@@ -1,0 +1,157 @@
+/* COLOURS */
+
+body {
+    /* the 'l' prefix indicates light colours */
+    --purple:   #55007d;
+    --lpurple:  #efdcf7;
+    --pink:     #9c0649;
+    --lpink:    #ffe0ee;
+    --pink2:    #d44ec9;
+    --blue:     #397ca8;
+    --lblue:    #d4ebfa;
+    --teal:     #3b8a83;
+    --lteal:    #d4fff7;
+    --green:    #267a31;
+    --lgreen:   #cfffe0;
+    --orange:   #d99102;
+    --lorange:  #ffebc9;
+
+    --hmbc: var(--purple);
+    --lhmbc: var(--lpurple);
+    --n15: var(--blue);
+    --ln15: var(--lblue);
+    --hsqct: var(--green);
+    --lhsqct: var(--lgreen);
+    --c13: var(--orange);
+    --lc13: var(--lorange);
+    --h1: var(--pink);
+    --lh1: var(--lpink);
+}
+
+
+/* GRID LAYOUT */
+div#chooser {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: max-content max-content;
+    grid-template-columns: repeat(5, auto); /* 5 classes of experiments */
+    align-items: baseline;
+    grid-row-gap: 10px;
+    grid-column-gap: 20px;
+}
+
+div.chooser_modules {
+    height: 100%; /* fill up available space in the grid row so that it looks uniform */
+    align-self: center;
+}
+
+/* labels at the top of each column */
+div.chooser_text {
+    text-align: center;
+    font-size: 125%;
+    font-weight: bold;
+}
+
+/* the list of modules */
+div.chooser_modules {
+    padding: 0;
+    border: 2px dashed;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 110%;
+}
+
+/* overall look of the list */
+div.chooser_modules>ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 15px;
+    display: grid;
+    grid-auto-flow: column;
+    grid-row-gap: 10px;
+    grid-column-gap: 10px;
+    grid-template-rows: repeat(6, 30px);
+}
+
+/* radio buttons */
+/* https://markheath.net/post/customize-radio-button-css */
+/* disable the original radio buttons first. we only style the labels */
+.chooser_modules input[type="radio"] {
+    opacity: 0;
+    position: fixed;
+    width: 0;
+}
+
+/* then style the labels. This applies to all labels. */
+.chooser_modules label {
+    display: inline-block;
+    border: 1px solid black;
+    padding: 1.5px;
+    border-radius: 2px;
+    width: 140px;
+    transition-property: background-color;
+    transition-duration: 0.2s;
+}
+
+.chooser_modules input[type="radio"]:focus + label {
+    box-shadow: 0 0 4px 2px #aaaaaa;
+}
+
+/* this applies to all labels that immediately follow a checked radio button */
+.chooser_modules input[type="radio"]:checked + label {
+    font-weight: bold;
+    padding: 0;
+    border: 2.5px solid black;
+}
+
+/* COLOURS */
+div.hmbc, div.hmbc label {
+    color: var(--hmbc);
+    border-color: var(--hmbc);
+}
+
+div.hmbc label:hover, div.hmbc input[type="radio"]:checked + label {
+    background-color: var(--lhmbc);
+    border-color: var(--hmbc);
+}
+
+
+div.n15, div.n15 label {
+    color: var(--n15);
+    border-color: var(--n15);
+}
+
+div.n15 label:hover, div.n15 input[type="radio"]:checked + label {
+    background-color: var(--ln15);
+    border-color: var(--n15);
+}
+
+div.hsqct, div.hsqct label {
+    color: var(--hsqct);
+    border-color: var(--hsqct);
+}
+
+div.hsqct label:hover, div.hsqct input[type="radio"]:checked + label {
+    background-color: var(--lhsqct);
+    border-color: var(--hsqct);
+}
+
+div.c13, div.c13 label {
+    color: var(--c13);
+    border-color: var(--c13);
+}
+
+div.c13 label:hover, div.c13 input[type="radio"]:checked + label {
+    background-color: var(--lc13);
+    border-color: var(--c13);
+}
+
+div.h1, div.h1 label {
+    color: var(--h1);
+    border-color: var(--h1);
+}
+
+div.h1 label:hover, div.h1 input[type="radio"]:checked + label {
+    background-color: var(--lh1);
+    border-color: var(--h1);
+}

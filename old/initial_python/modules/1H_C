@@ -1,0 +1,43 @@
+; vim: filetype=bruker:
+
+/* begin preamble */
+"l9     = d9/(p45*20)"              ; ASAP mixing loop counter
+"d10    = 3u"                       ; COSY t1
+"in10   = 2*dw"                     ; COSY increment
+/* end preamble */
+
+
+/* begin module */
+  ; COSY
+
+  (p1 ph11):f1
+  4u
+  p16:gp11*EA
+  d16
+  d10
+  (p1 ph1):f1
+  4u
+  p16:gp11
+  d16
+  4u
+  go=2 ph30
+
+/* end module */
+
+
+/* begin t1 increment */
+  1m id10
+  1m ip11*2
+  1m ip30*2
+/* end t1 increment */
+
+
+/* begin pulse phases */
+ph11=0 2
+ph30=0 2
+/* end pulse phases */
+
+/* begin gradients */
+;gpz0: 17.13%
+;gpz11: 10%
+/* end gradients */

@@ -1,0 +1,86 @@
+;p1: f1 channel -  90 degree high power pulse
+;p2: f1 channel - 180 degree high power pulse
+;p3: f2 channel -  90 degree high power pulse
+;p4: f2 channel - 180 degree high power pulse
+;p6 : f1 channel -  90 degree low power pulse
+;p14: f2 channel - 180 degree shaped pulse for inversion
+;     = 500usec for Crp60,0.5,20.1
+;p16: gradient pulse   [1 ms]
+;p17: extended gradient pulse for 15N HSQC
+;p19: gradient pulse 2 [600 us]
+;p21: f3 channel -  90 degree high power pulse
+;p22: f3 channel - 180 degree high power pulse
+;p24: f2 channel - 180 degree shaped pulse for refocussing
+;      = 2msec for Crp60comp.4
+;p31: f2 channel - 180 degree shaped pulse for inversion with J-compensation
+;p32: f1 channel - 180 degree shaped pulse (adiabatic)      [20 msec]
+;p33: f1 channel - 180(x) BURBOP [600 us]
+;p34: f2 channel - 180 pp BIBOP [600 us]
+;p45: f1 channel -  180 degree CAWURST-2 pulse
+
+;pl1: f1 channel - power level for pulse (default)
+;pl2: f2 channel - power level for pulse (default)
+;pl3: f3 channel - power level for pulse (default)
+;pl10: f1 channel - power level for TOCSY-spinlock
+;pl12: f2 channel - power level for CPD/BB decoupling
+
+;sp3: f2 channel - shaped pulse (180 degree inversion)
+;spnam3: Crp60,0.5,20.1
+;sp7: f2 channel - shaped pulse (180 degree refocusing)
+;spnam7: Crp60comp.4
+;sp18: f2 channel - shaped pulse (180 degree with J-compensation)
+;spnam18: Crp60_xfilt.2
+;sp29: f1 channel - shaped pulse (adiabatic)
+;sp33: f1 channel - 180(x) BURBOP
+;spnam33: BUBI_1H_600u_RF20kHz
+;sp34: f2 channel - 180 pp BIBOP
+;spnam34: BUBI_13C_600u_RF10kHz
+;sp45: f1 channel - CAWURST-2 pulse (180 degree)
+
+
+;cnst2: = 1J(CH)
+;cnst3: apparent J(CH) for Ernst angle excitation
+;cnst4: = 1J(NH)
+;cnst9: actual TOCSY mixing time (display only)
+;cnst16: 15N CTP gradient lengthening factor
+;cnst17: = -0.5 for Crp60comp.4
+;cnst33: = rf amplitude 20000 Hz for BUBI_1H_600u_RF20kHz
+;cnst34: = rf amplitude 10000 Hz for BUBI_13C_600u_RF10kHz
+;cnst39: 15N HSQC sensitivity factor
+;cnst40: 15N SW (ppm)
+
+;d0: 13C t1
+;d1: relaxation delay
+;d2: 1/2J(CH)
+;d3: reduced 1/4J(CH) for Ernst angle excitation
+;d4: 1/4J(CH)
+;d6: 1/8J(CH) for all multiplicities, 1/4J(CH) for CH only
+;d7: 1/(2*nJ(CH)), long-range coupling evolution
+;d8: delay for NOE buildup
+;d9: TOCSY mixing time
+;d10: 1H t1
+;d16: delay for homospoil/gradient recovery [200 us]
+;d20: 15N t1
+;d24: 1/4J(NH)
+;d26: 1/8J(NH) for all multiplicities, 1/4J(NH) for NH only
+
+;inf1: 1/SW(C) = 2 * DW(C)
+;in0: 1/(2 * SW(C)) = DW(C)
+;in10: 1/(SW(H)) = 2 * DW(H)
+;in20: 1/(2 * SW(N)) = DW(N)
+
+;aq: acquisition time
+;ds: >= 16
+;FnMODE: echo-antiecho
+;NBL: number of blocks (NOAH modules)
+;ns: 1 * n
+
+;l3: number of DIPSI-2 cycles
+
+;cpd2: decoupling according to sequence defined by cpdprg2
+;cpd3: 15N decoupling according to sequence defined by cpdprg3
+;pcpd2: f2 channel - 90 degree pulse for decoupling sequence
+;pcpd3: f3 channel - 90 degree pulse for decoupling sequence
+
+
+;gpz0:

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Jonathan Yong">
+    <meta name="description" content="Website to automatically generate NOAH pulse programmes in Bruker format">
+    <link rel="icon" href="data:,"><!-- stops Chrome from asking for a favicon -->
+    <title>gennoah</title>
+</head>
+
+<style>
+p.bold {
+    font-weight: bold;
+}
+
+p.italic {
+    font-style: italic;
+}
+
+.smallcolumn {
+    float: left;
+    width: 15%;
+    padding-right: 5%;
+}
+
+.mediumcolumn {
+    float: left;
+    width: 25%;
+    padding-right: 5%;
+}
+
+.bigcolumn {
+    float: left;
+    width: 50%;
+}
+
+.hidden {
+    display: none;
+}
+
+textarea.pulprog {
+    white-space: pre;
+    width: 100%;
+}
+
+div.pulprog_textarea {
+    padding-right: 10%;
+}
+
+span.overline {
+    text-decoration: overline;
+}
+</style>
+
+<body>
+    <h2>NOAH pulse programme generator</h2>
+
+    <div name="intro">
+        <p class="italic">Disclaimer: Not all modules have been tested. Use pulse programmes at your own risk...</p>
+
+        <p>Reference: Kupče, Ē.; Claridge, T. D. W. <i>Angew. Chem. Int. Ed.</i> <b>2017,</b> <i>56</i> (39), 11779–11783. DOI: <a href="https://doi.org/10.1002/anie.201705506">10.1002/anie.201705506</a>.</p>
+    </div>
+
+    <div id="main_section" class="hidden">
+
+        <div name="choose_template" class="smallcolumn">
+            <p class="bold">Step 1: Choose template</p>
+
+            <input type="radio" name="template" id="NCH" value="NCH" />
+            <label for="NCH"><sup>15</sup>N + <sup>13</sup>C + <sup>1</sup>H</label>
+            <br />
+            <input type="radio" name="template" id="CH" value="CH" />
+            <label for="CH"><sup>13</sup>C + <sup>1</sup>H</label>
+            <br />
+            <input type="radio" name="template" id="BCH" value="BCH" />
+            <label for="BCH"><sup>13</sup>C HMBC + <sup>13</sup>C + <sup>1</sup>H</label>
+        </div>
+        
+        <div name="choose_modules" class="mediumcolumn">
+            <p class="bold">Step 2: Choose modules</p>
+
+            <div id="promptForTemplate">
+                <p> Please select a template...</p>
+            </div>
+
+            <div id="N_select" class="hidden">
+                <p><sup>15</sup>N module</p>
+
+                <input type="radio" name="N_expt" id="N_M" value="N_M" />
+                <label for="N_M">HMQC</label><br />
+                <input type="radio" name="N_expt" id="N_S" value="N_S" />
+                <label for="N_S">HSQC</label><br />
+                <input type="radio" name="N_expt" id="N_Spv1" value="N_Spv1" />
+                <label for="N_Spv1">seHSQC (version 1)</label><br />
+                <input type="radio" name="N_expt" id="N_Spv2" value="N_Spv2" />
+                <label for="N_Spv2">seHSQC (version 2)</label><br />
+            </div>
+
+            <div id="B_select" class="hidden">
+                <p><sup>13</sup>C HMBC module</p>
+
+                <input type="radio" name="B_expt" id="C_B" value="C_B" />
+                <label for="C_B">default HMBC</label><br />
+            </div>
+
+            <div id="C_select" class="hidden">
+                <p><sup>13</sup>C module</p>
+
+                <input type="radio" name="C_expt" id="C_S" value="C_S" />
+                <label for="C_S">HSQC</label><br />
+                <input type="radio" name="C_expt" id="C_Spv1" value="C_Spv1" />
+                <label for="C_Spv1">seHSQC (version 1)</label><br />
+                <input type="radio" name="C_expt" id="C_Spv2" value="C_Spv2" />
+                <label for="C_Spv2">seHSQC (version 2)</label><br />
+                <input type="radio" name="C_expt" id="C_Spv2ur" value="C_Spv2ur" />
+                <label for="C_Spv2ur">seHSQC (version 2 with URPs)</label><br />
+            </div>
+ 
+            <div id="H_select" class="hidden">
+                <p><sup>1</sup>H module</p>
+
+                <input type="radio" name="H_expt" id="H_C" value="H_C" />
+                <label for="H_C">COSY</label><br />
+                <input type="radio" name="H_expt" id="H_Cqf" value="H_Cqf" />
+                <label for="H_Cqf">COSY (magnitude-mode)</label><br />
+                <input type="radio" name="H_expt" id="H_Cclip" value="H_Cclip" />
+                <label for="H_Cclip">CLIP-COSY</label><br />
+                <input type="radio" name="H_expt" id="H_D" value="H_D" />
+                <label for="H_D">DQF-COSY</label><br />
+                <input type="radio" name="H_expt" id="H_T" value="H_T" />
+                <label for="H_T">TOCSY</label><br />
+                <input type="radio" name="H_expt" id="H_N" value="H_N" />
+                <label for="H_N">NOESY</label><br />
+                <input type="radio" name="H_expt" id="H_R" value="H_R" />
+                <label for="H_R">ROESY (180, <span class="overline">180</span> spin lock)</label><br />
+                <input type="radio" name="H_expt" id="H_Rad" value="H_Rad" />
+                <label for="H_Rad">ROESY (adiabatic spin lock)</label><br />
+                <input type="radio" name="H_expt" id="H_CT" value="H_CT" />
+                <label for="H_CT">COSY + TOCSY</label><br />
+                <input type="radio" name="H_expt" id="H_CN" value="H_CN" />
+                <label for="H_CN">COSY + NOESY</label><br />
+            </div>
+        </div>
+
+        <div name="pulprog_text" class="bigcolumn">
+            <p class="bold">Step 3: Get the pulse programme text</p>
+
+            <p><input type="button" id="save_file" value="Download file" /></p>
+
+            <div name="pulprog_textarea" class="pulprog_textarea">
+                <textarea id="pulprog" class="pulprog" rows="40" readonly></textarea>
+            </div>
+        </div>
+
+    </div>
+
+    <noscript>This page requires JavaScript to work.</noscript>
+</body>
+
+<script src="frontend.js" type="module"></script>
+
+</html>

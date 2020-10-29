@@ -1,0 +1,70 @@
+; vim: filetype=bruker:
+
+/* begin preamble */
+"l9     = d9/(p45*20)"              ; ASAP mixing loop counter
+"d10    = 3u"                       ; COSY/NOESY t1
+"in10   = 2*dw"                     ; COSY/NOESY increment
+define delay DH_1
+define delay DH_2
+define delay DH_3
+"DH_1   = p16+d16+4u-d10"
+"DH_2   = d8-p16-d16-de-aq-3m-p3-p16-58u"     ; NOE mixing time
+"DH_3   = p16+d16"
+/* end preamble */
+
+
+/* begin module */
+  ; COCONOSY
+
+  ; COSY
+  (p1 ph11)
+  DH_1
+  (p2 ph1)
+  4u
+  p16:gp11
+  d16
+  d10
+  (p1 ph1)
+  4u
+  p16:gp11*EA
+  d16
+  goscnp ph30    ; acquire H-H COSY
+
+  ; NOESY
+  4u
+  (p3 ph1):f2    ; extra 13C cleanup pulse
+  50u
+  p16:gp12
+  DH_2 st      ; noe mixing time
+  (p1 ph12):f1
+  DH_3
+  de
+  4u
+  (p2 ph12):f1
+  4u
+  p16:gp11*EA
+  d16
+  go=2 ph31    ; acquire phase sensitive H-H NOESY
+
+/* end module */
+
+/* begin t1 increment */
+  1m id10
+  1m ip11*2
+  1m ip30*2
+  1m ip31*2
+/* end t1 increment */
+
+
+/* begin pulse phases */
+ph11=0 2
+ph12=0 0 2 2
+ph30=0 2
+ph31=0 2 2 0
+/* end pulse phases */
+
+/* begin gradients */
+;gpz0: 17.13%
+;gpz11: 10%
+;gpz12: 33%
+/* end gradients */

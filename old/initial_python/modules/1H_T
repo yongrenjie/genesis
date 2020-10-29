@@ -1,0 +1,98 @@
+; vim: filetype=bruker:
+
+/* begin preamble */
+"FACTOR1= (d9/(p6*115.112))/2"
+"l3     = FACTOR1*2"                ; number of TOCSY loops
+"d10    = 3u"                       ; TOCSY t1
+"in10   = 2*dw"                     ; TOCSY increment
+/* end preamble */
+
+
+/* begin module */
+  ; TOCSY (process as States)
+
+  "cnst9  = l3*p6*115.112/1000000"  ; actual TOCSY mixing time
+  "cnst9  = cnst9"                  ; force display in ased
+  p1 ph13
+  d10
+  p1 ph1
+  10u gron13 pl0:f1
+  (p32:sp29 ph1):f1
+  20u groff
+  d16 pl10:f1
+  
+						;begin DIPSI2
+8 p6*3.556 ph17
+  p6*4.556 ph18
+  p6*3.222 ph17
+  p6*3.167 ph18
+  p6*0.333 ph17
+  p6*2.722 ph18
+  p6*4.167 ph17
+  p6*2.944 ph18
+  p6*4.111 ph17
+  
+  p6*3.556 ph18
+  p6*4.556 ph17
+  p6*3.222 ph18
+  p6*3.167 ph17
+  p6*0.333 ph18
+  p6*2.722 ph17
+  p6*4.167 ph18
+  p6*2.944 ph17
+  p6*4.111 ph18
+
+  p6*3.556 ph18
+  p6*4.556 ph17
+  p6*3.222 ph18
+  p6*3.167 ph17
+  p6*0.333 ph18
+  p6*2.722 ph17
+  p6*4.167 ph18
+  p6*2.944 ph17
+  p6*4.111 ph18
+
+  p6*3.556 ph17
+  p6*4.556 ph18
+  p6*3.222 ph17
+  p6*3.167 ph18
+  p6*0.333 ph17
+  p6*2.722 ph18
+  p6*4.167 ph17
+  p6*2.944 ph18
+  p6*4.111 ph17
+  lo to 8 times l3
+						;end DIPSI2
+  p16:gp14
+  d16
+  10u gron13*1.333 pl0:f1 
+  (p32*0.75:sp29 ph1):f1
+  20u groff
+  d16 pl1:f1
+  4u
+  p1 ph1
+
+  go=2 ph30
+
+/* end module */
+
+/* begin EA increment */
+  1m ip13
+/* end EA increment */
+
+/* begin t1 increment */
+  1m rp13
+  1m id10
+/* end t1 increment */
+
+/* begin pulse phases */
+ph13=0 2
+ph17=3
+ph18=1
+ph30=0 2
+/* end pulse phases */
+
+/* begin gradients */
+;gpz13: 14%
+;gpz14: 20%
+/* end gradients */
