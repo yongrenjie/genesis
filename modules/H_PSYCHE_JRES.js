@@ -41,7 +41,7 @@ if "l2 % 2 == 0"
   p16:gp17
   d16
   d16
-  ( center (p40:sp40 ph14):f1 (p40:gp14) )
+  ( center (p40:sp40 ph15):f1 (p40:gp14) )
   d16
   p16:gp17
   d16
@@ -76,7 +76,7 @@ else
   p16:gp17
   d16
   d16
-  ( center (p40:sp40 ph14):f1 (p40:gp14) )
+  ( center (p40:sp40 ph15):f1 (p40:gp14) )
   d16
   p16:gp17
   d16

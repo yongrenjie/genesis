@@ -113,6 +113,7 @@ const allParams = {
     "cnst44": "gradient ratio (2*N/H)",
     "cnst45": "gradient ratio (4*N/H)",
     "cnst46": "gradient ratio (1*N/H)",
+    "cnst50": "PSYCHE drop points [1-4]",
 
     "d0": "13C t1",
     "d1": "relaxation delay",
@@ -196,7 +197,7 @@ allPhases[11] = new Phase({num: 11, str: "0 0 0 0 2 2 2 2"});
 allPhases[12] = new Phase({num: 12, str: "0 2"});
 allPhases[13] = new Phase({num: 13, str: "0", ct1: "i2"});
 allPhases[14] = new Phase({num: 14, str: "0 1 2 3"});
-allPhases[14] = new Phase({num: 14, str: "0 1"});
+allPhases[15] = new Phase({num: 15, str: "0 1"});
 // ... plenty of empty slots to use
 // below are for receivers
 allPhases[26] = new Phase({num: 26, str: "0 2"});
