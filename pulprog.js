@@ -230,7 +230,7 @@ class Gradient {
     }
 }
 const allGradients = new Array(32);
-allGradients[0] = new Gradient({num: 0, val: 14, comment: "for purging"});
+allGradients[0] = new Gradient({num: 0, val: 24, comment: "for purging"});
 allGradients[1] = new Gradient({num: 1, val: 60, comment: "HMBC CTP"});
 allGradients[2] = new Gradient({num: 2, val: 80, comment: "15N CTP"});
 allGradients[3] = new Gradient({num: 3, val: 75, comment: "HSQC-TOCSY CTP"});
