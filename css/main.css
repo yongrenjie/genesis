@@ -130,9 +130,9 @@ div#spinner {
 }
 
 dt {
-    font-size: 110%;
+    font-size: 120%;
     font-weight: bold;
-    padding: 0.5ex 0;
+    padding: 2ex 0 0 0;
 }
 
 dd {
@@ -153,8 +153,8 @@ sub {
 
 ul#faq_toc {
     font-size: 110%;
-    font-weight: bold;
     margin: 20px 100px;
+    line-height: 1.5;
 }
 
 ol.steps {
@@ -205,4 +205,4 @@ dd>ul>li {
 span.ms {
     font-family: "Source Code Pro", monospace;
     background-color: #eeeeee;
-: one would need to have specialised versions of the pulse programme.}
+}
