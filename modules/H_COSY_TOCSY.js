@@ -9,8 +9,6 @@ H_COSY_TOCSY.nuclei = `H`;
 H_COSY_TOCSY.auprog = `noah_cosy:noah_tocsy`;
 
 H_COSY_TOCSY.preamble = `
-"p6      = (1000000/(4*cnst10))"       ; pw90 for DIPSI-2
-"plw10   = plw1*(p1/p6)*(p1/p6)"       ; power level for DIPSI-2
 "l11     = (d9/(p6*115.112))/2"        ; half the number of TOCSY loops
 "l12     = l11*2"                      ; number of TOCSY loops
 "d10     = 3u"                         ; COSY/TOCSY t1

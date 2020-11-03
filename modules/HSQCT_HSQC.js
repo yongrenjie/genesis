@@ -13,8 +13,6 @@ HSQCT_HSQC.shortDescription = `; 13C HSQC followed by DIPSI-2
 HSQCT_HSQC.auprog = `noah_hsqc`;
 
 HSQCT_HSQC.preamble = `
-"p6      = (1000000/(4*cnst10))"       ; pw90 for DIPSI-2
-"plw10   = plw1*(p1/p6)*(p1/p6)"       ; power level for DIPSI-2
 "p2      = p1*2"                       ; 1H hard 180
 "d2      = 0.5s/cnst2"                 ; JCOMP
 "d4      = 0.25s/cnst2"                ; 13C INEPT

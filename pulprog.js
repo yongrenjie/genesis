@@ -91,7 +91,6 @@ const allParams = {
     "cnst4": "= 1J(NH)",
     "cnst6": "= minimum 1J(CH)",
     "cnst7": "= maximum 1J(CH)",
-    "cnst10": "RF amplitude for DIPSI-2 mixing (Hz)",
     "cnst12": "> J(HH), ca. 30 Hz for CLIP-COSY mixing",
     "cnst13": "= nJ(CH) long-range",
     "cnst16": "15N CTP gradient lengthening factor",
@@ -113,7 +112,7 @@ const allParams = {
     "cnst44": "gradient ratio (2*N/H)",
     "cnst45": "gradient ratio (4*N/H)",
     "cnst46": "gradient ratio (1*N/H)",
-    "cnst50": "PSYCHE drop points [1-4]",
+    "cnst50": "PSYCHE drop points",
 
     "d0": "13C t1",
     "d1": "relaxation delay",
