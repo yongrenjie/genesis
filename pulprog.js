@@ -626,14 +626,13 @@ function makePulprogText(frontendModules) {
         `  1m igrad EA`,
     );
     if (d11Present) {
-        // Note that we only want to increment d11 here if cnst37 = 1, OR if there is no cnst37
-        // to begin with (e.g. QF COSY). If cnst37 is > 1 then we want to increment it together
-        // with 13C t1, but at twice the rate (see below).
-        // Also, this will break NUS, but noah_nus.py will already warn the user if there is a QF
+        // This will break NUS, but noah_nus.py will already warn the user if there is a QF
         // module, so we don't need to warn them again here.
+        // l2 is incremented with EA, so we can check l2 % cnst37 here in exactly the same
+        // way we usually do l1 % cnst39.
         if (cnst38Present) {
             mainpp.push(
-                `if "cnst37 == 1"`,
+                `if "l2 % cnst37 == 0"`,
                 `{`,
                 `  1m id11`,
                 `}`,
@@ -703,21 +702,6 @@ function makePulprogText(frontendModules) {
             ht1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
         }
         mainpp.push(`#endif /* NUS */`);
-    }
-    else if (d11Present && cnst38Present) {
-        // If d11 and cnst37 are present, then we want to increment d11 here, but *twice* as
-        // fast as we would increment d10, since d11 is meant to be a QF delay.
-        mainpp.push(
-            ``,
-            `  ; 1H t1 incrementation`,
-            `if "cnst37 > 1"`,
-            `{`,
-            `  if "(2 * l1) % cnst37 == 0"`,
-            `  {`,
-            `  1m id11`,
-            `  }`,
-            `}`,
-        );
     }
     
     // 15N t1 incrementation
