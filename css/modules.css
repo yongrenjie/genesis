@@ -70,7 +70,7 @@ div.chooser_modules>ul {
     grid-auto-flow: column;
     grid-row-gap: 10px;
     grid-column-gap: 10px;
-    grid-template-rows: repeat(6, 30px);
+    grid-template-rows: repeat(8, 30px);  /* this is where we can change the height of each box! */
 }
 
 /* radio buttons */
