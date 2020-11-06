@@ -19,8 +19,10 @@ div#buttons input {
     outline: 0;
 }
 
-div#buttons input:hover {
-    background-color: #d0d0d0;
+@media (pointer: fine) {
+    div#buttons input:hover {
+        background-color: #d0d0d0;
+    }
 }
 
 div#buttons input:focus {
