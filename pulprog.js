@@ -586,8 +586,11 @@ function makePulprogText(frontendModules) {
     }
 
     // Use a regex to find all phases in the pulse programme text
-    let phases = new Set(mainpp.join("\n").match(/(?<=ph)\d{1,2}/g));
-    phases = Array.from(phases, Number).sort((a, b) => a - b);
+    let phases = new Set(mainpp.join("\n").match(/ph\d{1,2}/g));
+    phases = Array.from(phases)
+        .map(phx => Number(phx.slice(2)))
+        .sort((a, b) => a - b);
+    console.log(phases);
 
     // Postprocess mainpp
     /* -------------------------------------------------------------- */
