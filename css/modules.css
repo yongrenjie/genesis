@@ -107,8 +107,13 @@ li#li_h1_none>label {
     padding: 1.5px;
     border-radius: 2px;
     width: 140px;
-    transition-property: background-color;
-    transition-duration: 0.2s;
+}
+
+@supports (transition-property: background-color) {
+    .chooser_modules label {
+        transition-property: background-color;
+        transition-duration: 0.2s;
+    }
 }
 
 .chooser_modules input[type="radio"]:focus + label {
