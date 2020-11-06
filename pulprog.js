@@ -1026,4 +1026,4 @@ function displayPage() {
     document.getElementById("spinner-container").style.display = "none";
     document.getElementById("main-wrapper").style.display = "block";
 }
-Promise.allSettled(promises).then(displayPage);
+Promise.all(promises).then(displayPage);
