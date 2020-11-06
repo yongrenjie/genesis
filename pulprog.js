@@ -102,9 +102,9 @@ const allParams = {
     "cnst32": "fraction of C-H magn used for HSQC-TOCSY [0.5 to 1]",
     "cnst33": "= rf amplitude 20000 Hz for BUBI_1H_600u_RF20kHz",
     "cnst34": "= rf amplitude 10000 Hz for BUBI_13C_600u_RF10kHz",
-    "cnst37": "1H sensitivity factor",
-    "cnst38": "1H indirect SW (Hz)",
-    "cnst39": "15N HSQC sensitivity factor",
+    "cnst37": "TD1 for 1H JRES or PSYCHE [32]",
+    "cnst38": "SW (Hz) for 1H JRES or PSYCHE",
+    "cnst39": "15N HSQC sensitivity factor [1-4]",
     "cnst40": "15N SW (ppm)",
     "cnst41": "gradient ratio (2*C/H)",
     "cnst42": "gradient ratio (4*C/H)",
@@ -627,11 +627,9 @@ function makePulprogText(frontendModules) {
     if (d11Present) {
         // This will break NUS, but noah_nus.py will already warn the user if there is a QF
         // module, so we don't need to warn them again here.
-        // l2 is incremented with EA, so we can check l2 % cnst37 here in exactly the same
-        // way we usually do l1 % cnst39.
         if (cnst38Present) {
             mainpp.push(
-                `if "l2 % cnst37 == 0"`,
+                `if "l2 % (l0 * 2 / cnst37) == 0"`,
                 `{`,
                 `  1m id11`,
                 `}`,
@@ -689,7 +687,7 @@ function makePulprogText(frontendModules) {
         // on whether cnst38 is in the pulse programme (as cnst37 isn't yet in it!)
         if (cnst38Present) {
             mainpp.push(
-                `if "l1 % cnst37 == 0"`,
+                `if "l1 % (l0 * 2 / cnst37) == 0"`,
                 `{`,
                 `  1m id10`,
             );
