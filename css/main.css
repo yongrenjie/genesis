@@ -21,19 +21,16 @@ html {
 
 body {
     margin: 0 0 50px 0; /* override user-agent style sheet */
-    display: grid;
-    grid-template-columns: 1fr max-content 1fr;
+    display: flex;
+    justify-content: center;
 }
 
-body>* {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    padding: 0 40px;
-}
-
-div#wrapper {
+div#main-wrapper {
     display: none; /* change this with JS */
+    max-width: 1058px;
     animation: fadein 0.8s;
+    flex-grow: 0;
+    padding: 20px;
 }
 
 @keyframes fadein {
@@ -86,7 +83,6 @@ h2:after {
     left: 0.5em;
     margin-right: -50%;
 }
-
 
 /* spinning loader */
 div#spinner-container {
@@ -153,7 +149,7 @@ sub {
 
 ul#faq_toc {
     font-size: 110%;
-    margin: 20px 100px;
+    margin: 20px 60px;
     line-height: 1.5;
 }
 

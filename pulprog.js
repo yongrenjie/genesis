@@ -943,8 +943,8 @@ function toggleDevMode() {
             }
         }
     }
-    setNoneModuleLengths();
     resetButtons();
+    setModuleListLengths();
 }
 
 // Add toggle behaviour to the devmode button
@@ -1002,44 +1002,25 @@ function savePPFile() {
 document.getElementById("download_button").addEventListener("click", savePPFile);
 
 
+// Function which sets grid-template-rows of each module selector box
+// to be equal to the number of visible items -- except for the 1H box
+// which is manually set to be 8 items long.
+function setModuleListLengths() {
+    let uls = [...document.querySelectorAll("div.chooser_modules:not(.h1)>ul")];
+    let lengths = uls.map(ul => [...ul.children].filter(li => li.style.display != "none").length);
+    uls.forEach(function (ul, i) {
+        ul.style.gridTemplateRows = `repeat(${lengths[i]}, auto)`;
+    });
+}
+setModuleListLengths();
+
+
+
 //////////////////////////////////////////////////////////////////////////////
 // Everything is done loading, now we can correctly style and display the page
 
-function setNoneModuleLengths() {
-    /* function which sets the grid-column-start, grid-column-end, and width
-     * of the 'None' button within each module box, depending on the number
-     * of modules. */
-    // Get the number of visible elements in each box. The spreading operator converts it
-    // from a nodeList into an array, which has map() and related methods.
-    let uls = [...document.querySelectorAll("div.chooser_modules>ul")];
-    let lengths = uls.map(ul => [...ul.children].filter(li => li.style.display != "none").length);
-    // Get the number of grid rows in each box.
-    // To do this we parse the CSS with a hacky regex. This works as long as
-    // div.chooser_modules>ul grid-template-rows is ALWAYS set to repeat(n, 30px).
-    let maxLength = getComputedStyle(uls[0]).gridTemplateRows.split(' ').length;
-    // There are (length - 1) non-empty choices in each module box, and (maxLength - 1)
-    // rows for these (since the top row must be dedicated to None).
-    uls.forEach(function(ul, i) {
-        let ncols = Math.ceil((lengths[i] - 1) / (maxLength - 1));
-        if (ncols > 1) {
-            ul.children[0].style.gridColumnStart = "1";
-            ul.children[0].style.gridColumnEnd = (ncols + 1).toString();
-            ul.children[0].getElementsByTagName("label")[0].style.width = "100%";
-        }
-        else {
-            ul.children[0].style.gridColumnStart = "1";
-            ul.children[0].style.gridColumnEnd = "1";
-            ul.children[0].getElementsByTagName("label")[0].style.width = "100%";
-        }
-    });
-}
-setNoneModuleLengths();
-
-
 function displayPage() {
     document.getElementById("spinner-container").style.display = "none";
-    document.getElementById("wrapper").style.display = "block";
-    document.body.style.gridTemplateColumns = "1fr min-content 1fr";
-    // console.clear();
+    document.getElementById("main-wrapper").style.display = "block";
 }
 Promise.allSettled(promises).then(displayPage);
