@@ -1,0 +1,23 @@
+if ((i_argc > 2) && (strlen(i_argv[2]) > 1)) {
+    sprintf(cmd, "1 FnMODE %s", i_argv[2]);
+    XCMD(cmd)
+    sprintf(cmd, "1s FnMODE %s", i_argv[2]);
+    XCMD(cmd)
+}
+
+XCMD("2 WDW SINE")
+XCMD("1 WDW SINE")
+XCMD("1 SSB 0")
+XCMD("2 SSB 0")
+XCMD("2 PH_mod no")
+XCMD("1 PH_mod mc")
+XCMD("fixF1h_jres")
+XCMD("combinekh")
+XCMD("proc_noah")
+XCMD("abs1")
+XCMD("1 SR 0")
+XCMD("2 NLEV 20")
+XCMD("sendgui levcalc")
+XCMD("tilt")
+XCMD("2 SPECTYP JRES")
+QUIT

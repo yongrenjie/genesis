@@ -1,0 +1,24 @@
+float cnst40=0.0;
+double sfo=0.0, bf=0.0, o=0.0, sw_h=0.0;
+char nuc[8];
+
+FETCHPARS("SFO3", &sfo)
+STOREPAR1S("SFO1", sfo)
+
+// cnst40 is 15N SW in ppm
+FETCHPAR("CNST 40", &cnst40)
+STOREPAR1S("SW", (double) cnst40)
+// calculate 15N SW_h
+sw_h = cnst40 * sfo;
+STOREPAR1S("SW_h", sw_h)
+
+FETCHPARS("NUC3", nuc)
+STOREPAR1S("NUC1", nuc)
+
+FETCHPARS("BF3", &bf)
+STOREPAR1S("BF1", bf)
+
+FETCHPARS("O3", &o)
+STOREPAR1S("O1", o)
+
+QUIT

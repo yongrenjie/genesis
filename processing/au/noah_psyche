@@ -1,0 +1,7 @@
+XCMD("fixF1h_psyche")
+XCMD("2 SI 65536")
+XCMD("1 FnMODE QF")
+XCMD("1s FnMODE QF")
+XCMD("combinekh")
+XCMD("noah_pshift")
+QUIT

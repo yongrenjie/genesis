@@ -1,0 +1,10 @@
+int fntp, td1;
+XFB
+// Check for NUS.
+FETCHPARS("FnTYPE", &fntp)
+if (fntp == 2) {
+    XHT2
+    FETCHPAR1S("NusTD", &td1)  
+    STOREPAR1("TD", td1)
+}
+QUIT
