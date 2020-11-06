@@ -976,7 +976,7 @@ document.getElementById("reset_button").addEventListener("click", resetButtons);
 
 // FAQ button.
 function goToFAQ(){
-    window.location.href = "#faq";
+    window.location.href = "#faq_h2";
 }
 document.getElementById("faq_button").addEventListener("click", goToFAQ);
 

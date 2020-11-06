@@ -27,10 +27,10 @@ body {
 
 div#main-wrapper {
     display: none; /* change this with JS */
-    max-width: 1058px;
+    max-width: 1018px;
     animation: fadein 0.8s;
     flex-grow: 0;
-    padding: 20px;
+    margin: 20px;
 }
 
 @keyframes fadein {
@@ -50,7 +50,7 @@ h1 {
     text-align: center;
     font-size: 250%;
     font-weight: bold;
-    padding: 40px 0 20px 0;
+    padding: 0;
     margin: 0;
 }
 
@@ -60,7 +60,7 @@ h2 {
     overflow: hidden;
     text-align: center;
     font-size: 150%;
-    margin: 20px 0 20px 0;
+    margin: 15px 0 15px 0;
 }
 
 h2:before,

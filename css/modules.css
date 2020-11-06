@@ -28,6 +28,11 @@ body {
     --lh1: var(--lpink);
 }
 
+h2#modules_h2 {
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
 
 /* Module selector */
 div#chooser {

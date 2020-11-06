@@ -24,9 +24,17 @@
 
         <h1>NOAH pulse programme generator</h1>
 
-        <h2>Module selector</h2>
-        <div id="chooser">
+        <h2 id="modules_h2">Module selector</h2>
 
+        <div id="devmode">
+            Developer mode:
+            <div class="switch">
+                <input id="devmode_button" type="checkbox" class="switch-input" />
+                <label for="devmode_button" class="switch-label"></label>
+            </div>
+        </div>
+
+        <div id="chooser">
             <div class="chooser-overall hmbc">
                 <div class="chooser_text hmbc">
                     <sup>13</sup>C HMBC
@@ -254,31 +262,21 @@
                     </ul>
                 </div>
             </div><!-- /chooser-overall h1 -->
-
         </div><!-- /chooser -->
 
-        <div id="button-container">
-            <div></div>
-            <div id="buttons">
-                <input id="reset_button" type="button" value="Reset all">
-                <input id="download_button" type="button" value="Download pulse programme">
-                <input id="faq_button" type="button" value="Read the FAQ">
-            </div>
-            <div id="devmode">
-                Developer mode:
-                <div class="switch">
-                    <input id="devmode_button" type="checkbox" class="switch-input" />
-                    <label for="devmode_button" class="switch-label"></label>
-                </div>
-            </div>
-        </div><!-- /button-container -->
+
+        <div id="buttons">
+            <input id="reset_button" type="button" value="Reset all">
+            <input id="download_button" type="button" value="Download pulse programme">
+            <input id="faq_button" type="button" value="Read the FAQ">
+        </div><!-- /buttons -->
 
         <h2>Pulse programme text</h2>
         <div id="pulprog">
             <textarea id="pulprog_text" rows=40 placeholder="Select two or more modules to generate pulse programme..." readonly></textarea>
         </div>
 
-        <h2>FAQ</h2>
+        <h2 id="faq_h2">FAQ</h2>
         <div id="faq">
 
             <ul id="faq_toc">
@@ -338,12 +336,12 @@
 
                         <li>
                             <p>Process the data by entering <span class="ms">splitx_au</span> into the TopSpin command-line.</p>
-                            <p>This will create new datasets with experiment numbers (expnos) beginning from 1000<i>m</i> + 1, where <i>m</i> is the expno of the original NOAH data.</p>
+                            <p>This will create new datasets with expnos beginning from (1000 × <i>m</i>) + 1, where <i>m</i> is the expno of the original NOAH data.</p>
                             <p>If you are using macOS 10.15 (Catalina), please note there is a bug in TopSpin which causes a number of AU programmes to not work. On TopSpin 4.0.9, <span class="ms">splitx_au</span> will still work but many of the subsidiary AU programmes do not (especially those for <sup>15</sup>N or <sup>1</sup>H modules). On earlier versions, even <span class="ms">splitx_au</span> itself will not work. Unfortunately there is nothing we can do about it until Bruker releases a fix.</p>
                         </li>
                     </ol>
 
-                    Please note that if you are using old versions of the pulse programme, there is an additional step where you need to specify the userP1 through userP5 parameters. For example, in a BSC experiment you would specify (userP1, userP2, userP3) = (noah_hmbc, noah_hsqc, noah_cosy) respectively. This is no longer necessary as long as you have downloaded the newest AU scripts and pulse programme from this website. Please do get in touch if you need extra information on this.
+                    If you are using old versions of the pulse programme, there is an additional step where you need to specify the userP1 through userP5 parameters. For example, in a BSC experiment, you would specify (userP1, userP2, userP3) = (noah_hmbc, noah_hsqc, noah_cosy) respectively. This is no longer necessary as long as you have downloaded the newest AU scripts and pulse programmes from this website. Please do get in touch if you need extra information on this.
                 </dd>
 
                 <dt id="faq_nus">How do I use non-uniform sampling with NOAH sequences?</dt>
