@@ -27,7 +27,7 @@ body {
 
 div#main-wrapper {
     display: none; /* change this with JS */
-    max-width: 1018px;
+    max-width: 1023px;  /* Chrome only needs 1018, Safari needs 1023 */
     animation: fadein 0.8s;
     flex-grow: 0;
     margin: 20px;

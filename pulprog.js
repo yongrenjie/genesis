@@ -588,9 +588,8 @@ function makePulprogText(frontendModules) {
     // Use a regex to find all phases in the pulse programme text
     let phases = new Set(mainpp.join("\n").match(/ph\d{1,2}/g));
     phases = Array.from(phases)
-        .map(phx => Number(phx.slice(2)))
+        .map(phx => Number(phx.slice(2)))  // extract the number
         .sort((a, b) => a - b);
-    console.log(phases);
 
     // Postprocess mainpp
     /* -------------------------------------------------------------- */
@@ -790,17 +789,21 @@ function makePulprogText(frontendModules) {
     // Find all the gradients in the text and generate gpnam/gpz definitions.
     /* -------------------------------------------------------------- */
     let gradients = new Set([
-        mainppText.match(/(?<=gp)\d{1,2}/g),
-        mainppText.match(/(?<=gron)\d{1,2}/g)
-    ].filter(Boolean).flat());
+        mainppText.match(/gp\d{1,2}/g),
+        mainppText.match(/gron\d{1,2}/g)]
+        .filter(Boolean)
+        .flat()
+        .map(s => s.replace("gron", "").replace("gp", "")));  // extract the number
     gradients = Array.from(gradients, Number).sort((a, b) => a - b);
     const gpnamDefns = gradients.map(g => allGradients[g].makeGpnamInstruction()).filter(Boolean);
     const gpzDefns = gradients.map(g => allGradients[g].makeGpzInstruction());
 
     // Add WaveMaker definitions.
     /* -------------------------------------------------------------- */
-    let shapedPulses = new Set(mainppText.match(/(?<=p\d{1,2}:sp)\d{1,2}/g));
-    shapedPulses = Array.from(shapedPulses, Number).sort((a, b) => a - b);
+    let shapedPulses = new Set(mainppText.match(/p\d{1,2}:sp\d{1,2}/g));
+    shapedPulses = Array.from(shapedPulses)
+        .map(s => Number(s.split(":")[1].slice(2)))  // extract the number
+        .sort((a, b) => a - b);
     let wvmDefns = shapedPulses.map(s => allWavemakers[s]).filter(e => e !== undefined);
     // If there is 13C decoupling we should add in the pulses for adiabatic decoupling.
     if (mainpp.join("\n").includes("cpd2:f2")) {
