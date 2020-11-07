@@ -22,7 +22,7 @@ html {
 }
 
 body {
-    margin: 0 0 50px 0; /* override user-agent style sheet */
+    margin: 0 0 0px 0; /* override user-agent style sheet */
     display: flex;
     justify-content: center;
 }
@@ -149,6 +149,10 @@ sub {
   top: 0.4em;
 }
 
+div#faq {
+    margin-bottom: 30px;
+}
+
 ul#faq_toc {
     font-size: 110%;
     margin: 20px 60px;
@@ -160,6 +164,7 @@ ol.steps {
 }
 
 ol.steps > li {
+    margin: 0 0 1ex 0;
     list-style: none;
     position: relative;
 }
@@ -180,6 +185,7 @@ ol#citations {
 }
 
 ol#citations > li {
+    :argin: 0 0 1ex 0;
     list-style: none;
     position: relative;
 }
