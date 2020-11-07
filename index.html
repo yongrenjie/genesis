@@ -6,14 +6,14 @@
     <meta name="description" content="Website to automatically generate NOAH pulse programmes in Bruker format">
     <link rel="icon" href="data:,"><!-- stops Chrome from asking for a favicon -->
     <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&family=Source+Sans+Pro:ital,wght@0,400;0,700;1,400;1,700&display=auto" rel="stylesheet">
-    <title>gennoah</title>
+    <title>NOAH Generator</title>
 </head>
 
 <link rel="stylesheet" type="text/css" href="css/main.css">
 <link rel="stylesheet" type="text/css" href="css/modules.css">
 <link rel="stylesheet" type="text/css" href="css/buttons.css">
 
-<body>
+<body id="top">
 
     <div id="spinner-container">
         <div id="spinner-text">Loading modules... </div>
@@ -273,11 +273,13 @@
 
         <h2>Pulse programme text</h2>
         <div id="pulprog">
-            <textarea id="pulprog_text" rows=40 placeholder="Select two or more modules to generate pulse programme..." readonly></textarea>
+            <textarea id="pulprog_text" rows=20 placeholder="Select two or more modules to generate pulse programme..." readonly></textarea>
         </div>
 
         <h2 id="faq_h2">FAQ</h2>
         <div id="faq">
+
+            <a href="#top">Back to top</a>
 
             <ul id="faq_toc">
             </ul>
@@ -285,6 +287,7 @@
             <dl>
 
                 <dt id="faq_run">How do I run a NOAH experiment?</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
                 <dd>
                     <p>For the most part the setup is the same as for a standard 2D experiment. The nuclei involved should be configured in the same way as for a <sup>13</sup>C–<sup>1</sup>H experiment. There are two parameters which require additional consideration:</p>
                     <ul>
@@ -305,6 +308,7 @@
                 </dd>
 
                 <dt id="faq_rga">Does rga work as expected?</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
                 <dd>
                     <p>No, it doesn't. It tries to optimise the receiver gain for the first module, instead of the entire supersequence as a whole. If the first module has low intrinsic sensitivity (which is typically the case), then <span class="ms">rga</span> will suggest unreasonably large values for the receiver gain, leading to ADC overflows for the more sensitive modules.</p>
 
@@ -314,16 +318,19 @@
                 </dd>
 
                 <dt id="faq_weird">During acquisition, is it normal that TopSpin shows weird numbers in the progress bar?</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
                 <dd>
                     <p>Yes. Using the same example as before, if you are running a NOAH-4 experiment with 256 <i>t</i><sub>1</sub> increments (i.e. TD1 = 1024), then the progress line in the status bar will inch towards "1024/256".</p>
                 </dd>
                 
                 <dt id="faq_diffparams">Is it possible to have different values of SW/TD2/RG/&lt;other parameter&gt; for different modules?</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
                 <dd>
                     <p>In a way, yes, but as far as we are aware it has to be hardcoded in the pulse programme (and often in a nontrivial way). That would make the pulse programme overly specialised for a particular sample/spectrometer, and isn't something we want to do here.</p>
                 </dd>
 
                 <dt id="faq_process">How do I process the acquired data?</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
                 <dd>
 
                     <p>If you acquired this data under automation, it should have already been set up such that your data is automatically processed. If your NOAH dataset was acquired with experiment number (expno) <i>m</i>, then check whether you already have datasets in expnos 1000<i>m</i> + 1 onwards. If those exist, then chances are these <i>are</i> the individual processed 2D spectra. If not, then read on...</p>
@@ -345,6 +352,7 @@
                 </dd>
 
                 <dt id="faq_nus">How do I use non-uniform sampling with NOAH sequences?</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
                 <dd>
                     <p>NUS can be enabled in the pulse sequence, but <b>not</b> in the conventional way of setting FnTYPE to 'non-uniform sampling'.</p>
 
@@ -366,6 +374,7 @@
                 </dd>
 
                 <dt id="faq_automation">How can NOAH spectra be set up for use in automation?</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
                 <dd>
                     <p>The acquisition AU programme (AUNM) should be set to <span class="ms">au_zgcosy</span>, to avoid issues with <span class="ms">rga</span> (see above). The processing AU programme (AUNMP) should be set to <span class="ms">splitx_au</span>. If the pulse programmes and AU scripts are up-to-date, then there is no need to set the user processing parameters.</p>
 
@@ -373,6 +382,8 @@
                 </dd>
 
                 <dt id="faq_cite">What papers should I cite / where can I find out more about NOAH experiments?</dt>
+
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
                 <dd>
                     <p>Thanks for asking. There are a few:</p>
                     

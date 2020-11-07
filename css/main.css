@@ -5,14 +5,16 @@ html {
     font-family: "Source Sans Pro", sans-serif;
     box-sizing: border-box;
     font-size: 18px;
-    scroll-behavior: smooth;
+    /* uncomment this for smooth scroll */
+    /* scroll-behavior: smooth; */
 }
 
-@media screen and (prefers-reduced-motion: reduce) {
-	html {
-		scroll-behavior: auto;
-	}
-}
+/* uncomment this for smooth scroll */
+/* @media screen and (prefers-reduced-motion: reduce) { */
+/* 	html { */
+/* 		scroll-behavior: auto; */
+/* 	} */
+/* } */
 
 *, *:before, *:after {
     box-sizing: inherit;
@@ -27,7 +29,7 @@ body {
 
 div#main-wrapper {
     display: none; /* change this with JS */
-    max-width: 1023px;  /* Chrome only needs 1018, Safari needs 1023 */
+    max-width: 1030px;  /* Chrome only needs 1018, Safari needs 1023 */
     animation: fadein 0.8s;
     flex-grow: 0;
     margin: 20px;
@@ -201,4 +203,8 @@ dd>ul>li {
 span.ms {
     font-family: "Source Code Pro", monospace;
     background-color: #eeeeee;
+}
+
+span.small {
+    font-size: 80%;
 }
