@@ -1,3 +1,18 @@
+/* fixF1h_psyche
+ * -------------
+ * Fix the values of SW and O1 in the indirect dimension for NOAH PSYCHE
+ * modules. SW_h is back-calculated from in11 (the t1 increment in the PSYCHE
+ * module is in11*2). SW_h will be very close to the user-specified cnst38.
+ * However, the pulse programme makes tiny adjustments to in11 to make sure
+ * that the length of each chunk is exactly an even number of dwell points, to
+ * minimise chunking artefacts. So, SW_h will (in general) be a tiny bit
+ * different from cnst38.
+ *
+ * v: 2.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 7 November 2020 */
+
 double sfo1;
 FETCHPARS("SFO1", &sfo1) 
 STOREPAR1S("SFO1", sfo1)

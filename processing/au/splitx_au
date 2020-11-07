@@ -1,3 +1,20 @@
+/* splitx_au
+ * ---------
+ * Splits a NOAH dataset into NBL different individual datasets which can then
+ * be separately processed. If the NOAH dataset has expno M, the individual
+ * datasets will have expnos starting from (1000 * M) + 1.
+ * 
+ * This AU programme also parses the pulse programme text in order to determine
+ * what subsidiary AU programmes (noah_xxxx) to use for processing the
+ * individual datasets. If necessary, this behaviour can be overruled by
+ * specifying the noah_xxxx programmes as the userP1 through userP5 processing
+ * parameters.
+ *
+ * v: 2.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 7 November 2020 */
+
 int    *irow;
 double *drow;
 int i, j, k;
@@ -9,7 +26,10 @@ int parmode;
 FETCHPAR("PARMODE", &parmode)
 if (parmode != 1) STOPMSG("Program is only suitable for 2D")
 
-// Check if NBL > 1
+// Check if NBL > 1. As of the time of writing, NBL can only go up to 5, so
+// the check for NBL > 8 is slightly excessive. However, this cap on NBL will
+// (in all likelihood) be increased in the future, so setting a higher check
+// on NBL future-proofs this script to some extent.
 int nbl;
 FETCHPAR("NBL", &nbl)
 if ((nbl < 2) || (nbl > 8)) STOPMSG("Program is only suitable for 2 <= NBL <= 7")

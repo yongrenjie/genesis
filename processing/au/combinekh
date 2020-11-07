@@ -1,7 +1,15 @@
-/* combinekh - adds up k rows of a ser file
- * uses cnst37 instead of cnst39 -- for 1H 2DJ and PSYCHE spectra
- * Jonathan Yong, University of Oxford
- * 5 Nov 2020 */
+/* combinekh
+ * ---------
+ * Adds up series of k adjacent FIDs in a ser file. The value of k is read from
+ * the status parameters l0 and cnst37. l0 in turn is indirectly calculated
+ * from td1 in the NOAH pulse programmes. cnst37 is the "final" td1, i.e. the
+ * number of FIDs after running combinekh. For use with 1H 2DJ or PSYCHE NOAH
+ * modules.
+ *
+ * v: 2.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 7 November 2020 */
 
 /* calculate sensitivity factor k */
 float cnst37;

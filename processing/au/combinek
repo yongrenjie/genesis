@@ -1,6 +1,12 @@
-/* combinek - adds up k rows of a ser file
- * Jonathan Yong, University of Oxford
- * 28 Oct 2020 */
+/* combinek
+ * --------
+ * Adds up series of k adjacent FIDs in a ser file. The value of k is read from
+ * the status parameter cnst39. For use with 15N NOAH modules.
+ *
+ * v: 2.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 7 November 2020 */
 
 /* read sensitivity factor k */
 float cnst39;
@@ -11,7 +17,7 @@ k = (int) (cnst39 + 0.5); /* round to nearest integer - directly casting always 
 /* Check for invalid values of k.
    We don't spawn a message box if k == 1, because the user may have purposely chosen that */
 if (k == 0)      STOPMSG("combinek has already been run on this dataset")
-else if (k == 1) STOP // STOPMSG("cnst15 is 1, so combinek will have no effect")
+else if (k == 1) STOP
 else if (k < 0)  STOPMSG("error: cnst15 cannot be negative")
 
 /* open the ser file to read */

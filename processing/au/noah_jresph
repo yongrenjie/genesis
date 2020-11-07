@@ -1,3 +1,12 @@
+/* noah_jresph
+ * -----------
+ * Process NOAH phase-sensitive 2DJ (i.e. PSYCHE 2DJ) module.
+ *
+ * v: 2.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 7 November 2020 */
+
 #define PI 3.141593
 
 if ((i_argc > 2) && (strlen(i_argv[2]) > 1)) {

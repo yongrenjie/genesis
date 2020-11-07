@@ -1,3 +1,12 @@
+/* proc_noah
+ * ---------
+ * General processing for NOAH modules.
+ *
+ * v: 2.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 7 November 2020 */
+
 int fntp, td1;
 XFB
 // Check for NUS.

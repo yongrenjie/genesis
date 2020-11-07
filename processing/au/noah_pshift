@@ -1,8 +1,16 @@
-/* noah_pshift : for processing NOAH PSYCHE modules
- * Only deals with 2D data. Lots of improvements to code. Thoroughly commented.
- * Takes drop points from CNST50 instead of CNST4.
- * Jonathan Yong, University of Oxford
- * 31 Oct 2020 */
+/* noah_pshift
+ * -----------
+ * Perform pure shift processing on NOAH PSYCHE module, i.e. extract the 1D FID
+ * from the 2D interferogram. This is a heavily simplified/rewritten version of
+ * the `pshift` AU programme in TopSpin. The major difference is that the drop
+ * points are read from cnst50 instead of cnst4 as usual (in NOAH supersequences,
+ * cnst4 is reserved for 1J(NH) in 15N modules).
+ *
+ * v: 2.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * modified from `pshift` AU programme by Ralph Adams, University of Manchester
+ * 7 November 2020 */
 
 // Maximum size of TD that we can handle.
 #define MAX_TD 131072
@@ -33,7 +41,7 @@ int grpdly_points = 2 * ((int) (grpdly + 1));  // *2 because real + imaginary. I
 /* TODO: does this work on new TopSpin 4 double-format data? */
 int pmod;
 FETCHPAR("PARMODE", &pmod)
-if (pmod != 1) STOPMSG("min_pshift: only works on 2D data")
+if (pmod != 1) STOPMSG("noah_pshift: only works on 2D data")
 
 // Read in key parameters
 int td1, td2;
@@ -69,8 +77,8 @@ int points_per_chunk = 2 * ROUND(sw2/sw1);
 
 int ser_array[MAX_TD];
 FILE *fp_ser, *fp_fid;
-if ((fp_ser = fopen(infile, "r")) == NULL) STOPMSG("min_pshift: failed to open ser file for reading")
-if ((fp_fid = fopen(outfile, "w")) == NULL) STOPMSG("min_pshift: failed to open fid file for writing")
+if ((fp_ser = fopen(infile, "r")) == NULL) STOPMSG("noah_pshift: failed to open ser file for reading")
+if ((fp_fid = fopen(outfile, "w")) == NULL) STOPMSG("noah_pshift: failed to open fid file for writing")
 
 // Data size. // TODO: change this to be compatible with new double-style data
 unsigned int dsize = 4;
@@ -79,13 +87,13 @@ unsigned int dsize = 4;
 int j, k, *p;
 for (j = 0; j < td1; j++) {  // loop over chunks
     // Read in TD2 points. This includes the group delay plus drop points.
-    if (fread(ser_array, dsize, td2, fp_ser) != td2) STOPMSG("min_pshift: error reading data from ser file")
+    if (fread(ser_array, dsize, td2, fp_ser) != td2) STOPMSG("noah_pshift: error reading data from ser file")
     // Reset the pointer to the start of ser_array.
     p = ser_array;
 
     // For the first chunk we want to copy over the group delay.
     if (j == 0) {
-        if (fwrite(p, dsize, grpdly_points, fp_fid) != grpdly_points) STOPMSG("min_pshift: error writing to fid file")
+        if (fwrite(p, dsize, grpdly_points, fp_fid) != grpdly_points) STOPMSG("noah_pshift: error writing to fid file")
     }
     // Advance the pointer beyond the group delay. If j > 0 then this simply
     // skips over the group delay without copying it.
@@ -93,7 +101,7 @@ for (j = 0; j < td1; j++) {  // loop over chunks
     // Skip over the drop points.
     p += drop_points;
     // Write points_per_chunk points to the FID file.
-    if (fwrite(p, dsize, points_per_chunk, fp_fid) != points_per_chunk) STOPMSG("min_pshift: error writing to fid file")
+    if (fwrite(p, dsize, points_per_chunk, fp_fid) != points_per_chunk) STOPMSG("noah_pshift: error writing to fid file")
 }
 // Close both file pointers.
 fclose(fp_ser);
