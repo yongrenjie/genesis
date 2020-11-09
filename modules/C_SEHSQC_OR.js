@@ -3,7 +3,7 @@
 const C_SEHSQC_OR = {};
 export default C_SEHSQC_OR;
 
-C_SEHSQC_OR.shortCode = `Spor`;  // TODO change this back
+C_SEHSQC_OR.shortCode = `Sp`;
 
 C_SEHSQC_OR.nuclei = `CH`;
 

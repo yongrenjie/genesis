@@ -4,7 +4,7 @@ const N_HSQC = {};
 export default N_HSQC;
 
 N_HSQC.shortDescription = "; 15N HSQC";
-N_HSQC.shortCode = `S`;
+N_HSQC.shortCode = `Sn`;
 N_HSQC.nuclei = `NH`;
 N_HSQC.auprog = `noah_nhsqc`;
 

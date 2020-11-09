@@ -4,7 +4,7 @@ const N_SEHSQC = {};
 export default N_SEHSQC;
 
 N_SEHSQC.shortDescription = "; 15N sensitivity-enhanced HSQC";
-N_SEHSQC.shortCode = `Spv2`;  // TODO change this back
+N_SEHSQC.shortCode = `Spn`;
 N_SEHSQC.nuclei = `NH`;
 N_SEHSQC.auprog = `noah_nhsqc`;
 

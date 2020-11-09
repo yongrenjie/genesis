@@ -3,7 +3,7 @@
 const C_SEHSQC = {};
 export default C_SEHSQC;
 
-C_SEHSQC.shortCode = `Spv2`;  // TODO change this back
+C_SEHSQC.shortCode = `Sp`;
 
 C_SEHSQC.nuclei = `CH`;
 
