@@ -1,3 +1,6 @@
+// Get the version number.
+import version__ from "./version.js";
+
 // Name attributes of the radio button groups.
 let inputNames = ["hmbc", "n15", "hsqct", "c13", "h1"];
 
@@ -894,8 +897,8 @@ function makePulprogText(frontendModules) {
     pp.push(``);
     pp.push(...paramDefns);
     pp.push(``);
-    pp.push(`; ngn: constructed from ${backendModules.join(", ")}`);
     pp.push(auProgsStr);
+    pp.push(`; ngn-${version__}: constructed from ${backendModules.join(", ")}`);
     pp.push(`; pulse programme generated on ${(new Date()).toString()}`);
     return pp.join("\n");
 }
@@ -1024,9 +1027,10 @@ setModuleListLengths();
 
 //////////////////////////////////////////////////////////////////////////////
 // Everything is done loading, now we can correctly style and display the page
-
+//
 function displayPage() {
     document.getElementById("spinner-container").style.display = "none";
     document.getElementById("main-wrapper").style.display = "block";
+    document.getElementById("version").innerHTML = version__;
 }
 Promise.all(promises).then(displayPage);

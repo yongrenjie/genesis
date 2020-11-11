@@ -7,7 +7,7 @@ HSQCT_INEPT.nuclei = `CH`;
 
 HSQCT_INEPT.shortCode = `St`;
 
-HSQCT_INEPT.shortDescription = `; 13C HSQC-TOCSY with Ernst angle excitation
+HSQCT_INEPT.shortDescription = `; 13C HSQC-TOCSY with Ernst angle excitation`
 
 HSQCT_INEPT.auprog = `noah_hsqc`;
 

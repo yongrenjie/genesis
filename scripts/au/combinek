@@ -3,7 +3,7 @@
  * Adds up series of k adjacent FIDs in a ser file. The value of k is read from
  * the status parameter cnst39. For use with 15N NOAH modules.
  *
- * v: 2.0
+ * v: 2.0.0
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
  * 7 November 2020 */
