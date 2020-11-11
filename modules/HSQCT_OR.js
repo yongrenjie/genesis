@@ -32,7 +32,7 @@ define delay DHSQCT_OR8
 "DHSQCT_OR2    = d2-cnst17*p24/2-p16-d16-p2-d0*2"   ; multiplicity editing
 "DHSQCT_OR3    = d2-cnst17*p24/2-4u"                ; multiplicity editing
 "DHSQCT_OR4    = p16+d16+p2+d0*2-4u"                ; 13C post-t1, no editing
-"DHSQCT_OR5    = d26-cnst17*p24/2"                  ; SE spin echo
+"DHSQCT_OR5    = d6-cnst17*p24/2"                   ; SE spin echo
 "DHSQCT_OR6    = d2-larger(p2,p14)/2-p1*2/PI"       ; multiplicity editing
 "DHSQCT_OR7    = d2-larger(p2,p14)/2-p16-d16-de-4u" ; multiplicity editing
 "DHSQCT_OR8    = p16+d16-p1*0.78+de+8u"             ; final spin echo, no editing
@@ -85,45 +85,45 @@ HSQCT_OR.module = `
   DHSQCT_OR1 pl10:f1
 
 						;begin DIPSI2
-5 p6*3.556 ph5
+5 p6*3.556 ph3
   p6*4.556 ph1
-  p6*3.222 ph5
+  p6*3.222 ph3
   p6*3.167 ph1
-  p6*0.333 ph5
+  p6*0.333 ph3
   p6*2.722 ph1
-  p6*4.167 ph5
+  p6*4.167 ph3
   p6*2.944 ph1
-  p6*4.111 ph5
+  p6*4.111 ph3
   
   p6*3.556 ph1
-  p6*4.556 ph5
+  p6*4.556 ph3
   p6*3.222 ph1
-  p6*3.167 ph5
+  p6*3.167 ph3
   p6*0.333 ph1
-  p6*2.722 ph5
+  p6*2.722 ph3
   p6*4.167 ph1
-  p6*2.944 ph5
+  p6*2.944 ph3
   p6*4.111 ph1
 
   p6*3.556 ph1
-  p6*4.556 ph5
+  p6*4.556 ph3
   p6*3.222 ph1
-  p6*3.167 ph5
+  p6*3.167 ph3
   p6*0.333 ph1
-  p6*2.722 ph5
+  p6*2.722 ph3
   p6*4.167 ph1
-  p6*2.944 ph5
+  p6*2.944 ph3
   p6*4.111 ph1
 
-  p6*3.556 ph5
+  p6*3.556 ph3
   p6*4.556 ph1
-  p6*3.222 ph5
+  p6*3.222 ph3
   p6*3.167 ph1
-  p6*0.333 ph5
+  p6*0.333 ph3
   p6*2.722 ph1
-  p6*4.167 ph5
+  p6*4.167 ph3
   p6*2.944 ph1
-  p6*4.111 ph5
+  p6*4.111 ph3
   lo to 5 times l14
 						;end DIPSI2
 
