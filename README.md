@@ -10,7 +10,10 @@ View at https://yongrenjie.github.io/gennoah.
 **Running the website offline**
 
 Because the website uses ES6 modules, which cannot be served locally, simply opening `index.html` in a browser of choice will not work.
-You need to start a HTTP server from the top-level directory, for example using Python:
+(See [this question on Stack Overflow](https://stackoverflow.com/questions/46992463).) for more info.)
+Instead, you need to start a HTTP server from the top-level directory.
+The MDN web docs have [some useful instructions](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/set_up_a_local_testing_server).
+The easiest way is probably using Python 3:
 
 ```
 git clone https://github.com/yongrenjie/gennoah   # or download a release
