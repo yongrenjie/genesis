@@ -287,10 +287,10 @@
             </ul>
 
             <dl>
-                <dt id="faq_download">Just give me all the scripts, please</dt>
+                <dt id="faq_download">Download all NOAH scripts</dt>
                 <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
                 <dd>
-                    <p><a href="scripts/downloads/noah_all_2.0.zip">Click here to download the AU and Python scripts.</a> We assume you know what you're doing here. (If not, the other entries in this FAQ have more information.)</p>
+                    <p><a href="downloads/noah_scripts_v2.0.0.zip">Click here to download the AU and Python scripts (.zip).</a> We assume you know what you're doing here. (If not, the other entries in this FAQ have more information.)</p>
                 </dd>
 
                 <dt id="faq_run">Acquiring a NOAH experiment: an overview</dt>
@@ -312,6 +312,18 @@
                         <li><b>cnst39</b>: for <sup>15</sup>N experiments one often does not need great resolution in the indirect dimension. By setting this to a value larger than 1, TD1 for the <sup>15</sup>N experiment will be reduced by a factor of cnst39; in return NS will be increased by a factor of cnst39.</li>
                         <li><b>cnst40</b>: for <sup>15</sup>N experiments this is the nitrogen SW in ppm. (The nitrogen transmitter offset is O3P.)</li>
                     </ul>
+                </dd>
+
+                <dt id="faq_zgoptns">What are acquisition flags, and how do I use them?</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
+                <dd>
+                    <p>Acquisition flags are ways of conditionally running parts of a pulse programme (technically, compiling, not running). They are useful when we don't want to create two versions of what's essentially the same module with just small changes. In this case, you can enable acquisition flags to turn on/off optional features. The available acquisition flags are listed near the top of the pulse programme. To turn on an acquisition flag, such as <span class="ms">-DEDIT</span>, simply include it in the TopSpin acquisition parameter <b>zgoptns</b> (accessible via <span class="ms">ased</span>).</p>
+                    <p>There are two acquisition flags available currently:</p>
+                    <ul>
+                        <li><b>-DEDIT</b>: enables multiplicity editing in HSQC spectra.</li>
+                        <li><b>-DTEDIT</b>: enables multiplicity editing in HSQC-TOCSY spectra.</li>
+                    </ul>
+                    <p>There is also the -DNUS flag, which (partially) turns on non-uniform sampling, but you probably don't want to set that manually unless you're absolutely certain what you're doing. Instead, please use the <span class="ms">noah_nus.py</span> script. See: <a href="#faq_nus">Can non-uniform sampling be used with NOAH sequences?</a> for more information.</p>
                 </dd>
 
                 <dt id="faq_rga">Does rga work as expected?</dt>
@@ -343,7 +355,7 @@
                     <p>If you acquired this data under automation, it should have already been set up such that your data is automatically processed. If your NOAH dataset was acquired with experiment number (expno) <i>m</i>, then check whether you already have datasets in expnos (1000 × <i>m</i>) + 1 onwards. If those exist, then chances are these <i>are</i> the individual processed 2D spectra. If not, then read on...</p>
 
                     <ol class="steps">
-                        <li>If you haven't already done so, <a href="scripts/downloads/noah_au_2.0.zip" download>download the newest versions of the processing AU programmes</a>. These should be placed inside the folder <b>&lt;TS&gt;/exp/stan/nmr/au/src/user</b>, where &lt;TS&gt; is your TopSpin installation location (<span class="ms">C:\Bruker\TopSpinX.Y.Z</span> for Windows, and <span class="ms">/opt/topspinx.y.z</span> for macOS/Linux).</li>
+                        <li>If you haven't already done so, <a href="downloads/noah_scripts_v2.0.0.zip" download>download the newest versions of the NOAH scripts</a>. Unzip that and copy everything inside the <b>au</b> subdirectory to <b>&lt;TS&gt;/exp/stan/nmr/au/src/user</b>, where &lt;TS&gt; is your TopSpin installation location (<span class="ms">C:\Bruker\TopSpinX.Y.Z</span> for Windows, and <span class="ms">/opt/topspinx.y.z</span> for macOS/Linux).</li>
 
                         <li>Process the data by entering <span class="ms">splitx_au</span> into the TopSpin command line. This will create new datasets with expnos beginning from (1000 × <i>m</i>) + 1, where <i>m</i> is the expno of the original NOAH data.</li>
                     </ol>
@@ -388,7 +400,6 @@
                 </dd>
 
                 <dt id="faq_cite">What papers should I cite / where can I find out more about NOAH experiments?</dt>
-
                 <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
                 <dd>
                     <p>Thanks for asking. There are a few:</p>
