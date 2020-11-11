@@ -27,13 +27,17 @@ define delay DHSQCT_HSQCT4
 define delay DHSQCT_HSQCT5
 define delay DHSQCT_HSQCT6
 define delay DHSQCT_HSQCT7
+define delay DHSQCT_HSQCT8
+define delay DHSQCT_HSQCT9
 "DHSQCT_HSQCT1   = d4-p14/2"
 "DHSQCT_HSQCT2   = d4+p14/2"
 "DHSQCT_HSQCT3   = p16+d16+p2/2+d0-p3*2/PI+4u"
 "DHSQCT_HSQCT4   = d2+p3+p2/2"
 "DHSQCT_HSQCT5   = DHSQCT_HSQCT3+p3-p2/2"
 "DHSQCT_HSQCT6   = d4+p14/2-p16-d16"
-"DHSQCT_HSQCT7   = de+4u"
+"DHSQCT_HSQCT7   = d2-p14/2-p16-d16-4u"
+"DHSQCT_HSQCT8   = d2+p14/2-p16-d16-de"
+"DHSQCT_HSQCT9   = de+4u"
 "cnst41  = 2*sfo2/sfo1"                ; gradient ratio
 define list<gradient> GHSQCT_HSQCT={cnst41}
 `
@@ -137,12 +141,21 @@ HSQCT_HSQCT.module = `
   p16:gp13*-1
   d16 pl1:f1
 
+#ifdef TEDIT
   DHSQCT_HSQCT7
+  (p14:sp3 ph0):f2 
+  (p2 ph1):f1 
+  p16:gp3*GHSQCT_HSQCT
+  d16 pl12:f2 
+  DHSQCT_HSQCT8
+#else
+  DHSQCT_HSQCT9
   (p2 ph1):f1
   4u
   p16:gp3*GHSQCT_HSQCT
   d16 pl12:f2
   4u
+#endif /* TEDIT */
   goscnp ph30 cpd2:f2   ; acquire 13C HSQC-TOCSY
   50u do:f2
 `
