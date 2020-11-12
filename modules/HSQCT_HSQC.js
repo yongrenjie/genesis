@@ -58,13 +58,13 @@ HSQCT_HSQC.module = `
   (p14:sp3 ph0):f2
 #endif /*TEDIT*/
   4u
-  p16:gp3*EA
+  p16:gp3
   d16
   d0
   (p2 ph11):f1
   d0
   4u
-  p16:gp3*EA
+  p16:gp3
   d16
 
   ; multiplicity editing
@@ -86,7 +86,7 @@ HSQCT_HSQC.module = `
   (p14:sp3 ph0):f2
   (p2 ph1):f1
   4u
-  p16:gp3*GHSQCT_HSQC
+  p16:gp3*GHSQCT_HSQC*EA
   d16 pl2:f2
   DHSQCT_HSQC7
   (p3 ph0):f2

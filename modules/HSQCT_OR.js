@@ -58,14 +58,14 @@ HSQCT_OR.module = `
 
   ; multiplicity editing
 #ifdef TEDIT
-  p16:gp3*EA
+  p16:gp3
   d16 
   DHSQCT_OR2
   (center (p2 ph0):f1 (p24:sp7 ph7):f2 )
   4u
   DHSQCT_OR3 pl2:f2
 #else
-  p16:gp3*EA
+  p16:gp3
   d16
   (p24:sp7 ph7):f2
   4u
@@ -134,14 +134,14 @@ HSQCT_OR.module = `
   DHSQCT_OR6
   (center (p2 ph0):f1 (p14:sp3 ph13):f2 )
   4u
-  p16:gp3*GHSQCT_OR
+  p16:gp3*GHSQCT_OR*EA
   d16 pl12:f2
   DHSQCT_OR7
 #else
   DHSQCT_OR8
   (p2 ph0):f1
   4u
-  p16:gp3*GHSQCT_OR
+  p16:gp3*GHSQCT_OR*EA
   d16 pl12:f2
   4u
 #endif /* TEDIT */
