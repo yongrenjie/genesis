@@ -369,13 +369,13 @@ function getChosenBackendModules(frontendModules) {
 // Construct pulse programme {{{1
 function makePulprogText(frontendModules) {
     // Initialisation {{{2
-    //
+
     // Make sure the user has selected at least two "types" of modules. If not,
     // return an empty string straight away.
-    const validModules = frontendModules.filter(elem => !elem.includes("none"));
-    if (validModules.length < 2) {
-        return "";
-    }
+    // const validModules = frontendModules.filter(elem => !elem.includes("none"));
+    // if (validModules.length < 2) {
+    //     return "";
+    // }
     // Get the array of corresponding backend modules.
     const backendModules = getChosenBackendModules(frontendModules);
     // Set some flags that will help us later
@@ -728,6 +728,8 @@ function makePulprogText(frontendModules) {
     // counting the number of FID periods (i.e. the NBL parameter).
     const fidRegexes = [/goscnp ph\d{1,2}/, /go=\d ph\d{1,2}/];
     const nbl = mainpp.filter(line => fidRegexes.some(rgx => line.search(rgx) != -1)).length;
+    // Return an empty string if we have less than one module.
+    if (nbl < 2) return "";
     const ppShortCodeName = `; ngn_noah${nbl}-${shortCodes.join("")}`;
 
     // Start by removing extra whitespace and empty lines.
@@ -860,7 +862,7 @@ function makePulprogText(frontendModules) {
     pp.push(...gpnamDefns);
     pp.push(...gpzDefns);
     pp.push(``);
-    pp.push(`;WaveMaker shaped pulses (use 'wvm -a' to generate)`)
+    if (wvmDefns.length > 0) pp.push(`;WaveMaker shaped pulses (use 'wvm -a' to generate)`)
     pp.push(...wvmDefns);
     pp.push(``);
     pp.push(...paramDefns);
