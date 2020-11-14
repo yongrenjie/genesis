@@ -29,3 +29,4 @@ XCMD("2 NLEV 20")
 XCMD("sendgui levcalc")
 XCMD("2 SPECTYP NOESY")
 QUIT
+// vim: ft=c

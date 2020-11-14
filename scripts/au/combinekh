@@ -153,3 +153,4 @@ STOREPAR("NS", ns*k)
 STOREPARS("CNST 37", 0.0)
 
 QUIT
+// vim: ft=c

@@ -30,3 +30,4 @@ XCMD("sendgui levcalc")
 XCMD("tilt")
 XCMD("2 SPECTYP JRES")
 QUIT
+// vim: ft=c

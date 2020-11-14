@@ -264,3 +264,4 @@ free(auto_auprogs);
 
 Show_status("splitx done.");
 QUIT
+// vim: ft=c

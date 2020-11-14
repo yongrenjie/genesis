@@ -36,3 +36,4 @@ STOREPAR1S("SW", sw_h/sfo1)
 STOREPAR1("SW", sw_h/sfo1)
 
 QUIT
+// vim: ft=c

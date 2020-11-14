@@ -28,3 +28,4 @@ XCMD("2 LEV0 5")
 XCMD("sendgui levcalc")
 XCMD("2 SPECTYP HMBC")
 QUIT
+// vim: ft=c

@@ -34,3 +34,4 @@ FETCHPARS("O3", &o)
 STOREPAR1S("O1", o)
 
 QUIT
+// vim: ft=c

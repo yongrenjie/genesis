@@ -14,3 +14,4 @@ XCMD("1s FnMODE QF")
 XCMD("combinekh")
 XCMD("noah_pshift")
 QUIT
+// vim: ft=c

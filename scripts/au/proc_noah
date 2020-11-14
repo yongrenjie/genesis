@@ -17,3 +17,4 @@ if (fntp == 2) {
     STOREPAR1("TD", td1)
 }
 QUIT
+// vim: ft=c
