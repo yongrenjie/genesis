@@ -1,3 +1,5 @@
+// Initialisation {{{1
+
 // Get the version number.
 import version__ from "./version.js";
 
@@ -8,10 +10,8 @@ let inputNames = ["hmbc", "n15", "hsqct", "c13", "h1"];
 // (imported from the individual module files).
 const allModules = new Map();
 
-
-//////////////////////////////////////////////////////////////////////////////
-// Pulse programme goto labels. We have to manually keep track of these as I'm too lazy
-// to write code to do it.
+// Standardised parameter definitions {{{1
+// Goto labels {{{2
 // 1 - beginning of pulse sequence ('ze')
 // 2 - NS loop (go=2)
 // 3 - EA loop (lo to 3 times 2)
@@ -21,10 +21,7 @@ const allModules = new Map();
 // 7 - ROESY spin lock
 // 8 - TOCSY DIPSI-2
 
-
-//////////////////////////////////////////////////////////////////////////////
-// Definitions for all pulse programme parameters.
-
+// String definitions {{{2
 const allParams = {
     "aq": "acquisition time",
     "ds": ">= 16",
@@ -157,9 +154,7 @@ const allParams = {
     "pcpd3": "f3 channel - 90 degree pulse for decoupling sequence",
 }
 
-
-//////////////////////////////////////////////////////////////////////////////
-// Define phases. This is a bit boring, but we only have to do it once...
+// Phases {{{2
 class Phase {
     constructor({num, str, ea = null, nt1 = null, ct1 = null, ht1 = null}) {
         this.num = num;  // phXX
@@ -210,8 +205,7 @@ allPhases[30] = new Phase({num: 30, str: "0 2 2 0", ct1: "i2"});
 allPhases[31] = new Phase({num: 31, str: "0 2", ct1: "i2"});
 
 
-//////////////////////////////////////////////////////////////////////////////
-// Define gradients.
+// Gradients {{{2
 class Gradient {
     constructor({num, val, comment = "", shape="SMSQ10.100"}) {
         this.num = num;   // gpzXX
@@ -253,8 +247,7 @@ allGradients[17] = new Gradient({num: 17, val: 49, comment: "1H PSYCHE CTP gradi
 allGradients[18] = new Gradient({num: 18, val: 77, comment: "1H PSYCHE CTP gradient 3"});
 
 
-//////////////////////////////////////////////////////////////////////////////
-// Define WaveMaker shapes.
+// WaveMaker definitions {{{2
 const allWavemakers = new Array(64);
 allWavemakers[3] = ";sp3:wvm:wu180C13: cawurst-20(60 kHz, 0.5 ms; L2H)";
 allWavemakers[18] = ";sp18:wvm:wu180Jcomp: cawurst-40(280 ppm; Jcomp, L2H)";
@@ -262,10 +255,7 @@ allWavemakers[45] = ";sp45:wvm:wuASAP: cawurst-2(30 ppm, 1.0 ms; Q=3)";
 allWavemakers[49] = ";sp49:wvm:wu180H1SL: wurstAM(p50, 9.5 ppm; B1max = 5.0 kHz)";
 allWavemakers[50] = ";sp50:wvm:wu180H1SL2: wurstAM(p50, -0.5 ppm; B1max = 5.0 kHz)";
 
-
-//////////////////////////////////////////////////////////////////////////////
-// Programmatically import all the backend modules.
-
+// Programmatically import backend modules {{{1
 function loadAllBackendModules() {
     // first, get a list of all backend modules available for selection
     const ids = [...document.querySelectorAll("li>input")].map(e => e.id);
@@ -290,15 +280,12 @@ function loadAllBackendModules() {
 const promises = loadAllBackendModules();
 
 
-//////////////////////////////////////////////////////////////////////////////
-// Add code to detect chosen modules and convert to backend versions if necessary.
-
+// Get selected modules from HTML and convert to backend modules {{{1
 function getChosenFrontendModules() {
     /* Get an array of strings (the radio button IDs) corresponding to the modules
      * selected by the user (the 'frontend modules'). */
     return inputNames.map(inputName => document.querySelector(`input[name="${inputName}"]:checked`).id);
 }
-
 
 function getChosenBackendModules(frontendModules) {
     /* Based on the user inputs, selects the appropriate backend modules for constructing
@@ -379,11 +366,10 @@ function getChosenBackendModules(frontendModules) {
 }
 
 
-//////////////////////////////////////////////////////////////////////////////
-// Code to construct the pulse programme. This is the main part of the script
-
+// Construct pulse programme {{{1
 function makePulprogText(frontendModules) {
-    /* Generate pulse programme text. */
+    // Initialisation {{{2
+    //
     // Make sure the user has selected at least two "types" of modules. If not,
     // return an empty string straight away.
     const validModules = frontendModules.filter(elem => !elem.includes("none"));
@@ -392,8 +378,7 @@ function makePulprogText(frontendModules) {
     }
     // Get the array of corresponding backend modules.
     const backendModules = getChosenBackendModules(frontendModules);
-    // console.log(backendModules);
-    // Figure out which type of modules are present
+    // Set some flags that will help us later
     const hmbcModulePresent = (backendModules.findIndex(elem => elem.startsWith("C_HMBC_")) !== -1);
     const nModulePresent = (backendModules.findIndex(elem => elem.startsWith("N_")) !== -1);
     const c1ModulePresent = (backendModules.findIndex(elem => elem.startsWith("HSQCT_")) !== -1);
@@ -412,8 +397,7 @@ function makePulprogText(frontendModules) {
     let nt1incs = []; // incrementation of 15N t1 and associated phases
     let ct1incs = []; // 13C t1
 
-    // Helper functions
-    /* -------------------------------------------------------------- */
+    // Helper functions {{{2
     // Trim newlines from beginning and end. trim() removes all whitespace, which we don't want here.
     let trimNewlines = (s => s.replace(/^\n|\n$/g, ''));
     // Split a parameter name into word and number.
@@ -467,8 +451,7 @@ function makePulprogText(frontendModules) {
         return (scmp != 0) ? scmp : na - nb;
     }
 
-    // Preprocess mainpp
-    /* -------------------------------------------------------------- */
+    // Preprocess mainpp {{{2
     // Figure out which nucleus to stop decoupling on, if any.
     let stopDec = "";
     const lastModule = allModules.get(backendModules[backendModules.length - 1]);
@@ -502,8 +485,7 @@ function makePulprogText(frontendModules) {
         `  4u UNBLKGRAD`,
     );
 
-    // Main pulse programme construction
-    /* -------------------------------------------------------------- */
+    // Main pulse programme construction {{{2
     // Generator which spits out numbers to multiply purge gradients by.
     function* gradGenFunc() {
         yield* [1.77, 2.32, -1.29, 0.71];
@@ -588,14 +570,14 @@ function makePulprogText(frontendModules) {
         else console.log(`makePulprogText: module ${module} not found`);
     }
 
+    // Postprocess mainpp, including EA/t1 incrementation {{{2
+    // Initialisation {{{3
     // Use a regex to find all phases in the pulse programme text
     let phases = new Set(mainpp.join("\n").match(/ph\d{1,2}/g));
     phases = Array.from(phases)
         .map(phx => Number(phx.slice(2)))  // extract the number
         .sort((a, b) => a - b);
 
-    // Postprocess mainpp
-    /* -------------------------------------------------------------- */
     // Change the last goscnp to go=2
     for (let l = mainpp.length - 1; l >= 0; l--) {
         if (mainpp[l].includes("goscnp")) {
@@ -622,7 +604,7 @@ function makePulprogText(frontendModules) {
         nusRedefinitions.push(`#endif`);
         mainpp.splice(4, 0, ...nusRedefinitions);
     }
-    // Add in EA incrementation
+    // EA incrementation {{{3
     mainpp.push(
         ``,
         `  ; echo/antiecho loop`,
@@ -651,7 +633,7 @@ function makePulprogText(frontendModules) {
         `  lo to 3 times 2`,
     );
 
-    // t1 incrementations.
+    // 13C t1 incrementation {{{3
     // General stuff: increment l1 and NUS list, if it's being used.
     mainpp.push(
         ``,
@@ -662,7 +644,7 @@ function makePulprogText(frontendModules) {
         `#endif`,
     );
 
-    // 13C t1 incrementation.
+    // Actual 13C t1 incrementation.
     const ct1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("ct1")).filter(Boolean);
     ct1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
     if (d0Present) {
@@ -676,7 +658,7 @@ function makePulprogText(frontendModules) {
         );
     }
 
-    // 1H t1 incrementation.
+    // 1H t1 incrementation {{{3
     const ht1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("ht1")).filter(Boolean);
     ht1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
     if (d10Present) {
@@ -705,8 +687,8 @@ function makePulprogText(frontendModules) {
         }
         mainpp.push(`#endif /* NUS */`);
     }
-    
-    // 15N t1 incrementation
+
+    // 15N t1 incrementation {{{3
     const nt1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("nt1")).filter(Boolean);
     if (nModulePresent) {
         // if there is NUS defined then we want to disable cnst39, i.e. duplicate all of the increment
@@ -734,24 +716,20 @@ function makePulprogText(frontendModules) {
         );
     }
 
-    // Loop over t1 increments.
+    // Final loop and exit {{{3
     mainpp.push(``);
     mainpp.push(`  lo to 4 times l0`);
     // BLKGRAD and exit.
     mainpp.push(``, `50u BLKGRAD`, `exit`);
     const mainppText = mainpp.join("\n");  // convenience string for future use
-    // The bulk of the pulse programme is done now.
-    /* -------------------------------------------------------------- */
 
+    // Postprocess preambles {{{2
     // Generate a pulse programme name by postprocessing shortCodes, as well as
     // counting the number of FID periods (i.e. the NBL parameter).
-    /* -------------------------------------------------------------- */
     const fidRegexes = [/goscnp ph\d{1,2}/, /go=\d ph\d{1,2}/];
     const nbl = mainpp.filter(line => fidRegexes.some(rgx => line.search(rgx) != -1)).length;
     const ppShortCodeName = `; ngn_noah${nbl}-${shortCodes.join("")}`;
 
-    // Postprocess preambles.
-    /* -------------------------------------------------------------- */
     // Start by removing extra whitespace and empty lines.
     preambles = preambles.map(l => l.trim()).filter(Boolean);
     // There are three types of lines that we need to deal with:
@@ -785,12 +763,11 @@ function makePulprogText(frontendModules) {
     // Now we can stick the preambles back together in the right order.
     preambles = defineDelayLines.concat(lowerParamLines, upperParamLines, defineGradLines);
 
-    // Create phase definitions. This is a one-liner since we did all the hard work earlier
-    /* -------------------------------------------------------------- */
+    // Create postamble components {{{2
+    // Phase definitions {{{3
     const phaseDefns = phases.map(p => `ph${p}=${allPhases[p].str}`);
 
-    // Find all the gradients in the text and generate gpnam/gpz definitions.
-    /* -------------------------------------------------------------- */
+    // Gradient definitions {{{3
     let gradients = new Set([
         mainppText.match(/gp\d{1,2}/g),
         mainppText.match(/gron\d{1,2}/g)]
@@ -801,8 +778,7 @@ function makePulprogText(frontendModules) {
     const gpnamDefns = gradients.map(g => allGradients[g].makeGpnamInstruction()).filter(Boolean);
     const gpzDefns = gradients.map(g => allGradients[g].makeGpzInstruction());
 
-    // Add WaveMaker definitions.
-    /* -------------------------------------------------------------- */
+    // WaveMaker definitions {{{3
     let shapedPulses = new Set(mainppText.match(/p\d{1,2}:sp\d{1,2}/g));
     shapedPulses = Array.from(shapedPulses)
         .map(s => Number(s.split(":")[1].slice(2)))  // extract the number
@@ -813,8 +789,7 @@ function makePulprogText(frontendModules) {
         wvmDefns.push(";cpd2:wvm:wudec: cawurst_d-20(220 ppm, 1.4 ms; L2H)");
     }
 
-    // Construct parameter definitions.
-    /* -------------------------------------------------------------- */
+    // Parameter definitions {{{3
     // We need to scan the preamble and mainppText with several regexes.
     const preamblePlusMainpp = preambles.join("\n") + "\n" + mainppText;
     let params = new Set([
@@ -837,22 +812,15 @@ function makePulprogText(frontendModules) {
     // Then map them to their definitions.
     const paramDefns = params.map(p => `;${p}: ${allParams[p]}`);
 
-    // Construct AU programme list.
-    /* -------------------------------------------------------------- */
+    // AU programme list {{{3
     const auProgs = backendModules.map(m => allModules.get(m).auprog);
     const auProgsStr = `; auprog: ${auProgs.join(":")}`;
 
-    // Finally, string it all together to make the pulse programme
-    /* -------------------------------------------------------------- */
+    // Finally, string everything together {{{2
     pp.push(ppShortCodeName);
     pp.push(``);  // this adds a blank line
     pp.push(...shortDescriptions);
     pp.push(
-        ``,
-        `;use -DNUS for non-uniform sampling`,
-        `; . specify NUS sampling percentage as NusAMOUNT or NusPOINTS`,
-        `; . generate 'noah' VCLIST and set it`,
-        `; . leave FnTYPE as 'traditional (planes)' - do not change to 'non-uniform_sampling'!`,
         ``,
         `;$CLASS=HighRes`,
         `;$DIM=2D`,
@@ -903,6 +871,7 @@ function makePulprogText(frontendModules) {
     return pp.join("\n");
 }
 
+// Add website behaviour (e.g. textarea, devmode, reset, FAQ) {{{1
 
 function updatePulprogText() {
     /* Function which updates the pulse programme text.
@@ -915,10 +884,6 @@ function updatePulprogText() {
     catch (error) { console.error(error); ppText = ""; }
     document.getElementById("pulprog_text").value = ppText;
 }
-
-
-//////////////////////////////////////////////////////////////////////////////
-// Add behaviour to toggle developer mode on/off.
 
 function toggleDevMode() {
     /* Enable or disable developer mode depending on the state of devmode_button. */
@@ -960,10 +925,6 @@ function toggleDevMode() {
 document.getElementById("devmode_button").addEventListener("click", toggleDevMode);
 // Call toggleDevMode() once upon page load so that the grid is styled correctly.
 toggleDevMode();
-
-
-//////////////////////////////////////////////////////////////////////////////
-// Add event listeners to the buttons on the page.
 
 // These are the module buttons, which need to call updatePulprogText().
 for (let inputName of inputNames) {
@@ -1011,6 +972,9 @@ function savePPFile() {
 document.getElementById("download_button").addEventListener("click", savePPFile);
 
 
+
+// Style and display the page {{{1
+
 // Function which sets grid-template-rows of each module selector box
 // to be equal to the number of visible items -- except for the 1H box
 // which is manually set to be 8 items long.
@@ -1023,14 +987,11 @@ function setModuleListLengths() {
 }
 setModuleListLengths();
 
-
-
-//////////////////////////////////////////////////////////////////////////////
-// Everything is done loading, now we can correctly style and display the page
-//
 function displayPage() {
     document.getElementById("spinner-container").style.display = "none";
     document.getElementById("main-wrapper").style.display = "block";
     document.getElementById("version").innerHTML = version__;
 }
 Promise.all(promises).then(displayPage);
+// }}}1
+// vim: foldmethod=marker
