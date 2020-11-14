@@ -7,7 +7,8 @@ H_JRES.nuclei = `H`;
 
 H_JRES.shortCode = `Jqf`;
 
-H_JRES.shortDescription = `; 1H magnitude-mode 2D J spectrum`;
+H_JRES.shortDescription = `; 1H magnitude-mode 2D J spectrum
+;     [set TD1 and SW(Hz) as cnst37 and cnst38 respectively]`;
 
 H_JRES.auprog = `noah_jres QF`;
 

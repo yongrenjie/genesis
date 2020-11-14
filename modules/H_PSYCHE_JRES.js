@@ -7,7 +7,8 @@ H_PSYCHE_JRES.nuclei = `H`;
 
 H_PSYCHE_JRES.shortCode = `J`;
 
-H_PSYCHE_JRES.shortDescription = `; 1H phase-sensitive PSYCHE 2D J spectrum`;
+H_PSYCHE_JRES.shortDescription = `; 1H phase-sensitive PSYCHE 2D J spectrum
+;     [set TD1 and SW(Hz) as cnst37 and cnst38 respectively]`;
 
 H_PSYCHE_JRES.auprog = `noah_jres`;
 

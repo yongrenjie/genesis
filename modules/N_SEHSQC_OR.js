@@ -3,7 +3,9 @@
 const N_SEHSQC_OR = {};
 export default N_SEHSQC_OR;
 
-N_SEHSQC_OR.shortDescription = "; 15N sensitivity-enhanced HSQC";
+N_SEHSQC_OR.shortDescription = `; 15N sensitivity-enhanced HSQC
+;     [set SW(ppm) as cnst40; optional k-scaling with cnst39]`;
+
 N_SEHSQC_OR.shortCode = `Spn`;
 N_SEHSQC_OR.nuclei = `NH`;
 N_SEHSQC_OR.auprog = `noah_nhsqc`;

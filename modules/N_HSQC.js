@@ -3,7 +3,9 @@
 const N_HSQC = {};
 export default N_HSQC;
 
-N_HSQC.shortDescription = "; 15N HSQC";
+N_HSQC.shortDescription = `; 15N HSQC
+;     [set SW(ppm) as cnst40; optional k-scaling with cnst39]`;
+
 N_HSQC.shortCode = `Sn`;
 N_HSQC.nuclei = `NH`;
 N_HSQC.auprog = `noah_nhsqc`;

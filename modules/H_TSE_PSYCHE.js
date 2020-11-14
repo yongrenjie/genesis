@@ -7,7 +7,8 @@ H_TSE_PSYCHE.nuclei = `H`;
 
 H_TSE_PSYCHE.shortCode = `Pt`;
 
-H_TSE_PSYCHE.shortDescription = `; 1H 1D TSE-PSYCHE pure shift spectrum`;
+H_TSE_PSYCHE.shortDescription = `; 1H 1D TSE-PSYCHE pure shift spectrum
+;     [set TD1 and SW(Hz) as cnst37 and cnst38 respectively]`;
 
 H_TSE_PSYCHE.auprog = `noah_psyche`;
 
