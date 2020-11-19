@@ -334,7 +334,6 @@ function getChosenBackendModules(frontendModules) {
         // Deal with N15 module
         else if (module.startsWith("n15")) {
             if (module === "n15_hmqc") backendModules.push("N_HMQC");
-            else if (module === "n15_hsqc") backendModules.push("N_HSQC");
             else if (module === "n15_sehsqc") {
                 if (cModulePresent || hModulePresent) backendModules.push("N_SEHSQC");
                 else backendModules.push("N_SEHSQC_OR");   // Original seHSQC
