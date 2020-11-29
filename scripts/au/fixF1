@@ -1,0 +1,21 @@
+double a1=0.0, sw1=0.0, sf1=0.0;
+char c1[8];
+    
+  FETCHPARS("SFO1", &sf1) 
+  STOREPAR1S("SFO1", sf1)
+  
+  FETCHPARS("NUC1", c1)
+  STOREPAR1S("NUC1", c1)
+  
+  FETCHPARS("BF1", &a1)  
+  STOREPAR1S("BF1", a1)
+
+  FETCHPARS("SW_h", &sw1)  
+  STOREPAR1S("SW_h", sw1)
+  STOREPAR1S("SW", sw1/sf1)
+  
+  FETCHPARS("O1", &a1)  
+  STOREPARS("O2", a1)
+  STOREPAR1S("O1", a1)
+
+QUIT
