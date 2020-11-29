@@ -55,11 +55,11 @@ C_HMBC_CNF.module = `
   DC_HMBC_CNF3
   p16:gp10*-3
   d16
-  (p3 ph5):f2
+  (p3 ph7):f2
   DC_HMBC_CNF4
   p16:gp10*2
   d16
-  (p3 ph5):f2
+  (p3 ph7):f2
   4u
   p16:gp10
   d16
