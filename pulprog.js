@@ -112,6 +112,7 @@ const allParams = {
     "cnst44": "gradient ratio (2*N/H)",
     "cnst45": "gradient ratio (4*N/H)",
     "cnst46": "gradient ratio (1*N/H)",
+    "cnst47": "HMBC gradient ratio",
     "cnst50": "PSYCHE drop points",
 
     "d0": "13C t1",
@@ -584,12 +585,14 @@ function makePulprogText(frontendModules) {
             break;
         }
     }
-    // Check for d0, d10, d11, and d20
+    // Check for d0, d10, d11, d20, EA1, EA2
     const mainppTemp = mainpp.join("\n");
     const d0Present = (mainppTemp.search(/\bd0\b/) != -1);
     const d10Present = (mainppTemp.search(/\bd10\b/) != -1);
     const d11Present = (mainppTemp.search(/\bd11\b/) != -1);
     const d20Present = (mainppTemp.search(/\bd20\b/) != -1);
+    const ea1Present = (mainppTemp.search(/\bEA1\b/) != -1);
+    const ea2Present = (mainppTemp.search(/\bEA2\b/) != -1);
     // For cnst38 it is a bit more tricky. We have not yet added the preambles so we can't simply
     // search in mainppTemp. We have to check the preamble of the module itself.
     const cnst38Present = lastModule.preamble.includes("cnst38");
@@ -610,6 +613,8 @@ function makePulprogText(frontendModules) {
         `  "l2 = l2 + 1"`,
         `  1m igrad EA`,
     );
+    if (ea1Present) mainpp.push(`  1m igrad EA1`);
+    if (ea2Present) mainpp.push(`  1m igrad EA2`);
     if (d11Present) {
         // This will break NUS, but noah_nus.py will already warn the user if there is a QF
         // module, so we don't need to warn them again here.
