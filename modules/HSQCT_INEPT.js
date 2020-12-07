@@ -64,7 +64,7 @@ HSQCT_INEPT.module = `
 
   ; reverse INEPT
   (p3 ph7):f2
-  (p1 ph2):f1    ; this phase (-x) differs from HSQC (+x) as HSQC-TOCSY has extra 180 at the end
+  (p1 ph2):f1
   DHSQCT_INEPT4
   (p14:sp3 ph0):f2
   (p2 ph1):f1

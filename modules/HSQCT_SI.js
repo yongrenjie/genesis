@@ -59,8 +59,6 @@ HSQCT_SI.module = `
   DHSQCT_SI2            ; 13C-1H: y,  12C-1H: z
 
   ; forward INEPT
-  ; with editing there's an extra 180 on 1H, so we need to start
-  ; with the opposite sign to make sure that bulk magnetisation is preserved
 #ifdef TEDIT
   (p1 ph1):f1
 #else
