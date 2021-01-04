@@ -367,17 +367,9 @@ function getChosenBackendModules(frontendModules) {
 
 
 // Construct pulse programme {{{1
-function makePulprogText(frontendModules) {
+function makePulprogText(backendModules) {
     // Initialisation {{{2
 
-    // Make sure the user has selected at least two "types" of modules. If not,
-    // return an empty string straight away.
-    // const validModules = frontendModules.filter(elem => !elem.includes("none"));
-    // if (validModules.length < 2) {
-    //     return "";
-    // }
-    // Get the array of corresponding backend modules.
-    const backendModules = getChosenBackendModules(frontendModules);
     // Set some flags that will help us later
     const hmbcModulePresent = (backendModules.findIndex(elem => elem.startsWith("C_HMBC_")) !== -1);
     const nModulePresent = (backendModules.findIndex(elem => elem.startsWith("N_")) !== -1);
@@ -882,11 +874,12 @@ function makePulprogText(frontendModules) {
 function updatePulprogText() {
     /* Function which updates the pulse programme text.
      * This is triggered whenever a module is selected. */
-    // First, get array of frontend modules
+    // First, get array of frontend and backend modules
     let frontendModules = getChosenFrontendModules();
+    const backendModules = getChosenBackendModules(frontendModules);
     // Change the pulprog text accordingly
     let ppText;
-    try { ppText = makePulprogText(frontendModules); }
+    try { ppText = makePulprogText(backendModules); }
     catch (error) { console.error(error); ppText = ""; }
     document.getElementById("pulprog_text").value = ppText;
 }
