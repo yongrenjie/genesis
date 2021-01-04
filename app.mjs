@@ -78,9 +78,18 @@ function onRequest(req, res) {
     });
 
     // Otherwise, determine the content type and return the file
-    if (pathname.endsWith(".html")) contentType = "text/html";
-    else if (pathname.endsWith(".mjs")) contentType = "text/javascript";
-    else if (pathname.endsWith(".css")) contentType = "text/css";
+    if (pathname.endsWith(".html"))
+        contentType = "text/html";
+    else if (pathname.endsWith(".js") || pathname.endsWith(".mjs"))
+        contentType = "text/javascript";
+    else if (pathname.endsWith(".css"))
+        contentType = "text/css";
+    else if (pathname.endsWith(".png"))
+        contentType = "image/png";
+    else if (pathname.endsWith(".ico"))
+        contentType = "image/x-icon";
+    else if (pathname.endsWith(".webmanifest"))
+        contentType = "application/manifest+json";
     res.writeHead(200, {"content-type": contentType});
     stream.pipe(res);
 }
