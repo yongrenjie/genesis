@@ -1,5 +1,4 @@
-/* faq.js
- * programmatically generate FAQ table of contents */
+// programmatically generate FAQ table of contents
 
 const toc = document.getElementById("faq_toc");
 const dts = document.querySelectorAll("dl>dt");

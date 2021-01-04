@@ -1,9 +1,9 @@
 // Initialisation {{{1
 
 // Get the version number.
-import version__ from "./version.js";
-
-import {makePulprogText} from "./pulprog.js";
+import version__ from "./version.mjs";
+import {moduleNames} from "./moduleNames.mjs";
+import {makePulprogText} from "./pulprog.mjs";
 
 // Name attributes of the radio button groups.
 let inputNames = ["hmbc", "n15", "hsqct", "c13", "h1"];
@@ -14,20 +14,10 @@ const allModules = new Map();
 
 // Programmatically import backend modules {{{1
 function loadAllBackendModules() {
-    // first, get a list of all backend modules available for selection
-    const ids = [...document.querySelectorAll("li>input")].map(e => e.id);
-    const not_h1_ids = ids
-        .filter(s => s[0] === s[0]
-        .toUpperCase());
-    const h1_ids = ids
-        .filter(s => s.startsWith("h1") && s != "h1_none")
-        .map(s => s.replace("h1", "h")
-        .toUpperCase());
-    let allBackendModules = not_h1_ids.concat(h1_ids);
     // then import all of them, adding them to the allModules map.
     let promises = [];
-    for (let module of allBackendModules) {
-        let p = import(`./modules/${module}.js`);
+    for (let module of moduleNames) {
+        let p = import(`./modules/${module}.mjs`);
         p.then(obj => allModules.set(module, obj.default))
             .catch(error => console.log(`${module} not found`));
         promises.push(p);
