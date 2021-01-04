@@ -1,0 +1,18 @@
+{
+    "name": "gennoah",
+    "version": "2.0.0",
+    "author": "Jonathan Yong",
+    "email": "jonathan.yong@chem.ox.ac.uk",
+    "url": "https://github.com/yongrenjie",
+    "description": "make NOAH pulse programmes",
+    "homepage": "https://github.com/yongrenjie/gennoah",
+    "bugs": {
+        "url": "https://github.com/yongrenjie/gennoah/issues",
+        "email": "jonathan.yong@chem.ox.ac.uk"
+    },
+    "license": "MIT",
+    "repository": "github:yongrenjie/gennoah",
+    "scripts": {
+        "start": "node app.mjs"
+    }
+}
