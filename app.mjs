@@ -8,6 +8,7 @@ import querystring from "querystring";
 import {makePulprogText} from "./pulprog.mjs";
 import {moduleNames} from "./moduleNames.mjs";
 let allModules = new Map();
+const port = process.env.PORT || 3000;
 
 const errorText = `Error: modules not correctly specified
 
@@ -97,5 +98,5 @@ function onRequest(req, res) {
 // Create the server on port 80 after loading all modules
 const promises = loadAllBackendModules();
 Promise.all(promises).then(values => {
-    http.createServer(onRequest).listen(80);
+    http.createServer(onRequest).listen(port);
 });
