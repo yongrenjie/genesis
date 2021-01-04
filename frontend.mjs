@@ -127,6 +127,9 @@ function updatePulprogText() {
         catch (error) { console.error(error); ppText = ""; }
         document.getElementById("pulprog_text").value = ppText;
     }
+    else {
+        document.getElementById("pulprog_text").value = "";
+    }
 }
 
 function toggleDevMode() {
