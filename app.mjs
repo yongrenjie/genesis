@@ -8,7 +8,7 @@ import querystring from "querystring";
 import {makePulprogText} from "./pulprog.mjs";
 import {moduleNames} from "./moduleNames.mjs";
 let allModules = new Map();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5555;
 
 const errorText = `Error: modules not correctly specified
 
