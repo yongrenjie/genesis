@@ -118,7 +118,7 @@ const allParams = {
     "d10": "1H t1",
     "d11": "1H t1 (magnitude-mode)",
     "d12": "<1/4J(HH) CLIP-COSY mixing time",
-    "d15": "ASAP mixing time [0 (no mixing) or 40-60 ms]",
+    "d15": "optional ASAP mixing time [40-60 ms] (use `wvm`)",
     "d16": "delay for homospoil/gradient recovery [200 us]",
     "d19": "HSQC-TOCSY mixing time",
     "d20": "15N t1",
@@ -724,8 +724,9 @@ export function makePulprogText(backendModules, allModules) {
         `"l2      = 0"                 ; Counter, even for echo, odd for antiecho`,
     );
     if (asapMixing) {
+        // The call to larger() silences divide-by-zero errors.
         pp.push(
-            `"l6      = d15/(p45*20)"      ; Number of ASAP loops`,
+            `"l6      = d15/(larger(p45,1u)*20)"  ; Number of ASAP loops`,
         );
     }
     pp.push(
