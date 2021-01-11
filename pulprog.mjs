@@ -187,6 +187,7 @@ allPhases[12] = new Phase({num: 12, str: "0 2"});
 allPhases[13] = new Phase({num: 13, str: "0", ct1: "i2"});
 allPhases[14] = new Phase({num: 14, str: "0 1 2 3"});
 allPhases[15] = new Phase({num: 15, str: "0 1"});
+allPhases[16] = new Phase({num: 16, str: "1 3", ea: "i", ct1: "r"});  // DQF-COSY ph
 // ... plenty of empty slots to use
 // below are for receivers
 allPhases[26] = new Phase({num: 26, str: "0 2"});
@@ -237,6 +238,7 @@ allGradients[15] = new Gradient({num: 15, val: 1, comment: "1H PSYCHE ZQS weak g
 allGradients[16] = new Gradient({num: 16, val: 35, comment: "1H PSYCHE CTP gradient 1"});
 allGradients[17] = new Gradient({num: 17, val: 49, comment: "1H PSYCHE CTP gradient 2"});
 allGradients[18] = new Gradient({num: 18, val: 77, comment: "1H PSYCHE CTP gradient 3"});
+allGradients[19] = new Gradient({num: 19, val: 37, comment: "1H CTP"}); // stronger grad needed for e.g. DQF-COSY
 
 
 // WaveMaker definitions {{{2
