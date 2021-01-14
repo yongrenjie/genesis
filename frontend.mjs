@@ -51,6 +51,8 @@ function getChosenBackendModules(frontendModules) {
      *     */
     // Get array of non-none modules
     let validModules = frontendModules.filter(elem => !elem.includes("none"));
+    // Return early if none were selected
+    if (validModules.length == 0) return [];
     // If devmode is enabled, then we are (mostly) done, since the input IDs are already
     // the correct names of the backend modules. We just need to capitalise the 1H module.
     if (document.getElementById("devmode_button").checked) {
