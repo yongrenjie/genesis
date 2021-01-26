@@ -29,15 +29,17 @@ define delay DHSQCT_SI6
 define delay DHSQCT_SI7
 define delay DHSQCT_SI8
 define delay DHSQCT_SI9
-"DHSQCT_SI1 = d4-p14/2"                     ; zz-filter
-"DHSQCT_SI2 = d4+p14/2"                     ; zz-filter
-"DHSQCT_SI3 = d4-larger(p2,p14)/2"          ; INEPT
-"DHSQCT_SI4 = p16+d16+p2+d0*2-4u-p3*2/PI"   ; 13C pre-t1 if editing
-"DHSQCT_SI5 = d2-p16-d16+p3*2/PI"           ; 13C editing period
-"DHSQCT_SI6 = d2-p2-p3*2/PI"                ; 13C editing period
-"DHSQCT_SI7 = p16+d16+p2/2+d0-4u-p3*2/PI"   ; 13C pre-/post-t1 if no editing
-"DHSQCT_SI8 = d6-cnst17*p24/2-p19-d16"      ; first spin echo after t1
-"DHSQCT_SI9 = p16+d16-p1*0.78+de+8u"        ; final spin echo for refocusing gradient
+define delay DHSQCT_SI10
+"DHSQCT_SI1 = d4-p14/2"                        ; zz-filter
+"DHSQCT_SI2 = d4+p14/2"                        ; zz-filter
+"DHSQCT_SI3 = d4-larger(p2,p14)/2"             ; INEPT
+"DHSQCT_SI4 = p16+d16+p2+d0*2-4u-p3*2/PI"      ; 13C pre-t1 if editing
+"DHSQCT_SI5 = d2-p16-d16+p3*2/PI"              ; 13C editing period
+"DHSQCT_SI6 = d2-p2-p3*2/PI"                   ; 13C editing period
+"DHSQCT_SI7 = p16+d16+p2/2+d0-4u-p3*2/PI"      ; 13C pre-/post-t1 if no editing
+"DHSQCT_SI8 = d6-cnst17*p24/2-p19-d16"         ; first spin echo after t1
+"DHSQCT_SI9 = d4-larger(p2,p14)/2-p16-d16-4u"  ; DIPSI spin echo
+"DHSQCT_SI10= p16+d16-p1*0.78+de+8u"           ; final spin echo for refocusing gradient
 "cnst41  = 2*sfo2/sfo1"                ; gradient ratio
 define list<gradient> GHSQCT_SI={cnst41}
 `
@@ -120,11 +122,14 @@ HSQCT_SI.module = `
   (center (p1 ph1):f1 (p3 ph9):f2 )  ; seHSQC pulse, incremented with EA
 
   ; reverse INEPT for second component
+  4u
   p16:gp7
   d16
-  DHSQCT_SI3
+  DHSQCT_SI9
   (center (p2 ph0):f1 (p14:sp3 ph0):f2 )
-  DHSQCT_SI3 pl10:f1
+  DHSQCT_SI9 pl10:f1
+  p16:gp7
+  d16
 
 						;begin DIPSI2
 5 p6*3.556 ph3
@@ -173,7 +178,7 @@ HSQCT_SI.module = `
   (p1 ph0):f1
 
   ; spin echo for refocusing gradient
-  DHSQCT_SI9
+  DHSQCT_SI10
   (p2 ph0):f1
   4u
   p16:gp3*EA*GHSQCT_SI
