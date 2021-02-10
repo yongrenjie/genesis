@@ -226,7 +226,7 @@ document.getElementById("download_button").addEventListener("click", savePPFile)
 
 // Function which sets grid-template-rows of each module selector box
 // to be equal to the number of visible items -- except for the 1H box
-// which is manually set to be 8 items long.
+// which is manually set to be 8 items long via CSS.
 function setModuleListLengths() {
     let uls = [...document.querySelectorAll("div.chooser_modules:not(.h1)>ul")];
     let lengths = uls.map(ul => [...ul.children].filter(li => li.style.display != "none").length);

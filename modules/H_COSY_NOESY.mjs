@@ -3,7 +3,7 @@
 const H_COSY_NOESY = {};
 export default H_COSY_NOESY;
 
-H_COSY_NOESY.shortDescription = "; 1H COSY and NOESY (shared t1)";
+H_COSY_NOESY.shortDescription = "; 1H COSY and NOESY (echo/antiecho F1)";
 H_COSY_NOESY.shortCode = `CN`;
 H_COSY_NOESY.nuclei = `H`;
 H_COSY_NOESY.auprog = `noah_cosy:noah_noesy`;
@@ -39,11 +39,11 @@ H_COSY_NOESY.module = `
   ; NOESY
   4u
   10u gron12
-  (p32:sp29 ph0):f1
+  (p32:sp29 ph0):f1  ; ZQ suppression
   20u groff
   p16:gp11
   d16 pl1:f1
-  DH_COSY_NOESY2 st      ; NOE mixing time
+  DH_COSY_NOESY2 st  ; NOE mixing time
   (p1 ph7):f1
   DH_COSY_NOESY3
   de
