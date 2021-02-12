@@ -2,10 +2,10 @@
  * -----------
  * Process NOAH PSYCHE module.
  *
- * v: 2.0.0
+ * v: 2.0.1
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 7 November 2020 */
+ * 12 February 2021 */
 
 XCMD("fixF1h_psyche")
 XCMD("2 SI 65536")

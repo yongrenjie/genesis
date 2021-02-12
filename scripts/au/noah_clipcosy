@@ -2,16 +2,31 @@
  * -------------
  * Process NOAH CLIP-COSY module.
  *
- * v: 2.0.0
+ * v: 2.0.1
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 7 November 2020 */
+ * 12 February 2021 */
 
 if ((i_argc > 2) && (strlen(i_argv[2]) > 1)) {
-    sprintf(cmd, "1 FnMODE %s", i_argv[2]); 
-    XCMD(cmd)
-    sprintf(cmd, "1s FnMODE %s", i_argv[2]); 
-    XCMD(cmd)
+    if (strcmp(i_argv[2], "undefined") == 0
+            || strcmp(i_argv[2], "QF") == 0
+            || strcmp(i_argv[2], "QSEQ") == 0
+            || strcmp(i_argv[2], "TPPI") == 0
+            || strcmp(i_argv[2], "States") == 0
+            || strcmp(i_argv[2], "States-TPPI") == 0
+            || strcmp(i_argv[2], "Echo-Antiecho") == 0
+            || strcmp(i_argv[2], "QF(no-frequency)") == 0) {
+        sprintf(cmd, "1 FnMODE %s", i_argv[2]);
+        XCMD(cmd)
+        sprintf(cmd, "1s FnMODE %s", i_argv[2]);
+        XCMD(cmd)
+    }
+    // ignore 'xaup' passed as second parameter
+    else if (strcmp(i_argv[2], "xaup") == 0) ;
+    else {
+        sprintf(text, "ignoring invalid FnMODE '%s'", i_argv[2]);
+        Proc_err(INFO_OPT, text);
+    }
 }
 
 XCMD("2 WDW QSINE")
