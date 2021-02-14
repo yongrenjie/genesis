@@ -48,11 +48,10 @@ STOREPAR1("SI", si);
 XAU ("proc_noah", "")
 
 // contents of setgtc2d inserted here (post-refactoring)
-float taq, taq1, tdeff1, td1;
+float taq, taq1, tdeff1;
 FETCHPARS("AQ", &taq);
 FETCHPAR1S("AQ", &taq1);
 FETCHPAR1S("TDEFF", &tdeff1);
-FETCHPAR1S("TD", &td1);
 // account for NUS
 if (tdeff1 != 0) taq1 = taq1 * tdeff1 / td1;
 taq1 = 2 * taq1;

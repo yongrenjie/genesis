@@ -29,7 +29,7 @@ STOREPAR1("O1", o1)
 
 float cnst38;
 FETCHPARS("CNST 38", &cnst38)
-double sw_h = (double) sw_h;
+double sw_h = (double) cnst38;
 STOREPAR1S("SW_h", sw_h)
 STOREPAR1("SW_h", sw_h)
 STOREPAR1S("SW", sw_h/sfo1)
