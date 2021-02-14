@@ -6,10 +6,10 @@
  * number of FIDs after running combinekh. For use with 1H 2DJ or PSYCHE NOAH
  * modules.
  *
- * v: 2.0.1
+ * v: 2.0.2
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 12 February 2021 */
+ * 13 February 2021 */
 
 /* calculate sensitivity factor k */
 float cnst37;
