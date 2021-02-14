@@ -1,4 +1,7 @@
-// This is the version for the website only, not for scripts!
+export {pprogs_version, scripts_version};
 
-const version = "2.0.0";
-export default version;
+// For the website and pulse programmes
+const pprogs_version = "2.0.0";
+
+// For the processing scripts
+const scripts_version = "2.0.2";

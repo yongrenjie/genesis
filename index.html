@@ -312,7 +312,7 @@
                 <dt id="faq_download">Download all NOAH scripts</dt>
                 <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
                 <dd>
-                    <p><a href="downloads/noah_scripts_v2.0.2.zip">Click here to download the AU and Python scripts (.zip).</a> We assume you know what you're doing here. (If not, the other entries in this FAQ have more information.)</p>
+                    <p><a class="scripts" download>Click here to download the AU and Python scripts (.zip).</a> We assume you know what you're doing here. (If not, the other entries in this FAQ have more information.)</p>
                 </dd>
 
                 <dt id="faq_run">Acquiring a NOAH experiment: an overview</dt>
@@ -377,7 +377,7 @@
                     <p>If you acquired this data under automation, it should have already been set up such that your data is automatically processed. If your NOAH dataset was acquired with experiment number (expno) <i>m</i>, then check whether you already have datasets in expnos (1000 × <i>m</i>) + 1 onwards. If those exist, then chances are these <i>are</i> the individual processed 2D spectra. If not, then read on...</p>
 
                     <ol class="steps">
-                        <li>If you haven't already done so, <a href="downloads/noah_scripts_v2.0.2.zip" download>download the newest versions of the NOAH scripts</a>. Unzip that and copy everything inside the <b>au</b> subdirectory to <b>&lt;TS&gt;/exp/stan/nmr/au/src/user</b>, where &lt;TS&gt; is your TopSpin installation location (<span class="ms">C:\Bruker\TopSpinX.Y.Z</span> for Windows, and <span class="ms">/opt/topspinx.y.z</span> for macOS/Linux).</li>
+                        <li>If you haven't already done so, <a class="scripts" download>download the newest versions of the NOAH scripts</a>. Unzip that and copy everything inside the <b>au</b> subdirectory to <b>&lt;TS&gt;/exp/stan/nmr/au/src/user</b>, where &lt;TS&gt; is your TopSpin installation location (<span class="ms">C:\Bruker\TopSpinX.Y.Z</span> for Windows, and <span class="ms">/opt/topspinx.y.z</span> for macOS/Linux).</li>
 
                         <li>Process the data by entering <span class="ms">splitx_au</span> into the TopSpin command line. This will create new datasets with expnos beginning from (1000 × <i>m</i>) + 1, where <i>m</i> is the expno of the original NOAH data.</li>
                     </ol>
