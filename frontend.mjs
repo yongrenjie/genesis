@@ -1,7 +1,7 @@
 // Initialisation {{{1
 
 // Get the version number.
-import {pprogs_version, scripts_version} from "./version.mjs";
+import {version} from "./version.mjs";
 import {moduleNames} from "./moduleNames.mjs";
 import {makePulprogText} from "./pulprog.mjs";
 
@@ -225,7 +225,7 @@ document.getElementById("download_button").addEventListener("click", savePPFile)
 function createScriptDownloadLinks() {
     let anchors = [...document.querySelectorAll("a.scripts")];
     for (let a of anchors) {
-        a.setAttribute("href", `downloads/noah_scripts_v${scripts_version}.zip`);
+        a.setAttribute("href", `downloads/noah_scripts_v${version}.zip`);
     }
 }
 createScriptDownloadLinks();
@@ -248,7 +248,7 @@ setModuleListLengths();
 function displayPage() {
     document.getElementById("spinner-container").style.display = "none";
     document.getElementById("main-wrapper").style.display = "block";
-    document.getElementById("version").innerHTML = pprogs_version;
+    document.getElementById("version").innerHTML = version;
 }
 Promise.all(promises).then(displayPage);
 // }}}1

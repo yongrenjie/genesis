@@ -1,5 +1,5 @@
 // Get the version number.
-import {pprogs_version} from "./version.mjs";
+import {version} from "./version.mjs";
 
 // Standardised parameter definitions {{{1
 // Goto labels {{{2
@@ -749,7 +749,7 @@ export function makePulprogText(backendModules, allModules) {
     pp.push(...paramDefns);
     pp.push(``);
     pp.push(auProgsStr);
-    pp.push(`; ngn-${pprogs_version}: constructed from ${backendModules.join(", ")}`);
+    pp.push(`; ngn-${version}: constructed from ${backendModules.join(", ")}`);
     pp.push(`; pulse programme generated on ${(new Date()).toString()}`);
     return pp.join("\n");
 }
