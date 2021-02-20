@@ -187,6 +187,14 @@ function toggleDevMode() {
             }
         }
     }
+    // make the font size smaller if devmode is enabled
+    for (let ul of uls.slice(0, -1)) {
+        for (let li of ul.children) {
+            if (!(li.children[0].id.includes("none"))) {
+                li.style.fontSize = on ? "14px" : "inherit";
+            }
+        }
+    }
     resetButtons();
     setModuleListLengths();
 }
