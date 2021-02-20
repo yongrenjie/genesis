@@ -1,18 +1,18 @@
 // vim: filetype=bruker:
 
-const HSQCT_HSQC = {};
-export default HSQCT_HSQC;
+const HSQCT_HSQC_F2J = {};
+export default HSQCT_HSQC_F2J;
 
-HSQCT_HSQC.nuclei = `CH`;
+HSQCT_HSQC_F2J.nuclei = `CH`;
 
-HSQCT_HSQC.shortCode = `S`;
+HSQCT_HSQC_F2J.shortCode = `2Sj`;
 
-HSQCT_HSQC.shortDescription = `; 13C HSQC with variable INEPT excitation
+HSQCT_HSQC_F2J.shortDescription = `; 13C HSQC (F2-coupled) with variable INEPT excitation
 ;     [use -DTEDIT for multiplicity editing]`
 
-HSQCT_HSQC.auprog = `noah_hsqc`;
+HSQCT_HSQC_F2J.auprog = `noah_hsqc`;
 
-HSQCT_HSQC.preamble = `
+HSQCT_HSQC_F2J.preamble = `
 "p2      = p1*2"                       ; 1H hard 180
 "d2      = 0.5s/cnst2"                 ; JCOMP
 "d4      = 0.25s/cnst2"                ; 13C INEPT
@@ -20,36 +20,36 @@ HSQCT_HSQC.preamble = `
 "in0     = inf1/2"                     ; 13C HSQC increment
 "l13     = (d19/(p6*115.112))/2"       ; half the number of HSQC-TOCSY DIPSI-2 loops
 "l14     = l13*2"                      ; number of HSQC-TOCSY DIPSI-2 loops
-define delay DHSQCT_HSQC1
-define delay DHSQCT_HSQC2
-define delay DHSQCT_HSQC3
-define delay DHSQCT_HSQC4
-define delay DHSQCT_HSQC5
-define delay DHSQCT_HSQC6
-define delay DHSQCT_HSQC7
-"DHSQCT_HSQC1   = (asin(cnst32)/(2*PI*cnst2))-p14/2000000"
-"DHSQCT_HSQC2   = (asin(cnst32)/(2*PI*cnst2))+p14/2000000"
-"DHSQCT_HSQC3   = p16+d16+p2/2+d0-p3*2/PI+4u"
-"DHSQCT_HSQC4   = d2+p3+p2/2"
-"DHSQCT_HSQC5   = DHSQCT_HSQC3+p3-p2/2"
-"DHSQCT_HSQC6   = d4-p14/2"
-"DHSQCT_HSQC7   = d4+p14/2-p16-d16-p3-de+p1*2/PI-8u"
+define delay DHSQCT_HSQC_F2J1
+define delay DHSQCT_HSQC_F2J2
+define delay DHSQCT_HSQC_F2J3
+define delay DHSQCT_HSQC_F2J4
+define delay DHSQCT_HSQC_F2J5
+define delay DHSQCT_HSQC_F2J6
+define delay DHSQCT_HSQC_F2J7
+"DHSQCT_HSQC_F2J1   = (asin(cnst32)/(2*PI*cnst2))-p14/2000000"
+"DHSQCT_HSQC_F2J2   = (asin(cnst32)/(2*PI*cnst2))+p14/2000000"
+"DHSQCT_HSQC_F2J3   = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DHSQCT_HSQC_F2J4   = d2+p3+p2/2"
+"DHSQCT_HSQC_F2J5   = DHSQCT_HSQC_F2J3+p3-p2/2"
+"DHSQCT_HSQC_F2J6   = d4-p14/2"
+"DHSQCT_HSQC_F2J7   = d4+p14/2-p16-d16-p3-de+p1*2/PI-8u"
 "cnst41  = 2*sfo2/sfo1"                ; gradient ratio
-define list<gradient> GHSQCT_HSQC={cnst41}
+define list<gradient> GHSQCT_HSQC_F2J={cnst41}
 `
 
-HSQCT_HSQC.module = `
-  ; 13C-1H HSQC
+HSQCT_HSQC_F2J.module = `
+  ; 13C-1H HSQC (F2-coupled) with variable INEPT excitation
 
   ; INEPT
   (p1 ph0):f1
-  DHSQCT_HSQC1
+  DHSQCT_HSQC_F2J1
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DHSQCT_HSQC2 pl2:f2
+  DHSQCT_HSQC_F2J2 pl2:f2
   (p1 ph1):f1
   (p3 ph5):f2
-  DHSQCT_HSQC3
+  DHSQCT_HSQC_F2J3
 
   ; t1 period
 #ifdef TEDIT
@@ -69,30 +69,30 @@ HSQCT_HSQC.module = `
 
   ; multiplicity editing
 #ifdef TEDIT
-  DHSQCT_HSQC4
+  DHSQCT_HSQC_F2J4
   (p31:sp18 ph0):f2
-  DHSQCT_HSQC5
+  DHSQCT_HSQC_F2J5
   (p2 ph1):f1
   d2 pl2:f2
 #else
   (p14:sp3 ph0):f2
-  DHSQCT_HSQC3 pl2:f2
+  DHSQCT_HSQC_F2J3 pl2:f2
 #endif /* TEDIT */
 
   ; reverse INEPT
   (p3 ph7):f2
   (p1 ph0):f1
-  DHSQCT_HSQC6
+  DHSQCT_HSQC_F2J6
   (p14:sp3 ph0):f2
   (p2 ph1):f1
   4u
-  p16:gp3*GHSQCT_HSQC*EA
+  p16:gp3*GHSQCT_HSQC_F2J*EA
   d16 pl2:f2
-  DHSQCT_HSQC7
+  DHSQCT_HSQC_F2J7
   (p3 ph0):f2
   4u pl12:f2
-  goscnp ph30 cpd2:f2
-  50u do:f2
+  goscnp ph30
+  50u
 
   ; DIPSI-2 mixing before next module
 if "d19 > 1m"

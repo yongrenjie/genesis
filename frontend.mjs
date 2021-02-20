@@ -85,19 +85,35 @@ function getChosenBackendModules(frontendModules) {
             if (module === "n15_hmqc") backendModules.push("N_HMQC");
             else if (module === "n15_sehsqc") {
                 if (cModulePresent || hModulePresent) backendModules.push("N_SEHSQC");
-                else backendModules.push("N_SEHSQC_OR");   // Original seHSQC
+                else backendModules.push("N_SEHSQC_OR");   // Original CRK seHSQC
             }
         }
         // Deal with HSQC-TOCSY module
         else if (module.startsWith("hsqct")) {
-            // if a second C13 module is present we need the modified INEPT block
-            if (c2ModulePresent) backendModules.push("HSQCT_INEPT");
-            else if (hModulePresent) backendModules.push("HSQCT_HSQCT");
-            else backendModules.push("HSQCT_OR");  // Bruker sensitivity-enhanced HSQC-TOCSY
+            if (module === "hsqct_hsqct") {
+                // HSQC-TOCSY module
+                // if a second C13 module is present we need the modified INEPT block
+                if (c2ModulePresent) backendModules.push("HSQCT_INEPT");
+                else if (hModulePresent) backendModules.push("HSQCT_HSQCT");
+                else backendModules.push("HSQCT_OR");  // Bruker sensitivity-enhanced HSQC-TOCSY
+            }
+            else if (module === "hsqct_hsqc") {
+                // HSQC module
+                // if a second C13 module is present we need the modified INEPT block
+                if (c2ModulePresent) backendModules.push("HSQCT_HSQC");
+                else backendModules.push("C_HSQC");
+            }
+            else if (module === "hsqct_hsqc_f2j") {
+                // F2-coupled HSQC module
+                // if a second C13 module is present we need the modified INEPT block
+                if (c2ModulePresent) backendModules.push("HSQCT_HSQC_F2J");
+                else backendModules.push("C_HSQC_F2J");
+            }
         }
         // Deal with C13 module
         else if (module.startsWith("c13")) {
             if (module === "c13_hsqc") backendModules.push("C_HSQC");
+            else if (module === "c13_hsqc_f2j") backendModules.push("C_HSQC_F2J");
             else if (module === "c13_sehsqc") {
                 backendModules.push(hModulePresent ? "C_SEHSQC" : "C_SEHSQC_OR");
             }
