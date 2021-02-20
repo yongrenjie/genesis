@@ -10,24 +10,16 @@
 #
 # Usage:
 #
-#   ./update_version.sh <OLD_VERSION> <NEW_VERSION>
+#   ./update_version.sh <NEW_VERSION>
 #
-# This is most easily used with curly braces expansion, viz.
-#
-#   ./update_version.sh 2.0.{3,4}
-#
-# to update from 2.0.3 to 2.0.4.
+# The old version number is read automatically from the output of `git tag`.
 
 usage() {
     cat << EOM
 Usage:
-  $0 <OLD_VERSION> <NEW_VERSION>
+  $0 <NEW_VERSION>
 
-This is most easily used with curly braces expansion, viz.
-
-  ./update_version.sh 2.0.{3,4}
-
-to update from 2.0.3 to 2.0.4.
+The old version number is read automatically from the output of git tag.
 EOM
 }
 
@@ -35,7 +27,10 @@ EOM
 if [ "$1" = "-h" ]; then
     usage
     exit 0
-elif [ $# -lt 2 ]; then
+elif [ $# -lt 1 ]; then
+    usage
+    exit 1
+elif [ $# -gt 1 ]; then
     usage
     exit 1
 fi
@@ -43,9 +38,12 @@ fi
 # cd to the correct directory
 cd $(dirname "$0")
 
+# Get the current version number from git tag
+git_vno=$(git tag -l | tail -n 1 | sed 's/v//')
+
 # Escape the dots in version numbers
-old_vno=${1//./\\.}
-new_vno=$2
+old_vno=${git_vno//./\\.}
+new_vno=$1
 
 # Check version of sed as GNU and BSD versions differ in sed -i behaviour
 # Thanks https://stackoverflow.com/a/65497543/7115316
@@ -81,4 +79,4 @@ zip -r "downloads/${long_name}.zip" "${long_name}" -x '*.DS_Store*'
 rm -r ${long_name}
 
 echo ""
-echo "Version numbers updated from v${1} to v${2}."
+echo "Version numbers updated from v${git_vno} to v${new_vno}."
