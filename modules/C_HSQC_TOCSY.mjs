@@ -1,18 +1,18 @@
 // vim: filetype=bruker:
 
-const HSQCT_HSQCT = {};
-export default HSQCT_HSQCT;
+const C_HSQC_TOCSY = {};
+export default C_HSQC_TOCSY;
 
-HSQCT_HSQCT.nuclei = `CH`;
+C_HSQC_TOCSY.nuclei = `CH`;
 
-HSQCT_HSQCT.shortCode = `St`;
+C_HSQC_TOCSY.shortCode = `St`;
 
-HSQCT_HSQCT.shortDescription = `; 13C HSQC-TOCSY
+C_HSQC_TOCSY.shortDescription = `; 13C HSQC-TOCSY
 ;     [use -DTEDIT for multiplicity editing]`
 
-HSQCT_HSQCT.auprog = `noah_hsqc`;
+C_HSQC_TOCSY.auprog = `noah_hsqc`;
 
-HSQCT_HSQCT.preamble = `
+C_HSQC_TOCSY.preamble = `
 "p2      = p1*2"                       ; 1H hard 180
 "d2      = 0.5s/cnst2"                 ; JCOMP
 "d4      = 0.25s/cnst2"                ; 13C INEPT
@@ -20,40 +20,40 @@ HSQCT_HSQCT.preamble = `
 "in0     = inf1/2"                     ; 13C HSQC increment
 "l13     = (d19/(p6*115.112))/2"       ; half the number of HSQC-TOCSY DIPSI-2 loops
 "l14     = l13*2"                      ; number of HSQC-TOCSY DIPSI-2 loops
-define delay DHSQCT_HSQCT1
-define delay DHSQCT_HSQCT2
-define delay DHSQCT_HSQCT3
-define delay DHSQCT_HSQCT4
-define delay DHSQCT_HSQCT5
-define delay DHSQCT_HSQCT6
-define delay DHSQCT_HSQCT7
-define delay DHSQCT_HSQCT8
-define delay DHSQCT_HSQCT9
-"DHSQCT_HSQCT1   = d4-p14/2"
-"DHSQCT_HSQCT2   = d4+p14/2"
-"DHSQCT_HSQCT3   = p16+d16+p2/2+d0-p3*2/PI+4u"
-"DHSQCT_HSQCT4   = d2+p3+p2/2"
-"DHSQCT_HSQCT5   = DHSQCT_HSQCT3+p3-p2/2"
-"DHSQCT_HSQCT6   = d4+p14/2-p16-d16"
-"DHSQCT_HSQCT7   = d2-p14/2-p16-d16-4u"
-"DHSQCT_HSQCT8   = d2+p14/2-p16-d16-de"
-"DHSQCT_HSQCT9   = de+4u"
+define delay DC_HSQC_TOCSY1
+define delay DC_HSQC_TOCSY2
+define delay DC_HSQC_TOCSY3
+define delay DC_HSQC_TOCSY4
+define delay DC_HSQC_TOCSY5
+define delay DC_HSQC_TOCSY6
+define delay DC_HSQC_TOCSY7
+define delay DC_HSQC_TOCSY8
+define delay DC_HSQC_TOCSY9
+"DC_HSQC_TOCSY1   = d4-p14/2"
+"DC_HSQC_TOCSY2   = d4+p14/2"
+"DC_HSQC_TOCSY3   = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DC_HSQC_TOCSY4   = d2+p3+p2/2"
+"DC_HSQC_TOCSY5   = DC_HSQC_TOCSY3+p3-p2/2"
+"DC_HSQC_TOCSY6   = d4+p14/2-p16-d16"
+"DC_HSQC_TOCSY7   = d2-p14/2-p16-d16-4u"
+"DC_HSQC_TOCSY8   = d2+p14/2-p16-d16-de"
+"DC_HSQC_TOCSY9   = de+4u"
 "cnst41  = 2*sfo2/sfo1"                ; gradient ratio
-define list<gradient> GHSQCT_HSQCT={cnst41}
+define list<gradient> GC_HSQC_TOCSY={cnst41}
 `
 
-HSQCT_HSQCT.module = `
+C_HSQC_TOCSY.module = `
   ; 13C-1H HSQC
 
   ; INEPT
   (p1 ph0):f1
-  DHSQCT_HSQCT1
+  DC_HSQC_TOCSY1
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DHSQCT_HSQCT2 pl2:f2
+  DC_HSQC_TOCSY2 pl2:f2
   (p1 ph1):f1
   (p3 ph5):f2
-  DHSQCT_HSQCT3
+  DC_HSQC_TOCSY3
 
   ; t1 period
 #ifdef TEDIT
@@ -73,26 +73,26 @@ HSQCT_HSQCT.module = `
 
   ; multiplicity editing
 #ifdef TEDIT
-  DHSQCT_HSQCT4
+  DC_HSQC_TOCSY4
   (p31:sp18 ph0):f2
-  DHSQCT_HSQCT5
+  DC_HSQC_TOCSY5
   (p2 ph1):f1
   d2 pl2:f2
 #else
   (p14:sp3 ph0):f2
-  DHSQCT_HSQCT3 pl2:f2
+  DC_HSQC_TOCSY3 pl2:f2
 #endif /* TEDIT */
 
   ; reverse INEPT
   (p3 ph7):f2
   (p1 ph2):f1
-  DHSQCT_HSQCT1
+  DC_HSQC_TOCSY1
   (p14:sp3 ph0):f2
   (p2 ph1):f1
 
   p16:gp13
   d16
-  DHSQCT_HSQCT6 pl10:f1
+  DC_HSQC_TOCSY6 pl10:f1
 
 						;begin DIPSI2
 5 p6*3.556 ph3
@@ -142,17 +142,17 @@ HSQCT_HSQCT.module = `
   d16 pl1:f1
 
 #ifdef TEDIT
-  DHSQCT_HSQCT7
+  DC_HSQC_TOCSY7
   (p14:sp3 ph0):f2 
   (p2 ph1):f1 
-  p16:gp3*GHSQCT_HSQCT*EA
+  p16:gp3*GC_HSQC_TOCSY*EA
   d16 pl12:f2 
-  DHSQCT_HSQCT8
+  DC_HSQC_TOCSY8
 #else
-  DHSQCT_HSQCT9
+  DC_HSQC_TOCSY9
   (p2 ph1):f1
   4u
-  p16:gp3*GHSQCT_HSQCT*EA
+  p16:gp3*GC_HSQC_TOCSY*EA
   d16 pl12:f2
   4u
 #endif /* TEDIT */

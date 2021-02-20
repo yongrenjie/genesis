@@ -20,8 +20,8 @@ body {
     --lhmbc: var(--lpurple);
     --n15: var(--blue);
     --ln15: var(--lblue);
-    --hsqct: var(--green);
-    --lhsqct: var(--lgreen);
+    --ci13: var(--green);
+    --lci13: var(--lgreen);
     --c13: var(--orange);
     --lc13: var(--lorange);
     --h1: var(--pink);
@@ -149,14 +149,14 @@ div.n15 label:hover, div.n15 input[type="radio"]:checked + label {
     border-color: var(--n15);
 }
 
-div.hsqct, div.hsqct label {
-    color: var(--hsqct);
-    border-color: var(--hsqct);
+div.ci13, div.ci13 label {
+    color: var(--ci13);
+    border-color: var(--ci13);
 }
 
-div.hsqct label:hover, div.hsqct input[type="radio"]:checked + label {
-    background-color: var(--lhsqct);
-    border-color: var(--hsqct);
+div.ci13 label:hover, div.ci13 input[type="radio"]:checked + label {
+    background-color: var(--lci13);
+    border-color: var(--ci13);
 }
 
 div.c13, div.c13 label {

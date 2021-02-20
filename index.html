@@ -121,57 +121,45 @@
                 </div>
             </div> <!-- /chooser-overall n15 -->
 
-            <div class="chooser-overall hsqct">
-                <div class="chooser_text hsqct">
-                    <sup>13</sup>C-<sup>1</sup>H #1
+            <div class="chooser-overall ci13">
+                <div class="chooser_text ci13">
+                    <sup>13</sup>C–<sup>1</sup>H #1
                 </div>
-                <div class="chooser_modules hsqct">
+                <div class="chooser_modules ci13">
                     <ul>
                         <!-- nondevmode -->
                         <li>
-                            <input type="radio" name="hsqct" id="hsqct_none" checked></input>
-                            <label for="hsqct_none">None</label>
+                            <input type="radio" name="ci13" id="ci13_none" checked></input>
+                            <label for="ci13_none">None</label>
                         </li>
                         <li>
-                            <input type="radio" name="hsqct" id="hsqct_hsqct"></input>
-                            <label for="hsqct_hsqct">HSQC-TOCSY</label>
+                            <input type="radio" name="ci13" id="ci13_hsqc"></input>
+                            <label for="ci13_hsqc">HSQC</label>
                         </li>
                         <li>
-                            <input type="radio" name="hsqct" id="hsqct_hsqc"></input>
-                            <label for="hsqct_hsqc">HSQC</label>
+                            <input type="radio" name="ci13" id="ci13_hsqc_f2j"></input>
+                            <label for="ci13_hsqc_f2j">F2 J-HSQC</label>
                         </li>
                         <li>
-                            <input type="radio" name="hsqct" id="hsqct_hsqc_f2j"></input>
-                            <label for="hsqct_hsqc_f2j">F2 J-HSQC</label>
+                            <input type="radio" name="ci13" id="ci13_hsqc_tocsy"></input>
+                            <label for="ci13_hsqc_tocsy">HSQC-TOCSY</label>
                         </li>
                         <!-- devmode -->
                         <li>
-                            <input type="radio" name="hsqct" id="HSQCT_INEPT"></input>
-                            <label for="HSQCT_INEPT">HSQCT_INEPT</label>
+                            <input type="radio" name="ci13" id="CI_HSQC_TOCSY"></input>
+                            <label for="CI_HSQC_TOCSY">CI_HSQC_TOCSY</label>
                         </li>
                         <li>
-                            <input type="radio" name="hsqct" id="HSQCT_HSQCT"></input>
-                            <label for="HSQCT_HSQCT">HSQCT_HSQCT</label>
+                            <input type="radio" name="ci13" id="CI_HSQC"></input>
+                            <label for="CI_HSQC">CI_HSQC</label>
                         </li>
                         <li>
-                            <input type="radio" name="hsqct" id="HSQCT_OR"></input>
-                            <label for="HSQCT_OR">HSQCT_OR</label>
-                        </li>
-                        <li>
-                            <input type="radio" name="hsqct" id="HSQCT_HSQC"></input>
-                            <label for="HSQCT_HSQC">HSQCT_HSQC</label>
-                        </li>
-                        <li>
-                            <input type="radio" name="hsqct" id="HSQCT_HSQC_F2J"></input>
-                            <label for="HSQCT_HSQC_F2J">HSQCT_HSQC_F2J</label>
-                        </li>
-                        <li>
-                            <input type="radio" name="hsqct" id="HSQCT_SI"></input>
-                            <label for="HSQCT_SI">HSQCT_SI</label>
+                            <input type="radio" name="ci13" id="CI_HSQC_F2J"></input>
+                            <label for="CI_HSQC_F2J">CI_HSQC_F2J</label>
                         </li>
                     </ul>
                 </div>
-            </div> <!-- /chooser-overall hsqct -->
+            </div> <!-- /chooser-overall ci13 -->
 
             <div class="chooser-overall c13">
                 <div class="chooser_text c13">
@@ -196,6 +184,14 @@
                             <input type="radio" name="c13" id="c13_sehsqc"></input>
                             <label for="c13_sehsqc">seHSQC</label>
                         </li>
+                        <li>
+                            <input type="radio" name="c13" id="c13_hsqc_tocsy"></input>
+                            <label for="c13_hsqc_tocsy">HSQC-TOCSY</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="c13_sehsqc_tocsy"></input>
+                            <label for="c13_sehsqc_tocsy">seHSQC-TOCSY</label>
+                        </li>
                         <!-- devmode -->
                         <li>
                             <input type="radio" name="c13" id="C_HSQC"></input>
@@ -204,6 +200,10 @@
                         <li>
                             <input type="radio" name="c13" id="C_HSQC_F2J"></input>
                             <label for="C_HSQC_F2J">C_HSQC_F2J</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="C_HSQC_TOCSY"></input>
+                            <label for="C_HSQC_TOCSY">C_HSQC_TOCSY</label>
                         </li>
                         <li>
                             <input type="radio" name="c13" id="C_SEHSQC"></input>
@@ -216,6 +216,14 @@
                         <li>
                             <input type="radio" name="c13" id="C_SEHSQC_DP"></input>
                             <label for="C_SEHSQC_DP">C_SEHSQC_DP</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="C_SEHSQC_TOCSY"></input>
+                            <label for="C_SEHSQC_TOCSY">C_SEHSQC_TOCSY</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="C_SEHSQC_TOCSY_OR"></input>
+                            <label for="C_SEHSQC_TOCSY_OR">C_SEHSQC_TOCSY_OR</label>
                         </li>
                     </ul>
                 </div>

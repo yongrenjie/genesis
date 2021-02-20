@@ -6,7 +6,7 @@ import {moduleNames} from "./moduleNames.mjs";
 import {makePulprogText} from "./pulprog.mjs";
 
 // Name attributes of the radio button groups.
-let inputNames = ["hmbc", "n15", "hsqct", "c13", "h1"];
+let inputNames = ["hmbc", "n15", "ci13", "c13", "h1"];
 
 // Object containing every module. Keys are module names. Values are module objects
 // (imported from the individual module files).
@@ -65,7 +65,7 @@ function getChosenBackendModules(frontendModules) {
     // Otherwise we need to do some logic...
     // Figure out which type of modules are present
     const nModulePresent = (validModules.findIndex(elem => elem.includes("n15")) !== -1);
-    const c1ModulePresent = (validModules.findIndex(elem => elem.includes("hsqct")) !== -1);
+    const c1ModulePresent = (validModules.findIndex(elem => elem.includes("ci13")) !== -1);
     const c2ModulePresent = (validModules.findIndex(elem => elem.includes("c13")) !== -1);
     const cModulePresent = (c1ModulePresent || c2ModulePresent);  // any 13C module
     const hModulePresent = (validModules.findIndex(elem => elem.includes("h1")) !== -1);
@@ -88,34 +88,39 @@ function getChosenBackendModules(frontendModules) {
                 else backendModules.push("N_SEHSQC_OR");   // Original CRK seHSQC
             }
         }
-        // Deal with HSQC-TOCSY module
-        else if (module.startsWith("hsqct")) {
-            if (module === "hsqct_hsqct") {
+        // Deal with first C13 module (the one with variable INEPT excitation)
+        else if (module.startsWith("ci13")) {
+            if (module === "ci13_hsqc_tocsy") {
                 // HSQC-TOCSY module
                 // if a second C13 module is present we need the modified INEPT block
-                if (c2ModulePresent) backendModules.push("HSQCT_INEPT");
-                else if (hModulePresent) backendModules.push("HSQCT_HSQCT");
-                else backendModules.push("HSQCT_OR");  // Bruker sensitivity-enhanced HSQC-TOCSY
+                if (c2ModulePresent) backendModules.push("CI_HSQC_TOCSY");
+                else backendModules.push("C_HSQC_TOCSY");
             }
-            else if (module === "hsqct_hsqc") {
+            else if (module === "ci13_hsqc") {
                 // HSQC module
                 // if a second C13 module is present we need the modified INEPT block
-                if (c2ModulePresent) backendModules.push("HSQCT_HSQC");
+                if (c2ModulePresent) backendModules.push("CI_HSQC");
                 else backendModules.push("C_HSQC");
             }
-            else if (module === "hsqct_hsqc_f2j") {
+            else if (module === "ci13_hsqc_f2j") {
                 // F2-coupled HSQC module
                 // if a second C13 module is present we need the modified INEPT block
-                if (c2ModulePresent) backendModules.push("HSQCT_HSQC_F2J");
+                if (c2ModulePresent) backendModules.push("CI_HSQC_F2J");
                 else backendModules.push("C_HSQC_F2J");
             }
         }
-        // Deal with C13 module
+        // Deal with second C13 module (without variable INEPT excitation)
         else if (module.startsWith("c13")) {
+            // The only logic here is with the seHSQC variants: if a 1H module is present
+            // then we use the ZIP-seHSQC version, if not then we can use CRK versions.
             if (module === "c13_hsqc") backendModules.push("C_HSQC");
-            else if (module === "c13_hsqc_f2j") backendModules.push("C_HSQC_F2J");
             else if (module === "c13_sehsqc") {
                 backendModules.push(hModulePresent ? "C_SEHSQC" : "C_SEHSQC_OR");
+            }
+            else if (module === "c13_hsqc_f2j") backendModules.push("C_HSQC_F2J");
+            else if (module === "c13_hsqc_tocsy") backendModules.push("C_HSQC_TOCSY");
+            else if (module === "c13_sehsqc_tocsy") {
+                backendModules.push(hModulePresent ? "C_SEHSQC_TOCSY" : "C_SEHSQC_TOCSY_OR");
             }
         }
         // Deal with H1 module
@@ -201,7 +206,7 @@ for (let inputName of inputNames) {
 
 // Reset button.
 function resetButtons() {
-    let noneButtonIDs = ["hmbc_none", "n15_none", "hsqct_none", "c13_none", "h1_none"]
+    let noneButtonIDs = ["hmbc_none", "n15_none", "ci13_none", "c13_none", "h1_none"]
     for (let id of noneButtonIDs) {
         document.getElementById(id).checked = true;
     }
