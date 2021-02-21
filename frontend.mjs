@@ -102,6 +102,12 @@ function getChosenBackendModules(frontendModules) {
                 if (c2ModulePresent) backendModules.push("CI_HSQC");
                 else backendModules.push("C_HSQC");
             }
+            else if (module === "ci13_hsqc_cosy") {
+                // HSQC-COSY module
+                // if a second C13 module is present we need the modified INEPT block
+                if (c2ModulePresent) backendModules.push("CI_HSQC_COSY");
+                else backendModules.push("CI_HSQC_COSY");  // not yet coded the real one
+            }
             else if (module === "ci13_hsqc_f2j") {
                 // F2-coupled HSQC module
                 // if a second C13 module is present we need the modified INEPT block
