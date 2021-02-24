@@ -133,6 +133,7 @@ const allParams = {
     "l0": "total number of t1 increments",
     "l1": "running counter of t1 increments",
     "l2": "even for echo, odd for antiecho",
+    "l3": "running counter for scan number",
     "l6": "loop for ASAP mixing",
     "l7": "loop for ROESY spinlock = p15 / p25*2",
     "l11": "half the number of DIPSI-2 cycles",
@@ -190,6 +191,7 @@ allPhases[15] = new Phase({num: 15, str: "0 1"});
 allPhases[16] = new Phase({num: 16, str: "1 3", ea: "i", ct1: "r"});  // DQF-COSY ph
 // ... plenty of empty slots to use
 // below are for receivers
+allPhases[25] = new Phase({num: 25, str: "0 0 2 2", ct1: "i2"});      // HSQC-COSY
 allPhases[26] = new Phase({num: 26, str: "0 2"});
 allPhases[27] = new Phase({num: 27, str: "1 3 3 1", nt1: "i2"});
 allPhases[28] = new Phase({num: 28, str: "1 3 3 1", ct1: "i2"});
@@ -338,6 +340,7 @@ export function makePulprogText(backendModules, allModules) {
         `2 30m`,             // NS loop (go=2 phXX) goes back to here
         `3 5m${stopDec}`,    // EA loop goes back to here
         `4 50u UNBLKGRAD`,   // t1 loop goes back to here
+        `  "l3 = l3 + 1"`,
         ``,
         `  ; Cleanup`,
     );
@@ -724,6 +727,7 @@ export function makePulprogText(backendModules, allModules) {
         `"l0      = td1/${2*nbl}"             ; Total number of 13C t1 increments`,
         `"l1      = 0"                 ; Running counter of 13C t1 increments`,
         `"l2      = 0"                 ; Counter, even for echo, odd for antiecho`,
+        `"l3      = 0"                 ; Running counter for NS`,
     );
     if (asapMixing) {
         // The call to larger() silences divide-by-zero errors.
