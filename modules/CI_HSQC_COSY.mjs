@@ -108,8 +108,6 @@ else
 
   ; coherence transfer
   (p1 ph0):f1
-  d12
-  (p2 ph0):f1
 if "l3 % 2 == 1"   ; relayed COSY peak suppression
 {
   d12
@@ -120,6 +118,8 @@ else
   (p14:sp3 ph0):f2
   DCI_HSQC_COSY11  ; d2-p14/2
 }
+  (p2 ph0):f1
+  d12
   (p1 ph2):f1
 
   ; spin echo for HSQC vs COSY peak editing
