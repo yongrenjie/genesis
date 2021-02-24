@@ -1,6 +1,7 @@
 export const moduleNames = [
     "CI_HSQC",
     "CI_HSQC_COSY",
+    "CI_HSQC_COSY_DSE",
     "CI_HSQC_F2J",
     "CI_HSQC_TOCSY",
     "C_HMBC_CF",
