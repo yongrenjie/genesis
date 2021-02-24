@@ -19,7 +19,15 @@ usage() {
 Usage:
   $0 <NEW_VERSION>
 
-The old version number is read automatically from the output of git tag.
+(The current version number is $(git tag -l | tail -n 1 | sed 's/v//'))
+EOM
+}
+
+git_dirty() {
+    cat << EOM
+There are uncommitted changes or untracked files present in the working directory.
+Please commit or remove these before running this script (as it will automatically
+make a new commit for the version number bump).
 EOM
 }
 
@@ -32,6 +40,12 @@ elif [ $# -lt 1 ]; then
     exit 1
 elif [ $# -gt 1 ]; then
     usage
+    exit 1
+fi
+
+# Check if git index or working directory has new stuff
+if ! [ -z "$(git status --porcelain=v1 2>/dev/null)" ]; then
+    git_dirty
     exit 1
 fi
 
@@ -77,6 +91,11 @@ long_name="noah_scripts_v${new_vno}"
 cp -r scripts ${long_name}
 zip -r "downloads/${long_name}.zip" "${long_name}" -x '*.DS_Store*'
 rm -r ${long_name}
+
+# git add and commit
+git add -A
+git commit -m "version: bump to ${new_vno}"
+git tag "v${new_vno}"
 
 echo ""
 echo "Version numbers updated from v${git_vno} to v${new_vno}."
