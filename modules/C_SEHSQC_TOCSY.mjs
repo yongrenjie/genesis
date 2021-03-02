@@ -20,28 +20,28 @@ C_SEHSQC_TOCSY.preamble = `
 "in0     = inf1/2"                     ; 13C HSQC increment
 "l13     = (d19/(p6*115.112))/2"       ; half the number of HSQC-TOCSY DIPSI-2 loops
 "l14     = l13*2"                      ; number of HSQC-TOCSY DIPSI-2 loops
-define delay DC_SEHSQC_TOCSY1
-define delay DC_SEHSQC_TOCSY2
-define delay DC_SEHSQC_TOCSY3
-define delay DC_SEHSQC_TOCSY4
-define delay DC_SEHSQC_TOCSY5
-define delay DC_SEHSQC_TOCSY6
-define delay DC_SEHSQC_TOCSY7
-define delay DC_SEHSQC_TOCSY8
-define delay DC_SEHSQC_TOCSY9
-define delay DC_SEHSQC_TOCSY10
-"DC_SEHSQC_TOCSY1 = d4-p14/2"                        ; zz-filter
-"DC_SEHSQC_TOCSY2 = d4+p14/2"                        ; zz-filter
-"DC_SEHSQC_TOCSY3 = d4-larger(p2,p14)/2"             ; INEPT
-"DC_SEHSQC_TOCSY4 = p16+d16+p2+d0*2-4u-p3*2/PI"      ; 13C pre-t1 if editing
-"DC_SEHSQC_TOCSY5 = d2-p16-d16+p3*2/PI"              ; 13C editing period
-"DC_SEHSQC_TOCSY6 = d2-p2-p3*2/PI"                   ; 13C editing period
-"DC_SEHSQC_TOCSY7 = p16+d16+p2/2+d0-4u-p3*2/PI"      ; 13C pre-/post-t1 if no editing
-"DC_SEHSQC_TOCSY8 = d6-cnst17*p24/2-p19-d16"         ; first spin echo after t1
-"DC_SEHSQC_TOCSY9 = d4-larger(p2,p14)/2-p16-d16-4u"  ; DIPSI spin echo
-"DC_SEHSQC_TOCSY10= p16+d16-p1*0.78+de+8u"           ; final spin echo for refocusing gradient
+define delay DC_SEHSQCT1
+define delay DC_SEHSQCT2
+define delay DC_SEHSQCT3
+define delay DC_SEHSQCT4
+define delay DC_SEHSQCT5
+define delay DC_SEHSQCT6
+define delay DC_SEHSQCT7
+define delay DC_SEHSQCT8
+define delay DC_SEHSQCT9
+define delay DC_SEHSQCT10
+"DC_SEHSQCT1 = d4-p14/2"                        ; zz-filter
+"DC_SEHSQCT2 = d4+p14/2"                        ; zz-filter
+"DC_SEHSQCT3 = d4-larger(p2,p14)/2"             ; INEPT
+"DC_SEHSQCT4 = p16+d16+p2+d0*2-4u-p3*2/PI"      ; 13C pre-t1 if editing
+"DC_SEHSQCT5 = d2-p16-d16+p3*2/PI"              ; 13C editing period
+"DC_SEHSQCT6 = d2-p2-p3*2/PI"                   ; 13C editing period
+"DC_SEHSQCT7 = p16+d16+p2/2+d0-4u-p3*2/PI"      ; 13C pre-/post-t1 if no editing
+"DC_SEHSQCT8 = d6-cnst17*p24/2-p19-d16"         ; first spin echo after t1
+"DC_SEHSQCT9 = d4-larger(p2,p14)/2-p16-d16-4u"  ; DIPSI spin echo
+"DC_SEHSQCT10= p16+d16-p1*0.78+de+8u"           ; final spin echo for refocusing gradient
 "cnst41  = 2*sfo2/sfo1"                ; gradient ratio
-define list<gradient> GC_SEHSQC_TOCSY={cnst41}
+define list<gradient> GC_SEHSQCT={cnst41}
 `
 
 
@@ -50,15 +50,15 @@ C_SEHSQC_TOCSY.module = `
 
   ; ZIP element
   (p1 ph0):f1
-  DC_SEHSQC_TOCSY1
+  DC_SEHSQCT1
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_SEHSQC_TOCSY2
+  DC_SEHSQCT2
   (p1 ph0):f1
-  DC_SEHSQC_TOCSY1
+  DC_SEHSQCT1
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_SEHSQC_TOCSY2            ; 13C-1H: y,  12C-1H: z
+  DC_SEHSQCT2            ; 13C-1H: y,  12C-1H: z
 
   ; forward INEPT
 #ifdef TEDIT
@@ -66,18 +66,18 @@ C_SEHSQC_TOCSY.module = `
 #else
   (p1 ph3):f1
 #endif
-  DC_SEHSQC_TOCSY3
+  DC_SEHSQCT3
   4u
   (center (p2 ph0):f1 (p14:sp3 ph0):f2 )
   4u
-  DC_SEHSQC_TOCSY3 pl2:f2
+  DC_SEHSQCT3 pl2:f2
   4u
   (p1 ph1):f1 (p3 ph5):f2
 
   ; t1 evolution with optional multiplicity editing
 #ifdef TEDIT
   4u
-  DC_SEHSQC_TOCSY4
+  DC_SEHSQCT4
   (p31:sp18 ph0):f2
   p16:gp3
   d16 pl2:f2
@@ -88,13 +88,13 @@ C_SEHSQC_TOCSY.module = `
 
   p16:gp3
   d16
-  DC_SEHSQC_TOCSY5
+  DC_SEHSQCT5
   (p31:sp18 ph0):f2
   (p2 ph0):f1
-  DC_SEHSQC_TOCSY6 pl2:f2
+  DC_SEHSQCT6 pl2:f2
 #else
   4u
-  DC_SEHSQC_TOCSY7 
+  DC_SEHSQCT7 
   (p24:sp7 ph0):f2
   p16:gp3
   d16 pl2:f2
@@ -107,16 +107,16 @@ C_SEHSQC_TOCSY.module = `
   d16
   (p24:sp7 ph0):f2
   4u
-  DC_SEHSQC_TOCSY7 pl2:f2
+  DC_SEHSQCT7 pl2:f2
 #endif
 
   ; reverse INEPT for first component
   (center (p1 ph0):f1 (p3 ph7):f2 )
   p19:gp6
   d16
-  DC_SEHSQC_TOCSY8
+  DC_SEHSQCT8
   (center (p2 ph0):f1 (p24:sp7 ph0):f2 )
-  DC_SEHSQC_TOCSY8
+  DC_SEHSQCT8
   p19:gp6
   d16 pl2:f2
   (center (p1 ph1):f1 (p3 ph9):f2 )  ; seHSQC pulse, incremented with EA
@@ -125,9 +125,9 @@ C_SEHSQC_TOCSY.module = `
   4u
   p16:gp7
   d16
-  DC_SEHSQC_TOCSY9
+  DC_SEHSQCT9
   (center (p2 ph0):f1 (p14:sp3 ph0):f2 )
-  DC_SEHSQC_TOCSY9 pl10:f1
+  DC_SEHSQCT9 pl10:f1
   p16:gp7
   d16
 
@@ -178,10 +178,10 @@ C_SEHSQC_TOCSY.module = `
   (p1 ph0):f1
 
   ; spin echo for refocusing gradient
-  DC_SEHSQC_TOCSY10
+  DC_SEHSQCT10
   (p2 ph0):f1
   4u
-  p16:gp3*EA*GC_SEHSQC_TOCSY
+  p16:gp3*EA*GC_SEHSQCT
   d16 pl12:f2
   4u
   goscnp ph30 cpd2:f2   ; acquire 13C HSQC
