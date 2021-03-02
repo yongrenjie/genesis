@@ -6,11 +6,11 @@
  * points are read from cnst50 instead of cnst4 as usual (in NOAH supersequences,
  * cnst4 is reserved for 1J(NH) in 15N modules).
  *
- * v: 2.0.4
+ * v: 2.0.5
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
  * modified from `pshift` AU programme by Ralph Adams, University of Manchester
- * 24 February 2021 */
+ * 02 March 2021 */
 
 // Maximum size of TD that we can handle.
 #define MAX_TD 131072
