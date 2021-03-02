@@ -126,6 +126,7 @@ const allParams = {
     "d20": "15N t1",
     "d24": "1/4J(NH)",
     "d26": "1/8J(NH) for all multiplicities, 1/4J(NH) for NH only",
+    "d29": "DIPSI-2 mixing time between 13C modules",
 
     "inf1": "1/SW(C) = 2 * DW(C)",
     "in0": "1/(2 * SW(C)) = DW(C)",
@@ -138,10 +139,12 @@ const allParams = {
     "l3": "running counter for scan number",
     "l6": "loop for ASAP mixing",
     "l7": "loop for ROESY spinlock = p15 / p25*2",
-    "l11": "half the number of DIPSI-2 cycles",
-    "l12": "actual number of DIPSI-2 cycles",
+    "l11": "TOCSY: half the number of DIPSI-2 cycles",
+    "l12": "TOCSY: actual number of DIPSI-2 cycles",
     "l13": "HSQC-TOCSY: half the number of DIPSI-2 cycles",
     "l14": "HSQC-TOCSY: actual number of DIPSI-2 cycles",
+    "l15": "DIPSI-2 between 13C modules: half the number of DIPSI-2 cycles",
+    "l16": "DIPSI-2 between 13C modules: actual number of DIPSI-2 cycles",
 
     "cpd2": "13C decoupling according to sequence defined by cpdprg2",
     "cpd3": "15N decoupling according to sequence defined by cpdprg3",
@@ -227,17 +230,17 @@ const allGradients = new Array(32);
 allGradients[0] = new Gradient({num: 0, val: 24, comment: "for purging"});
 allGradients[1] = new Gradient({num: 1, val: 80, comment: "HMBC CTP"});
 allGradients[2] = new Gradient({num: 2, val: 80, comment: "15N CTP"});
-allGradients[3] = new Gradient({num: 3, val: 75, comment: "HSQC-TOCSY CTP"});
+allGradients[3] = new Gradient({num: 3, val: 75, comment: "13C alternate module CTP"});
 allGradients[4] = new Gradient({num: 4, val: 70, comment: "13C CTP"});
 allGradients[5] = new Gradient({num: 5, val: 10, comment: "1H CTP"});
-allGradients[6] = new Gradient({num: 6, val: 11, comment: "13C HSQC spin echo CTP"});
-allGradients[7] = new Gradient({num: 7, val: -5, comment: "13C HSQC spin echo CTP"});
-allGradients[8] = new Gradient({num: 8, val: 13, comment: "15N HSQC spin echo CTP"});
-allGradients[9] = new Gradient({num: 9, val: -6, comment: "15N HSQC spin echo CTP"});
+allGradients[6] = new Gradient({num: 6, val: 11, comment: "13C spin echo CTP"});
+allGradients[7] = new Gradient({num: 7, val: -5, comment: "13C spin echo CTP"});
+allGradients[8] = new Gradient({num: 8, val: 13, comment: "15N spin echo CTP"});
+allGradients[9] = new Gradient({num: 9, val: -6, comment: "15N spin echo CTP"});
 allGradients[10] = new Gradient({num: 10, val: 5, comment: "HMBC J-filter"});
 allGradients[11] = new Gradient({num: 11, val: 43, comment: "1H purge gradient"});
 allGradients[12] = new Gradient({num: 12, val: 11, comment: "1H ZQ filter", shape: ""});
-allGradients[13] = new Gradient({num: 13, val: 19, comment: "HSQC-TOCSY purge gradients"});
+allGradients[13] = new Gradient({num: 13, val: 19, comment: "13C DIPSI-2 purge gradients"});
 allGradients[14] = new Gradient({num: 14, val: 1, comment: "1H PSYCHE weak gradient", shape: "RECT.1"});
 allGradients[15] = new Gradient({num: 15, val: 1, comment: "1H PSYCHE ZQS weak gradient", shape: "RECT.1"});
 allGradients[16] = new Gradient({num: 16, val: 35, comment: "1H PSYCHE CTP gradient 1"});
@@ -255,18 +258,122 @@ allWavemakers[49] = ";sp49:wvm:wu180H1SL: wurstAM(p50, cnst49 ppm; B1max = 5.0 k
 allWavemakers[50] = ";sp50:wvm:wu180H1SL2: wurstAM(p50, cnst50 ppm; B1max = 5.0 kHz)";
 // }}}1
 
+// Boring and ultra-long string constants {{{1
+// extraDipsiMixingPPText {{{2
+const extraDipsiMixingPPText = [
+    ``,
+    `  ; (optional) DIPSI-2 mixing before next module`,
+    `if "d29 > 1m"`,
+    `{`,
+    `  50u`,
+    `  p16:gp13`,
+    `  d16 pl10:f1`,
+    `						;begin DIPSI2`,
+    `9 p6*3.556 ph3`,
+    `  p6*4.556 ph1`,
+    `  p6*3.222 ph3`,
+    `  p6*3.167 ph1`,
+    `  p6*0.333 ph3`,
+    `  p6*2.722 ph1`,
+    `  p6*4.167 ph3`,
+    `  p6*2.944 ph1`,
+    `  p6*4.111 ph3`,
+    `  `,
+    `  p6*3.556 ph1`,
+    `  p6*4.556 ph3`,
+    `  p6*3.222 ph1`,
+    `  p6*3.167 ph3`,
+    `  p6*0.333 ph1`,
+    `  p6*2.722 ph3`,
+    `  p6*4.167 ph1`,
+    `  p6*2.944 ph3`,
+    `  p6*4.111 ph1`,
+    ``,
+    `  p6*3.556 ph1`,
+    `  p6*4.556 ph3`,
+    `  p6*3.222 ph1`,
+    `  p6*3.167 ph3`,
+    `  p6*0.333 ph1`,
+    `  p6*2.722 ph3`,
+    `  p6*4.167 ph1`,
+    `  p6*2.944 ph3`,
+    `  p6*4.111 ph1`,
+    ``,
+    `  p6*3.556 ph3`,
+    `  p6*4.556 ph1`,
+    `  p6*3.222 ph3`,
+    `  p6*3.167 ph1`,
+    `  p6*0.333 ph3`,
+    `  p6*2.722 ph1`,
+    `  p6*4.167 ph3`,
+    `  p6*2.944 ph1`,
+    `  p6*4.111 ph3`,
+    `  lo to 9 times l16`,
+    `						;end DIPSI2`,
+    `  p16:gp13*1.333`,
+    `  d16 pl1:f1`,
+    `}`,
+]
+// }}}2
+// asapMixingPPText {{{2
+const asapMixingPPText = [
+    ``,
+    `  ; ASAP mixing`,
+    `if "d15 > 1m"`,
+    `{`,
+    `  50u`,
+    `  p16:gp0*0.4`,
+    `  d16`,
+    `  4u`,
+    `						;begin ASAP`,
+    `6 (p45:sp45 ph=0.0):f1`,
+    `  (p45:sp45 ph=150.0):f1`,
+    `  (p45:sp45 ph=60.0):f1`,
+    `  (p45:sp45 ph=150.0):f1`,
+    `  (p45:sp45 ph=0.0):f1`,
+    `  (p45:sp45 ph=0.0):f1`,
+    `  (p45:sp45 ph=150.0):f1`,
+    `  (p45:sp45 ph=60.0):f1`,
+    `  (p45:sp45 ph=150.0):f1`,
+    `  (p45:sp45 ph=0.0):f1`,
+    `  (p45:sp45 ph=180.0):f1`,
+    `  (p45:sp45 ph=330.0):f1`,
+    `  (p45:sp45 ph=240.0):f1`,
+    `  (p45:sp45 ph=330.0):f1`,
+    `  (p45:sp45 ph=180.0):f1`,
+    `  (p45:sp45 ph=180.0):f1`,
+    `  (p45:sp45 ph=330.0):f1`,
+    `  (p45:sp45 ph=240.0):f1`,
+    `  (p45:sp45 ph=330.0):f1`,
+    `  (p45:sp45 ph=180.0):f1`,
+    `  lo to 6 times l6`,
+    `						;end ASAP`,
+    `  4u pl1:f1`,
+    `}`,
+]
+// }}}2
+// }}}1
+
 // The function {{{1
 export function makePulprogText(backendModules, allModules) {
+    /* backendModules : Array of Strings indicating the backend modules to be used in pulse
+     *                  programme construction.
+     * allModules     : Map containing backend module names as the keys (these are the same 
+     *                  as the .mjs file names, without extensions) and the actual module
+     *                  objects as the values.
+     */
     // Initialisation {{{2
 
     // Set some flags that will help us later
     const hmbcModulePresent = (backendModules.findIndex(elem => elem.startsWith("C_HMBC_")) !== -1);
     const nModulePresent = (backendModules.findIndex(elem => elem.startsWith("N_")) !== -1);
-    const c1ModulePresent = (backendModules.findIndex(elem => elem.startsWith("HSQCT_")) !== -1);
+    const c1ModulePresent = (backendModules.findIndex(elem => elem.startsWith("CI_")) !== -1);
     const c2ModulePresent = (backendModules.findIndex(elem => elem.startsWith("C_")) !== -1);
     const cModulePresent = (c1ModulePresent || c2ModulePresent);  // any 13C module
     const hModulePresent = (backendModules.findIndex(elem => elem.startsWith("H_")) !== -1);
     const asapMixing = (hmbcModulePresent && hModulePresent);
+    const extraDipsiMixing = (c1ModulePresent && c2ModulePresent &&
+        backendModules.filter(m => m.includes("CI_") && m.includes("TOCSY")).length === 0);
 
     // Initialise pulse programme components.
     // All these are arrays of strings.
@@ -391,46 +498,20 @@ export function makePulprogText(backendModules, allModules) {
             // here comes the main part -- the actual pulprog itself
             mainpp.push(``, ``, `  ; MODULE ${index + 1}`),
             mainpp.push(...trimNewlines(mod.module).split("\n"));
+            // DIPSI-2 mixing between two 13C modules; but this isn't needed if
+            // the previous module was a HSQC-TOCSY.
+            if (extraDipsiMixing
+                && backendModules[index].startsWith("CI_")
+                && backendModules[index + 1].startsWith("C_")
+            ) {
+                mainpp.push(...extraDipsiMixingPPText);
+            }
             // ASAP mixing if the next module is a 1H module.
             if (asapMixing
                 && backendModules[index + 1] !== undefined
                 && backendModules[index + 1].startsWith("H_")
             ) {
-                mainpp.push(
-                    ``,
-                    `  ; ASAP mixing`,
-                    `if "d15 > 1m"`,
-                    `{`,
-                    `  50u`,
-                    `  p16:gp0*0.4`,
-                    `  d16`,
-                    `  4u`,
-                    `						;begin ASAP`,
-                    `6 (p45:sp45 ph=0.0):f1`,
-                    `  (p45:sp45 ph=150.0):f1`,
-                    `  (p45:sp45 ph=60.0):f1`,
-                    `  (p45:sp45 ph=150.0):f1`,
-                    `  (p45:sp45 ph=0.0):f1`,
-                    `  (p45:sp45 ph=0.0):f1`,
-                    `  (p45:sp45 ph=150.0):f1`,
-                    `  (p45:sp45 ph=60.0):f1`,
-                    `  (p45:sp45 ph=150.0):f1`,
-                    `  (p45:sp45 ph=0.0):f1`,
-                    `  (p45:sp45 ph=180.0):f1`,
-                    `  (p45:sp45 ph=330.0):f1`,
-                    `  (p45:sp45 ph=240.0):f1`,
-                    `  (p45:sp45 ph=330.0):f1`,
-                    `  (p45:sp45 ph=180.0):f1`,
-                    `  (p45:sp45 ph=180.0):f1`,
-                    `  (p45:sp45 ph=330.0):f1`,
-                    `  (p45:sp45 ph=240.0):f1`,
-                    `  (p45:sp45 ph=330.0):f1`,
-                    `  (p45:sp45 ph=180.0):f1`,
-                    `  lo to 6 times l6`,
-                    `						;end ASAP`,
-                    `  4u pl1:f1`,
-                    `}`,
-                );
+                mainpp.push(...asapMixingPPText);
             }
             // add cleanup for all but the last module
             if (index != backendModules.length - 1) {
@@ -737,6 +818,14 @@ export function makePulprogText(backendModules, allModules) {
         pp.push(
             `"l6      = d15/(larger(p45,1u)*20)"  ; Number of ASAP loops`,
         );
+    }
+    if (extraDipsiMixing) {
+        // extraDipsiMixing is true if there are two 13C modules and the first isn't
+        // a HSQC-TOCSY.
+        pp.push(
+             `"l15    = (d29/(p6*115.112))/2"   ; half the number of DIPSI-2 loops between 13C modules`,
+             `"l16    = l15*2"                  ; number of DIPSI-2 loops between 13C modules`,
+        )
     }
     pp.push(
         `"acqt0   = 0"`,
