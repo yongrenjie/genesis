@@ -53,7 +53,7 @@ fi
 cd $(dirname "$0")
 
 # Get the current version number from git tag
-git_vno=$(git tag -l | tail -n 1 | sed 's/v//')
+git_vno=$(git tag -l | grep "^v[[:digit:]]\{1,\}\.[[:digit:]]\{1,\}\.[[:digit:]]\{1,\}" | tail -n 1 | sed 's/v//')
 
 # Escape the dots in version numbers
 old_vno=${git_vno//./\\.}
