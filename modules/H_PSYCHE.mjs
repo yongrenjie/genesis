@@ -22,7 +22,7 @@ define delay DH_PSYCHE2
 "cnst22  = (cnst20/360)*sqrt((2*cnst21)/(p40/2000000))"       ; PSYCHE RF amplitude
 "spw40   = plw1*(cnst22/(250000/p1))*(cnst22/(250000/p1))"    ; PSYCHE power level
 "DH_PSYCHE1  = in11/2-p16-d16-50u"
-"DH_PSYCHE2  = (dw*2*cnst50)+d16+50u"
+"DH_PSYCHE2  = (dw*2*cnst24)+d16+50u"
 `
 
 H_PSYCHE.module = `

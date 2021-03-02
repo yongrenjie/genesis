@@ -25,7 +25,7 @@ define delay DH_TSE_PSYCHE2
 "spw41   = plw1*(cnst23/(250000/p1))*(cnst23/(250000/p1))"    ; PSYCHE ZQS chirp RF amplitude
 "spw42   = spw41"                      ; PSYCHE ZQS chirp power
 "DH_TSE_PSYCHE1  = in11/2"
-"DH_TSE_PSYCHE2  = dw*2*cnst50"
+"DH_TSE_PSYCHE2  = dw*2*cnst24"
 `
 
 H_TSE_PSYCHE.module = `

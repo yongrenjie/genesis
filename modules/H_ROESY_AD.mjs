@@ -12,6 +12,9 @@ H_ROESY_AD.auprog = `noah_roesy States`;
 H_ROESY_AD.preamble = `
 "d10     = 3u"                         ; ROESY t1
 "in10    = 2*dw"                       ; ROESY increment
+"cnst51  = abs(cnst49-cnst50)*sfo1*1.732/2"                   ; rf amplitude for spin lock
+"spw49   = plw1*(cnst51*4*p1/1000000)*(cnst51*4*p1/1000000)"  ; power level for spin lock
+"spw50   = spw49"
 `
 
 H_ROESY_AD.module = `

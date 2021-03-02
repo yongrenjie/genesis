@@ -90,6 +90,7 @@ const allParams = {
     "cnst21": "PSYCHE saltire / chirp bandwidth (Hz) [10000]",
     "cnst22": "PSYCHE saltire RF amplitude (Hz)",
     "cnst23": "PSYCHE ZQS chirp RF amplitude (Hz)",
+    "cnst24": "PSYCHE drop points [ca. 4]",
     "cnst32": "fraction of C-H magn used for HSQC-TOCSY [0.5 to 1]",
     "cnst33": "= rf amplitude 20000 Hz for BUBI_1H_600u_RF20kHz",
     "cnst34": "= rf amplitude 10000 Hz for BUBI_13C_600u_RF10kHz",
@@ -104,7 +105,8 @@ const allParams = {
     "cnst45": "gradient ratio (4*N/H)",
     "cnst46": "gradient ratio (1*N/H)",
     "cnst47": "HMBC gradient ratio",
-    "cnst50": "PSYCHE drop points",
+    "cnst49": "left edge of spectral window (ppm) [ca. 9.5]",
+    "cnst50": "right edge of spectral window (ppm) [ca. -0.5]",
 
     "d0": "13C t1",
     "d1": "relaxation delay",
@@ -248,8 +250,8 @@ const allWavemakers = new Array(64);
 allWavemakers[3] = ";sp3:wvm:wu180C13: cawurst-20(60 kHz, 0.5 ms; L2H)";
 allWavemakers[18] = ";sp18:wvm:wu180Jcomp: cawurst-40(280 ppm; Jcomp, L2H)";
 allWavemakers[45] = ";sp45:wvm:wuASAP: cawurst-2(30 ppm, 1.0 ms; Q=3)";
-allWavemakers[49] = ";sp49:wvm:wu180H1SL: wurstAM(p50, 9.5 ppm; B1max = 5.0 kHz)";
-allWavemakers[50] = ";sp50:wvm:wu180H1SL2: wurstAM(p50, -0.5 ppm; B1max = 5.0 kHz)";
+allWavemakers[49] = ";sp49:wvm:wu180H1SL: wurstAM(p50, cnst49 ppm; B1max = 5.0 kHz)";
+allWavemakers[50] = ";sp50:wvm:wu180H1SL2: wurstAM(p50, cnst50 ppm; B1max = 5.0 kHz)";
 // }}}1
 
 // The function {{{1
