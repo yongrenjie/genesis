@@ -57,11 +57,11 @@ C_HSQC_COSY.module = `
   DC_HSQC_COSY5
 
   ; t1 period
-#ifdef TEDIT
+#ifdef EDIT
   (p31:sp18 ph0):f2
 #else
   (p14:sp3 ph0):f2
-#endif /*TEDIT*/
+#endif /* EDIT */
   4u
   p16:gp4
   d16

@@ -77,7 +77,7 @@ C_HSQC_COSY_CLIP.module = `
   (p24:sp7 ph0):f2
   4u
   DC_HSQCC_CL4 pl2:f2
-#endif
+#endif /* EDIT */
 
   (p3 ph7):f2
   p16:gp11*0.5  ; purge gradient

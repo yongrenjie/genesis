@@ -7,8 +7,9 @@ CI_HSQC_COSY_DSE.nuclei = `CH`;
 
 CI_HSQC_COSY_DSE.shortCode = `Sc`;
 
-CI_HSQC_COSY_DSE.shortDescription = `; 13C HSQC-COSY (2 spin echoes, doesn't preserve bulk)
-;     [use -DTEDIT for multiplicity editing]`
+CI_HSQC_COSY_DSE.shortDescription = `; 13C HSQC-COSY (2 spin echoes)
+;     [DOES NOT PRESERVE UNUSED 1JCH MAGNETISATION - ONLY FOR INTERNAL USE]
+;     [use -DEDIT1 for multiplicity editing (not recommended)]`
 
 CI_HSQC_COSY_DSE.auprog = `noah_hsqc`;
 
@@ -55,11 +56,11 @@ CI_HSQC_COSY_DSE.module = `
   DCI_HSQCC_DSE3
 
   ; t1 period
-#ifdef EDIT
+#ifdef EDIT1
   (p31:sp18 ph0):f2
 #else
   (p14:sp3 ph0):f2
-#endif /*EDIT*/
+#endif /* EDIT1 */
   4u
   p16:gp3
   d16
@@ -71,7 +72,7 @@ CI_HSQC_COSY_DSE.module = `
   d16
 
   ; multiplicity editing
-#ifdef EDIT
+#ifdef EDIT1
   DCI_HSQCC_DSE4
   (p31:sp18 ph0):f2
   DCI_HSQCC_DSE5
@@ -80,7 +81,7 @@ CI_HSQC_COSY_DSE.module = `
 #else
   (p14:sp3 ph0):f2
   DCI_HSQCC_DSE3 pl2:f2
-#endif
+#endif /* EDIT1 */
 
   ; reverse INEPT
   (p3 ph7):f2

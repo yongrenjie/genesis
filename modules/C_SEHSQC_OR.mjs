@@ -75,7 +75,7 @@ C_SEHSQC_OR.module = `
   (p24:sp7 ph0):f2
   4u
   DC_SEHSQC_OR4 pl2:f2
-#endif
+#endif /* EDIT */
 
   ; reverse INEPT for first component
   (center (p1 ph0):f1 (p3 ph7):f2 )
@@ -90,7 +90,7 @@ C_SEHSQC_OR.module = `
   (center (p1 ph1):f1 (p3 ph10):f2 )
 #else
   (center (p1 ph1):f1 (p3 ph9):f2 )
-#endif
+#endif /* EDIT */
 
   ; reverse INEPT for second component
   p16:gp7

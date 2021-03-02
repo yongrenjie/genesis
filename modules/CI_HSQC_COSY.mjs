@@ -8,7 +8,8 @@ CI_HSQC_COSY.nuclei = `CH`;
 CI_HSQC_COSY.shortCode = `Sc`;
 
 CI_HSQC_COSY.shortDescription = `; 13C HSQC-COSY with variable INEPT excitation
-;     [use -DTEDIT for multiplicity editing (not recommended)]`
+;     [specify fraction of 1J(CH) magnetisation to use with cnst32]
+;     [use -DEDIT1 for multiplicity editing (not recommended)]`
 
 CI_HSQC_COSY.auprog = `noah_hsqc`;
 
@@ -71,11 +72,11 @@ else
   DCI_HSQC_COSY5
 
   ; t1 period
-#ifdef TEDIT
+#ifdef EDIT1
   (p31:sp18 ph0):f2
 #else
   (p14:sp3 ph0):f2
-#endif /*TEDIT*/
+#endif /*EDIT1*/
   4u
   p16:gp3
   d16
@@ -87,7 +88,7 @@ else
   d16
 
   ; multiplicity editing. As it stands this would break the 1JCH magnetisation.
-#ifdef TEDIT
+#ifdef EDIT1
   DCI_HSQC_COSY6
   (p31:sp18 ph0):f2
   DCI_HSQC_COSY7
@@ -96,7 +97,7 @@ else
 #else
   (p14:sp3 ph0):f2
   DCI_HSQC_COSY5 pl2:f2
-#endif /* TEDIT */
+#endif /* EDIT1 */
 
   ; reverse INEPT
   (p3 ph7):f2

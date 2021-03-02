@@ -85,7 +85,7 @@ C_SEHSQC_DP.module = `
   d16
   (p14:sp3 ph0):f2
   DC_SEHSQC_DP3 pl2:f2
-#endif
+#endif /* EDIT */
 
   ( center
     (p3 ph7):f2

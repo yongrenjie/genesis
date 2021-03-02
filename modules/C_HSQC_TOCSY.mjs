@@ -8,7 +8,8 @@ C_HSQC_TOCSY.nuclei = `CH`;
 C_HSQC_TOCSY.shortCode = `St`;
 
 C_HSQC_TOCSY.shortDescription = `; 13C HSQC-TOCSY
-;     [use -DTEDIT for multiplicity editing]`
+;     [use -DEDIT for multiplicity editing (not recommended)]
+;     [use -DINVERT for inversion of TOCSY peaks]`;
 
 C_HSQC_TOCSY.auprog = `noah_hsqc`;
 
@@ -56,11 +57,11 @@ C_HSQC_TOCSY.module = `
   DC_HSQC_TOCSY3
 
   ; t1 period
-#ifdef TEDIT
+#ifdef EDIT
   (p31:sp18 ph0):f2
 #else
   (p14:sp3 ph0):f2
-#endif /*TEDIT*/
+#endif /* EDIT */
   4u
   p16:gp3
   d16
@@ -72,7 +73,7 @@ C_HSQC_TOCSY.module = `
   d16
 
   ; multiplicity editing
-#ifdef TEDIT
+#ifdef EDIT
   DC_HSQC_TOCSY4
   (p31:sp18 ph0):f2
   DC_HSQC_TOCSY5
@@ -81,7 +82,7 @@ C_HSQC_TOCSY.module = `
 #else
   (p14:sp3 ph0):f2
   DC_HSQC_TOCSY3 pl2:f2
-#endif /* TEDIT */
+#endif /* EDIT */
 
   ; reverse INEPT
   (p3 ph7):f2
@@ -141,7 +142,7 @@ C_HSQC_TOCSY.module = `
   p16:gp13*-1
   d16 pl1:f1
 
-#ifdef TEDIT
+#ifdef INVERT
   DC_HSQC_TOCSY7
   (p14:sp3 ph0):f2 
   (p2 ph1):f1 
@@ -155,7 +156,7 @@ C_HSQC_TOCSY.module = `
   p16:gp3*GC_HSQC_TOCSY*EA
   d16 pl12:f2
   4u
-#endif /* TEDIT */
+#endif /* INVERT */
   goscnp ph30 cpd2:f2   ; acquire 13C HSQC-TOCSY
   50u do:f2
 `

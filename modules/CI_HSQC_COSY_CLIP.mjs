@@ -8,7 +8,8 @@ CI_HSQC_COSY_CLIP.shortCode = `Sc`;
 CI_HSQC_COSY_CLIP.nuclei = `CH`;
 
 CI_HSQC_COSY_CLIP.shortDescription = `; 13C HSQC-CLIP-COSY
-;     [use -DTEDIT for multiplicity editing (not recommended)]`
+;     [DOES NOT PRESERVE UNUSED 1JCH MAGNETISATION - ONLY FOR INTERNAL USE]
+;     [use -DEDIT1 for multiplicity editing (not recommended)]`
 
 CI_HSQC_COSY_CLIP.auprog = `noah_hsqc`;
 
@@ -60,7 +61,7 @@ CI_HSQC_COSY_CLIP.module = `
   ; optional multiplicity editing
   ; edited part from hsqcedetgpsisp2.3
   ; nonedited part from hsqcetgpsisp2.2
-#ifdef TEDIT
+#ifdef EDIT1
   p16:gp3*EA
   d16
   DCI_HSQCC_CL2
@@ -77,7 +78,7 @@ CI_HSQC_COSY_CLIP.module = `
   (p24:sp7 ph0):f2
   4u
   DCI_HSQCC_CL4 pl2:f2
-#endif
+#endif /* EDIT1 */
 
   (p3 ph7):f2
   p16:gp11*0.5  ; purge gradient

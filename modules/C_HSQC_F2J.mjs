@@ -52,7 +52,7 @@ C_HSQC_F2J.module = `
   (p31:sp18 ph0):f2
 #else
   (p14:sp3 ph0):f2
-#endif /*EDIT*/
+#endif /* EDIT */
   4u
   p16:gp4
   d16
@@ -73,7 +73,7 @@ C_HSQC_F2J.module = `
 #else
   (p14:sp3 ph0):f2
   DC_HSQC_F2J3 pl2:f2
-#endif
+#endif /* EDIT */
 
   ; reverse INEPT
   (p3 ph7):f2

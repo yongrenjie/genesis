@@ -8,7 +8,8 @@ C_SEHSQC_TOCSY_OR.nuclei = `CH`;
 C_SEHSQC_TOCSY_OR.shortCode = `Stp`;
 
 C_SEHSQC_TOCSY_OR.shortDescription = `; 13C sensitivity-enhanced HSQC-TOCSY
-;     [use -DTEDIT for multiplicity editing]`
+;     [use -DEDIT for multiplicity editing (not recommended)]
+;     [use -DINVERT for inversion of TOCSY peaks]`
 
 C_SEHSQC_TOCSY_OR.auprog = `noah_hsqc`;
 
@@ -33,9 +34,9 @@ define delay DC_SEHSQCT_OR8
 "DC_SEHSQCT_OR3    = d2-cnst17*p24/2-4u"                ; multiplicity editing
 "DC_SEHSQCT_OR4    = p16+d16+p2+d0*2-4u"                ; 13C post-t1, no editing
 "DC_SEHSQCT_OR5    = d6-cnst17*p24/2"                   ; SE spin echo
-"DC_SEHSQCT_OR6    = d2-larger(p2,p14)/2-p1*2/PI"       ; multiplicity editing
-"DC_SEHSQCT_OR7    = d2-larger(p2,p14)/2-p16-d16-de-4u" ; multiplicity editing
-"DC_SEHSQCT_OR8    = p16+d16-p1*0.78+de+8u"             ; final spin echo, no editing
+"DC_SEHSQCT_OR6    = d2-larger(p2,p14)/2-p1*2/PI"       ; inversion of TOCSY vs HSQC
+"DC_SEHSQCT_OR7    = d2-larger(p2,p14)/2-p16-d16-de-4u" ; inversion of TOCSY vs HSQC
+"DC_SEHSQCT_OR8    = p16+d16-p1*0.78+de+8u"             ; final spin echo, no inversion
 "cnst43  = sfo2/sfo1"                ; gradient ratio
 define list<gradient> GC_SEHSQCT_OR={cnst43}
 `
@@ -57,7 +58,7 @@ C_SEHSQC_TOCSY_OR.module = `
   d0
 
   ; multiplicity editing
-#ifdef TEDIT
+#ifdef EDIT
   p16:gp3
   d16 
   DC_SEHSQCT_OR2
@@ -70,7 +71,7 @@ C_SEHSQC_TOCSY_OR.module = `
   (p24:sp7 ph7):f2
   4u
   DC_SEHSQCT_OR4 pl2:f2
-#endif /* TEDIT */
+#endif /* EDIT */
 
   ; first spin echo
   (center (p1 ph0):f1 (p3 ph7):f2 )
@@ -130,7 +131,7 @@ C_SEHSQC_TOCSY_OR.module = `
   4u pl1:f1
   (p1 ph0):f1
 
-#ifdef TEDIT
+#ifdef INVERT
   DC_SEHSQCT_OR6
   (center (p2 ph0):f1 (p14:sp3 ph13):f2 )
   4u
@@ -144,7 +145,7 @@ C_SEHSQC_TOCSY_OR.module = `
   p16:gp3*GC_SEHSQCT_OR*EA
   d16 pl12:f2
   4u
-#endif /* TEDIT */
+#endif /* INVERT */
 
   goscnp ph30 cpd2:f2
   50u do:f2

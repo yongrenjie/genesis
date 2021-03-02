@@ -8,7 +8,8 @@ CI_HSQC_F2J.nuclei = `CH`;
 CI_HSQC_F2J.shortCode = `Sj`;
 
 CI_HSQC_F2J.shortDescription = `; 13C HSQC (F2-coupled) with variable INEPT excitation
-;     [use -DTEDIT for multiplicity editing]`
+;     [specify fraction of 1J(CH) magnetisation to use with cnst32]
+;     [use -DEDIT1 for multiplicity editing]`
 
 CI_HSQC_F2J.auprog = `noah_hsqc`;
 
@@ -52,11 +53,11 @@ CI_HSQC_F2J.module = `
   DCI_HSQC_F2J3
 
   ; t1 period
-#ifdef TEDIT
+#ifdef EDIT1
   (p31:sp18 ph0):f2
 #else
   (p14:sp3 ph0):f2
-#endif /*TEDIT*/
+#endif /* EDIT1 */
   4u
   p16:gp3
   d16
@@ -68,7 +69,7 @@ CI_HSQC_F2J.module = `
   d16
 
   ; multiplicity editing
-#ifdef TEDIT
+#ifdef EDIT1
   DCI_HSQC_F2J4
   (p31:sp18 ph0):f2
   DCI_HSQC_F2J5
@@ -77,7 +78,7 @@ CI_HSQC_F2J.module = `
 #else
   (p14:sp3 ph0):f2
   DCI_HSQC_F2J3 pl2:f2
-#endif /* TEDIT */
+#endif /* EDIT1 */
 
   ; reverse INEPT
   (p3 ph7):f2
