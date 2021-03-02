@@ -191,6 +191,7 @@ allPhases[13] = new Phase({num: 13, str: "0", ct1: "i2"});
 allPhases[14] = new Phase({num: 14, str: "0 1 2 3"});
 allPhases[15] = new Phase({num: 15, str: "0 1"});
 allPhases[16] = new Phase({num: 16, str: "1 3", ea: "i", ct1: "r"});  // DQF-COSY ph
+allPhases[17] = new Phase({num: 17, str: "1 1 3 3"});
 // ... plenty of empty slots to use
 // below are for receivers
 allPhases[25] = new Phase({num: 25, str: "0 0 2 2", ct1: "i2"});      // HSQC-COSY
