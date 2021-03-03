@@ -27,8 +27,8 @@ H_COSY_TOCSY.module = `
   2m st
 
   ; TOCSY
-  10u gron12 pl0:f1
-  (p32:sp29 ph0):f1  ; ZQ suppression
+  10u gron12
+  (p32:sp29 ph0):f1
   20u groff
   d16 pl10:f1
 
@@ -38,7 +38,7 @@ H_COSY_TOCSY.module = `
   p6*3.222 ph3
   p6*3.167 ph1
   p6*0.333 ph3
-  
+  p6*2.722 ph1
   p6*4.167 ph3
   p6*2.944 ph1
   p6*4.111 ph3
@@ -76,12 +76,12 @@ H_COSY_TOCSY.module = `
 						;end DIPSI2
   p16:gp11
   d16
-  10u gron12*1.333 pl0:f1 
-  (p32*0.75:sp29 ph0):f1  ; ZQ suppression
+  10u gron12*1.333
+  (p32*0.75:sp29 ph0):f1
   20u groff
   d16 pl1:f1
   4u
-
   (p1 ph0):f1
+
   goscnp ph26  ; acquire H-H TOCSY
 `
