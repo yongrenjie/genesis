@@ -53,6 +53,22 @@ CI_HSQC_COSY.module = `
 
   ; INEPT with variable excitation
   (p1 ph0):f1
+#ifdef EDIT1
+if "l3 % 2 == 1"
+{
+  DCI_HSQC_COSY3
+  (p14:sp3 ph0):f2
+  (p2 ph0):f1
+  DCI_HSQC_COSY4 pl2:f2
+}
+else
+{
+  DCI_HSQC_COSY1
+  (p14:sp3 ph0):f2
+  (p2 ph0):f1
+  DCI_HSQC_COSY2 pl2:f2
+}
+#else
 if "l3 % 2 == 1"
 {
   DCI_HSQC_COSY1
@@ -67,6 +83,8 @@ else
   (p2 ph0):f1
   DCI_HSQC_COSY4 pl2:f2
 }
+#endif /* EDIT1 */
+
   (p1 ph1):f1
   (p3 ph5):f2
   DCI_HSQC_COSY5
@@ -76,7 +94,7 @@ else
   (p31:sp18 ph0):f2
 #else
   (p14:sp3 ph0):f2
-#endif /*EDIT1*/
+#endif /* EDIT1 */
   4u
   p16:gp3
   d16
