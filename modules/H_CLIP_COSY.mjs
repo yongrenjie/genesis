@@ -23,7 +23,7 @@ H_CLIP_COSY.module = `
   (p1 ph6):f1
   d10
   (p1 ph0):f1
-  10u gron12 pl0:f1
+  10u gron12
   (p32:sp29 ph0):f1
   20u groff
   d16 pl1:f1
@@ -39,7 +39,7 @@ H_CLIP_COSY.module = `
   d12
 
   (p1 ph0):f1
-  10u gron12*1.333 pl0:f1 
+  10u gron12*1.333
   (p32*0.75:sp29 ph2):f1
   20u groff
   p16:gp11

@@ -27,7 +27,7 @@ H_TOCSY.module = `
   (p32:sp29 ph0):f1
   20u groff
   d16 pl10:f1
-  
+
 						;begin DIPSI2
 8 p6*3.556 ph3
   p6*4.556 ph1

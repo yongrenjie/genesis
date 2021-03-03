@@ -38,7 +38,7 @@ H_COSY_TOCSY.module = `
   2m st
 
   ; TOCSY
-  10u gron12 pl0:f1
+  10u gron12
   (p32:sp29 ph0):f1  ; ZQ suppression
   20u groff
   d16 pl10:f1
@@ -87,7 +87,7 @@ H_COSY_TOCSY.module = `
 						;end DIPSI2
   p16:gp11
   d16
-  10u gron12*1.333 pl0:f1 
+  10u gron12*1.333
   (p32*0.75:sp29 ph0):f1  ; ZQ suppression
   20u groff
   d16 pl1:f1
