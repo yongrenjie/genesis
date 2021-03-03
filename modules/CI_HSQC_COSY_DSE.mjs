@@ -5,7 +5,7 @@ export default CI_HSQC_COSY_DSE;
 
 CI_HSQC_COSY_DSE.nuclei = `CH`;
 
-CI_HSQC_COSY_DSE.shortCode = `Sc`;
+CI_HSQC_COSY_DSE.shortCode = `Q`;
 
 CI_HSQC_COSY_DSE.shortDescription = `; 13C HSQC-COSY (2 spin echoes)
 ;     [DOES NOT PRESERVE UNUSED 1JCH MAGNETISATION - ONLY FOR INTERNAL USE]

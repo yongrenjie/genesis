@@ -5,7 +5,7 @@ export default CI_HSQC_COSY;
 
 CI_HSQC_COSY.nuclei = `CH`;
 
-CI_HSQC_COSY.shortCode = `Sc`;
+CI_HSQC_COSY.shortCode = `Q`;
 
 CI_HSQC_COSY.shortDescription = `; 13C HSQC-COSY with variable INEPT excitation
 ;     [specify fraction of 1J(CH) magnetisation to use with cnst32]

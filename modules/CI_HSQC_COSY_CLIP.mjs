@@ -3,7 +3,7 @@
 const CI_HSQC_COSY_CLIP = {};
 export default CI_HSQC_COSY_CLIP;
 
-CI_HSQC_COSY_CLIP.shortCode = `Sc`;
+CI_HSQC_COSY_CLIP.shortCode = `Q`;
 
 CI_HSQC_COSY_CLIP.nuclei = `CH`;
 

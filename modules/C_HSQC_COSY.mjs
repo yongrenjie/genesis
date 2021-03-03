@@ -5,7 +5,7 @@ export default C_HSQC_COSY;
 
 C_HSQC_COSY.nuclei = `CH`;
 
-C_HSQC_COSY.shortCode = `Sc`;
+C_HSQC_COSY.shortCode = `Q`;
 
 C_HSQC_COSY.shortDescription = `; 13C HSQC-COSY
 ;     [use -DEDIT for multiplicity editing (not recommended)]`
