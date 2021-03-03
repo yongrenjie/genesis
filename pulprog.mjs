@@ -278,7 +278,7 @@ const extraDipsiMixingPPText = [
     `  p6*4.167 ph3`,
     `  p6*2.944 ph1`,
     `  p6*4.111 ph3`,
-    `  `,
+    ``,
     `  p6*3.556 ph1`,
     `  p6*4.556 ph3`,
     `  p6*3.222 ph1`,
