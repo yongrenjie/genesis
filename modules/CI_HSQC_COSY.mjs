@@ -49,7 +49,7 @@ define list<gradient> GCI_HSQC_COSY={cnst41}
 `
 
 CI_HSQC_COSY.module = `
-  ; 13C-1H HSQC
+  ; 13C-1H HSQC-COSY
 
   ; INEPT with variable excitation
   (p1 ph0):f1

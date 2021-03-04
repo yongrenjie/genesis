@@ -41,7 +41,7 @@ define list<gradient> GCI_HSQCC_CL={cnst43}
 `
 
 CI_HSQC_COSY_CLIP.module = `
-  ; 13C-1H seHSQC
+  ; 13C-1H HSQC-CLIP-COSY
 
   ; forward INEPT
   (p1 ph0):f1
@@ -62,7 +62,7 @@ CI_HSQC_COSY_CLIP.module = `
   ; edited part from hsqcedetgpsisp2.3
   ; nonedited part from hsqcetgpsisp2.2
 #ifdef EDIT1
-  p16:gp3*EA
+  p16:gp3
   d16
   DCI_HSQCC_CL2
   (p31:sp18 ph0):f2
@@ -73,7 +73,7 @@ CI_HSQC_COSY_CLIP.module = `
   2u
   2u pl2:f2
 #else
-  p16:gp3*EA
+  p16:gp3
   d16
   (p24:sp7 ph0):f2
   4u

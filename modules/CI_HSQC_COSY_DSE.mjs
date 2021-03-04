@@ -43,7 +43,7 @@ define list<gradient> GCI_HSQCC_DSE={cnst41}
 `
 
 CI_HSQC_COSY_DSE.module = `
-  ; 13C-1H HSQC
+  ; 13C-1H HSQC-COSY
 
   ; INEPT
   (p1 ph0):f1
