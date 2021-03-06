@@ -13,6 +13,8 @@
     "license": "MIT",
     "repository": "github:yongrenjie/gennoah",
     "scripts": {
-        "start": "node build/app.js"
-    }
+        "start": "node build/app.js",
+        "postinstall": "tsc"
+    },
+    "type": "module"
 }
