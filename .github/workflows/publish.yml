@@ -1,0 +1,42 @@
+name: publish-website
+on:
+  push:
+    branches:
+      - typescript
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        ref: typescript
+
+    - name: Setup node.js v14
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Compile TypeScript code
+      run: |
+        npm install typescript
+        tsc
+
+    - name: Clone gh-pages branch
+      uses: actions/checkout@v2
+      with:
+        ref: gh-pages
+        path: gh-pages
+
+    - name: Update content of gh-pages clone
+      run: |
+        rm -rf gh-pages/build
+        cp -r build gh-pages
+        cd gh-pages
+        git config --local user.name "GitHub Actions"
+        git config --local user.email "<>"
+        git add -f build    # Need -f because build/ is gitignored.
+        git commit -m "Update compiled JavaScript" || true
+        git push
