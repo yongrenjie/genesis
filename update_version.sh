@@ -2,7 +2,7 @@
 
 # Script to automatically update gennoah version numbers. Updates the following list of files:
 #   - package.json
-#   - version.mjs
+#   - src/version.js
 #   - any file in scripts/ (recursively)
 # and also automatically creates the noah_scripts_vX.Y.Z.zip file in downloads/.
 #
@@ -70,7 +70,7 @@ fi
 
 # Edit top-level JavaScript files
 "${sed_command[@]}" "s/${old_vno}/${new_vno}/g" "./package.json"
-"${sed_command[@]}" "s/${old_vno}/${new_vno}/g" "./version.mjs"
+"${sed_command[@]}" "s/${old_vno}/${new_vno}/g" "./src/version.js"
 
 # Edit scripts
 # We first get the date by grepping in noah_nus.py. Note that this regex will fail in the year 2100.

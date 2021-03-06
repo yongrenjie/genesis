@@ -1,9 +1,9 @@
 // Initialisation {{{1
 
 // Get the version number.
-import {version} from "./version.mjs";
-import {moduleNames} from "./moduleNames.mjs";
-import {makePulprogText} from "./pulprog.mjs";
+import {version} from "./version.js";
+import {moduleNames} from "./moduleNames.js";
+import {makePulprogText} from "./pulprog.js";
 
 // Name attributes of the radio button groups.
 let inputNames = ["hmbc", "n15", "ci13", "c13", "h1"];
@@ -17,9 +17,9 @@ function loadAllBackendModules() {
     // then import all of them, adding them to the allModules map.
     let promises = [];
     for (let module of moduleNames) {
-        let p = import(`./modules/${module}.mjs`);
+        let p = import(`./modules/${module}.js`);
         p.then(obj => allModules.set(module, obj.default))
-            .catch(error => console.log(`${module} not found`));
+            .catch(error => console.log(`${error}: ${module} not found`));
         promises.push(p);
     }
     return promises;
@@ -34,7 +34,7 @@ function getChosenFrontendModules() {
     return inputNames.map(inputName => document.querySelector(`input[name="${inputName}"]:checked`).id);
 }
 
-function getChosenBackendModules(frontendModules) {
+function getChosenBackendModules(frontendModules: Array<string>) {
     /* Based on the user inputs, selects the appropriate backend modules for constructing
      * the pulse programme.
      * This takes care of a few aspects where the exact pulse sequence chosen depends on
@@ -55,7 +55,7 @@ function getChosenBackendModules(frontendModules) {
     if (validModules.length == 0) return [];
     // If devmode is enabled, then we are (mostly) done, since the input IDs are already
     // the correct names of the backend modules. We just need to capitalise the 1H module.
-    if (document.getElementById("devmode_button").checked) {
+    if ((document.getElementById("devmode_button") as HTMLInputElement).checked) {
         if (validModules[validModules.length - 1].startsWith("h1")) {
             // replace the last element
             validModules.push(validModules.pop().replace("h1", "h").toUpperCase());
@@ -153,24 +153,25 @@ function updatePulprogText() {
     /* Function which updates the pulse programme text.
      * This is triggered whenever a module is selected. */
     // First, get array of frontend and backend modules
-    let frontendModules = getChosenFrontendModules();
+    const frontendModules = getChosenFrontendModules();
     const backendModules = getChosenBackendModules(frontendModules);
+    const pulprogTextarea = document.getElementById("pulprog_text") as HTMLTextAreaElement;
     // Change the pulprog text accordingly
     if (backendModules.length > 0) {
-        let ppText;
+        let ppText: string;
         try { ppText = makePulprogText(backendModules, allModules); }
         catch (error) { console.error(error); ppText = ""; }
-        document.getElementById("pulprog_text").value = ppText;
+        pulprogTextarea.value = ppText;
     }
     else {
-        document.getElementById("pulprog_text").value = "";
+        pulprogTextarea.value = "";
     }
 }
 
 function toggleDevMode() {
     /* Enable or disable developer mode depending on the state of devmode_button. */
     // get state of button.
-    const on = document.getElementById("devmode_button").checked;
+    const on = (document.getElementById("devmode_button") as HTMLInputElement).checked;
     const uls = [...document.querySelectorAll("div.chooser_modules>ul")];
     // change the number of rows in each box
     // it turns out we don't need this (for now), but if we implement new things such
@@ -183,7 +184,7 @@ function toggleDevMode() {
     // toggled since nondevmode and devmode use the same inputs.
     for (let ul of uls.slice(0, -1)) {
         // iterate over each list item.
-        for (let li of ul.children) {
+        for (let li of ul.children as HTMLCollectionOf<HTMLElement>) {
             const radioID = li.children[0].id;
             if (radioID.includes("none")) {
                 // 'none' button, must always be displayed
@@ -201,7 +202,7 @@ function toggleDevMode() {
     }
     // make the font size smaller if devmode is enabled
     for (let ul of uls.slice(0, -1)) {
-        for (let li of ul.children) {
+        for (let li of ul.children as HTMLCollectionOf<HTMLElement>) {
             if (!(li.children[0].id.includes("none"))) {
                 li.style.fontSize = on ? "14px" : "inherit";
             }
@@ -228,7 +229,7 @@ for (let inputName of inputNames) {
 function resetButtons() {
     let noneButtonIDs = ["hmbc_none", "n15_none", "ci13_none", "c13_none", "h1_none"]
     for (let id of noneButtonIDs) {
-        document.getElementById(id).checked = true;
+        (document.getElementById(id) as HTMLInputElement).checked = true;
     }
     updatePulprogText();
 }
@@ -242,7 +243,7 @@ document.getElementById("faq_button").addEventListener("click", goToFAQ);
 
 // Download button.
 function savePPFile() {
-    const ppText = document.getElementById("pulprog_text").value;
+    const ppText = (document.getElementById("pulprog_text") as HTMLTextAreaElement).value;
     if (ppText.length > 0) {
         // use application/octet-stream to stop browsers from adding an extension
         const ppBlob = new Blob([ppText], {type: "application/octet-stream"});
@@ -278,8 +279,8 @@ createScriptDownloadLinks();
 // to be equal to the number of visible items -- except for the 1H box
 // which is manually set to be 8 items long via CSS.
 function setModuleListLengths() {
-    let uls = [...document.querySelectorAll("div.chooser_modules:not(.h1)>ul")];
-    let lengths = uls.map(ul => [...ul.children].filter(li => li.style.display != "none").length);
+    let uls = [...document.querySelectorAll("div.chooser_modules:not(.h1)>ul")] as Array<HTMLElement>;
+    let lengths = uls.map(ul => ([...ul.children] as Array<HTMLElement>).filter(li => li.style.display != "none").length);
     uls.forEach(function (ul, i) {
         ul.style.gridTemplateRows = `repeat(${lengths[i]}, auto)`;
     });

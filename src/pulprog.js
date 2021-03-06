@@ -1,5 +1,5 @@
 // Get the version number.
-import {version} from "./version.mjs";
+import {version} from "./version.js";
 
 // Standardised parameter definitions {{{1
 // Goto labels {{{2
@@ -359,7 +359,7 @@ export function makePulprogText(backendModules, allModules) {
     /* backendModules : Array of Strings indicating the backend modules to be used in pulse
      *                  programme construction.
      * allModules     : Map containing backend module names as the keys (these are the same 
-     *                  as the .mjs file names, without extensions) and the actual module
+     *                  as the .js file names, without extensions) and the actual module
      *                  objects as the values.
      */
     // Initialisation {{{2

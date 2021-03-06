@@ -21,7 +21,7 @@ To get this to work, first [install Node.js](https://nodejs.org/en/download/), t
 ```
 git clone https://github.com/yongrenjie/gennoah   # or download a release
 cd gennoah
-node app.mjs
+node ./build/app.js
 ```
 
 Open up a browser and navigate to `localhost` (the website is served on the default port 80).

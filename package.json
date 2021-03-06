@@ -13,6 +13,6 @@
     "license": "MIT",
     "repository": "github:yongrenjie/gennoah",
     "scripts": {
-        "start": "node app.mjs"
+        "start": "node build/app.js"
     }
 }

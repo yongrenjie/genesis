@@ -5,8 +5,8 @@ import http from "http";
 import url from "url";
 import querystring from "querystring";
 
-import {makePulprogText} from "./pulprog.mjs";
-import {moduleNames} from "./moduleNames.mjs";
+import {makePulprogText} from "./pulprog.js";
+import {moduleNames} from "./moduleNames.js";
 let allModules = new Map();
 const port = process.env.PORT || 5555;
 
@@ -26,7 +26,7 @@ function loadAllBackendModules() {
     // then import all of them, adding them to the allModules map.
     let promises = [];
     for (let module of moduleNames) {
-        let p = import(`./modules/${module}.mjs`);
+        let p = import(`./modules/${module}.js`);
         p.then(obj => allModules.set(module, obj.default))
             .catch(error => console.log(`${module} not found`));
         promises.push(p);
