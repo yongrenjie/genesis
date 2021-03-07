@@ -14,7 +14,8 @@
     "repository": "github:yongrenjie/gennoah",
     "scripts": {
         "start": "node build/app.js",
-        "postinstall": "tsc"
+        "postinstall": "tsc",
+        "test": "tsc; mocha tests/"
     },
     "type": "module"
 }

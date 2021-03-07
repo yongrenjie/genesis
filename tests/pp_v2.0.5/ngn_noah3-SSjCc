@@ -1,0 +1,426 @@
+; ngn_noah3-SSjCc
+
+; 13C HSQC with variable INEPT excitation
+;     [specify fraction of 1J(CH) magnetisation to use with cnst32]
+;     [use -DEDIT1 for multiplicity editing]
+; 13C HSQC (F2-coupled)
+;     [use -DEDIT for multiplicity editing]
+; 1H CLIP-COSY (States)
+
+;$CLASS=HighRes
+;$DIM=2D
+;$TYPE=
+;$SUBTYPE=
+;$COMMENT=
+
+#include <Avance.incl>
+#include <Grad.incl>
+#include <Delay.incl>
+
+#ifdef NUS
+define list<loopcounter> t1list=<$VCLIST>
+#endif
+
+define delay DC_HSQC_F2J1
+define delay DC_HSQC_F2J2
+define delay DC_HSQC_F2J3
+define delay DC_HSQC_F2J4
+define delay DC_HSQC_F2J5
+define delay DC_HSQC_F2J6
+define delay DCI_HSQC1
+define delay DCI_HSQC2
+define delay DCI_HSQC3
+define delay DCI_HSQC4
+define delay DCI_HSQC5
+define delay DCI_HSQC6
+define delay DCI_HSQC7
+"cnst41  = 2*sfo2/sfo1"                ; gradient ratio
+"d0      = 3u"                         ; 13C HSQC t1
+"d2      = 0.5s/cnst2"                 ; JCOMP
+"d4      = 0.25s/cnst2"                ; 13C INEPT
+"d10     = 3u"                         ; CLIP-COSY t1
+"d12     = 0.25s/cnst12"               ; CLIP-COSY mixing (< 1/4J(HH))
+"in0     = inf1/2"                     ; 13C HSQC increment
+"in10    = 2*dw"                       ; CLIP-COSY increment
+"l13     = (d19/(p6*115.112))/2"       ; half the number of HSQC-TOCSY DIPSI-2 loops
+"l14     = l13*2"                      ; number of HSQC-TOCSY DIPSI-2 loops
+"p2      = p1*2"                       ; 1H hard 180
+"DCI_HSQC1   = (asin(cnst32)/(2*PI*cnst2))-p14/2000000"
+"DCI_HSQC2   = (asin(cnst32)/(2*PI*cnst2))+p14/2000000"
+"DCI_HSQC3   = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DCI_HSQC4   = d2+p3+p2/2"
+"DCI_HSQC5   = DCI_HSQC3+p3-p2/2"
+"DCI_HSQC6   = d4-p14/2"
+"DCI_HSQC7   = d4+p14/2-p16-d16-p3-de+p1*2/PI-8u"
+"DC_HSQC_F2J1   = d4-p14/2"
+"DC_HSQC_F2J2   = d4+p14/2"
+"DC_HSQC_F2J3   = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DC_HSQC_F2J4   = d2+p3+p2/2"
+"DC_HSQC_F2J5   = DC_HSQC_F2J3+p3-p2/2"
+"DC_HSQC_F2J6   = DC_HSQC_F2J2-p16-d16-p3-de+p1*2/PI-8u"
+define list<gradient> GC_HSQC_F2J={cnst41}
+define list<gradient> GCI_HSQC={cnst41}
+"l0      = td1/6"             ; Total number of 13C t1 increments
+"l1      = 0"                 ; Running counter of 13C t1 increments
+"l2      = 0"                 ; Counter, even for echo, odd for antiecho
+"l3      = 0"                 ; Running counter for NS
+"l15    = (d29/(p6*115.112))/2"   ; half the number of DIPSI-2 loops between 13C modules
+"l16    = l15*2"                  ; number of DIPSI-2 loops between 13C modules
+"acqt0   = 0"
+baseopt_echo
+
+1 ze
+2 30m
+3 5m
+4 50u UNBLKGRAD
+
+#ifdef NUS
+  "d0=(in0*t1list)+3u"
+  "d10=(in10*t1list)+3u"
+#endif
+  "l3 = l3 + 1"
+
+  ; Cleanup
+  4u pl2:f2
+  (p3 ph0):f2
+  4u pl1:f1
+  p16:gp0
+  d16
+  (p1 ph0):f1
+  4u
+  p16:gp0*-1.37
+  d16
+  (p1 ph1):f1
+  4u
+  p16:gp0*0.77
+  d16
+  4u BLKGRAD
+  d1 st0
+  4u UNBLKGRAD
+
+
+  ; MODULE 1
+  ; 13C-1H HSQC
+
+  ; INEPT
+  (p1 ph0):f1
+  DCI_HSQC1
+  (p14:sp3 ph0):f2
+  (p2 ph0):f1
+  DCI_HSQC2 pl2:f2
+  (p1 ph1):f1
+  (p3 ph5):f2
+  DCI_HSQC3
+
+  ; t1 period
+#ifdef EDIT1
+  (p31:sp18 ph0):f2
+#else
+  (p14:sp3 ph0):f2
+#endif /*EDIT1*/
+  4u
+  p16:gp3
+  d16
+  d0
+  (p2 ph11):f1
+  d0
+  4u
+  p16:gp3
+  d16
+
+  ; multiplicity editing
+#ifdef EDIT1
+  DCI_HSQC4
+  (p31:sp18 ph0):f2
+  DCI_HSQC5
+  (p2 ph1):f1
+  d2 pl2:f2
+#else
+  (p14:sp3 ph0):f2
+  DCI_HSQC3 pl2:f2
+#endif /* EDIT1 */
+
+  ; reverse INEPT
+  (p3 ph7):f2
+  (p1 ph0):f1
+  DCI_HSQC6
+  (p14:sp3 ph0):f2
+  (p2 ph1):f1
+  4u
+  p16:gp3*GCI_HSQC*EA
+  d16 pl2:f2
+  DCI_HSQC7
+  (p3 ph0):f2
+  4u pl12:f2
+  goscnp ph30 cpd2:f2
+  50u do:f2
+
+  ; (optional) DIPSI-2 mixing before next module
+if "d29 > 1m"
+{
+  50u
+  p16:gp13
+  d16 pl10:f1
+						;begin DIPSI2
+9 p6*3.556 ph3
+  p6*4.556 ph1
+  p6*3.222 ph3
+  p6*3.167 ph1
+  p6*0.333 ph3
+  p6*2.722 ph1
+  p6*4.167 ph3
+  p6*2.944 ph1
+  p6*4.111 ph3
+
+  p6*3.556 ph1
+  p6*4.556 ph3
+  p6*3.222 ph1
+  p6*3.167 ph3
+  p6*0.333 ph1
+  p6*2.722 ph3
+  p6*4.167 ph1
+  p6*2.944 ph3
+  p6*4.111 ph1
+
+  p6*3.556 ph1
+  p6*4.556 ph3
+  p6*3.222 ph1
+  p6*3.167 ph3
+  p6*0.333 ph1
+  p6*2.722 ph3
+  p6*4.167 ph1
+  p6*2.944 ph3
+  p6*4.111 ph1
+
+  p6*3.556 ph3
+  p6*4.556 ph1
+  p6*3.222 ph3
+  p6*3.167 ph1
+  p6*0.333 ph3
+  p6*2.722 ph1
+  p6*4.167 ph3
+  p6*2.944 ph1
+  p6*4.111 ph3
+  lo to 9 times l16
+						;end DIPSI2
+  p16:gp13*1.333
+  d16 pl1:f1
+}
+
+  ; Cleanup
+  4u pl1:f1
+  4u pl2:f2
+  (p3 ph0):f2
+  4u
+  p16:gp0*1.77
+  2m st
+
+
+  ; MODULE 2
+  ; 13C-1H HSQC (F2 coupled)
+
+  ; INEPT
+  (p1 ph0):f1
+  DC_HSQC_F2J1
+  (p14:sp3 ph0):f2
+  (p2 ph0):f1
+  DC_HSQC_F2J2 pl2:f2
+  (p1 ph1):f1
+  (p3 ph5):f2
+  DC_HSQC_F2J3
+
+  ; t1 period
+#ifdef EDIT
+  (p31:sp18 ph0):f2
+#else
+  (p14:sp3 ph0):f2
+#endif /* EDIT */
+  4u
+  p16:gp4
+  d16
+  d0
+  (p2 ph11):f1
+  d0
+  4u
+  p16:gp4
+  d16
+
+  ; multiplicity editing
+#ifdef EDIT
+  DC_HSQC_F2J4
+  (p31:sp18 ph0):f2
+  DC_HSQC_F2J5
+  (p2 ph1):f1
+  d2 pl2:f2
+#else
+  (p14:sp3 ph0):f2
+  DC_HSQC_F2J3 pl2:f2
+#endif /* EDIT */
+
+  ; reverse INEPT
+  (p3 ph7):f2
+  (p1 ph0):f1
+  DC_HSQC_F2J1
+  (p14:sp3 ph0):f2
+  (p2 ph1):f1
+  4u
+  p16:gp4*EA*GC_HSQC_F2J
+  d16 pl2:f2
+  DC_HSQC_F2J6
+  (p3 ph0):f2
+  4u pl12:f2
+  goscnp ph30 cpd2:f2
+  50u
+
+  ; Cleanup
+  4u pl1:f1
+  4u pl2:f2
+  (p3 ph0):f2
+  4u
+  p16:gp0*2.32
+  2m st
+
+
+  ; MODULE 3
+  ; 1H-1H CLIP-COSY
+
+  (p1 ph6):f1
+  d10
+  (p1 ph0):f1
+  10u gron12
+  (p32:sp29 ph0):f1
+  20u groff
+  d16 pl1:f1
+  (p1 ph0):f1
+
+  ; in-phase transfer via perfect echo
+  d12
+  (p2 ph1):f1
+  d12
+  (p1 ph1):f1
+  d12
+  (p2 ph3):f1
+  d12
+
+  (p1 ph0):f1
+  10u gron12*1.333
+  (p32*0.75:sp29 ph2):f1
+  20u groff
+  p16:gp11
+  d16 pl1:f1 
+  4u
+  (p1 ph0):f1
+
+  go=2 ph26
+
+  ; echo/antiecho loop
+  "l2 = l2 + 1"
+  1m igrad EA
+  1m ip6
+  30m wr #0 if #0 zd
+  lo to 3 times 2
+
+  ; t1 incrementation
+  "l1 = l1 + 1"
+#ifdef NUS
+  1m t1list.inc
+#endif
+  1m ip5*2
+  1m rp6
+  1m ip30*2
+
+  ; 13C t1 incrementation
+#ifdef NUS
+#else
+  1m id0
+#endif
+
+  ; 1H t1 incrementation
+#ifdef NUS
+#else
+  1m id10
+#endif /* NUS */
+
+  lo to 4 times l0
+
+50u BLKGRAD
+exit
+
+ph0=0
+ph1=1
+ph2=2
+ph3=3
+ph5=0 2
+ph6=0 2
+ph7=0 0 2 2
+ph11=0 0 0 0 2 2 2 2
+ph26=0 2
+ph30=0 2 2 0
+
+;gpnam0: SMSQ10.100
+;gpnam3: SMSQ10.100
+;gpnam4: SMSQ10.100
+;gpnam11: SMSQ10.100
+;gpnam13: SMSQ10.100
+;gpz0: 24% (for purging)
+;gpz3: 75% (13C alternate module CTP)
+;gpz4: 70% (13C CTP)
+;gpz11: 43% (1H purge gradient)
+;gpz12: 11% (1H ZQ filter)
+;gpz13: 19% (13C DIPSI-2 purge gradients)
+
+;WaveMaker shaped pulses (use 'wvm -a' to generate)
+;sp3:wvm:wu180C13: cawurst-20(60 kHz, 0.5 ms; L2H)
+;sp18:wvm:wu180Jcomp: cawurst-40(280 ppm; Jcomp, L2H)
+;cpd2:wvm:wudec: cawurst_d-20(220 ppm, 1.4 ms; L2H)
+
+;cnst2: = 1J(CH)
+;cnst12: > J(HH), ca. 30 Hz for CLIP-COSY mixing
+;cnst32: fraction of C-H magn used for HSQC-TOCSY [0.5 to 1]
+;cnst41: gradient ratio (2*C/H)
+;cpd2: 13C decoupling according to sequence defined by cpdprg2
+;d0: 13C t1
+;d1: relaxation delay
+;d2: 1/2J(CH)
+;d4: 1/4J(CH)
+;d10: 1H t1
+;d12: <1/4J(HH) CLIP-COSY mixing time
+;d16: delay for homospoil/gradient recovery [200 us]
+;d19: HSQC-TOCSY mixing time
+;d29: DIPSI-2 mixing time between 13C modules
+;l0: total number of t1 increments
+;l1: running counter of t1 increments
+;l2: even for echo, odd for antiecho
+;l3: running counter for scan number
+;l13: HSQC-TOCSY: half the number of DIPSI-2 cycles
+;l14: HSQC-TOCSY: actual number of DIPSI-2 cycles
+;l16: DIPSI-2 between 13C modules: actual number of DIPSI-2 cycles
+;p1: f1 channel -  90 degree high power pulse
+;p2: f1 channel - 180 degree high power pulse
+;p3: f2 channel -  90 degree high power pulse
+;p6: f1 channel -  90 degree low power pulse
+;p14: f2 channel - 180 degree shaped pulse for inversion
+;     = 500usec for Crp60,0.5,20.1
+;p16: gradient pulse   [1 ms]
+;p31: f2 channel - 180 degree shaped pulse for inversion with J-compensation
+;p32: f1 channel - 180 degree shaped pulse (adiabatic)      [20 msec]
+;     smoothed chirp (sweepwidth, 20% smoothing, 10000 points)
+;pl1: f1 channel - power level for pulse (default)
+;pl2: f2 channel - power level for pulse (default)
+;pl10: f1 channel - power level for TOCSY-spinlock
+;pl12: f2 channel - power level for CPD/BB decoupling
+;sp3: f2 channel - shaped pulse (180 degree inversion)
+;sp18: f2 channel - shaped pulse (180 degree with J-compensation)
+;sp29: f1 channel - shaped pulse (adiabatic)
+;spnam3: Crp60,0.5,20.1 or WaveMaker
+;spnam18: Crp60_xfilt.2 or WaveMaker
+;spnam29: Crp60,20,20.10
+;aq: acquisition time
+;ds: >= 16
+;FnMODE: echo-antiecho
+;NBL: number of blocks (NOAH modules)
+;ns: 1 * n
+
+; auprog: noah_hsqc:noah_hsqc:noah_clipcosy States
+; ngn-2.0.5: constructed from CI_HSQC, C_HSQC_F2J, H_CLIP_COSY
+; pulse programme generated on Sun Mar 07 2021 22:19:33 GMT+0000 (Greenwich Mean Time)
