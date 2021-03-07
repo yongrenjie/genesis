@@ -2,7 +2,7 @@
 
 const toc = document.getElementById("faq_toc");
 const dts = document.querySelectorAll("dl>dt");
-for (let dt of dts) {
+for (let dt of dts as NodeListOf<HTMLElement>) {
     let a = document.createElement("a");
     let text = document.createTextNode(dt.innerText);
     a.appendChild(text);
