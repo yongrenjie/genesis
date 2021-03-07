@@ -3,7 +3,12 @@
     "outDir": "./build",
     "allowJs": true,
     "target": "es6",
-    "module": "esnext"
+    "module": "esnext",
+    "lib": [
+        "es2019",
+        "dom",
+        "dom.iterable"
+    ]
   },
   "include": ["./src/**/*"]
 }

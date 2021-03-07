@@ -154,6 +154,13 @@ const allParams = {
 
 // Phases {{{2
 class Phase {
+    num: number;
+    str: string;
+    ea:  string;
+    nt1: string;
+    ct1: string;
+    ht1: string;
+
     constructor({num, str, ea = null, nt1 = null, ct1 = null, ht1 = null}) {
         this.num = num;  // phXX
         this.str = str;  // string describing the phases e.g. "0 0 0 0 2 2 2 2"
@@ -163,7 +170,7 @@ class Phase {
         this.ht1 = ht1;  //            'r' for reset
     }
 
-    makeInstruction(occasion) {  // occasion = 'ea', 'nt1', 'ct1', or 'ht1'
+    makeInstruction(occasion: string) {  // occasion = 'ea', 'nt1', 'ct1', or 'ht1'
         if (this[occasion] === null) {
             return ``;
         }
@@ -208,6 +215,11 @@ allPhases[31] = new Phase({num: 31, str: "0 2", ct1: "i2"});
 
 // Gradients {{{2
 class Gradient {
+    num: number;
+    val: number;
+    comment: string;
+    shape: string;
+
     constructor({num, val, comment = "", shape="SMSQ10.100"}) {
         this.num = num;   // gpzXX
         this.val = val;   // float: amplitude in percentage
@@ -355,7 +367,8 @@ const asapMixingPPText = [
 // }}}1
 
 // The function {{{1
-export function makePulprogText(backendModules, allModules) {
+export function makePulprogText(backendModules: string[],
+                                allModules: Map<string, any>) {
     /* backendModules : Array of Strings indicating the backend modules to be used in pulse
      *                  programme construction.
      * allModules     : Map containing backend module names as the keys (these are the same 
@@ -382,20 +395,20 @@ export function makePulprogText(backendModules, allModules) {
     let shortDescriptions = [];
     let preambles = [];
     let mainpp = [];  // the bulk of the pulse programme
-    let nt1incs = []; // incrementation of 15N t1 and associated phases
-    let ct1incs = []; // 13C t1
 
     // Helper functions {{{2
     // Trim newlines from beginning and end. trim() removes all whitespace, which we don't want here.
-    let trimNewlines = (s => s.replace(/^\n|\n$/g, ''));
+    let trimNewlines = ((s: string) => s.replace(/^\n|\n$/g, ''));
     // Split a parameter name into word and number.
-    function splitParam(p) {
+    function splitParam(p: string) {
         let numMatch = p.match(/\d+$/);
-        let num; let word;
+        let numAsStr: string;
+        let word: string;
+        let num: number;  // or null...
         if (numMatch) {
-            num = numMatch[0];   // "21"
-            word = p.slice(0, -num.length);  // "cnst"
-            num = Number(num);  // 21
+            numAsStr = numMatch[0];   // "21"
+            word = p.slice(0, -numAsStr.length);  // "cnst"
+            num = Number(numAsStr);  // 21
         }
         else {
             num = null;
@@ -406,8 +419,8 @@ export function makePulprogText(backendModules, allModules) {
     // Extract the parameter being defined from a preamble line.
     // The parameter is an object with attributes 's' for string ('cnst'), 
     // 'n' for number (21), and 'full' for the full thing ('cnst21').
-    function extractPreambleParam(line) {
-        let param = {};
+    function extractPreambleParam(line: string) {
+        let param: any = {};  // TODO: make an interface or class for TypeScript
         param.full = line.split("=")[0].slice(1).trim();
         // Get the word + number.
         [param.s, param.n] = splitParam(param.full);
@@ -418,7 +431,8 @@ export function makePulprogText(backendModules, allModules) {
     }
     // Take an array of strings and a key function (keyfn :: string -> key)
     // Returns a filtered array containing only strings with unique keys.
-    function removeDuplicateByKey(lines, keyfn) {
+    function removeDuplicateByKey(lines: string[],
+                                  keyfn: (k: string) => any) {
         let keys = lines.map(keyfn);
         let uniqueLines = lines.filter(function (l, pos) {
             let k = keyfn(l);  // grab the key corresponding to each line
@@ -430,7 +444,7 @@ export function makePulprogText(backendModules, allModules) {
     }
     // Sorting function acting on strings that have the form /[A-Za-z]+\d+/.
     // Essentially sorts the tuple (stringpart, numberpart) in lexicographic order.
-    function sortStrNum(pa, pb) {
+    function sortStrNum(pa: string, pb: string) {
         const ia = pa.search(/\d/); const ib = pb.search(/\d/);  // index of first number
         const sa = pa.slice(0, ia); const sb = pb.slice(0, ib);  // string part
         const na = (ia != -1) ? Number(pa.slice(ia)) : 0;        // number part
@@ -536,8 +550,8 @@ export function makePulprogText(backendModules, allModules) {
     // Postprocess mainpp, including EA/t1 incrementation {{{2
     // Initialisation {{{3
     // Use a regex to find all phases in the pulse programme text
-    let phases = new Set(mainpp.join("\n").match(/ph\d{1,2}/g));
-    phases = Array.from(phases)
+    let phases2 = new Set(mainpp.join("\n").match(/ph\d{1,2}/g));
+    let phases = Array.from(phases2)   // TODO: Ugly variable name, silences TypeScript errors!
         .map(phx => Number(phx.slice(2)))  // extract the number
         .sort((a, b) => a - b);
 
@@ -737,19 +751,19 @@ export function makePulprogText(backendModules, allModules) {
     const phaseDefns = phases.map(p => `ph${p}=${allPhases[p].str}`);
 
     // Gradient definitions {{{3
-    let gradients = new Set([
+    let gradients2 = new Set([
         mainppText.match(/gp\d{1,2}/g),
         mainppText.match(/gron\d{1,2}/g)]
         .filter(Boolean)
         .flat()
         .map(s => s.replace("gron", "").replace("gp", "")));  // extract the number
-    gradients = Array.from(gradients, Number).sort((a, b) => a - b);
+    let gradients = Array.from(gradients2, Number).sort((a, b) => a - b);
     const gpnamDefns = gradients.map(g => allGradients[g].makeGpnamInstruction()).filter(Boolean);
     const gpzDefns = gradients.map(g => allGradients[g].makeGpzInstruction());
 
     // WaveMaker definitions {{{3
-    let shapedPulses = new Set(mainppText.match(/p\d{1,2}:sp\d{1,2}/g));
-    shapedPulses = Array.from(shapedPulses)
+    let shapedPulses2 = new Set(mainppText.match(/p\d{1,2}:sp\d{1,2}/g));
+    let shapedPulses = Array.from(shapedPulses2)
         .map(s => Number(s.split(":")[1].slice(2)))  // extract the number
         .sort((a, b) => a - b);
     let wvmDefns = shapedPulses.map(s => allWavemakers[s]).filter(e => e !== undefined);
@@ -761,7 +775,7 @@ export function makePulprogText(backendModules, allModules) {
     // Parameter definitions {{{3
     // We need to scan the preamble and mainppText with several regexes.
     const preamblePlusMainpp = preambles.join("\n") + "\n" + mainppText;
-    let params = new Set([
+    let params2 = new Set([
         preamblePlusMainpp.match(/\bp\d{1,2}\b/g),     // pulses
         preamblePlusMainpp.match(/\bd\d{1,2}\b/g),     // delays
         preamblePlusMainpp.match(/\bl\d{1,2}\b/g),     // loop counters
@@ -771,7 +785,7 @@ export function makePulprogText(backendModules, allModules) {
         preamblePlusMainpp.match(/\bcnst\d{1,2}\b/g),  // constants
     ].filter(Boolean).flat());
     // Add in spnams from sp.
-    params = [...params];
+    let params = [...params2];
     const spParams = [...params].filter(p => p.startsWith("sp")).map(p => p.replace("sp", "spnam"));
     params.push(...spParams);
     // Sort parameters.
