@@ -1,0 +1,40 @@
+// vim: syntax=bruker:
+
+import NOAHModule from "./moduleSpec.js";
+
+let shortDescription = `; 1H ROESY with adiabatic spin lock
+;     [use "wvm -a" to generate spin lock pulses before running]`;
+
+let preamble = `
+"d10     = 3u"                         ; ROESY t1
+"in10    = 2*dw"                       ; ROESY increment
+"cnst51  = abs(cnst49-cnst50)*sfo1*1.732/2"                   ; rf amplitude for spin lock
+"spw49   = plw1*(cnst51*4*p1/1000000)*(cnst51*4*p1/1000000)"  ; power level for spin lock
+"spw50   = spw49"
+`
+
+let module = `
+  ; ROESY with adiabatic spin lock
+
+  (p1 ph6):f1
+  d10
+  (p1 ph0):f1
+  10u
+  (p50:sp49 ph0):f1
+  (p50:sp50 ph0):f1
+  10u 
+  p16:gp11
+  d16 pl1:f1
+  (p1 ph0):f1
+  goscnp ph26
+`
+
+const mod = new NOAHModule(
+    "H",
+    "Rad",
+    "noah_roesy States",
+    shortDescription,
+    preamble,
+    module
+);
+export default mod;

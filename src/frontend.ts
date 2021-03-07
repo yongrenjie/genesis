@@ -2,30 +2,11 @@
 
 // Get the version number.
 import {version} from "./version.js";
-import {moduleNames} from "./moduleNames.js";
 import {makePulprogText} from "./pulprog.js";
+import allModules from "./modules/allModules.js";
 
 // Name attributes of the radio button groups.
-let inputNames = ["hmbc", "n15", "ci13", "c13", "h1"];
-
-// Object containing every module. Keys are module names. Values are module objects
-// (imported from the individual module files).
-const allModules = new Map();
-
-// Programmatically import backend modules {{{1
-function loadAllBackendModules() {
-    // then import all of them, adding them to the allModules map.
-    let promises = [];
-    for (let module of moduleNames) {
-        let p = import(`./modules/${module}.js`);
-        p.then(obj => allModules.set(module, obj.default))
-            .catch(error => console.log(`${error}: ${module} not found`));
-        promises.push(p);
-    }
-    return promises;
-}
-const promises = loadAllBackendModules();
-
+const inputNames = ["hmbc", "n15", "ci13", "c13", "h1"];
 
 // Get selected modules from HTML and convert to backend modules {{{1
 function getChosenFrontendModules() {
@@ -286,12 +267,9 @@ function setModuleListLengths() {
     });
 }
 setModuleListLengths();
-
-function displayPage() {
-    document.getElementById("spinner-container").style.display = "none";
-    document.getElementById("main-wrapper").style.display = "block";
-    document.getElementById("version").innerHTML = version;
-}
-Promise.all(promises).then(displayPage);
+// Display the page
+document.getElementById("spinner-container").style.display = "none";
+document.getElementById("main-wrapper").style.display = "block";
+document.getElementById("version").innerHTML = version;
 // }}}1
 // vim: foldmethod=marker

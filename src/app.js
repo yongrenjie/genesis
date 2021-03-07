@@ -5,9 +5,8 @@ import http from "http";
 import url from "url";
 import querystring from "querystring";
 
-import {makePulprogText} from "./pulprog.js";
-import {moduleNames} from "./moduleNames.js";
-let allModules = new Map();
+import { makePulprogText } from "./pulprog.js";
+import allModules from "./modules/allModules.js";
 const port = process.env.PORT || 5555;
 
 const errorText = `Error: modules not correctly specified
@@ -18,21 +17,8 @@ The format for a proper request is:
 
 The available modules are:
 
-    ${moduleNames.join("\n    ")}
+    ${[...allModules.keys()].join("\n    ")}
 `
-
-// Load all the modules
-function loadAllBackendModules() {
-    // then import all of them, adding them to the allModules map.
-    let promises = [];
-    for (let module of moduleNames) {
-        let p = import(`./modules/${module}.js`);
-        p.then(obj => allModules.set(module, obj.default))
-            .catch(error => console.log(`${module} not found`));
-        promises.push(p);
-    }
-    return promises;
-}
 
 // Request handler
 function onRequest(req, res) {
@@ -95,8 +81,5 @@ function onRequest(req, res) {
     stream.pipe(res);
 }
 
-// Create the server on port 80 after loading all modules
-const promises = loadAllBackendModules();
-Promise.all(promises).then(values => {
-    http.createServer(onRequest).listen(port);
-});
+// Create the server on port 5555 after loading all modules
+http.createServer(onRequest).listen(port);

@@ -1,5 +1,6 @@
 // Get the version number.
 import {version} from "./version.js";
+import NOAHModule from "./modules/moduleSpec.js";
 
 // Standardised parameter definitions {{{1
 // Goto labels {{{2
@@ -368,7 +369,7 @@ const asapMixingPPText = [
 
 // The function {{{1
 export function makePulprogText(backendModules: string[],
-                                allModules: Map<string, any>) {
+                                allModules: Map<string, NOAHModule>) {
     /* backendModules : Array of Strings indicating the backend modules to be used in pulse
      *                  programme construction.
      * allModules     : Map containing backend module names as the keys (these are the same 
