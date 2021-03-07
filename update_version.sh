@@ -4,7 +4,7 @@
 #   - package.json
 #   - src/version.js
 #   - any file in scripts/ (recursively)
-# and also automatically creates the noah_scripts_vX.Y.Z.zip file in downloads/.
+# and also automatically creates the noah_scripts_vX.Y.Z.zip file in static/downloads/.
 #
 # This script should be run before committing a version number bump.
 #
@@ -89,7 +89,7 @@ done
 # Create zip file of scripts
 long_name="noah_scripts_v${new_vno}"
 cp -r scripts ${long_name}
-zip -r "downloads/${long_name}.zip" "${long_name}" -x '*.DS_Store*'
+zip -r "static/downloads/${long_name}.zip" "${long_name}" -x '*.DS_Store*'
 rm -r ${long_name}
 
 # git add and commit

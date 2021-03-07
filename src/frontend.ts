@@ -267,7 +267,7 @@ document.getElementById("download_button").addEventListener("click", savePPFile)
 function createScriptDownloadLinks() {
     let anchors = [...document.querySelectorAll("a.scripts")];
     for (let a of anchors) {
-        a.setAttribute("href", `downloads/noah_scripts_v${version}.zip`);
+        a.setAttribute("href", `static/downloads/noah_scripts_v${version}.zip`);
     }
 }
 createScriptDownloadLinks();
