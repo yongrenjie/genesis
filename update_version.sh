@@ -92,10 +92,10 @@ cp -r scripts ${long_name}
 zip -r "static/downloads/${long_name}.zip" "${long_name}" -x '*.DS_Store*'
 rm -r ${long_name}
 
-# git add and commit
-git add -A
-git commit -m "version: bump to ${new_vno}"
-git tag "v${new_vno}"
+# git add and commit (disabled for now)
+# git add -A
+# git commit -m "version: bump to ${new_vno}"
+# git tag "v${new_vno}"
 
 echo ""
 echo "Version numbers updated from v${git_vno} to v${new_vno}."
