@@ -1,42 +1,50 @@
-// Initialisation {{{1
-
-// Get the version number.
-import {version} from "./version.js";
-import {makePulprogText} from "./pulprog.js";
+import { version } from "./version.js";
+import { makePulprogText } from "./pulprog.js";
 import allModules from "./modules/allModules.js";
 
-// Name attributes of the radio button groups.
 const inputNames = ["hmbc", "n15", "ci13", "c13", "h1"];
+const devModeButton = document.getElementById("devmode_button") as HTMLInputElement;
+const pulprogTextarea = document.getElementById("pulprog_text") as HTMLTextAreaElement;
 
-// Get selected modules from HTML and convert to backend modules {{{1
-function getChosenFrontendModules() {
+// Function to determine which buttons are selected {{{1
+/**
+ * Obtain the IDs of the radio buttons that were selected by the user on the webpage.
+ * @returns {string[]} The selected IDs.
+ */
+function getSelectedButtons(): string[] {
     /* Get an array of strings (the radio button IDs) corresponding to the modules
      * selected by the user (the 'frontend modules'). */
     return inputNames.map(inputName => document.querySelector(`input[name="${inputName}"]:checked`).id);
 }
+// }}}1
 
-function getChosenBackendModules(frontendModules: Array<string>) {
-    /* Based on the user inputs, selects the appropriate backend modules for constructing
-     * the pulse programme.
-     * This takes care of a few aspects where the exact pulse sequence chosen depends on
-     * what other modules are present in the sequence. In particular:
-     *   - The presence of 13C and/or 15N zz-filters in the HMBC module depends on the
-     *     subsequent modules.
-     *   - The 15N seHSQC and 13C seHSQC depend on whether bulk magnetisation is required
-     *     for subsequent modules. If it is not required, then we use the Bruker standard
-     *     instead of the modified one with a reverse zz-filter.
-     *   - The 13C HSQC-TOCSY uses the Bruker standard if it is the last experiment in the
-     *     sequence, i.e. no further 13C HSQC or 1H module after it.
-     *   - The INEPT excitation in the 13C HSQC-TOCSY is disabled if there is no further 
-     *     13C module after it.
-     *     */
-    // Get array of non-none modules
-    let validModules = frontendModules.filter(elem => !elem.includes("none"));
+// Function to determine which modules to use {{{1
+/**
+ * Determine which modules to use, based on the IDs of the buttons that the user selected.
+ *
+ * This function is 'intelligent' in that it takes care of a few details where the exact
+ * variant chosen depends on what other modules are present in the sequence. In particular:
+ *
+ * - The presence of 13C and/or 15N zz-filters in the HMBC module depends on the
+ *   subsequent modules.
+ * - The 15N seHSQC and 13C seHSQC depend on whether bulk magnetisation is required
+ *   for subsequent modules. If it is not required, then we use the Bruker standard
+ *   instead of the ZIP-seHSQC.
+ * - Variable INEPT excitation is used in the first 13C module if there are two such
+ *   modules.
+ *
+ * @param {string[]} selectedButtons - The IDs of the checked buttons on the website.
+ * @returns {string[]} The names of the modules to construct the pulse programme from.
+ */
+function chooseModules(selectedButtons: string[]): string[] {
+    // Remove any selected "None" buttons.
+    let validModules = selectedButtons.filter(elem => !elem.includes("none"));
     // Return early if none were selected
     if (validModules.length == 0) return [];
+
     // If devmode is enabled, then we are (mostly) done, since the input IDs are already
     // the correct names of the backend modules. We just need to capitalise the 1H module.
-    if ((document.getElementById("devmode_button") as HTMLInputElement).checked) {
+    if (devModeButton.checked) {
         if (validModules[validModules.length - 1].startsWith("h1")) {
             // replace the last element
             validModules.push(validModules.pop().replace("h1", "h").toUpperCase());
@@ -126,33 +134,14 @@ function getChosenBackendModules(frontendModules: Array<string>) {
     }
     return backendModules;
 }
+// }}}1
 
-
-// Add website behaviour (e.g. textarea, devmode, reset, FAQ) {{{1
-
-function updatePulprogText() {
-    /* Function which updates the pulse programme text.
-     * This is triggered whenever a module is selected. */
-    // First, get array of frontend and backend modules
-    const frontendModules = getChosenFrontendModules();
-    const backendModules = getChosenBackendModules(frontendModules);
-    const pulprogTextarea = document.getElementById("pulprog_text") as HTMLTextAreaElement;
-    // Change the pulprog text accordingly
-    if (backendModules.length > 0) {
-        let ppText: string;
-        try { ppText = makePulprogText(backendModules, allModules); }
-        catch (error) { console.error(error); ppText = ""; }
-        pulprogTextarea.value = ppText;
-    }
-    else {
-        pulprogTextarea.value = "";
-    }
-}
-
+// Add page behaviour {{{1
+// Dev mode {{{2
+/** Enable or disable developer mode depending on the state of devmode_button.
+ */
 function toggleDevMode() {
-    /* Enable or disable developer mode depending on the state of devmode_button. */
-    // get state of button.
-    const on = (document.getElementById("devmode_button") as HTMLInputElement).checked;
+    const on = devModeButton.checked;
     const uls = [...document.querySelectorAll("div.chooser_modules>ul")];
     // change the number of rows in each box
     // it turns out we don't need this (for now), but if we implement new things such
@@ -192,21 +181,38 @@ function toggleDevMode() {
     resetButtons();
     setModuleListLengths();
 }
-
 // Add toggle behaviour to the devmode button
 document.getElementById("devmode_button").addEventListener("click", toggleDevMode);
 // Call toggleDevMode() once upon page load so that the grid is styled correctly.
 toggleDevMode();
-
-// These are the module buttons, which need to call updatePulprogText().
+// }}}2
+// Update pulprog text when radio buttons are changed {{{2
+/**
+ * Updates the pulse programme textarea with the pulse programme corresponding
+ * to the currently selected modules. If no modules are selected, or if fewer
+ * than two modules are present, it empties the textarea (thereby resetting it
+ * to its placeholder text).
+ */
+function updatePulprogText() {
+    const moduleNames = chooseModules(getSelectedButtons());
+    if (moduleNames.length > 0) {
+        let ppText: string;
+        try { ppText = makePulprogText(moduleNames, allModules); }
+        catch (error) { console.error(error); ppText = ""; }
+        pulprogTextarea.value = ppText;
+    }
+    else {
+        pulprogTextarea.value = "";
+    }
+}
 for (let inputName of inputNames) {
     let buttons = document.querySelectorAll(`input[name="${inputName}"]`);
     for (let button of buttons) {
         button.addEventListener("click", updatePulprogText);
     }
 }
-
-// Reset button.
+// }}}2
+// Reset button {{{2
 function resetButtons() {
     let noneButtonIDs = ["hmbc_none", "n15_none", "ci13_none", "c13_none", "h1_none"]
     for (let id of noneButtonIDs) {
@@ -215,14 +221,11 @@ function resetButtons() {
     updatePulprogText();
 }
 document.getElementById("reset_button").addEventListener("click", resetButtons);
-
-// FAQ button.
-function goToFAQ(){
-    window.location.href = "#faq_h2";
-}
-document.getElementById("faq_button").addEventListener("click", goToFAQ);
-
-// Download button.
+// }}}2
+// Download button {{{2
+/**
+ * Triggers a download for the pulse programme file.
+ */
 function savePPFile() {
     const ppText = (document.getElementById("pulprog_text") as HTMLTextAreaElement).value;
     if (ppText.length > 0) {
@@ -242,23 +245,19 @@ function savePPFile() {
     }
 }
 document.getElementById("download_button").addEventListener("click", savePPFile);
-
-
-// Automatically generate the links to the newest scripts, based on the version number.
-function createScriptDownloadLinks() {
-    let anchors = [...document.querySelectorAll("a.scripts")];
-    for (let a of anchors) {
-        a.setAttribute("href", `static/downloads/noah_scripts_v${version}.zip`);
-    }
+// }}}2
+// FAQ button {{{2
+function goToFAQ(){
+    window.location.href = "#faq_h2";
 }
-createScriptDownloadLinks();
-
-
-// Style and display the page {{{1
-
-// Function which sets grid-template-rows of each module selector box
-// to be equal to the number of visible items -- except for the 1H box
-// which is manually set to be 8 items long via CSS.
+document.getElementById("faq_button").addEventListener("click", goToFAQ);
+// }}}2
+// Set the length of the five module boxes {{{2
+/**
+ * Sets the grid-template-rows property of each module selector box to be equal
+ * to the number of visible items -- except for the 1H box which is manually
+ * set to be 8 items long via CSS.
+ */
 function setModuleListLengths() {
     let uls = [...document.querySelectorAll("div.chooser_modules:not(.h1)>ul")] as Array<HTMLElement>;
     let lengths = uls.map(ul => ([...ul.children] as Array<HTMLElement>).filter(li => li.style.display != "none").length);
@@ -267,9 +266,27 @@ function setModuleListLengths() {
     });
 }
 setModuleListLengths();
-// Display the page
+// }}}2
+// Modify version number-dependent parts {{{2
+// Update the version number on the page
+document.getElementById("version").innerHTML = version;
+/**
+ * Automatically generates the links to the newest scripts, based on the
+ * version number.
+ */
+function createScriptDownloadLinks() {
+    let anchors = [...document.querySelectorAll("a.scripts")];
+    for (let a of anchors) {
+        a.setAttribute("href", `static/downloads/noah_scripts_v${version}.zip`);
+    }
+}
+// Create the download link for the newest scripts
+createScriptDownloadLinks();
+// }}}2
+// Display the page {{{2
 document.getElementById("spinner-container").style.display = "none";
 document.getElementById("main-wrapper").style.display = "block";
-document.getElementById("version").innerHTML = version;
+// }}}2
 // }}}1
+
 // vim: foldmethod=marker
