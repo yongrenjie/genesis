@@ -2,7 +2,7 @@ name: publish-website
 on:
   push:
     branches:
-      - typescript
+      - master
 
 jobs:
   build:
@@ -23,6 +23,11 @@ jobs:
       run: |
         npm install typescript
         tsc
+
+    - name: Run tests with Mocha
+      run: |
+        npm install mocha
+        npm test
 
     - name: Clone gh-pages branch
       uses: actions/checkout@v2
