@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Script to automatically update gennoah version numbers. Updates the following list of files:
-#   - package.json
+#   - package.json (and package-lock.json, via npm install)
 #   - src/version.js
 #   - any file in scripts/ (recursively)
 # and also automatically creates the noah_scripts_vX.Y.Z.zip file in static/downloads/.
@@ -70,7 +70,8 @@ fi
 
 # Edit top-level JavaScript files
 "${sed_command[@]}" "s/${old_vno}/${new_vno}/g" "./package.json"
-"${sed_command[@]}" "s/${old_vno}/${new_vno}/g" "./src/version.js"
+"${sed_command[@]}" "s/${old_vno}/${new_vno}/g" "./src/version.ts"
+npm install
 
 # Edit scripts
 # We first get the date by grepping in noah_nus.py. Note that this regex will fail in the year 2100.
@@ -92,10 +93,10 @@ cp -r scripts ${long_name}
 zip -r "static/downloads/${long_name}.zip" "${long_name}" -x '*.DS_Store*'
 rm -r ${long_name}
 
-# git add and commit (disabled for now)
-# git add -A
-# git commit -m "version: bump to ${new_vno}"
-# git tag "v${new_vno}"
+# git add and commit
+git add -A
+git commit -m "version: bump to ${new_vno}"
+git tag "v${new_vno}"
 
 echo ""
 echo "Version numbers updated from v${git_vno} to v${new_vno}."
