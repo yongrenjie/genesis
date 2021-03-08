@@ -108,6 +108,7 @@ const allParams = {
     "cnst47": "HMBC gradient ratio",
     "cnst49": "left edge of spectral window (ppm) [ca. 9.5]",
     "cnst50": "right edge of spectral window (ppm) [ca. -0.5]",
+    "cnst51": "RF amplitude of ROESY spin lock (Hz)",
 
     "d0": "13C t1",
     "d1": "relaxation delay",
