@@ -6,7 +6,7 @@ import url from "url";
 import querystring from "querystring";
 
 import { makePulprogText } from "./pulprog.js";
-import allModules from "./modules/allModules.js";
+import allModules from "./allModules.js";
 const port = process.env.PORT || 5555;
 
 const errorText = `Error: modules not correctly specified

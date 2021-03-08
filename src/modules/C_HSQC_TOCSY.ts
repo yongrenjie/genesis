@@ -1,4 +1,4 @@
-import NOAHModule from "./moduleSpec.js";
+import NOAHModule from "../moduleSpec.js";
 
 let shortDescription = `; 13C HSQC-TOCSY
 ;     [use -DEDIT for multiplicity editing (not recommended)]

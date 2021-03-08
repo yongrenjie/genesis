@@ -1,4 +1,4 @@
-import NOAHModule from "./moduleSpec.js";
+import NOAHModule from "../moduleSpec.js";
 
 let shortDescription = `; 13C HSQC-COSY (2 spin echoes)
 ;     [DOES NOT PRESERVE UNUSED 1JCH MAGNETISATION - ONLY FOR INTERNAL USE]

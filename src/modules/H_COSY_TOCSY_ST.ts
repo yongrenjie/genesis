@@ -1,6 +1,6 @@
 // vim: syntax=bruker:
 
-import NOAHModule from "./moduleSpec.js";
+import NOAHModule from "../moduleSpec.js";
 
 let shortDescription = `; 1H COSY + TOCSY (States F1)`;
 

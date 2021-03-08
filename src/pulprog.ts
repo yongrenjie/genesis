@@ -1,6 +1,6 @@
 // Get the version number.
 import {version} from "./version.js";
-import NOAHModule from "./modules/moduleSpec.js";
+import NOAHModule from "./moduleSpec.js";
 
 // Standardised parameter definitions {{{1
 // Goto labels {{{2

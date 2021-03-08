@@ -1,6 +1,6 @@
 import { version } from "./version.js";
 import { makePulprogText } from "./pulprog.js";
-import allModules from "./modules/allModules.js";
+import allModules from "./allModules.js";
 
 const inputNames = ["hmbc", "n15", "ci13", "c13", "h1"];
 const devModeButton = document.getElementById("devmode_button") as HTMLInputElement;

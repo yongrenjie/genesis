@@ -2,7 +2,7 @@ import assert from "assert";
 import fs from "fs";
 
 import { makePulprogText } from "../build/pulprog.js";
-import allModules from "../build/modules/allModules.js";
+import allModules from "../build/allModules.js";
 
 
 /**

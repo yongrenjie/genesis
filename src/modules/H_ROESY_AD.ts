@@ -1,6 +1,6 @@
 // vim: syntax=bruker:
 
-import NOAHModule from "./moduleSpec.js";
+import NOAHModule from "../moduleSpec.js";
 
 let shortDescription = `; 1H ROESY with adiabatic spin lock
 ;     [use "wvm -a" to generate spin lock pulses before running]`;
