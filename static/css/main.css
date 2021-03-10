@@ -224,6 +224,11 @@ sub {
   top: 0.4em;
 }
 
+div#warning {
+    text-align: center;
+    color: #ff0000;
+}
+
 div#faq {
     margin-bottom: 30px;
 }
