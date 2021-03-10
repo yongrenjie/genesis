@@ -80,7 +80,7 @@ let pulprog = `
 `
 
 const mod = new NOAHModule(
-    "CH",
+    "hmbc",
     "B",
     "noah_hmbc",
     shortDescription,

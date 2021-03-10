@@ -30,7 +30,7 @@ let pulprog = `
 `
 
 const mod = new NOAHModule(
-    "H",
+    "h1",
     "Rad",
     "noah_roesy States",
     shortDescription,

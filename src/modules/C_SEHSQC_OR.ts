@@ -104,7 +104,7 @@ let pulprog = `
 `
 
 const mod = new NOAHModule(
-    "CH",
+    "c13",
     "Sp",
     "noah_hsqc",
     shortDescription,

@@ -537,8 +537,8 @@ export function makePulprogText(backendModules: string[],
                     `  4u pl1:f1`,  // as a courtesy to the next module
                 );
                 // 15N and/or 13C purge pulses
-                if (mod.nuclei.includes('C')) mainpp.push(`  4u pl2:f2`, `  (p3 ph0):f2`);
-                if (mod.nuclei.includes('N')) mainpp.push(`  4u pl3:f3`, `  (p21 ph0):f3`);
+                if (mod.nuclei().includes('C')) mainpp.push(`  4u pl2:f2`, `  (p3 ph0):f2`);
+                if (mod.nuclei().includes('N')) mainpp.push(`  4u pl3:f3`, `  (p21 ph0):f3`);
                 mainpp.push(
                     `  4u`,
                     `  p16:gp0*${gradGen.next().value}`,

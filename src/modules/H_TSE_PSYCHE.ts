@@ -63,7 +63,7 @@ let pulprog = `
 `
 
 const mod = new NOAHModule(
-    "H",
+    "h1",
     "Pt",
     "noah_psyche",
     shortDescription,

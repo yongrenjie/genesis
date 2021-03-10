@@ -35,7 +35,7 @@ let pulprog = `
 `
 
 const mod = new NOAHModule(
-    "H",
+    "h1",
     "D",
     "noah_clipcosy States",
     shortDescription,

@@ -89,7 +89,7 @@ else
 `
 
 const mod = new NOAHModule(
-    "H",
+    "h1",
     "J",
     "noah_jresph",
     shortDescription,

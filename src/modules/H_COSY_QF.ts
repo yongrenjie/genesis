@@ -26,7 +26,7 @@ let pulprog = `
 `
 
 const mod = new NOAHModule(
-    "H",
+    "h1",
     "Cqf",
     "noah_cosy QF",
     shortDescription,

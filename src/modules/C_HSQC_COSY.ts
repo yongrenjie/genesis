@@ -111,7 +111,7 @@ else
 `
 
 const mod = new NOAHModule(
-    "CH",
+    "c13",
     "Q",
     "noah_hsqc",
     shortDescription,

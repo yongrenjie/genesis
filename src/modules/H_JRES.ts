@@ -22,7 +22,7 @@ let pulprog = `
 `
 
 const mod = new NOAHModule(
-    "H",
+    "h1",
     "Jqf",
     "noah_jres QF",
     shortDescription,
