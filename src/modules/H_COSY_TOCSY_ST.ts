@@ -11,7 +11,7 @@ let preamble = `
 "in10    = 2*dw"                       ; COSY/TOCSY increment
 `
 
-let module = `
+let pulprog = `
   ; 1H-1H COSY + TOCSY (States)
 
   ; COSY
@@ -88,6 +88,6 @@ const mod = new NOAHModule(
     "noah_cosy States:noah_tocsy States",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;

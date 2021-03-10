@@ -10,7 +10,7 @@ let preamble = `
 "l7      = p15/(p25*2)"                ; ROESY spin lock loop counter
 `
 
-let module = `
+let pulprog = `
   ; 1H-1H ROESY
 
   (p1 ph6):f1
@@ -29,6 +29,6 @@ const mod = new NOAHModule(
     "noah_roesy States",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;

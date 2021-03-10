@@ -13,7 +13,7 @@ let preamble = `
 "spw50   = spw49"
 `
 
-let module = `
+let pulprog = `
   ; ROESY with adiabatic spin lock
 
   (p1 ph6):f1
@@ -35,6 +35,6 @@ const mod = new NOAHModule(
     "noah_roesy States",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;

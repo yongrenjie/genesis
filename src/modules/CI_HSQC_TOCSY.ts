@@ -31,7 +31,7 @@ define delay DCI_HSQC_TOCSY8
 define list<gradient> GCI_HSQC_TOCSY={cnst41}
 `
 
-let module = `
+let pulprog = `
   ; 13C-1H HSQC-TOCSY with Ernst angle excitation
 
   ; INEPT
@@ -141,7 +141,7 @@ const mod = new NOAHModule(
     "noah_hsqc",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;
 

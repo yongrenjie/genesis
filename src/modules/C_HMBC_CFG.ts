@@ -26,7 +26,7 @@ define list<gradient> EA1 = { 1.000 -cnst47}
 define list<gradient> EA2 = { -cnst47 1.000}
 `
 
-let module = `
+let pulprog = `
   ; 13C-1H HMBC
 
   ; zz-filter
@@ -78,7 +78,7 @@ const mod = new NOAHModule(
     "noah_hmbc",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;
 

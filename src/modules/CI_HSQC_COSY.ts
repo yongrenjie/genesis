@@ -39,7 +39,7 @@ define delay DCI_HSQC_COSY12
 define list<gradient> GCI_HSQC_COSY={cnst41}
 `
 
-let module = `
+let pulprog = `
   ; 13C-1H HSQC-COSY
 
   ; INEPT with variable excitation
@@ -149,7 +149,7 @@ const mod = new NOAHModule(
     "noah_hsqc",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;
 

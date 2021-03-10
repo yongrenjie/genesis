@@ -15,7 +15,7 @@ define delay DH_COSY_TOCSY2
 "DH_COSY_TOCSY2  = p16+d16"
 `
 
-let module = `
+let pulprog = `
   ; 1H-1H COSY + TOCSY
 
   ; COSY
@@ -107,6 +107,6 @@ const mod = new NOAHModule(
     "noah_cosy:noah_tocsy",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;

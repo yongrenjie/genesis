@@ -12,7 +12,7 @@ let preamble = `
 "spw50   = spw49"
 `
 
-let module = `
+let pulprog = `
   ; 1H-1H COSY + ROESY (States)
 
   ; COSY
@@ -43,6 +43,6 @@ const mod = new NOAHModule(
     "noah_cosy States:noah_roesy States",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;

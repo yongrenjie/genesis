@@ -20,7 +20,7 @@ define delay DC_HMBC_NOF4
 define list<gradient> GC_HMBC_NOF={cnst41}
 `
 
-let module = `
+let pulprog = `
   ; 13C-1H HMBC
 
   ; second-order low-pass J-filter
@@ -68,7 +68,7 @@ const mod = new NOAHModule(
     "noah_hmbc",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;
 

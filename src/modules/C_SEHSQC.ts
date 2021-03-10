@@ -34,7 +34,7 @@ define list<gradient> GC_SEHSQC={cnst41}
 `
 
 
-let module = `
+let pulprog = `
   ; 13C-1H seHSQC (with ZIP element)
 
   ; ZIP
@@ -137,7 +137,7 @@ const mod = new NOAHModule(
     "noah_hsqc",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;
 

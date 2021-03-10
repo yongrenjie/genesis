@@ -9,7 +9,7 @@ let preamble = `
 "in11    = 2*dw"                       ; COSY increment
 `
 
-let module = `
+let pulprog = `
   ; 1H-1H COSY, magnitude mode
 
   (p1 ph12):f1
@@ -31,6 +31,6 @@ const mod = new NOAHModule(
     "noah_cosy QF",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;

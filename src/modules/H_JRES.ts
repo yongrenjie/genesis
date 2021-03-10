@@ -11,7 +11,7 @@ let preamble = `
 "in11    = (1/cnst38)/2"               ; JRES increment
 `
 
-let module = `
+let pulprog = `
   ; 2D J spectrum, magnitude mode
 
   (p1 ph0):f1
@@ -27,6 +27,6 @@ const mod = new NOAHModule(
     "noah_jres QF",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;

@@ -11,7 +11,7 @@ define delay DH_DQF_COSY1
 "DH_DQF_COSY1   = p16+d16+4u"
 `
 
-let module = `
+let pulprog = `
   ; DQF-COSY
 
   (p1 ph16):f1
@@ -40,6 +40,6 @@ const mod = new NOAHModule(
     "noah_clipcosy States",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;

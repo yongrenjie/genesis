@@ -13,7 +13,7 @@ define delay DH_DQF_COSY_EA2
 "DH_DQF_COSY_EA2   = p16+d16+8u"
 `
 
-let module = `
+let pulprog = `
   ; DQF-COSY (echo-antiecho)
 
   (p1 ph5):f1
@@ -44,6 +44,6 @@ const mod = new NOAHModule(
     "noah_noesy",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;

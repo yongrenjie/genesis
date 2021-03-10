@@ -28,7 +28,7 @@ define delay DCI_HSQC_F2J7
 define list<gradient> GCI_HSQC_F2J={cnst41}
 `
 
-let module = `
+let pulprog = `
   ; 13C-1H HSQC (F2-coupled) with variable INEPT excitation
 
   ; INEPT
@@ -91,7 +91,7 @@ const mod = new NOAHModule(
     "noah_hsqc",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;
 

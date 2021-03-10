@@ -26,7 +26,7 @@ define delay DC_HMBC_CNF6
 define list<gradient> GC_HMBC_CNF={cnst41}
 `
 
-let module = `
+let pulprog = `
   ; 13C-1H HMBC
   
   ; 15N and 13C zz-filter
@@ -86,7 +86,7 @@ const mod = new NOAHModule(
     "noah_hmbc",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;
 

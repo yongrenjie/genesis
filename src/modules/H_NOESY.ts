@@ -11,7 +11,7 @@ define delay DH_NOESY1
 "DH_NOESY1   = d8-p32-p16-d16-30u"
 `
 
-let module = `
+let pulprog = `
   ; 1H-1H NOESY
 
   (p1 ph6):f1
@@ -35,6 +35,6 @@ const mod = new NOAHModule(
     "noah_noesy States",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;

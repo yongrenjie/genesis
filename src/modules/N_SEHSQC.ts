@@ -28,7 +28,7 @@ define delay DN_SEHSQC7
 define list<gradient> GN_SEHSQC={cnst44}
 `
 
-let module = `
+let pulprog = `
   ; 15N-1H seHSQC
 
   ; reverse zz-filter
@@ -107,7 +107,7 @@ const mod = new NOAHModule(
     "noah_nhsqc",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;
 

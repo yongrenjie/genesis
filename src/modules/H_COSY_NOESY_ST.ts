@@ -11,7 +11,7 @@ define delay DH_COSY_NOESY_ST1
 "DH_COSY_NOESY_ST1  = d8-4u-de-aq-4u-p16-d16-p32-30u"     ; NOE mixing time
 `
 
-let module = `
+let pulprog = `
   ; 1H-1H COSY + NOESY (States)
 
   ; COSY
@@ -39,6 +39,6 @@ const mod = new NOAHModule(
     "noah_cosy States:noah_noesy States",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;

@@ -459,8 +459,8 @@ export function makePulprogText(backendModules: string[],
     // Figure out which nucleus to stop decoupling on, if any.
     let stopDec = "";
     const lastModule = allModules.get(backendModules[backendModules.length - 1]);
-    if (lastModule.module.includes('cpd2:f2')) stopDec = " do:f2";
-    else if (lastModule.module.includes('cpd3:f3')) stopDec = " do:f3";
+    if (lastModule.pulprog.includes('cpd2:f2')) stopDec = " do:f2";
+    else if (lastModule.pulprog.includes('cpd3:f3')) stopDec = " do:f3";
     mainpp.push(
         `1 ze`,
         `2 30m`,             // NS loop (go=2 phXX) goes back to here
@@ -513,7 +513,7 @@ export function makePulprogText(backendModules: string[],
             preambles.push(...mod.preamble.split("\n"));
             // here comes the main part -- the actual pulprog itself
             mainpp.push(``, ``, `  ; MODULE ${index + 1}`),
-            mainpp.push(...trimNewlines(mod.module).split("\n"));
+            mainpp.push(...trimNewlines(mod.pulprog).split("\n"));
             // DIPSI-2 mixing between two 13C modules; but this isn't needed if
             // the previous module was a HSQC-TOCSY.
             if (extraDipsiMixing

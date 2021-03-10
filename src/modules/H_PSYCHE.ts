@@ -18,7 +18,7 @@ define delay DH_PSYCHE2
 "DH_PSYCHE2  = (dw*2*cnst24)+d16+50u"
 `
 
-let module = `
+let pulprog = `
   ; 1H 1D PSYCHE pure shift spectrum
 
   (p1 ph0):f1
@@ -52,6 +52,6 @@ const mod = new NOAHModule(
     "noah_psyche",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;

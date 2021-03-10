@@ -11,7 +11,7 @@ let preamble = `
 "in10    = 2*dw"                       ; TOCSY increment
 `
 
-let module = `
+let pulprog = `
   ; 1H-1H TOCSY
 
   (p1 ph6):f1
@@ -82,6 +82,6 @@ const mod = new NOAHModule(
     "noah_tocsy States",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;

@@ -28,7 +28,7 @@ define delay DN_SEHSQC_DP7
 define list<gradient> GN_SEHSQC_DP={cnst44}
 `
 
-let module = `
+let pulprog = `
   ; 15N-1H seHSQC, version 1
 
   ; INEPT
@@ -94,7 +94,7 @@ const mod = new NOAHModule(
     "noah_nhsqc",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;
 

@@ -19,7 +19,7 @@ define delay DN_HMQC2
 define list<gradient> GN_HMQC={cnst44}
 `
 
-let module = `
+let pulprog = `
   ; 15N-1H HMQC
 
   (p1 ph2):f1
@@ -66,7 +66,7 @@ const mod = new NOAHModule(
     "noah_nhsqc",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;
 

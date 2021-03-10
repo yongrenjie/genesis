@@ -17,7 +17,7 @@ let preamble = `
 "spw42   = spw41"                      ; PSYCHE ZQS chirp power
 `
 
-let module = `
+let pulprog = `
   ; PSYCHE 2D J spectrum (phase-sensitive)
 if "l2 % 2 == 0"
 {
@@ -94,6 +94,6 @@ const mod = new NOAHModule(
     "noah_jresph",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;

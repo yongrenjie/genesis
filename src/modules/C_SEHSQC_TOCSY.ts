@@ -40,7 +40,7 @@ define delay DC_SEHSQCT12
 define list<gradient> GC_SEHSQCT={cnst41}
 `
 
-let module = `
+let pulprog = `
   ; 13C-1H sensitivity-enhanced HSQC-TOCSY (with ZIP)
 
   ; ZIP element
@@ -198,7 +198,7 @@ const mod = new NOAHModule(
     "noah_hsqc",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;
 

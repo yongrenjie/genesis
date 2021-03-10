@@ -32,7 +32,7 @@ define delay DC_SEHSQCT_OR8
 define list<gradient> GC_SEHSQCT_OR={cnst43}
 `
 
-let module = `
+let pulprog = `
   ; 13C-1H sensitivity-enhanced HSQC-TOCSY
 
   ; INEPT
@@ -148,7 +148,7 @@ const mod = new NOAHModule(
     "noah_hsqc",
     shortDescription,
     preamble,
-    module
+    pulprog
 );
 export default mod;
 
