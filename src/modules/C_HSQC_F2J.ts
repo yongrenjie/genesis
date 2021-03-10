@@ -26,7 +26,7 @@ define list<gradient> GC_HSQC_F2J={cnst41}
 `
 
 let module = `
-  ; 13C-1H HSQC (F2 coupled)
+  ; 13C-1H HSQC (F2-coupled)
 
   ; INEPT
   (p1 ph0):f1
@@ -77,8 +77,8 @@ let module = `
   d16 pl2:f2
   DC_HSQC_F2J6
   (p3 ph0):f2
-  4u pl12:f2
-  goscnp ph30 cpd2:f2
+  4u
+  goscnp ph30
   50u
 `
 

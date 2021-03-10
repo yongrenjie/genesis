@@ -10,8 +10,6 @@ let preamble = `
 "d4      = 0.25s/cnst2"                ; 13C INEPT
 "d0      = 3u"                         ; 13C HSQC t1
 "in0     = inf1/2"                     ; 13C HSQC increment
-"l13     = (d19/(p6*115.112))/2"       ; half the number of HSQC-TOCSY DIPSI-2 loops
-"l14     = l13*2"                      ; number of HSQC-TOCSY DIPSI-2 loops
 define delay DCI_HSQC1
 define delay DCI_HSQC2
 define delay DCI_HSQC3

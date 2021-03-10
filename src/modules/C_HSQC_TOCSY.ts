@@ -8,8 +8,8 @@ let preamble = `
 "p2      = p1*2"                       ; 1H hard 180
 "d2      = 0.5s/cnst2"                 ; JCOMP
 "d4      = 0.25s/cnst2"                ; 13C INEPT
-"d0      = 3u"                         ; 13C HSQC t1
-"in0     = inf1/2"                     ; 13C HSQC increment
+"d0      = 3u"                         ; 13C t1
+"in0     = inf1/2"                     ; 13C increment
 "l13     = (d19/(p6*115.112))/2"       ; half the number of HSQC-TOCSY DIPSI-2 loops
 "l14     = l13*2"                      ; number of HSQC-TOCSY DIPSI-2 loops
 define delay DC_HSQC_TOCSY1
@@ -35,7 +35,7 @@ define list<gradient> GC_HSQC_TOCSY={cnst41}
 `
 
 let module = `
-  ; 13C-1H HSQC
+  ; 13C-1H HSQC-TOCSY
 
   ; INEPT
   (p1 ph0):f1
@@ -54,13 +54,13 @@ let module = `
   (p14:sp3 ph0):f2
 #endif /* EDIT */
   4u
-  p16:gp3
+  p16:gp4
   d16
   d0
   (p2 ph11):f1
   d0
   4u
-  p16:gp3
+  p16:gp4
   d16
 
   ; multiplicity editing
@@ -96,7 +96,7 @@ let module = `
   p6*4.167 ph3
   p6*2.944 ph1
   p6*4.111 ph3
-  
+
   p6*3.556 ph1
   p6*4.556 ph3
   p6*3.222 ph1
@@ -137,14 +137,14 @@ let module = `
   DC_HSQC_TOCSY7
   (p14:sp3 ph0):f2 
   (p2 ph1):f1 
-  p16:gp3*GC_HSQC_TOCSY*EA
+  p16:gp4*GC_HSQC_TOCSY*EA
   d16 pl12:f2 
   DC_HSQC_TOCSY8
 #else
   DC_HSQC_TOCSY9
   (p2 ph1):f1
   4u
-  p16:gp3*GC_HSQC_TOCSY*EA
+  p16:gp4*GC_HSQC_TOCSY*EA
   d16 pl12:f2
   4u
 #endif /* INVERT */

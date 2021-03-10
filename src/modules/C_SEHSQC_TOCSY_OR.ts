@@ -50,14 +50,14 @@ let module = `
 
   ; multiplicity editing
 #ifdef EDIT
-  p16:gp3
+  p16:gp4
   d16 
   DC_SEHSQCT_OR2
   (center (p2 ph0):f1 (p24:sp7 ph7):f2 )
   4u
   DC_SEHSQCT_OR3 pl2:f2
 #else
-  p16:gp3
+  p16:gp4
   d16
   (p24:sp7 ph7):f2
   4u
@@ -126,14 +126,14 @@ let module = `
   DC_SEHSQCT_OR6
   (center (p2 ph0):f1 (p14:sp3 ph13):f2 )
   4u
-  p16:gp3*GC_SEHSQCT_OR*EA
+  p16:gp4*GC_SEHSQCT_OR*EA
   d16 pl12:f2
   DC_SEHSQCT_OR7
 #else
   DC_SEHSQCT_OR8
   (p2 ph0):f1
   4u
-  p16:gp3*GC_SEHSQCT_OR*EA
+  p16:gp4*GC_SEHSQCT_OR*EA
   d16 pl12:f2
   4u
 #endif /* INVERT */

@@ -31,7 +31,7 @@ define list<gradient> GC_HSQCC_CL={cnst43}
 `
 
 let module = `
-  ; 13C-1H seHSQC
+  ; 13C-1H HSQC-CLIP-COSY
 
   ; forward INEPT
   (p1 ph0):f1
@@ -52,7 +52,7 @@ let module = `
   ; edited part from hsqcedetgpsisp2.3
   ; nonedited part from hsqcetgpsisp2.2
 #ifdef EDIT
-  p16:gp3*EA
+  p16:gp4
   d16
   DC_HSQCC_CL2
   (p31:sp18 ph0):f2
@@ -63,7 +63,7 @@ let module = `
   2u
   2u pl2:f2
 #else
-  p16:gp3*EA
+  p16:gp4
   d16
   (p24:sp7 ph0):f2
   4u
@@ -103,7 +103,7 @@ let module = `
   (center (p2 ph1):f1 (p14:sp3 ph0):f2)
   DC_HSQCC_CL8 pl12:f2
   4u
-  p16:gp3*EA*GC_HSQCC_CL
+  p16:gp4*EA*GC_HSQCC_CL
   d16
   goscnp ph30 cpd2:f2
   50u do:f2
