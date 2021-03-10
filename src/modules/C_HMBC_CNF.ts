@@ -1,4 +1,4 @@
-import NOAHModule from "../moduleSpec.js";
+import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 13C HMBC`;
 

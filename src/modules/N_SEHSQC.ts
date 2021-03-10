@@ -1,4 +1,4 @@
-import NOAHModule from "../moduleSpec.js";
+import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 15N sensitivity-enhanced HSQC
 ;     [set SW(ppm) as cnst40; optional k-scaling with cnst39]`;

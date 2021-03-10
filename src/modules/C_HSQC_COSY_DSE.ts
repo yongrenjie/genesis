@@ -1,4 +1,4 @@
-import NOAHModule from "../moduleSpec.js";
+import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 13C HSQC-COSY (2 spin echoes)
 ;     [use -DEDIT for multiplicity editing (not recommended)]`

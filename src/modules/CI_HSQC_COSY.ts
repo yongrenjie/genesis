@@ -1,4 +1,4 @@
-import NOAHModule from "../moduleSpec.js";
+import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 13C HSQC-COSY with variable INEPT excitation
 ;     [specify fraction of 1J(CH) magnetisation to use with cnst32]

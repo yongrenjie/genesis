@@ -1,4 +1,4 @@
-import NOAHModule from "./moduleSpec.js";
+import NOAHModule from "./noahModule.js";
 
 import CI_HSQC from "./modules/CI_HSQC.js";
 import CI_HSQC_COSY from "./modules/CI_HSQC_COSY.js";

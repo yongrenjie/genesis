@@ -1,6 +1,6 @@
 // vim: syntax=bruker:
 
-import NOAHModule from "../moduleSpec.js";
+import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H magnitude-mode 2D J spectrum
 ;     [set TD1 and SW(Hz) as cnst37 and cnst38 respectively]`;
