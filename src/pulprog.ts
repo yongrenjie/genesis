@@ -172,7 +172,7 @@ class Phase {
         this.ht1 = ht1;  //            'r' for reset
     }
 
-    makeInstruction(occasion: string) {  // occasion = 'ea', 'nt1', 'ct1', or 'ht1'
+    makeInstruction(occasion: string): string {  // occasion = 'ea', 'nt1', 'ct1', or 'ht1'
         if (this[occasion] === null) {
             return ``;
         }
@@ -222,19 +222,19 @@ class Gradient {
     comment: string;
     shape: string;
 
-    constructor({num, val, comment = "", shape="SMSQ10.100"}) {
+    constructor({num, val, comment = "", shape = "SMSQ10.100"}) {
         this.num = num;   // gpzXX
         this.val = val;   // float: amplitude in percentage
         this.comment = comment.trim();   // description of the gradient
         this.shape = shape;   // gradient shape
     }
 
-    makeGpnamInstruction() {
+    makeGpnamInstruction(): string {
         if (Boolean(this.shape)) return `;gpnam${this.num}: ${this.shape}`;
         else return ``;  // no shape -- for gron/groff commands
     }
 
-    makeGpzInstruction() {
+    makeGpzInstruction(): string {
         let s = `;gpz${this.num}: ${this.val}%`;
         if (Boolean(this.comment)) s += ` (${this.comment})`;
         return s;
@@ -369,26 +369,34 @@ const asapMixingPPText = [
 // }}}1
 
 // The function {{{1
+/** Construct the pulse programme.
+ *
+ * @param {string[]} backendModules - Array of strings indicating the backend
+ *                                    modules to be used in pulse programme
+ *                                    construction.
+ * @param {Map<string, NOAHModule>} allModules - Imported from allModules.js.
+ */
 export function makePulprogText(backendModules: string[],
                                 allModules: Map<string, NOAHModule>) {
-    /* backendModules : Array of Strings indicating the backend modules to be used in pulse
-     *                  programme construction.
-     * allModules     : Map containing backend module names as the keys (these are the same 
-     *                  as the .js file names, without extensions) and the actual module
-     *                  objects as the values.
-     */
     // Initialisation {{{2
-
+    // Error out if any modules don't exist.
+    const missingModules = backendModules.filter(name => !allModules.has(name));
+    if (missingModules.length > 0) {
+        const errMsg = `module(s) ${missingModules.join(", ")} not found`;
+        console.error(errMsg);
+        return errMsg;
+    }
+    // Get the modules
+    const modules = backendModules.map(name => allModules.get(name));
     // Set some flags that will help us later
-    const hmbcModulePresent = (backendModules.findIndex(elem => elem.startsWith("C_HMBC_")) !== -1);
-    const nModulePresent = (backendModules.findIndex(elem => elem.startsWith("N_")) !== -1);
-    const c1ModulePresent = (backendModules.findIndex(elem => elem.startsWith("CI_")) !== -1);
-    const c2ModulePresent = (backendModules.findIndex(elem => elem.startsWith("C_")) !== -1);
-    const cModulePresent = (c1ModulePresent || c2ModulePresent);  // any 13C module
-    const hModulePresent = (backendModules.findIndex(elem => elem.startsWith("H_")) !== -1);
-    const asapMixing = (hmbcModulePresent && hModulePresent);
-    const extraDipsiMixing = (c1ModulePresent && c2ModulePresent &&
-        backendModules.filter(m => m.includes("CI_") && m.includes("TOCSY")).length === 0);
+    const hasHmbcModule       = modules.some(mod => mod.category === "hmbc");
+    const hasNModule          = modules.some(mod => mod.category === "n15");
+    const hasHModule          = modules.some(mod => mod.category === "h1");
+    const asapMixing          = hasHmbcModule && hasHModule
+    const CModules            = modules.filter(mod => mod.category === "c13");
+    const hasCModule          = CModules.length > 0;
+    const hasMultipleCModules = CModules.length > 1;
+    const extraDipsiMixing    = hasMultipleCModules && !CModules[0].hasDipsi();
 
     // Initialise pulse programme components.
     // All these are arrays of strings.
@@ -471,8 +479,8 @@ export function makePulprogText(backendModules: string[],
         `  ; Cleanup`,
     );
     // Context-dependent cleanup before d1.
-    if (cModulePresent) mainpp.push(`  4u pl2:f2`, `  (p3 ph0):f2`);
-    if (nModulePresent) mainpp.push(`  4u pl3:f3`, `  (p21 ph0):f3`);
+    if (hasCModule) mainpp.push(`  4u pl2:f2`, `  (p3 ph0):f2`);
+    if (hasNModule) mainpp.push(`  4u pl3:f3`, `  (p21 ph0):f3`);
     mainpp.push(
         `  4u pl1:f1`,
         `  p16:gp0`,
@@ -673,7 +681,7 @@ export function makePulprogText(backendModules: string[],
 
     // 15N t1 incrementation {{{3
     const nt1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("nt1")).filter(Boolean);
-    if (nModulePresent) {
+    if (hasNModule) {
         // if there is NUS defined then we want to disable cnst39, i.e. duplicate all of the increment
         // instructions, but outside of the 'if l1 % cnst39 == 0' check. This is because we can't handle
         // NUS and k-scaling (effectively we would need two t1lists, one for 15N and one for the rest).

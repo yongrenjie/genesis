@@ -32,6 +32,12 @@ class NOAHModule {
         if (this.pulprog.includes(":f3")) ns.push("N");
         return ns;
     }
+
+    // Tells us whether the module includes a DIPSI-2 block. pl10 seems like the
+    // most foolproof way.
+    hasDipsi(): boolean {
+        return this.pulprog.includes("pl10:f1");
+    }
 }
 
 export default NOAHModule;
