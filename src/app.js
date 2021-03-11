@@ -38,6 +38,7 @@ function onRequest(req, res) {
             if (pptext.length > 0) {
                 console.log("download was requested for: " + backendModules.join(", "));
             }
+            else throw "No pulse programme found"; // caught later
         } catch (error) {
             // It could genuinely be any error: we aren't very concerned.
             res.writeHead(400, {"content-type": "text/plain"});
