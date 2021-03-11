@@ -42,8 +42,6 @@ define delay DCI_HSQC7
 "d12     = 0.25s/cnst12"               ; CLIP-COSY mixing (< 1/4J(HH))
 "in0     = inf1/2"                     ; 13C HSQC increment
 "in10    = 2*dw"                       ; CLIP-COSY increment
-"l13     = (d19/(p6*115.112))/2"       ; half the number of HSQC-TOCSY DIPSI-2 loops
-"l14     = l13*2"                      ; number of HSQC-TOCSY DIPSI-2 loops
 "p2      = p1*2"                       ; 1H hard 180
 "DCI_HSQC1   = (asin(cnst32)/(2*PI*cnst2))-p14/2000000"
 "DCI_HSQC2   = (asin(cnst32)/(2*PI*cnst2))+p14/2000000"
@@ -217,7 +215,7 @@ if "d29 > 1m"
 
 
   ; MODULE 2
-  ; 13C-1H HSQC (F2 coupled)
+  ; 13C-1H HSQC (F2-coupled)
 
   ; INEPT
   (p1 ph0):f1
@@ -268,8 +266,8 @@ if "d29 > 1m"
   d16 pl2:f2
   DC_HSQC_F2J6
   (p3 ph0):f2
-  4u pl12:f2
-  goscnp ph30 cpd2:f2
+  4u
+  goscnp ph30
   50u
 
   ; Cleanup
@@ -386,14 +384,11 @@ ph30=0 2 2 0
 ;d10: 1H t1
 ;d12: <1/4J(HH) CLIP-COSY mixing time
 ;d16: delay for homospoil/gradient recovery [200 us]
-;d19: HSQC-TOCSY mixing time
 ;d29: DIPSI-2 mixing time between 13C modules
 ;l0: total number of t1 increments
 ;l1: running counter of t1 increments
 ;l2: even for echo, odd for antiecho
 ;l3: running counter for scan number
-;l13: HSQC-TOCSY: half the number of DIPSI-2 cycles
-;l14: HSQC-TOCSY: actual number of DIPSI-2 cycles
 ;l16: DIPSI-2 between 13C modules: actual number of DIPSI-2 cycles
 ;p1: f1 channel -  90 degree high power pulse
 ;p2: f1 channel - 180 degree high power pulse
@@ -423,4 +418,4 @@ ph30=0 2 2 0
 
 ; auprog: noah_hsqc:noah_hsqc:noah_clipcosy States
 ; ngn-2.0.5: constructed from CI_HSQC, C_HSQC_F2J, H_CLIP_COSY
-; pulse programme generated on Sun Mar 07 2021 22:19:33 GMT+0000 (Greenwich Mean Time)
+; pulse programme generated on Thu Mar 11 2021 00:20:55 GMT+0000 (Greenwich Mean Time)

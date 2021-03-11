@@ -13,7 +13,8 @@ import allModules from "../build/allModules.js";
 function filterPulprog(text) {
     return text
         .split("\n")
-        .filter(line => line.includes("auprog") || !(!!line.trim() || line.trim().startsWith(";")))
+        .filter(line => !line.trim().startsWith(";") || line.includes("auprog"))
+        .filter(line => !!line.trim())  // removes empty lines
         .join("\n");
 }
 
