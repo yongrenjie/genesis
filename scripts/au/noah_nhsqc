@@ -36,7 +36,14 @@ XCMD("2 SSB 2")
 XCMD("2 PH_mod pk")
 XCMD("1 PH_mod pk") 
 XCMD("fixF1n")
-XCMD("combinek")
+
+/* read sensitivity factor k and call combinek if needed */
+float cnst39;
+FETCHPARS("CNST 39", &cnst39)
+int k;
+k = (int) (cnst39 + 0.5); /* round to nearest integer */
+if (k > 1) XCMD("combinek")
+
 XCMD("proc_noah")
 XCMD("1 SR 0")
 XCMD("sendgui apk2d")
