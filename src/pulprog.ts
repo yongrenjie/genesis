@@ -2,6 +2,21 @@
 import {version} from "./version.js";
 import NOAHModule from "./noahModule.js";
 
+// Helper function
+// Take an array of strings and a key function (keyfn :: string -> key)
+// Returns a filtered array containing only strings with unique keys.
+function removeDuplicateByKey(lines: string[],
+                              keyfn: (k: string) => any): string[] {
+    let keys = lines.map(keyfn);
+    let uniqueLines = lines.filter(function (l, pos) {
+        let k = keyfn(l);  // grab the key corresponding to each line
+        return keys.indexOf(k) == pos;
+        // indexOf gets the first occurrence of k in keys,
+        // so this returns true only if it's the first line with such a key.
+    });
+    return uniqueLines;
+}
+
 // Standardised parameter definitions {{{1
 // Goto labels {{{2
 // 1 - beginning of pulse sequence ('ze')
@@ -368,6 +383,70 @@ const asapMixingPPText = [
 // }}}2
 // }}}1
 
+// The Parameter class {{{1
+class Parameter {
+    str: string;
+    num?: number;
+
+    constructor(name: string) {
+        const endingNumberMatch = name.match(/\d+$/);
+        if (endingNumberMatch === null) this.str = name;
+        else {
+            this.num = Number(endingNumberMatch[0]);
+            this.str = name.slice(0, -endingNumberMatch[0].length);
+        }
+    }
+
+    // Regenerate the 'usual' name.
+    name() {
+        // Technically the cast isn't necessary, but why risk it? I really
+        // don't like how JS plays so hard and fast with types.
+        if (this.num) return this.str + String(this.num);
+        else return this.str;
+    }
+
+    // Get the description from allParams.
+    getDescription(): string {
+        return allParams[this.name()];
+    }
+
+    // Get a comment string for the bottom of the pulse programme.
+    getCommentString(): string {
+        return `;${this.name()}: ${this.getDescription()}`;
+    }
+
+    // Comparison function for two parameters.
+    // compare(p1, p2) returns negative if p1 < p2.
+    static compare(param1: Parameter, param2: Parameter): number {
+        let isUpper = (char: string) => char === char.toUpperCase();
+        let isLower = (char: string) => char === char.toLowerCase();
+
+        // Note that we want the manually defined delays (which start with
+        // D...) to go at the end, so we must make sure that capitalised
+        // parameters always come after uncapitalised parameters.
+        if (isUpper(param1.str[0]) && isLower(param2.str[0])) return 1;
+        if (isLower(param1.str[0]) && isUpper(param2.str[0])) return -1;
+
+        // Compare string part first.
+        if (param1.str < param2.str) return -1;
+        else if (param1.str > param2.str) return 1;
+        else {
+            // Compare number if the string parts are equal.
+            if (param1.num === undefined && param2.num === undefined) return 0;
+            else if (param1.num === undefined) return -1;
+            else if (param2.num === undefined) return 1;
+            else return (param1.num - param2.num);
+        }
+    }
+    
+    // Extract a parameter name from a preamble line / definition.
+    static fromPreamble(line: string): Parameter {
+        const paramName = line.split("=")[0].slice(1).trim();
+        return new Parameter(paramName);
+    }
+}
+// }}}1
+
 // The function {{{1
 /** Construct the pulse programme.
  *
@@ -388,6 +467,7 @@ export function makePulprogText(backendModules: string[],
     }
     // Get the modules
     const modules = backendModules.map(name => allModules.get(name));
+    const n       = modules.length;
     // Set some flags that will help us later
     const hasHmbcModule       = modules.some(mod => mod.category === "hmbc");
     const hasNModule          = modules.some(mod => mod.category === "n15");
@@ -439,19 +519,6 @@ export function makePulprogText(backendModules: string[],
         if (param.n == null) param.n = 0;
         return param;
     }
-    // Take an array of strings and a key function (keyfn :: string -> key)
-    // Returns a filtered array containing only strings with unique keys.
-    function removeDuplicateByKey(lines: string[],
-                                  keyfn: (k: string) => any) {
-        let keys = lines.map(keyfn);
-        let uniqueLines = lines.filter(function (l, pos) {
-            let k = keyfn(l);  // grab the key corresponding to each line
-            return keys.indexOf(k) == pos;
-            // indexOf gets the first occurrence of k in keys,
-            // so this returns true only if it's the first line with such a key.
-        });
-        return uniqueLines;
-    }
     // Sorting function acting on strings that have the form /[A-Za-z]+\d+/.
     // Essentially sorts the tuple (stringpart, numberpart) in lexicographic order.
     function sortStrNum(pa: string, pb: string) {
@@ -463,10 +530,10 @@ export function makePulprogText(backendModules: string[],
         return (scmp != 0) ? scmp : na - nb;
     }
 
-    // Preprocess mainpp {{{2
+    // Construct the beginning of the pulse programme (ze, d1 etc.) {{{2
     // Figure out which nucleus to stop decoupling on, if any.
     let stopDec = "";
-    const lastModule = allModules.get(backendModules[backendModules.length - 1]);
+    const lastModule = modules[n - 1];
     if (lastModule.pulprog.includes('cpd2:f2')) stopDec = " do:f2";
     else if (lastModule.pulprog.includes('cpd3:f3')) stopDec = " do:f3";
     mainpp.push(
@@ -498,7 +565,7 @@ export function makePulprogText(backendModules: string[],
         `  4u UNBLKGRAD`,
     );
 
-    // Main pulse programme construction {{{2
+    // Construct the main pulse programme {{{2
     // Generator which spits out numbers to multiply purge gradients by.
     function* gradGenFunc() {
         yield* [1.77, 2.32, -1.29, 0.71];
@@ -506,62 +573,50 @@ export function makePulprogText(backendModules: string[],
     const gradGen = gradGenFunc();
     // Iterate over modules. The hard work of constructing the pulse programme
     // is done here.
-    for (let [index, module] of backendModules.entries()) {
-        if (allModules.has(module)) {
-            // get module object
-            const mod = allModules.get(module); // module object
-            // get shortCode. We postprocess this in order to get a snappy
-            // name for the pulse sequence (e.g. 'MSCN').
-            shortCodes.push(mod.shortCode);
-            // get shortDescription. These go at the front of the pulse
-            // programme.
-            shortDescriptions.push(...mod.shortDescription.split("\n"));
-            // get preamble lines. These are postprocessed so that they
-            // appear in the right order.
-            preambles.push(...mod.preamble.split("\n"));
-            // here comes the main part -- the actual pulprog itself
-            mainpp.push(``, ``, `  ; MODULE ${index + 1}`),
-            mainpp.push(...trimNewlines(mod.pulprog).split("\n"));
-            // DIPSI-2 mixing between two 13C modules; but this isn't needed if
-            // the previous module was a HSQC-TOCSY.
-            if (extraDipsiMixing
-                && backendModules[index].startsWith("CI_")
-                && backendModules[index + 1].startsWith("C_")
-            ) {
-                mainpp.push(...extraDipsiMixingPPText);
-            }
-            // ASAP mixing if the next module is a 1H module.
-            if (asapMixing
-                && backendModules[index + 1] !== undefined
-                && backendModules[index + 1].startsWith("H_")
-            ) {
-                mainpp.push(...asapMixingPPText);
-            }
-            // add cleanup for all but the last module
-            if (index != backendModules.length - 1) {
-                mainpp.push(
-                    ``,
-                    `  ; Cleanup`,
-                    `  4u pl1:f1`,  // as a courtesy to the next module
-                );
-                // 15N and/or 13C purge pulses
-                if (mod.nuclei().includes('C')) mainpp.push(`  4u pl2:f2`, `  (p3 ph0):f2`);
-                if (mod.nuclei().includes('N')) mainpp.push(`  4u pl3:f3`, `  (p21 ph0):f3`);
-                mainpp.push(
-                    `  4u`,
-                    `  p16:gp0*${gradGen.next().value}`,
-                    `  2m st`,
-                );
-            }
+    for (const [i, mod] of modules.entries()) {  // n is the number of backend modules
+        const nextMod = modules[i + 1];
+
+        // Collect shortCodes, shortDescriptions, and preambles.
+        // The preambles will later be postprocessed.
+        shortCodes.push(mod.shortCode);
+        shortDescriptions.push(...mod.shortDescription.split("\n"));
+        preambles.push(...mod.preamble.split("\n"));
+
+        // Collect the pulse programmes themselves.
+        mainpp.push(``, ``, `  ; MODULE ${i + 1}`),
+        mainpp.push(...trimNewlines(mod.pulprog).split("\n"));
+
+        // Add anything that we might need between modules: extra DIPSI-2, ASAP
+        // mixing, or general purge gradients.
+        if (extraDipsiMixing
+            && mod.category === "c13" && !mod.hasDipsi()
+            && nextMod !== undefined && nextMod.category === "c13"
+        ) mainpp.push(...extraDipsiMixingPPText);
+        if (asapMixing
+            && nextMod !== undefined && nextMod.category === "h1"
+        ) mainpp.push(...asapMixingPPText);
+        // Cleanup
+        if (i < n - 1) {
+            mainpp.push(
+                ``,
+                `  ; Cleanup`,
+                `  4u pl1:f1`,
+            );
+            if (mod.nuclei().includes('C')) mainpp.push(`  4u pl2:f2`, `  (p3 ph0):f2`);
+            if (mod.nuclei().includes('N')) mainpp.push(`  4u pl3:f3`, `  (p21 ph0):f3`);
+            mainpp.push(
+                `  4u`,
+                `  p16:gp0*${gradGen.next().value}`,
+                `  2m st`,
+            );
         }
-        else console.log(`makePulprogText: module ${module} not found`);
     }
 
-    // Postprocess mainpp, including EA/t1 incrementation {{{2
+    // Construct the end of the pulse programme (EA/t1 incrementation) {{{2
     // Initialisation {{{3
     // Use a regex to find all phases in the pulse programme text
-    let phases2 = new Set(mainpp.join("\n").match(/ph\d{1,2}/g));
-    let phases = Array.from(phases2)   // TODO: Ugly variable name, silences TypeScript errors!
+    let phasesSet = new Set(mainpp.join("\n").match(/ph\d{1,2}/g));
+    let phases = Array.from(phasesSet)
         .map(phx => Number(phx.slice(2)))  // extract the number
         .sort((a, b) => a - b);
 
@@ -682,11 +737,10 @@ export function makePulprogText(backendModules: string[],
     // 15N t1 incrementation {{{3
     const nt1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("nt1")).filter(Boolean);
     if (hasNModule) {
-        // if there is NUS defined then we want to disable cnst39, i.e. duplicate all of the increment
-        // instructions, but outside of the 'if l1 % cnst39 == 0' check. This is because we can't handle
-        // NUS and k-scaling (effectively we would need two t1lists, one for 15N and one for the rest).
-        // However if NUS is defined then we don't want to id20 as d20 will be recalculated at the start
-        // of the pulse programme..
+        // k-scaling (cnst39 > 1) is incompatible with NUS, which explains the logic
+        // used in this part: cnst39 and d20 should only be changed if NUS is off (if
+        // NUS is on, then d20 is changed at the top of the pulse programme when t1list
+        // is incremented)
         mainpp.push(
             ``,
             `  ; 15N t1 incrementation`,
@@ -806,7 +860,7 @@ export function makePulprogText(backendModules: string[],
     const paramDefns = params.map(p => `;${p}: ${allParams[p]}`);
 
     // AU programme list {{{3
-    const auProgs = backendModules.map(m => allModules.get(m).auprog);
+    const auProgs = modules.map(m => m.auprog);
     const auProgsStr = `; auprog: ${auProgs.join(":")}`;
 
     // Finally, string everything together {{{2
