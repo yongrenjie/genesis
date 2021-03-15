@@ -2,21 +2,6 @@
 import {version} from "./version.js";
 import NOAHModule from "./noahModule.js";
 
-// Helper function
-// Take an array of strings and a key function (keyfn :: string -> key)
-// Returns a filtered array containing only strings with unique keys.
-function removeDuplicateByKey(lines: string[],
-                              keyfn: (k: string) => any): string[] {
-    let keys = lines.map(keyfn);
-    let uniqueLines = lines.filter(function (l, pos) {
-        let k = keyfn(l);  // grab the key corresponding to each line
-        return keys.indexOf(k) == pos;
-        // indexOf gets the first occurrence of k in keys,
-        // so this returns true only if it's the first line with such a key.
-    });
-    return uniqueLines;
-}
-
 // Standardised parameter definitions {{{1
 // Goto labels {{{2
 // 1 - beginning of pulse sequence ('ze')
@@ -383,36 +368,30 @@ const asapMixingPPText = [
 // }}}2
 // }}}1
 
-// The Parameter class {{{1
+// The Parameter class and a helper function {{{1
 class Parameter {
     str: string;
     num?: number;
+    definition?: string;
+    definitionComment?: string;
 
-    constructor(name: string) {
+    constructor(name: string, definition?: string, definitionComment?: string) {
         const endingNumberMatch = name.match(/\d+$/);
         if (endingNumberMatch === null) this.str = name;
         else {
             this.num = Number(endingNumberMatch[0]);
             this.str = name.slice(0, -endingNumberMatch[0].length);
         }
+        this.definition = definition;
+        this.definitionComment = definitionComment;
     }
 
     // Regenerate the 'usual' name.
     name() {
         // Technically the cast isn't necessary, but why risk it? I really
         // don't like how JS plays so hard and fast with types.
-        if (this.num) return this.str + String(this.num);
+        if (this.num !== undefined) return this.str + String(this.num);
         else return this.str;
-    }
-
-    // Get the description from allParams.
-    getDescription(): string {
-        return allParams[this.name()];
-    }
-
-    // Get a comment string for the bottom of the pulse programme.
-    getCommentString(): string {
-        return `;${this.name()}: ${this.getDescription()}`;
     }
 
     // Comparison function for two parameters.
@@ -439,15 +418,50 @@ class Parameter {
         }
     }
     
-    // Extract a parameter name from a preamble line / definition.
+    // Extract a Parameter from a preamble line / definition.
     static fromPreamble(line: string): Parameter {
-        const paramName = line.split("=")[0].slice(1).trim();
-        return new Parameter(paramName);
+        let name: string, definition: string, definitionComment: string;
+        const [part1, part2] = line.split(";");
+        if (part2) definitionComment = part2.trim(); 
+        name = part1.split("=")[0].slice(1).trim();
+        definition = part1.split("=")[1].split('"')[0].trim();
+        return new Parameter(name, definition, definitionComment);
+    }
+    
+    // Convert a Parameter back into a preamble line.
+    toPreamble(nameLength: number = 0, definitionLength: number = 0): string {
+        let line = `"${this.name().padEnd(nameLength)}`;
+        line += ` = ${(this.definition + '"').padEnd(definitionLength + 1)}`;
+        if (this.definitionComment) {
+            line += ` ; ${this.definitionComment}`;
+        }
+        return line;
+    }
+
+    // Convert a Parameter into a postamble line.
+    toPostamble(): string {
+        return `;${this.name()}: ${allParams[this.name()]}`;
     }
 }
+
+// removeDuplicateByKey(xs, f) gives the same behaviour as 
+//     nubBy ((==) `on` f) xs
+// in Haskell.
+function removeDuplicateByKey<In, Out>(lines: In[],
+                                       keyfn: (k: In) => Out): In[] {
+    let keys = lines.map(keyfn);
+    let uniqueLines = lines.filter(function (l, pos) {
+        let k = keyfn(l);  // grab the key corresponding to each line
+        return keys.indexOf(k) == pos;
+        // indexOf gets the first occurrence of k in keys,
+        // so this returns true only if it's the first line with such a key.
+    });
+    return uniqueLines;
+}
+
 // }}}1
 
-// The function {{{1
+// The big function {{{1
 /** Construct the pulse programme.
  *
  * @param {string[]} backendModules - Array of strings indicating the backend
@@ -480,55 +494,11 @@ export function makePulprogText(backendModules: string[],
 
     // Initialise pulse programme components.
     // All these are arrays of strings.
-    let pp = [];
-    let shortCodes = [];
-    let shortDescriptions = [];
-    let preambles = [];
-    let mainpp = [];  // the bulk of the pulse programme
-
-    // Helper functions {{{2
-    // Trim newlines from beginning and end. trim() removes all whitespace, which we don't want here.
-    let trimNewlines = ((s: string) => s.replace(/^\n|\n$/g, ''));
-    // Split a parameter name into word and number.
-    function splitParam(p: string) {
-        let numMatch = p.match(/\d+$/);
-        let numAsStr: string;
-        let word: string;
-        let num: number;  // or null...
-        if (numMatch) {
-            numAsStr = numMatch[0];   // "21"
-            word = p.slice(0, -numAsStr.length);  // "cnst"
-            num = Number(numAsStr);  // 21
-        }
-        else {
-            num = null;
-            word = p;
-        }
-        return [word, num];
-    }
-    // Extract the parameter being defined from a preamble line.
-    // The parameter is an object with attributes 's' for string ('cnst'), 
-    // 'n' for number (21), and 'full' for the full thing ('cnst21').
-    function extractPreambleParam(line: string) {
-        let param: any = {};  // TODO: make an interface or class for TypeScript
-        param.full = line.split("=")[0].slice(1).trim();
-        // Get the word + number.
-        [param.s, param.n] = splitParam(param.full);
-        // Since we're going to use this for sorting, we should replace
-        // the null with a zero.
-        if (param.n == null) param.n = 0;
-        return param;
-    }
-    // Sorting function acting on strings that have the form /[A-Za-z]+\d+/.
-    // Essentially sorts the tuple (stringpart, numberpart) in lexicographic order.
-    function sortStrNum(pa: string, pb: string) {
-        const ia = pa.search(/\d/); const ib = pb.search(/\d/);  // index of first number
-        const sa = pa.slice(0, ia); const sb = pb.slice(0, ib);  // string part
-        const na = (ia != -1) ? Number(pa.slice(ia)) : 0;        // number part
-        const nb = (ib != -1) ? Number(pb.slice(ib)) : 0;
-        const scmp = sa.localeCompare(sb);                       // compare string part
-        return (scmp != 0) ? scmp : na - nb;
-    }
+    let pp: string[] = [];
+    let shortCodes: string[] = [];
+    let shortDescriptions: string[] = [];
+    let preambles: string[] = [];
+    let mainpp: string[] = [];  // the bulk of the pulse programme
 
     // Construct the beginning of the pulse programme (ze, d1 etc.) {{{2
     // Figure out which nucleus to stop decoupling on, if any.
@@ -583,7 +553,8 @@ export function makePulprogText(backendModules: string[],
         preambles.push(...mod.preamble.split("\n"));
 
         // Collect the pulse programmes themselves.
-        mainpp.push(``, ``, `  ; MODULE ${i + 1}`),
+        mainpp.push(``, ``, `  ; MODULE ${i + 1}`);
+        let trimNewlines = ((s: string) => s.replace(/^\n|\n$/g, ''));
         mainpp.push(...trimNewlines(mod.pulprog).split("\n"));
 
         // Add anything that we might need between modules: extra DIPSI-2, ASAP
@@ -763,7 +734,7 @@ export function makePulprogText(backendModules: string[],
 
     // Final loop and exit {{{3
     mainpp.push(``);
-    mainpp.push(`  lo to 4 times l0`);
+    mainpp.push(`  lo to 4 times l0`);     // loop over t1 increments
     // BLKGRAD and exit.
     mainpp.push(``, `50u BLKGRAD`, `exit`);
     const mainppText = mainpp.join("\n");  // convenience string for future use
@@ -780,35 +751,31 @@ export function makePulprogText(backendModules: string[],
     // Start by removing extra whitespace and empty lines.
     preambles = preambles.map(l => l.trim()).filter(Boolean);
     // There are three types of lines that we need to deal with:
-    // 1) define delay XX, 2) other parameter definitions, 3) define list<gradient>XX.
-    let defineDelayLines = preambles.filter(l => l.startsWith("define delay")).sort(sortStrNum);
-    let paramLines = preambles.filter(l => !(l.startsWith("define")));
-    let defineGradLines = preambles.filter(l => l.startsWith("define list<gradient>")).sort(sortStrNum);
-    // Sort param lines (the other two have already been sorted)
-    paramLines.sort(function (linea, lineb) {
-        let pa = extractPreambleParam(linea);
-        let pb = extractPreambleParam(lineb);
-        // compare string part first
-        if (pa.s > pb.s) return 1;
-        else if (pa.s < pb.s) return -1;
-        // string parts equal, compare numbers
-        else return pa.n - pb.n;
-    });
+    // 1) define delay XX, 2) define list<gradient>XX, 3) the rest
+    const defineDelayLines = preambles
+        .filter(l => l.startsWith("define delay"))
+        .sort((la, lb) => Parameter.compare(new Parameter(la), new Parameter(lb)))
+    const defineGradLines = preambles
+        .filter(l => l.startsWith("define list<gradient>"))
+        .sort()
+    let preambleParams = preambles
+        .filter(l => !(l.startsWith("define")))
+        .map(l => Parameter.fromPreamble(l));
+    // Sort parameter lines. Note that Parameter.compare() automatically
+    // makes sure that 'custom' delays D_XXX occur below the standard delays
+    // dXX, which is necessary for TopSpin to parse the pulse programme.
+    preambleParams.sort(Parameter.compare);
     // Then remove duplicates according to the full parameter name
-    paramLines = removeDuplicateByKey(paramLines, (l => extractPreambleParam(l).full));
-    // paramLines is now mostly sorted, but the DC_S delays come before
-    // the other parameters, because capital letters sort lower than
-    // lowercase letters. So we need to reverse that here.
-    let upperParamLines = paramLines.filter(function (line) {
-        let paramFirstLetter = extractPreambleParam(line).full[0];
-        return paramFirstLetter == paramFirstLetter.toUpperCase();
-    });
-    let lowerParamLines = paramLines.filter(function (line) {
-        let paramFirstLetter = extractPreambleParam(line).full[0];
-        return paramFirstLetter == paramFirstLetter.toLowerCase();
-    });
+    preambleParams = removeDuplicateByKey(preambleParams, (p => p.name()));
+    // Find the lengths for pretty-printing the parameters.
+    const longestName = Math.max(...preambleParams.map(p => p.name().length));
+    const longestDefn = Math.max(...preambleParams.map(p => p.definition.length));
     // Now we can stick the preambles back together in the right order.
-    preambles = defineDelayLines.concat(lowerParamLines, upperParamLines, defineGradLines);
+    const preamblesText = [
+        ...defineDelayLines,
+        ...preambleParams.map(p => p.toPreamble(longestName, longestDefn)),
+        ...defineGradLines
+    ].join("\n");
 
     // Create postamble components {{{2
     // Phase definitions {{{3
@@ -838,8 +805,8 @@ export function makePulprogText(backendModules: string[],
 
     // Parameter definitions {{{3
     // We need to scan the preamble and mainppText with several regexes.
-    const preamblePlusMainpp = preambles.join("\n") + "\n" + mainppText;
-    let params2 = new Set([
+    const preamblePlusMainpp = preamblesText + "\n" + mainppText;
+    let allPpParamNames = [...new Set([
         preamblePlusMainpp.match(/\bp\d{1,2}\b/g),     // pulses
         preamblePlusMainpp.match(/\bd\d{1,2}\b/g),     // delays
         preamblePlusMainpp.match(/\bl\d{1,2}\b/g),     // loop counters
@@ -847,27 +814,26 @@ export function makePulprogText(backendModules: string[],
         preamblePlusMainpp.match(/\bpl\d{1,2}\b/g),    // power levels
         preamblePlusMainpp.match(/\bcpd\d{1,2}\b/g),   // decoupling programme
         preamblePlusMainpp.match(/\bcnst\d{1,2}\b/g),  // constants
-    ].filter(Boolean).flat());
-    // Add in spnams from sp.
-    let params = [...params2];
-    const spParams = [...params].filter(p => p.startsWith("sp")).map(p => p.replace("sp", "spnam"));
-    params.push(...spParams);
-    // Sort parameters.
-    params.sort(sortStrNum);
-    // Add in a few bonus ones.
-    params.push("aq", "ds", "FnMODE", "NBL", "ns");
-    // Then map them to their definitions.
-    const paramDefns = params.map(p => `;${p}: ${allParams[p]}`);
+    ].filter(Boolean).flat())];
+    // Add in the spnams.
+    const spParams1 = allPpParamNames.filter(p => p.startsWith("sp")).map(p => p.replace("sp", "spnam"));
+    allPpParamNames.push(...spParams1);
+    // Sort them and throw them all into a list of Parameters, with a few bonus ones.
+    const bonusParams = ["aq", "ds", "FnMODE", "NBL", "ns"];
+    const paramDefns = [
+        ...allPpParamNames.map(n => new Parameter(n)).sort(Parameter.compare),
+        ...bonusParams.map(n => new Parameter(n)),
+    ].map(p => p.toPostamble());
 
     // AU programme list {{{3
     const auProgs = modules.map(m => m.auprog);
     const auProgsStr = `; auprog: ${auProgs.join(":")}`;
 
     // Finally, string everything together {{{2
-    pp.push(ppShortCodeName);
-    pp.push(``);  // this adds a blank line
-    pp.push(...shortDescriptions);
     pp.push(
+        ppShortCodeName,
+        ``,
+        ...shortDescriptions,
         ``,
         `;$CLASS=HighRes`,
         `;$DIM=2D`,
@@ -883,48 +849,45 @@ export function makePulprogText(backendModules: string[],
         `define list<loopcounter> t1list=<$VCLIST>`,
         `#endif`,
         ``,
-    );
-    pp.push(...preambles);
-    pp.push(
+        preamblesText,
         `"l0      = td1/${2*nbl}"             ; Total number of 13C t1 increments`,
         `"l1      = 0"                 ; Running counter of 13C t1 increments`,
         `"l2      = 0"                 ; Counter, even for echo, odd for antiecho`,
         `"l3      = 0"                 ; Running counter for NS`,
     );
     if (asapMixing) {
-        // The call to larger() silences divide-by-zero errors.
-        pp.push(
-            `"l6      = d15/(larger(p45,1u)*20)"  ; Number of ASAP loops`,
-        );
+        pp.push(`"l6      = d15/(larger(p45,1u)*20)"  ; Number of ASAP loops`);
     }
     if (extraDipsiMixing) {
-        // extraDipsiMixing is true if there are two 13C modules and the first isn't
-        // a HSQC-TOCSY.
         pp.push(
              `"l15    = (d29/(p6*115.112))/2"   ; half the number of DIPSI-2 loops between 13C modules`,
              `"l16    = l15*2"                  ; number of DIPSI-2 loops between 13C modules`,
-        )
+        );
     }
     pp.push(
         `"acqt0   = 0"`,
         `baseopt_echo`,
+        ``,
+        ...mainpp,
+        ``,
+        ...phaseDefns,
+        ``,
+        ...gpnamDefns,
+        ...gpzDefns,
+        ``,
     );
-    pp.push(``);
-    pp.push(...mainpp);
-    pp.push(``);
-    pp.push(...phaseDefns);
-    pp.push(``);
-    pp.push(...gpnamDefns);
-    pp.push(...gpzDefns);
-    pp.push(``);
-    if (wvmDefns.length > 0) pp.push(`;WaveMaker shaped pulses (use 'wvm -a' to generate)`)
-    pp.push(...wvmDefns);
-    pp.push(``);
-    pp.push(...paramDefns);
-    pp.push(``);
-    pp.push(auProgsStr);
-    pp.push(`; ngn-${version}: constructed from ${backendModules.join(", ")}`);
-    pp.push(`; pulse programme generated on ${(new Date()).toString()}`);
+    if (wvmDefns.length > 0) {
+        pp.push(`;WaveMaker shaped pulses (use 'wvm -a' to generate)`);
+        pp.push(...wvmDefns);
+    }
+    pp.push(
+        ``,
+        ...paramDefns,
+        ``,
+        auProgsStr,
+        `; ngn-${version}: constructed from ${backendModules.join(", ")}`,
+        `; pulse programme generated on ${(new Date()).toString()}`,
+    );
     return pp.join("\n");
 }
 // }}}1
