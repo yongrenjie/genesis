@@ -11,8 +11,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-      with:
-        ref: typescript
 
     - name: Setup node.js v14
       uses: actions/setup-node@v2
