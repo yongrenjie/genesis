@@ -5,7 +5,9 @@ import allModules from "../build/allModules.js";
 
 describe("check that allModules really has every module TS file", function() {
     const moduleNames = [...allModules.keys()];
-    const moduleFiles = readdirSync("src/modules").map(fname => fname.slice(0, -3))
+    const moduleFiles = readdirSync("src/modules")
+        .filter(fname => fname.endsWith(".ts"))
+        .map(fname => fname.replace(".ts", ""))
 
     // If this fails, then there is some module in allModules that doesn't have
     // a corresponding module.ts file.

@@ -57,6 +57,11 @@ describe("regression tests against v2.0.6", function() {
         const new_pp = makePulprogText(["CI_HSQC", "C_HSQC_F2J", "H_CLIP_COSY"], allModules);
         assertPPEqual(v206_pp, new_pp);
     });
+    it("NOAH-3 StST: HSQC-TOCSY + HSQC + TOCSY", function() {
+        const v206_pp = fs.readFileSync("./tests/pp_v2.0.6/ngn_noah3-StST", "utf8");
+        const new_pp = makePulprogText(["CI_HSQC_TOCSY", "C_HSQC", "H_TOCSY"], allModules);
+        assertPPEqual(v206_pp, new_pp);
+    });
     it("NOAH-4 SpnSpCT: 15N seHSQC + 13C seHSQC + COSY + TOCSY", function() {
         const v206_pp = fs.readFileSync("./tests/pp_v2.0.6/ngn_noah4-SpnSpCT", "utf8");
         const new_pp = makePulprogText(["N_SEHSQC", "C_SEHSQC", "H_COSY_TOCSY"], allModules);
