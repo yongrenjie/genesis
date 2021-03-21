@@ -260,6 +260,24 @@ ol.steps > li > p:first-child {
     font-style: italic;
 }
 
+/* https://stackoverflow.com/a/4615631/7115316 */
+ol.citation-start {
+    counter-reset: cite-counter;
+}
+
+ol.citation-start li, ol.citation li {
+    :argin: 0 0 1ex 0;
+    list-style: none;
+    position: relative;
+}
+
+ol.citation-start li:before, ol.citation li:before {
+    content: "[" counter(cite-counter) "] ";
+    counter-increment: cite-counter;
+    position: absolute;
+    left: -1.4em;
+}
+
 dd>ul {
     margin-block-start: 0;
     margin-block-end: 0;
