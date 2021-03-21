@@ -21,12 +21,6 @@
 define list<loopcounter> t1list=<$VCLIST>
 #endif
 
-define delay DC_HSQC_F2J1
-define delay DC_HSQC_F2J2
-define delay DC_HSQC_F2J3
-define delay DC_HSQC_F2J4
-define delay DC_HSQC_F2J5
-define delay DC_HSQC_F2J6
 define delay DCI_HSQC1
 define delay DCI_HSQC2
 define delay DCI_HSQC3
@@ -34,30 +28,38 @@ define delay DCI_HSQC4
 define delay DCI_HSQC5
 define delay DCI_HSQC6
 define delay DCI_HSQC7
-"cnst41  = 2*sfo2/sfo1"                ; gradient ratio
-"d0      = 3u"                         ; 13C HSQC t1
-"d2      = 0.5s/cnst2"                 ; JCOMP
-"d4      = 0.25s/cnst2"                ; 13C INEPT
-"d10     = 3u"                         ; CLIP-COSY t1
-"d12     = 0.25s/cnst12"               ; CLIP-COSY mixing (< 1/4J(HH))
-"in0     = inf1/2"                     ; 13C HSQC increment
-"in10    = 2*dw"                       ; CLIP-COSY increment
-"p2      = p1*2"                       ; 1H hard 180
-"DCI_HSQC1   = (asin(cnst32)/(2*PI*cnst2))-p14/2000000"
-"DCI_HSQC2   = (asin(cnst32)/(2*PI*cnst2))+p14/2000000"
-"DCI_HSQC3   = p16+d16+p2/2+d0-p3*2/PI+4u"
-"DCI_HSQC4   = d2+p3+p2/2"
-"DCI_HSQC5   = DCI_HSQC3+p3-p2/2"
-"DCI_HSQC6   = d4-p14/2"
-"DCI_HSQC7   = d4+p14/2-p16-d16-p3-de+p1*2/PI-8u"
-"DC_HSQC_F2J1   = d4-p14/2"
-"DC_HSQC_F2J2   = d4+p14/2"
-"DC_HSQC_F2J3   = p16+d16+p2/2+d0-p3*2/PI+4u"
-"DC_HSQC_F2J4   = d2+p3+p2/2"
-"DC_HSQC_F2J5   = DC_HSQC_F2J3+p3-p2/2"
-"DC_HSQC_F2J6   = DC_HSQC_F2J2-p16-d16-p3-de+p1*2/PI-8u"
-define list<gradient> GC_HSQC_F2J={cnst41}
+define delay DC_HSQC_F2J1
+define delay DC_HSQC_F2J2
+define delay DC_HSQC_F2J3
+define delay DC_HSQC_F2J4
+define delay DC_HSQC_F2J5
+define delay DC_HSQC_F2J6
+"cnst41       = 2*sfo2/sfo1"                             ; gradient ratio
+"d0           = 3u"                                      ; 13C HSQC t1
+"d2           = 0.5s/cnst2"                              ; JCOMP
+"d4           = 0.25s/cnst2"                             ; 13C INEPT
+"d10          = 3u"                                      ; CLIP-COSY t1
+"d12          = 0.25s/cnst12"                            ; CLIP-COSY mixing (< 1/4J(HH))
+"in0          = inf1/2"                                  ; 13C HSQC increment
+"in10         = 2*dw"                                    ; CLIP-COSY increment
+"l17          = (d30/(p6*115.112))/2"                    ; half the number of DIPSI-2 loops
+"l18          = l17*2"                                   ; number of DIPSI-2 loops
+"p2           = p1*2"                                    ; 1H hard 180
+"DCI_HSQC1    = (asin(cnst32)/(2*PI*cnst2))-p14/2000000"
+"DCI_HSQC2    = (asin(cnst32)/(2*PI*cnst2))+p14/2000000"
+"DCI_HSQC3    = p16+d16+p2/2+d0-p3*2/PI+4u"             
+"DCI_HSQC4    = d2+p3+p2/2"                             
+"DCI_HSQC5    = DCI_HSQC3+p3-p2/2"                      
+"DCI_HSQC6    = d4-p14/2"                               
+"DCI_HSQC7    = d4+p14/2-p16-d16-p3-de+p1*2/PI-8u"      
+"DC_HSQC_F2J1 = d4-p14/2"                               
+"DC_HSQC_F2J2 = d4+p14/2"                               
+"DC_HSQC_F2J3 = p16+d16+p2/2+d0-p3*2/PI+4u"             
+"DC_HSQC_F2J4 = d2+p3+p2/2"                             
+"DC_HSQC_F2J5 = DC_HSQC_F2J3+p3-p2/2"                   
+"DC_HSQC_F2J6 = DC_HSQC_F2J2-p16-d16-p3-de+p1*2/PI-8u"  
 define list<gradient> GCI_HSQC={cnst41}
+define list<gradient> GC_HSQC_F2J={cnst41}
 "l0      = td1/6"             ; Total number of 13C t1 increments
 "l1      = 0"                 ; Running counter of 13C t1 increments
 "l2      = 0"                 ; Counter, even for echo, odd for antiecho
@@ -153,14 +155,13 @@ baseopt_echo
   goscnp ph30 cpd2:f2
   50u do:f2
 
-  ; (optional) DIPSI-2 mixing before next module
 if "d29 > 1m"
 {
   50u
   p16:gp13
   d16 pl10:f1
 						;begin DIPSI2
-9 p6*3.556 ph3
+10 p6*3.556 ph3
   p6*4.556 ph1
   p6*3.222 ph3
   p6*3.167 ph1
@@ -199,10 +200,10 @@ if "d29 > 1m"
   p6*4.167 ph3
   p6*2.944 ph1
   p6*4.111 ph3
-  lo to 9 times l16
+  lo to 10 times l18
 						;end DIPSI2
   p16:gp13*1.333
-  d16 pl1:f1
+  d16
 }
 
   ; Cleanup
@@ -384,12 +385,14 @@ ph30=0 2 2 0
 ;d10: 1H t1
 ;d12: <1/4J(HH) CLIP-COSY mixing time
 ;d16: delay for homospoil/gradient recovery [200 us]
-;d29: DIPSI-2 mixing time between 13C modules
+;d29: DIPSI-2 mixing time (2nd 13C module)
+;d30: DIPSI-2 mixing time (between 13C modules)
 ;l0: total number of t1 increments
 ;l1: running counter of t1 increments
 ;l2: even for echo, odd for antiecho
 ;l3: running counter for scan number
-;l16: DIPSI-2 between 13C modules: actual number of DIPSI-2 cycles
+;l17: DIPSI-2 (between 13C modules): half the number of DIPSI-2 cycles
+;l18: DIPSI-2 (between 13C modules): actual number of DIPSI-2 cycles
 ;p1: f1 channel -  90 degree high power pulse
 ;p2: f1 channel - 180 degree high power pulse
 ;p3: f2 channel -  90 degree high power pulse
@@ -418,4 +421,4 @@ ph30=0 2 2 0
 
 ; auprog: noah_hsqc:noah_hsqc:noah_clipcosy States
 ; ngn-2.0.5: constructed from CI_HSQC, C_HSQC_F2J, H_CLIP_COSY
-; pulse programme generated on Thu Mar 11 2021 00:20:55 GMT+0000 (Greenwich Mean Time)
+; pulse programme generated on Sun Mar 21 2021 01:03:33 GMT+0000 (Greenwich Mean Time)

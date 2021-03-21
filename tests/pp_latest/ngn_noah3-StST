@@ -44,8 +44,8 @@ define delay DC_HSQC6
 "in10            = 2*dw"                                    ; TOCSY increment
 "l11             = (d9/(p6*115.112))/2"                     ; half the number of TOCSY loops
 "l12             = l11*2"                                   ; number of TOCSY loops
-"l13             = (d19/(p6*115.112))/2"                    ; half the number of HSQC-TOCSY DIPSI-2 loops
-"l14             = l13*2"                                   ; number of HSQC-TOCSY DIPSI-2 loops
+"l13             = (d19/(p6*115.112))/2"                    ; half the number of DIPSI-2 loops
+"l14             = l13*2"                                   ; number of DIPSI-2 loops
 "p2              = p1*2"                                    ; 1H hard 180
 "DCI_HSQC_TOCSY1 = (asin(cnst32)/(2*PI*cnst2))-p14/2000000"
 "DCI_HSQC_TOCSY2 = (asin(cnst32)/(2*PI*cnst2))+p14/2000000"
@@ -298,7 +298,7 @@ baseopt_echo
   p6*4.167 ph3
   p6*2.944 ph1
   p6*4.111 ph3
-  
+
   p6*3.556 ph1
   p6*4.556 ph3
   p6*3.222 ph1
@@ -330,6 +330,7 @@ baseopt_echo
   p6*4.111 ph3
   lo to 8 times l12
 						;end DIPSI2
+
   p16:gp11
   d16
   10u gron12*1.333
@@ -410,18 +411,18 @@ ph30=0 2 2 0
 ;d1: relaxation delay
 ;d2: 1/2J(CH)
 ;d4: 1/4J(CH)
-;d9: TOCSY mixing time
+;d9: DIPSI-2 mixing time (TOCSY)
 ;d10: 1H t1
 ;d16: delay for homospoil/gradient recovery [200 us]
-;d19: HSQC-TOCSY mixing time
+;d19: DIPSI-2 mixing time (1st 13C module)
 ;l0: total number of t1 increments
 ;l1: running counter of t1 increments
 ;l2: even for echo, odd for antiecho
 ;l3: running counter for scan number
-;l11: TOCSY: half the number of DIPSI-2 cycles
-;l12: TOCSY: actual number of DIPSI-2 cycles
-;l13: HSQC-TOCSY: half the number of DIPSI-2 cycles
-;l14: HSQC-TOCSY: actual number of DIPSI-2 cycles
+;l11: DIPSI-2 (1H module): half the number of DIPSI-2 cycles
+;l12: DIPSI-2 (1H module): actual number of DIPSI-2 cycles
+;l13: DIPSI-2 (1st 13C module): half the number of DIPSI-2 cycles
+;l14: DIPSI-2 (1st 13C module): actual number of DIPSI-2 cycles
 ;p1: f1 channel -  90 degree high power pulse
 ;p2: f1 channel - 180 degree high power pulse
 ;p3: f2 channel -  90 degree high power pulse
@@ -450,4 +451,4 @@ ph30=0 2 2 0
 
 ; auprog: noah_hsqc:noah_hsqc:noah_tocsy States
 ; ngn-2.0.5: constructed from CI_HSQC_TOCSY, C_HSQC, H_TOCSY
-; pulse programme generated on Sat Mar 20 2021 21:34:45 GMT+0000 (Greenwich Mean Time)
+; pulse programme generated on Sun Mar 21 2021 01:03:39 GMT+0000 (Greenwich Mean Time)

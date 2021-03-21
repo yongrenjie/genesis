@@ -10,8 +10,6 @@ let preamble = `
 "d4      = 0.25s/cnst2"                ; 13C INEPT
 "d0      = 3u"                         ; 13C t1
 "in0     = inf1/2"                     ; 13C increment
-"l13     = (d19/(p6*115.112))/2"       ; half the number of HSQC-TOCSY DIPSI-2 loops
-"l14     = l13*2"                      ; number of HSQC-TOCSY DIPSI-2 loops
 define delay DC_HSQC_TOCSY1
 define delay DC_HSQC_TOCSY2
 define delay DC_HSQC_TOCSY3
@@ -86,49 +84,7 @@ let pulprog = `
   d16
   DC_HSQC_TOCSY6 pl10:f1
 
-						;begin DIPSI2
-5 p6*3.556 ph3
-  p6*4.556 ph1
-  p6*3.222 ph3
-  p6*3.167 ph1
-  p6*0.333 ph3
-  p6*2.722 ph1
-  p6*4.167 ph3
-  p6*2.944 ph1
-  p6*4.111 ph3
-
-  p6*3.556 ph1
-  p6*4.556 ph3
-  p6*3.222 ph1
-  p6*3.167 ph3
-  p6*0.333 ph1
-  p6*2.722 ph3
-  p6*4.167 ph1
-  p6*2.944 ph3
-  p6*4.111 ph1
-
-  p6*3.556 ph1
-  p6*4.556 ph3
-  p6*3.222 ph1
-  p6*3.167 ph3
-  p6*0.333 ph1
-  p6*2.722 ph3
-  p6*4.167 ph1
-  p6*2.944 ph3
-  p6*4.111 ph1
-
-  p6*3.556 ph3
-  p6*4.556 ph1
-  p6*3.222 ph3
-  p6*3.167 ph1
-  p6*0.333 ph3
-  p6*2.722 ph1
-  p6*4.167 ph3
-  p6*2.944 ph1
-  p6*4.111 ph3
-  lo to 5 times l14
-						;end DIPSI2
-
+  |DIPSI|
   4u
   p16:gp13*-1
   d16 pl1:f1

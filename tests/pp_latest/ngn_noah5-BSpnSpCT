@@ -58,8 +58,8 @@ define delay DN_SEHSQC7
 "in0            = inf1/2"                       ; 13C increment
 "in10           = 2*dw"                         ; COSY/TOCSY increment
 "in20           = 1000000/(2*cnst40*sfo3)"      ; 15N HSQC increment: cnst40 = SW(15N)
-"l11            = (d9/(p6*115.112))/2"          ; half the number of TOCSY loops
-"l12            = l11*2"                        ; number of TOCSY loops
+"l11            = (d9/(p6*115.112))/2"          ; half the number of DIPSI-2 loops
+"l12            = l11*2"                        ; number of DIPSI-2 loops
 "p2             = p1*2"                         ; 1H hard 180
 "p17            = p16*cnst16"                   ; Longer gradients for 15N seHSQC v2
 "p22            = p21*2"                        ; 15N hard 180
@@ -449,7 +449,7 @@ if "d15 > 1m"
   p6*4.167 ph3
   p6*2.944 ph1
   p6*4.111 ph3
-  
+
   p6*3.556 ph1
   p6*4.556 ph3
   p6*3.222 ph1
@@ -481,6 +481,7 @@ if "d15 > 1m"
   p6*4.111 ph3
   lo to 8 times l12
 						;end DIPSI2
+
   p16:gp11
   d16
   10u gron12*1.333
@@ -607,7 +608,7 @@ ph31=0 2
 ;d4: 1/4J(CH)
 ;d6: 1/8J(CH) for all multiplicities, 1/4J(CH) for CH only
 ;d7: 1/(2*nJ(CH)), long-range coupling evolution
-;d9: TOCSY mixing time
+;d9: DIPSI-2 mixing time (TOCSY)
 ;d10: 1H t1
 ;d15: optional ASAP mixing time [40-60 ms] (use `wvm`)
 ;d16: delay for homospoil/gradient recovery [200 us]
@@ -619,8 +620,8 @@ ph31=0 2
 ;l2: even for echo, odd for antiecho
 ;l3: running counter for scan number
 ;l6: loop for ASAP mixing
-;l11: TOCSY: half the number of DIPSI-2 cycles
-;l12: TOCSY: actual number of DIPSI-2 cycles
+;l11: DIPSI-2 (1H module): half the number of DIPSI-2 cycles
+;l12: DIPSI-2 (1H module): actual number of DIPSI-2 cycles
 ;p1: f1 channel -  90 degree high power pulse
 ;p2: f1 channel - 180 degree high power pulse
 ;p3: f2 channel -  90 degree high power pulse
@@ -662,4 +663,4 @@ ph31=0 2
 
 ; auprog: noah_hmbc:noah_nhsqc:noah_hsqc:noah_cosy:noah_tocsy
 ; ngn-2.0.5: constructed from C_HMBC_CNF, N_SEHSQC, C_SEHSQC, H_COSY_TOCSY
-; pulse programme generated on Mon Mar 15 2021 01:54:25 GMT+0000 (Greenwich Mean Time)
+; pulse programme generated on Sun Mar 21 2021 01:03:57 GMT+0000 (Greenwich Mean Time)

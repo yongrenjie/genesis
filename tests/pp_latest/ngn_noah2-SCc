@@ -24,21 +24,21 @@ define delay DC_HSQC3
 define delay DC_HSQC4
 define delay DC_HSQC5
 define delay DC_HSQC6
-"cnst41  = 2*sfo2/sfo1"                ; gradient ratio
-"d0      = 3u"                         ; 13C HSQC t1
-"d2      = 0.5s/cnst2"                 ; JCOMP
-"d4      = 0.25s/cnst2"                ; 13C INEPT
-"d10     = 3u"                         ; CLIP-COSY t1
-"d12     = 0.25s/cnst12"               ; CLIP-COSY mixing (< 1/4J(HH))
-"in0     = inf1/2"                     ; 13C HSQC increment
-"in10    = 2*dw"                       ; CLIP-COSY increment
-"p2      = p1*2"                       ; 1H hard 180
-"DC_HSQC1   = d4-p14/2"
-"DC_HSQC2   = d4+p14/2"
-"DC_HSQC3   = p16+d16+p2/2+d0-p3*2/PI+4u"
-"DC_HSQC4   = d2+p3+p2/2"
-"DC_HSQC5   = DC_HSQC3+p3-p2/2"
-"DC_HSQC6   = DC_HSQC2-p16-d16-p3-de+p1*2/PI-8u"
+"cnst41   = 2*sfo2/sfo1"                       ; gradient ratio
+"d0       = 3u"                                ; 13C HSQC t1
+"d2       = 0.5s/cnst2"                        ; JCOMP
+"d4       = 0.25s/cnst2"                       ; 13C INEPT
+"d10      = 3u"                                ; CLIP-COSY t1
+"d12      = 0.25s/cnst12"                      ; CLIP-COSY mixing (< 1/4J(HH))
+"in0      = inf1/2"                            ; 13C HSQC increment
+"in10     = 2*dw"                              ; CLIP-COSY increment
+"p2       = p1*2"                              ; 1H hard 180
+"DC_HSQC1 = d4-p14/2"                         
+"DC_HSQC2 = d4+p14/2"                         
+"DC_HSQC3 = p16+d16+p2/2+d0-p3*2/PI+4u"       
+"DC_HSQC4 = d2+p3+p2/2"                       
+"DC_HSQC5 = DC_HSQC3+p3-p2/2"                 
+"DC_HSQC6 = DC_HSQC2-p16-d16-p3-de+p1*2/PI-8u"
 define list<gradient> GC_HSQC={cnst41}
 "l0      = td1/4"             ; Total number of 13C t1 increments
 "l1      = 0"                 ; Running counter of 13C t1 increments
@@ -272,4 +272,4 @@ ph30=0 2 2 0
 
 ; auprog: noah_hsqc:noah_clipcosy States
 ; ngn-2.0.5: constructed from C_HSQC, H_CLIP_COSY
-; pulse programme generated on Sun Mar 07 2021 22:19:26 GMT+0000 (Greenwich Mean Time)
+; pulse programme generated on Sun Mar 21 2021 01:03:27 GMT+0000 (Greenwich Mean Time)

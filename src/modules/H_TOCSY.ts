@@ -22,48 +22,8 @@ let pulprog = `
   20u groff
   d16 pl10:f1
 
-						;begin DIPSI2
-8 p6*3.556 ph3
-  p6*4.556 ph1
-  p6*3.222 ph3
-  p6*3.167 ph1
-  p6*0.333 ph3
-  p6*2.722 ph1
-  p6*4.167 ph3
-  p6*2.944 ph1
-  p6*4.111 ph3
-  
-  p6*3.556 ph1
-  p6*4.556 ph3
-  p6*3.222 ph1
-  p6*3.167 ph3
-  p6*0.333 ph1
-  p6*2.722 ph3
-  p6*4.167 ph1
-  p6*2.944 ph3
-  p6*4.111 ph1
+  |DIPSI|
 
-  p6*3.556 ph1
-  p6*4.556 ph3
-  p6*3.222 ph1
-  p6*3.167 ph3
-  p6*0.333 ph1
-  p6*2.722 ph3
-  p6*4.167 ph1
-  p6*2.944 ph3
-  p6*4.111 ph1
-
-  p6*3.556 ph3
-  p6*4.556 ph1
-  p6*3.222 ph3
-  p6*3.167 ph1
-  p6*0.333 ph3
-  p6*2.722 ph1
-  p6*4.167 ph3
-  p6*2.944 ph1
-  p6*4.111 ph3
-  lo to 8 times l12
-						;end DIPSI2
   p16:gp11
   d16
   10u gron12*1.333

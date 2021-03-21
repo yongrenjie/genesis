@@ -39,41 +39,41 @@ define delay DN_SEHSQC4
 define delay DN_SEHSQC5
 define delay DN_SEHSQC6
 define delay DN_SEHSQC7
-"cnst41  = 2*sfo2/sfo1"                ; gradient ratio
-"cnst44  = 2*sfo3/sfo1"                ; gradient ratio
-"d0      = 3u"                         ; 13C HSQC t1
-"d2      = 0.5s/cnst2"                 ; JCOMP
-"d4      = 0.25s/cnst2"                ; 13C INEPT
-"d10     = 3u"                         ; COSY/TOCSY t1
-"d20     = 3u"                         ; 15N HSQC t1/2
-"d24     = 0.25s/cnst4"                ; 15N INEPT
-"in0     = inf1/2"                     ; 13C HSQC increment
-"in10    = 2*dw"                       ; COSY/TOCSY increment
-"in20    = 1000000/(2*cnst40*sfo3)"    ; 15N HSQC increment: cnst40 = SW(15N)
-"l11     = (d9/(p6*115.112))/2"        ; half the number of TOCSY loops
-"l12     = l11*2"                      ; number of TOCSY loops
-"p2      = p1*2"                       ; 1H hard 180
-"p17     = p16*cnst16"                 ; Longer gradients for 15N seHSQC v2
-"p22     = p21*2"                      ; 15N hard 180
-"DC_SEHSQC1 = d4-p14/2"                     ; zz-filter
-"DC_SEHSQC2 = d4+p14/2"                     ; zz-filter
-"DC_SEHSQC3 = d4-larger(p2,p14)/2"          ; INEPT
-"DC_SEHSQC4 = p16+d16+p2+d0*2-4u-p3*2/PI"   ; 13C pre-t1 if editing
-"DC_SEHSQC5 = d2-p16-d16+p3*2/PI"           ; 13C editing period
-"DC_SEHSQC6 = d2-p2-p3*2/PI"                ; 13C editing period
-"DC_SEHSQC7 = p16+d16+p2/2+d0-4u-p3*2/PI"   ; 13C pre-/post-t1 if no editing
-"DC_SEHSQC8 = d6-cnst17*p24/2-p19-d16"      ; first spin echo after t1
-"DC_SEHSQC9 = d4-larger(p2,p14)/2-p16-d16"  ; second spin echo after t1
-"DC_SEHSQC10= p16+d16-p1*0.78+de+8u"        ; final spin echo for refocusing gradient
-"DH_COSY_TOCSY1  = p16+d16+4u-d10"
-"DH_COSY_TOCSY2  = p16+d16"
-"DN_SEHSQC1 = d24-p22/2"                    ; zz-filter
-"DN_SEHSQC2 = d24+p22/2"                    ; zz-filter
-"DN_SEHSQC3 = d24-larger(p2,p22)/2"         ; INEPT
-"DN_SEHSQC4 = p17+d16+p2/2+d20-4u"          ; 15N pre- and post-t1, if no editing
-"DN_SEHSQC5 = d26-larger(p2,p22)/2-p19-d16" ; first spin echo after t1
-"DN_SEHSQC6 = d24-larger(p2,p22)/2-p16-d16" ; second spin echo after t1
-"DN_SEHSQC7 = p17+d16-p1*0.78+de+8u"        ; final spin echo for refocusing gradient
+"cnst41         = 2*sfo2/sfo1"                  ; gradient ratio
+"cnst44         = 2*sfo3/sfo1"                  ; gradient ratio
+"d0             = 3u"                           ; 13C HSQC t1
+"d2             = 0.5s/cnst2"                   ; JCOMP
+"d4             = 0.25s/cnst2"                  ; 13C INEPT
+"d10            = 3u"                           ; COSY/TOCSY t1
+"d20            = 3u"                           ; 15N HSQC t1/2
+"d24            = 0.25s/cnst4"                  ; 15N INEPT
+"in0            = inf1/2"                       ; 13C HSQC increment
+"in10           = 2*dw"                         ; COSY/TOCSY increment
+"in20           = 1000000/(2*cnst40*sfo3)"      ; 15N HSQC increment: cnst40 = SW(15N)
+"l11            = (d9/(p6*115.112))/2"          ; half the number of DIPSI-2 loops
+"l12            = l11*2"                        ; number of DIPSI-2 loops
+"p2             = p1*2"                         ; 1H hard 180
+"p17            = p16*cnst16"                   ; Longer gradients for 15N seHSQC v2
+"p22            = p21*2"                        ; 15N hard 180
+"DC_SEHSQC1     = d4-p14/2"                     ; zz-filter
+"DC_SEHSQC2     = d4+p14/2"                     ; zz-filter
+"DC_SEHSQC3     = d4-larger(p2,p14)/2"          ; INEPT
+"DC_SEHSQC4     = p16+d16+p2+d0*2-4u-p3*2/PI"   ; 13C pre-t1 if editing
+"DC_SEHSQC5     = d2-p16-d16+p3*2/PI"           ; 13C editing period
+"DC_SEHSQC6     = d2-p2-p3*2/PI"                ; 13C editing period
+"DC_SEHSQC7     = p16+d16+p2/2+d0-4u-p3*2/PI"   ; 13C pre-/post-t1 if no editing
+"DC_SEHSQC8     = d6-cnst17*p24/2-p19-d16"      ; first spin echo after t1
+"DC_SEHSQC9     = d4-larger(p2,p14)/2-p16-d16"  ; second spin echo after t1
+"DC_SEHSQC10    = p16+d16-p1*0.78+de+8u"        ; final spin echo for refocusing gradient
+"DH_COSY_TOCSY1 = p16+d16+4u-d10"              
+"DH_COSY_TOCSY2 = p16+d16"                     
+"DN_SEHSQC1     = d24-p22/2"                    ; zz-filter
+"DN_SEHSQC2     = d24+p22/2"                    ; zz-filter
+"DN_SEHSQC3     = d24-larger(p2,p22)/2"         ; INEPT
+"DN_SEHSQC4     = p17+d16+p2/2+d20-4u"          ; 15N pre- and post-t1, if no editing
+"DN_SEHSQC5     = d26-larger(p2,p22)/2-p19-d16" ; first spin echo after t1
+"DN_SEHSQC6     = d24-larger(p2,p22)/2-p16-d16" ; second spin echo after t1
+"DN_SEHSQC7     = p17+d16-p1*0.78+de+8u"        ; final spin echo for refocusing gradient
 define list<gradient> GC_SEHSQC={cnst41}
 define list<gradient> GN_SEHSQC={cnst44}
 "l0      = td1/8"             ; Total number of 13C t1 increments
@@ -198,9 +198,9 @@ baseopt_echo
 
 
   ; MODULE 2
-  ; 13C-1H seHSQC version 2
+  ; 13C-1H seHSQC (with ZIP element)
 
-  ; reverse zz-filter
+  ; ZIP
   (p1 ph0):f1
   DC_SEHSQC1
   (p14:sp3 ph0):f2
@@ -336,7 +336,7 @@ baseopt_echo
   p6*4.167 ph3
   p6*2.944 ph1
   p6*4.111 ph3
-  
+
   p6*3.556 ph1
   p6*4.556 ph3
   p6*3.222 ph1
@@ -368,6 +368,7 @@ baseopt_echo
   p6*4.111 ph3
   lo to 8 times l12
 						;end DIPSI2
+
   p16:gp11
   d16
   10u gron12*1.333
@@ -484,7 +485,7 @@ ph31=0 2
 ;d2: 1/2J(CH)
 ;d4: 1/4J(CH)
 ;d6: 1/8J(CH) for all multiplicities, 1/4J(CH) for CH only
-;d9: TOCSY mixing time
+;d9: DIPSI-2 mixing time (TOCSY)
 ;d10: 1H t1
 ;d16: delay for homospoil/gradient recovery [200 us]
 ;d20: 15N t1
@@ -494,8 +495,8 @@ ph31=0 2
 ;l1: running counter of t1 increments
 ;l2: even for echo, odd for antiecho
 ;l3: running counter for scan number
-;l11: TOCSY: half the number of DIPSI-2 cycles
-;l12: TOCSY: actual number of DIPSI-2 cycles
+;l11: DIPSI-2 (1H module): half the number of DIPSI-2 cycles
+;l12: DIPSI-2 (1H module): actual number of DIPSI-2 cycles
 ;p1: f1 channel -  90 degree high power pulse
 ;p2: f1 channel - 180 degree high power pulse
 ;p3: f2 channel -  90 degree high power pulse
@@ -534,4 +535,4 @@ ph31=0 2
 
 ; auprog: noah_nhsqc:noah_hsqc:noah_cosy:noah_tocsy
 ; ngn-2.0.5: constructed from N_SEHSQC, C_SEHSQC, H_COSY_TOCSY
-; pulse programme generated on Sun Mar 07 2021 22:19:57 GMT+0000 (Greenwich Mean Time)
+; pulse programme generated on Sun Mar 21 2021 01:03:53 GMT+0000 (Greenwich Mean Time)

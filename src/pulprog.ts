@@ -12,6 +12,7 @@ import NOAHModule from "./noahModule.js";
 // 6 - ASAP mixing
 // 7 - ROESY spin lock
 // 8 - TOCSY DIPSI-2
+// 9 - 13C module second DIPSI-2
 
 // String definitions {{{2
 const allParams = {
@@ -118,17 +119,18 @@ const allParams = {
     "d6": "1/8J(CH) for all multiplicities, 1/4J(CH) for CH only",
     "d7": "1/(2*nJ(CH)), long-range coupling evolution",
     "d8": "delay for NOE buildup",
-    "d9": "TOCSY mixing time",
+    "d9": "DIPSI-2 mixing time (TOCSY)",
     "d10": "1H t1",
     "d11": "1H t1 (magnitude-mode)",
     "d12": "<1/4J(HH) CLIP-COSY mixing time",
     "d15": "optional ASAP mixing time [40-60 ms] (use `wvm`)",
     "d16": "delay for homospoil/gradient recovery [200 us]",
-    "d19": "HSQC-TOCSY mixing time",
+    "d19": "DIPSI-2 mixing time (1st 13C module)",
     "d20": "15N t1",
     "d24": "1/4J(NH)",
     "d26": "1/8J(NH) for all multiplicities, 1/4J(NH) for NH only",
-    "d29": "DIPSI-2 mixing time between 13C modules",
+    "d29": "DIPSI-2 mixing time (2nd 13C module)",
+    "d30": "DIPSI-2 mixing time (between 13C modules)",
 
     "inf1": "1/SW(C) = 2 * DW(C)",
     "in0": "1/(2 * SW(C)) = DW(C)",
@@ -141,12 +143,14 @@ const allParams = {
     "l3": "running counter for scan number",
     "l6": "loop for ASAP mixing",
     "l7": "loop for ROESY spinlock = p15 / p25*2",
-    "l11": "TOCSY: half the number of DIPSI-2 cycles",
-    "l12": "TOCSY: actual number of DIPSI-2 cycles",
-    "l13": "HSQC-TOCSY: half the number of DIPSI-2 cycles",
-    "l14": "HSQC-TOCSY: actual number of DIPSI-2 cycles",
-    "l15": "DIPSI-2 between 13C modules: half the number of DIPSI-2 cycles",
-    "l16": "DIPSI-2 between 13C modules: actual number of DIPSI-2 cycles",
+    "l11": "DIPSI-2 (1H module): half the number of DIPSI-2 cycles",
+    "l12": "DIPSI-2 (1H module): actual number of DIPSI-2 cycles",
+    "l13": "DIPSI-2 (1st 13C module): half the number of DIPSI-2 cycles",
+    "l14": "DIPSI-2 (1st 13C module): actual number of DIPSI-2 cycles",
+    "l15": "DIPSI-2 (2nd 13C module): half the number of DIPSI-2 cycles",
+    "l16": "DIPSI-2 (2nd 13C module): actual number of DIPSI-2 cycles",
+    "l17": "DIPSI-2 (between 13C modules): half the number of DIPSI-2 cycles",
+    "l18": "DIPSI-2 (between 13C modules): actual number of DIPSI-2 cycles",
 
     "cpd2": "13C decoupling according to sequence defined by cpdprg2",
     "cpd3": "15N decoupling according to sequence defined by cpdprg3",
@@ -272,63 +276,106 @@ allWavemakers[49] = ";sp49:wvm:wu180H1SL: wurstAM(p50, cnst49 ppm; B1max = 5.0 k
 allWavemakers[50] = ";sp50:wvm:wu180H1SL2: wurstAM(p50, cnst50 ppm; B1max = 5.0 kHz)";
 // }}}1
 
-// Boring and ultra-long string constants {{{1
-// extraDipsiMixingPPText {{{2
-const extraDipsiMixingPPText = [
-    ``,
-    `  ; (optional) DIPSI-2 mixing before next module`,
-    `if "d29 > 1m"`,
-    `{`,
-    `  50u`,
-    `  p16:gp13`,
-    `  d16 pl10:f1`,
-    `						;begin DIPSI2`,
-    `9 p6*3.556 ph3`,
-    `  p6*4.556 ph1`,
-    `  p6*3.222 ph3`,
-    `  p6*3.167 ph1`,
-    `  p6*0.333 ph3`,
-    `  p6*2.722 ph1`,
-    `  p6*4.167 ph3`,
-    `  p6*2.944 ph1`,
-    `  p6*4.111 ph3`,
-    ``,
-    `  p6*3.556 ph1`,
-    `  p6*4.556 ph3`,
-    `  p6*3.222 ph1`,
-    `  p6*3.167 ph3`,
-    `  p6*0.333 ph1`,
-    `  p6*2.722 ph3`,
-    `  p6*4.167 ph1`,
-    `  p6*2.944 ph3`,
-    `  p6*4.111 ph1`,
-    ``,
-    `  p6*3.556 ph1`,
-    `  p6*4.556 ph3`,
-    `  p6*3.222 ph1`,
-    `  p6*3.167 ph3`,
-    `  p6*0.333 ph1`,
-    `  p6*2.722 ph3`,
-    `  p6*4.167 ph1`,
-    `  p6*2.944 ph3`,
-    `  p6*4.111 ph1`,
-    ``,
-    `  p6*3.556 ph3`,
-    `  p6*4.556 ph1`,
-    `  p6*3.222 ph3`,
-    `  p6*3.167 ph1`,
-    `  p6*0.333 ph3`,
-    `  p6*2.722 ph1`,
-    `  p6*4.167 ph3`,
-    `  p6*2.944 ph1`,
-    `  p6*4.111 ph3`,
-    `  lo to 9 times l16`,
-    `						;end DIPSI2`,
-    `  p16:gp13*1.333`,
-    `  d16 pl1:f1`,
-    `}`,
-]
-// }}}2
+// DIPSI and ASAP mixing {{{1
+
+/** 
+ * Dynamically generate the pulse programme and preamble needed for DIPSI-2 mixing.
+ * This is needed because different DIPSI mixings require different loop counters
+ * and delays (so that they aren't entangled).
+ *
+ * @param {string} label - The label to loop back to (i.e. X in 'lo to X times lY').
+ * @param {number} loopCounter - The loop counter that will represent the number of
+ *                               DIPSI-2 cycles (i.e. Y in 'lo to X times lY').
+ * @param {number} delay - The delay that represents the mixing time.
+ * @returns {string[]} [pulprog, preamble] - A two-member list containing the pulse
+ *                              programme text and the preamble text respectively.
+ */
+function makeDipsi(label: string,
+                   loopCounter: number,
+                   delay: number): string[] {
+    let pulprog = [
+        `\t\t\t\t\t\t;begin DIPSI2`,
+        `${label} p6*3.556 ph3`,
+        `  p6*4.556 ph1`,
+        `  p6*3.222 ph3`,
+        `  p6*3.167 ph1`,
+        `  p6*0.333 ph3`,
+        `  p6*2.722 ph1`,
+        `  p6*4.167 ph3`,
+        `  p6*2.944 ph1`,
+        `  p6*4.111 ph3`,
+        ``,
+        `  p6*3.556 ph1`,
+        `  p6*4.556 ph3`,
+        `  p6*3.222 ph1`,
+        `  p6*3.167 ph3`,
+        `  p6*0.333 ph1`,
+        `  p6*2.722 ph3`,
+        `  p6*4.167 ph1`,
+        `  p6*2.944 ph3`,
+        `  p6*4.111 ph1`,
+        ``,
+        `  p6*3.556 ph1`,
+        `  p6*4.556 ph3`,
+        `  p6*3.222 ph1`,
+        `  p6*3.167 ph3`,
+        `  p6*0.333 ph1`,
+        `  p6*2.722 ph3`,
+        `  p6*4.167 ph1`,
+        `  p6*2.944 ph3`,
+        `  p6*4.111 ph1`,
+        ``,
+        `  p6*3.556 ph3`,
+        `  p6*4.556 ph1`,
+        `  p6*3.222 ph3`,
+        `  p6*3.167 ph1`,
+        `  p6*0.333 ph3`,
+        `  p6*2.722 ph1`,
+        `  p6*4.167 ph3`,
+        `  p6*2.944 ph1`,
+        `  p6*4.111 ph3`,
+        `  lo to ${label} times l${loopCounter}`,
+        `\t\t\t\t\t\t;end DIPSI2`,
+    ].join("\n");
+
+    let preamble = [
+        `"l${loopCounter - 1}     = (d${delay}/(p6*115.112))/2"       ; half the number of DIPSI-2 loops`,
+        `"l${loopCounter}     = l${loopCounter - 1}*2"                      ; number of DIPSI-2 loops`
+    ].join("\n");
+
+    return [pulprog, preamble];
+}
+
+
+function* makeDipsiGenerator(): Generator<string[], any, "c13" | "h1"> {
+    let n_c13_modules = 0;  // Number of 13C modules seen so far.
+    let n_h1_modules = 0;   // Number of 1H modules seen so far.
+    // Seed the generator so that the next time we call it, we can
+    // pass in moduleType.
+    let moduleType = yield ["", ""];
+
+    while (true) {
+        if ((moduleType == "c13") && (n_c13_modules == 0)) {
+            // first 13C DIPSI-2 mixing requested.
+            n_c13_modules++;
+            moduleType = yield makeDipsi("5", 14, 19);
+        }
+        if ((moduleType == "c13") && (n_c13_modules == 1)) {
+            // second or more 13C DIPSI-2 mixing requested.
+            n_c13_modules++;
+            moduleType = yield makeDipsi("9", 16, 29);
+        }
+        else if ((moduleType == "h1") && (n_h1_modules == 0)) {
+            // first 1H DIPSI-2 mixing.
+            n_h1_modules++;
+            moduleType = yield makeDipsi("8", 12, 9);
+        }
+        else {
+            throw new Error("too much DIPSI mixing! what are you doing!")
+        }
+    }
+}
+
 // asapMixingPPText {{{2
 const asapMixingPPText = [
     ``,
@@ -499,6 +546,9 @@ export function makePulprogText(backendModules: string[],
     let shortDescriptions: string[] = [];
     let preambles: string[] = [];
     let mainpp: string[] = [];  // the bulk of the pulse programme
+    // Initialise and seed DIPSI-2 generator.
+    const dipsiGen = makeDipsiGenerator();
+    dipsiGen.next(); // so that we can pass next() a parameter next time.
 
     // Construct the beginning of the pulse programme (ze, d1 etc.) {{{2
     // Figure out which nucleus to stop decoupling on, if any.
@@ -555,14 +605,42 @@ export function makePulprogText(backendModules: string[],
         // Collect the pulse programmes themselves.
         mainpp.push(``, ``, `  ; MODULE ${i + 1}`);
         let trimNewlines = ((s: string) => s.replace(/^\n|\n$/g, ''));
-        mainpp.push(...trimNewlines(mod.pulprog).split("\n"));
+        let ppLines = trimNewlines(mod.pulprog).split("\n");
+        // Handle DIPSI-2 inside pp_lines.
+        let ppDipsiLineNo = ppLines.findIndex(line => line.includes("|DIPSI|"));
+        if (ppDipsiLineNo != -1) {  // means it was found
+            if (mod.category == "c13" || mod.category == "h1") {
+                let [dipsiPP, dipsiPreamble] = dipsiGen.next(mod.category).value;
+                ppLines[ppDipsiLineNo] = dipsiPP;
+                preambles.push(...dipsiPreamble.split("\n"));
+            }
+            else {
+                throw new Error("DIPSI-2 found inside wrong type of module")
+            }
+        }
+        mainpp.push(...ppLines);
 
         // Add anything that we might need between modules: extra DIPSI-2, ASAP
         // mixing, or general purge gradients.
         if (extraDipsiMixing
             && mod.category === "c13" && !mod.hasDipsi()
             && nextMod !== undefined && nextMod.category === "c13"
-        ) mainpp.push(...extraDipsiMixingPPText);
+        ) {
+            let [extraDipsiPP, extraDipsiPreamble] = makeDipsi("10", 18, 30);
+            preambles.push(...extraDipsiPreamble.split("\n"));
+            mainpp.push(
+                ``,
+                `if "d29 > 1m"`,
+                `{`,
+                `  50u`,
+                `  p16:gp13`,
+                `  d16 pl10:f1`,
+                extraDipsiPP,
+                `  p16:gp13*1.333`,
+                `  d16`,
+                `}`,
+            );
+        }
         if (asapMixing
             && nextMod !== undefined && nextMod.category === "h1"
         ) mainpp.push(...asapMixingPPText);
