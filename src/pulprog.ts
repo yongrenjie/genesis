@@ -162,12 +162,14 @@ const allParams = {
 class Phase {
     num: number;
     str: string;
+    // we can really have a stricter type system for these
+    // which would rule out invalid inputs
     ea:  string;
     nt1: string;
     ct1: string;
     ht1: string;
 
-    constructor({num, str, ea = null, nt1 = null, ct1 = null, ht1 = null}) {
+    constructor({num, str, ea = "", nt1 = "", ct1 = "", ht1 = ""}) {
         this.num = num;  // phXX
         this.str = str;  // string describing the phases e.g. "0 0 0 0 2 2 2 2"
         this.ea = ea;    // actions to take when EA / 15N t1 etc. is incremented.
@@ -176,17 +178,20 @@ class Phase {
         this.ht1 = ht1;  //            'r' for reset
     }
 
-    makeInstruction(occasion: string): string {  // occasion = 'ea', 'nt1', 'ct1', or 'ht1'
-        if (this[occasion] === null) {
+    makeInstruction(occasion: "ea" | "nt1" | "ct1" | "ht1"): string {
+        const shortInst = this[occasion];
+        if (shortInst.length === 0) {
             return ``;
         }
-        else if (this[occasion].length == 1) {
-            return `${this[occasion]}p${this.num}`;  // 'ip30' or 'rp30'
+        else if (shortInst.length === 1) {
+            return `${shortInst}p${this.num}`;  // 'ip30' or 'rp30'
         }
-        else if (this[occasion].length == 2) {
-            return `${this[occasion][0]}p${this.num}*${this[occasion][1]}`;  // 'ip30*2'
+        else if (shortInst.length === 2) {
+            return `${shortInst[0]}p${this.num}*${shortInst[1]}`;  // 'ip30*2'
         }
-        else console.error("we didn't plan for this");
+        else {
+            throw new Error("invalid occasion");
+        }
     }
 }
 const allPhases = new Array(32);
@@ -467,7 +472,9 @@ class Parameter {
     
     // Extract a Parameter from a preamble line / definition.
     static fromPreamble(line: string): Parameter {
-        let name: string, definition: string, definitionComment: string;
+        let name: string;
+        let definition: string;
+        let definitionComment: string | undefined;
         const [part1, part2] = line.split(";");
         if (part2) definitionComment = part2.trim(); 
         name = part1.split("=")[0].slice(1).trim();
@@ -526,8 +533,11 @@ export function makePulprogText(backendModules: string[],
         console.error(errMsg);
         return errMsg;
     }
-    // Get the modules
-    const modules = backendModules.map(name => allModules.get(name));
+    // Get the modules. We need the type assertion because we've already checked above
+    // that allModules *does* contain the modules, hence allModules.get(name) cannot
+    // possibly return undefined. TypeScript can't figure this out, so it thinks that
+    // modules has type Array<NOAHModule | undefined>.
+    const modules = backendModules.map(name => allModules.get(name)) as NOAHModule[];
     const n       = modules.length;
     // Set some flags that will help us later
     const hasHmbcModule       = modules.some(mod => mod.category === "hmbc");
@@ -847,7 +857,7 @@ export function makePulprogText(backendModules: string[],
     preambleParams = removeDuplicateByKey(preambleParams, (p => p.name()));
     // Find the lengths for pretty-printing the parameters.
     const longestName = Math.max(...preambleParams.map(p => p.name().length));
-    const longestDefn = Math.max(...preambleParams.map(p => p.definition.length));
+    const longestDefn = Math.max(...preambleParams.map(p => p.definition!.length));
     // Now we can stick the preambles back together in the right order.
     const preamblesText = [
         ...defineDelayLines,
@@ -865,7 +875,9 @@ export function makePulprogText(backendModules: string[],
         mainppText.match(/gron\d{1,2}/g)]
         .filter(Boolean)
         .flat()
-        .map(s => s.replace("gron", "").replace("gp", "")));  // extract the number
+        .map(s => s!.replace("gron", "").replace("gp", "")));  // extract the number
+    // the ! in the previous line is needed because TypeScript doesn't know that
+    // filter(Boolean) removes null results from str.match().
     let gradients = Array.from(gradients2, Number).sort((a, b) => a - b);
     const gpnamDefns = gradients.map(g => allGradients[g].makeGpnamInstruction()).filter(Boolean);
     const gpzDefns = gradients.map(g => allGradients[g].makeGpzInstruction());
@@ -882,7 +894,8 @@ export function makePulprogText(backendModules: string[],
     }
 
     // Parameter definitions {{{3
-    // We need to scan the preamble and mainppText with several regexes.
+    // We need to scan the preamble and mainppText with several regexes. Type assertion
+    // needed because TypeScript doesn't know that filter(Boolean) removes nulls.
     const preamblePlusMainpp = preamblesText + "\n" + mainppText;
     let allPpParamNames = [...new Set([
         preamblePlusMainpp.match(/\bp\d{1,2}\b/g),     // pulses
@@ -892,7 +905,7 @@ export function makePulprogText(backendModules: string[],
         preamblePlusMainpp.match(/\bpl\d{1,2}\b/g),    // power levels
         preamblePlusMainpp.match(/\bcpd\d{1,2}\b/g),   // decoupling programme
         preamblePlusMainpp.match(/\bcnst\d{1,2}\b/g),  // constants
-    ].filter(Boolean).flat())];
+    ].filter(Boolean).flat())] as string[];
     // Add in the spnams.
     const spParams1 = allPpParamNames.filter(p => p.startsWith("sp")).map(p => p.replace("sp", "spnam"));
     allPpParamNames.push(...spParams1);

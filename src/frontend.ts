@@ -14,7 +14,7 @@ const pulprogTextarea = document.getElementById("pulprog_text") as HTMLTextAreaE
 function getSelectedButtons(): string[] {
     /* Get an array of strings (the radio button IDs) corresponding to the modules
      * selected by the user (the 'frontend modules'). */
-    return inputNames.map(inputName => document.querySelector(`input[name="${inputName}"]:checked`).id);
+    return inputNames.map(inputName => document.querySelector(`input[name="${inputName}"]:checked`)!.id);
 }
 // }}}1
 
@@ -45,9 +45,10 @@ function chooseModules(selectedButtons: string[]): string[] {
     // If devmode is enabled, then we are (mostly) done, since the input IDs are already
     // the correct names of the backend modules. We just need to capitalise the 1H module.
     if (devModeButton.checked) {
-        if (validModules[validModules.length - 1].startsWith("h1")) {
-            // replace the last element
-            validModules.push(validModules.pop().replace("h1", "h").toUpperCase());
+        const lastValidModule = validModules[validModules.length - 1];
+        // replace the last element if it's a 1H element
+        if (lastValidModule.startsWith("h1")) {
+            validModules[validModules.length - 1] = lastValidModule.replace("h1", "h").toUpperCase();
         }
         return validModules;
     }
@@ -59,7 +60,7 @@ function chooseModules(selectedButtons: string[]): string[] {
     const cModulePresent = (c1ModulePresent || c2ModulePresent);  // any 13C module
     const hModulePresent = (validModules.findIndex(elem => elem.includes("h1")) !== -1);
     // Initialise empty array of backend modules
-    let backendModules = [];
+    let backendModules: string[] = [];
     // Iterate over valid modules
     for (let module of validModules) {
 
@@ -182,7 +183,7 @@ function toggleDevMode() {
     setModuleListLengths();
 }
 // Add toggle behaviour to the devmode button
-document.getElementById("devmode_button").addEventListener("click", toggleDevMode);
+document.getElementById("devmode_button")!.addEventListener("click", toggleDevMode);
 // Call toggleDevMode() once upon page load so that the grid is styled correctly.
 toggleDevMode();
 // }}}2
@@ -220,7 +221,7 @@ function resetButtons() {
     }
     updatePulprogText();
 }
-document.getElementById("reset_button").addEventListener("click", resetButtons);
+document.getElementById("reset_button")!.addEventListener("click", resetButtons);
 // }}}2
 // Download button {{{2
 /**
@@ -244,13 +245,13 @@ function savePPFile() {
         document.body.removeChild(link);
     }
 }
-document.getElementById("download_button").addEventListener("click", savePPFile);
+document.getElementById("download_button")!.addEventListener("click", savePPFile);
 // }}}2
 // FAQ button {{{2
 function goToFAQ(){
     window.location.href = "#faq_h2";
 }
-document.getElementById("faq_button").addEventListener("click", goToFAQ);
+document.getElementById("faq_button")!.addEventListener("click", goToFAQ);
 // }}}2
 // Programmatically generate the FAQ table of contents {{{2
 const toc = document.getElementById("faq_toc");
@@ -262,7 +263,7 @@ for (let dt of dts as NodeListOf<HTMLElement>) {
     a.href = `#${dt.id}`;
     let li = document.createElement("li");
     li.appendChild(a);
-    toc.appendChild(li);
+    toc!.appendChild(li);
 }
 // }}}2
 // Set the length of the five module boxes {{{2
@@ -282,7 +283,7 @@ setModuleListLengths();
 // }}}2
 // Modify version number-dependent parts {{{2
 // Update the version number on the page
-document.getElementById("version").innerHTML = version;
+document.getElementById("version")!.innerHTML = version;
 /**
  * Automatically generates the links to the newest scripts, based on the
  * version number.
@@ -297,8 +298,8 @@ function createScriptDownloadLinks() {
 createScriptDownloadLinks();
 // }}}2
 // Display the page {{{2
-document.getElementById("spinner-container").style.display = "none";
-document.getElementById("main-wrapper").style.display = "block";
+document.getElementById("spinner-container")!.style.display = "none";
+document.getElementById("main-wrapper")!.style.display = "block";
 // }}}2
 // }}}1
 
