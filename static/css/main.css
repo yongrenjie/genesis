@@ -260,23 +260,6 @@ ol.steps > li > p:first-child {
     font-style: italic;
 }
 
-ol#citations {
-    counter-reset: list;
-}
-
-ol#citations > li {
-    :argin: 0 0 1ex 0;
-    list-style: none;
-    position: relative;
-}
-
-ol#citations > li:before {
-    content: "[" counter(list) "] ";
-    counter-increment: list;
-    position: absolute;
-    left: -1.4em;
-}
-
 dd>ul {
     margin-block-start: 0;
     margin-block-end: 0;
