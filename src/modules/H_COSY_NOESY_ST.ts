@@ -1,5 +1,4 @@
-// vim: syntax=bruker:
-
+import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = "; 1H COSY and NOESY (States F1)";
@@ -36,9 +35,12 @@ let pulprog = `
 const mod = new NOAHModule(
     "h1",
     "CNst",
+    [Kupce2017ACIE],
     "noah_cosy States:noah_noesy States",
     shortDescription,
     preamble,
     pulprog
 );
 export default mod;
+
+// vim: syntax=bruker:

@@ -1,6 +1,7 @@
 // Get the version number.
 import {version} from "./version.js";
 import NOAHModule from "./noahModule.js";
+import { Citation } from "./citation.js";
 
 // Standardised parameter definitions {{{1
 // Goto labels {{{2
@@ -555,6 +556,7 @@ export function makePulprogText(backendModules: string[],
     let shortCodes: string[] = [];
     let shortDescriptions: string[] = [];
     let preambles: string[] = [];
+    let citations: Citation[] = [];
     let mainpp: string[] = [];  // the bulk of the pulse programme
     // Initialise and seed DIPSI-2 generator.
     const dipsiGen = makeDipsiGenerator();
@@ -611,6 +613,7 @@ export function makePulprogText(backendModules: string[],
         shortCodes.push(mod.shortCode);
         shortDescriptions.push(...mod.shortDescription.split("\n"));
         preambles.push(...mod.preamble.split("\n"));
+        citations.push(...mod.citations);
 
         // Collect the pulse programmes themselves.
         mainpp.push(``, ``, `  ; MODULE ${i + 1}`);
@@ -836,6 +839,11 @@ export function makePulprogText(backendModules: string[],
     if (nbl < 2) return "";
     const ppShortCodeName = `; ngn_noah${nbl}-${shortCodes.join("")}`;
 
+    // Create citation texts.
+    const citationText = [...new Set(citations)]
+        .map(c => c.makePPCitation())
+        .join("\n\n");
+
     // Start by removing extra whitespace and empty lines.
     preambles = preambles.map(l => l.trim()).filter(Boolean);
     // There are three types of lines that we need to deal with:
@@ -931,6 +939,8 @@ export function makePulprogText(backendModules: string[],
         `;$TYPE=`,
         `;$SUBTYPE=`,
         `;$COMMENT=`,
+        ``,
+        citationText,
         ``,
         `#include <Avance.incl>`,
         `#include <Grad.incl>`,

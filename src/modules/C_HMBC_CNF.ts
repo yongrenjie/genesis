@@ -1,3 +1,4 @@
+import { Kupce2017ACIE, Kupce2019JMR } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 13C HMBC`;
@@ -83,6 +84,7 @@ let pulprog = `
 const mod = new NOAHModule(
     "hmbc",
     "B",
+    [Kupce2017ACIE, Kupce2019JMR],
     "noah_hmbc",
     shortDescription,
     preamble,

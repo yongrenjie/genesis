@@ -1,9 +1,11 @@
+import { Citation } from "./citation.js";
 type ModuleCategory = "hmbc" | "n15" | "c13" | "h1";
 type Nucleus = "N" | "C" | "H";
 
 class NOAHModule {
-    category: ModuleCategory
+    category: ModuleCategory;
     shortCode: string;
+    citations: Citation[];
     auprog: string;
     shortDescription: string;
     preamble: string;
@@ -11,12 +13,14 @@ class NOAHModule {
 
     constructor(category: ModuleCategory,
                 shortCode: string,
+                citations: Citation[],
                 auprog: string,
                 shortDescription: string,
                 preamble: string,
                 pulprog: string) {
         this.category = category;
         this.shortCode = shortCode;
+        this.citations = citations;
         this.auprog = auprog;
         this.shortDescription = shortDescription;
         this.preamble = preamble;

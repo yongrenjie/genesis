@@ -1,5 +1,4 @@
-// vim: syntax=bruker:
-
+import { Kupce2017ACIE, Foroozandeh2014ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H 1D PSYCHE pure shift spectrum
@@ -49,9 +48,12 @@ let pulprog = `
 const mod = new NOAHModule(
     "h1",
     "P",
+    [Kupce2017ACIE, Foroozandeh2014ACIE],
     "noah_psyche",
     shortDescription,
     preamble,
     pulprog
 );
 export default mod;
+
+// vim: syntax=bruker:

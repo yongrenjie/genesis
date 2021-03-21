@@ -1,3 +1,4 @@
+import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 15N HSQC
@@ -68,6 +69,7 @@ let pulprog = `
 const mod = new NOAHModule(
     "n15",
     "Sn",
+    [Kupce2017ACIE],
     "noah_nhsqc",
     shortDescription,
     preamble,

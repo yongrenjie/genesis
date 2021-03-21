@@ -1,3 +1,4 @@
+import { Kupce2017ACIE, Gyongyosi2021AC } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 13C HSQC-CLIP-COSY
@@ -113,6 +114,7 @@ let pulprog = `
 const mod = new NOAHModule(
     "c13",
     "Qclip",
+    [Kupce2017ACIE, Gyongyosi2021AC],
     "noah_hsqc",
     shortDescription,
     preamble,

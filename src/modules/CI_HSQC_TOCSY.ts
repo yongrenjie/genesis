@@ -1,3 +1,4 @@
+import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 13C HSQC-TOCSY with Ernst angle excitation
@@ -95,6 +96,7 @@ let pulprog = `
 const mod = new NOAHModule(
     "c13",
     "St",
+    [Kupce2017ACIE],
     "noah_hsqc",
     shortDescription,
     preamble,
