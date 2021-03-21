@@ -457,9 +457,7 @@
                 <dt id="faq_nus">Can non-uniform sampling be used with NOAH sequences?</dt>
                 <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
                 <dd>
-                    <p>NUS can be enabled in the pulse sequence, but <b>not</b> in the conventional way of setting FnTYPE to 'non-uniform sampling'.</p>
-
-                    <p>The steps below are applicable to all pulse programmes downloaded from this website.</p>
+                    <p>NUS can be enabled in the pulse sequence, but <b>not</b> in the conventional way of setting FnTYPE to 'non-uniform sampling'. For all pulse programmes downloaded from this website, please follow the steps below:</p>
 
                     <ol class="steps">
                         <li><a href="scripts/py/noah_nus.py" download>Download the newest version of <span class="ms">noah_nus.py</span>.</a></li>
@@ -473,7 +471,13 @@
 
                     <p>The optimal sampling density depends on what spectra you're trying to run as well as your sample. However, there is nothing special about NOAH in this regard: the typical considerations (e.g. how sparse the spectrum is) are the same, and whatever works for the individual spectra will also work on NOAH.</p>
 
-                    <p>Please note that NUS is not currently compatible with the cnst37 and cnst39 scaling in <sup>1</sup>H and <sup>15</sup>N modules respectively. It is also not compatible with QF-style modules. If you set up an experiment with cnst37 or cnst39 &gt; 1 and then enable NUS, they will both be changed back to 1. (In principle this can be overcome, but it would add several more layers of complexity for the user, and we don't think it's worth the effort to implement.)</p>
+                    <p><b>Incompatibilities:</b> The script will not work on old versions of pulse sequences, e.g. those found in the Supporting Information of older papers. It is also not compatible with the cnst37 and cnst39 scaling in <sup>1</sup>H and <sup>15</sup>N modules respectively. It also cannot be used with QF-style modules, namely QF COSY and 2DJ. The behaviour of <span class="ms">noah_nus.py</span> is currently as follows:
+
+                    <ul>
+                        <li>If you try to enable NUS on a <sup>1</sup>H module requiring scaling (i.e. using cnst37), or a QF COSY, it will simply refuse to work.</li>
+                        <li>If you try to enable NUS on a <sup>15</sup>N experiment with cnst39 &gt; 1, cnst39 will be changed back to 1.</li>
+                    </ul>
+                    </p>
                 </dd>
 
                 <dt id="faq_automation">How can NOAH experiments be set up for use in automation?</dt>
