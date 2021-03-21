@@ -2,10 +2,10 @@
  * ---------
  * Process NOAH HMBC module.
  *
- * v: 2.0.5
+ * v: 2.0.6
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 02 March 2021 */
+ * 21 March 2021 */
 
 if ((i_argc > 2) && (strlen(i_argv[2]) > 1)) {
     if (strcmp(i_argv[2], "undefined") == 0

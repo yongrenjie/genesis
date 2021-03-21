@@ -10,10 +10,10 @@
  * specifying the noah_xxxx programmes as the userP1 through userP5 processing
  * parameters.
  *
- * v: 2.0.5
+ * v: 2.0.6
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 02 March 2021 */
+ * 21 March 2021 */
 
 int    *irow;
 double *drow;
