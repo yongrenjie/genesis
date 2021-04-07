@@ -251,7 +251,7 @@ class Gradient {
     }
 }
 const allGradients = new Array(32);
-allGradients[0] = new Gradient({num: 0, val: 24, comment: "for purging"});
+allGradients[0] = new Gradient({num: 0, val: 29, comment: "for purging"});
 allGradients[1] = new Gradient({num: 1, val: 80, comment: "HMBC CTP"});
 allGradients[2] = new Gradient({num: 2, val: 80, comment: "15N CTP"});
 allGradients[3] = new Gradient({num: 3, val: 75, comment: "13C alternate module CTP"});
@@ -586,11 +586,7 @@ export function makePulprogText(backendModules: string[],
         `  d16`,
         `  (p1 ph0):f1`,
         `  4u`,
-        `  p16:gp0*-1.37`,
-        `  d16`,
-        `  (p1 ph1):f1`,
-        `  4u`,
-        `  p16:gp0*0.77`,
+        `  p16:gp0*1.37`,
         `  d16`,
         `  4u BLKGRAD`,
         `  d1 st0`,

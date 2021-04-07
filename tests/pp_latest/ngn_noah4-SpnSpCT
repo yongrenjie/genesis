@@ -12,6 +12,10 @@
 ;$SUBTYPE=
 ;$COMMENT=
 
+;E. Kupce, T. D. W. Claridge
+;Angew. Chem. Int. Ed. 2017, 56 (39), 11779-11783
+;NOAH: NMR Supersequences for Small Molecule Analysis and Structure Elucidation
+
 #include <Avance.incl>
 #include <Grad.incl>
 #include <Delay.incl>
@@ -105,11 +109,7 @@ baseopt_echo
   d16
   (p1 ph0):f1
   4u
-  p16:gp0*-1.37
-  d16
-  (p1 ph1):f1
-  4u
-  p16:gp0*0.77
+  p16:gp0*1.37
   d16
   4u BLKGRAD
   d1 st0
@@ -534,5 +534,5 @@ ph31=0 2
 ;ns: 1 * n
 
 ; auprog: noah_nhsqc:noah_hsqc:noah_cosy:noah_tocsy
-; ngn-2.0.5: constructed from N_SEHSQC, C_SEHSQC, H_COSY_TOCSY
-; pulse programme generated on Sun Mar 21 2021 01:03:53 GMT+0000 (Greenwich Mean Time)
+; ngn-2.0.6: constructed from N_SEHSQC, C_SEHSQC, H_COSY_TOCSY
+; pulse programme generated on Wed Apr 07 2021 17:42:40 GMT+0100 (British Summer Time)
