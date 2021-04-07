@@ -16,12 +16,14 @@ define delay DC_HMBC_CFG3
 define delay DC_HMBC_CFG4
 define delay DC_HMBC_CFG5
 define delay DC_HMBC_CFG6
+define delay DC_HMBC_CFG7
 "DC_HMBC_CFG1   = d4-p14/2"
 "DC_HMBC_CFG2   = d4+p14/2"
-"DC_HMBC_CFG3   = 1s/(2*cnst6)-p16-d16"
-"DC_HMBC_CFG4   = 1s/(2*cnst7)-p16-d16"
-"DC_HMBC_CFG5   = d7-p16-d16-4u"
-"DC_HMBC_CFG6   = p2+d0*2"
+"DC_HMBC_CFG3   = 1s/(2*(cnst6+0.07*(cnst7-cnst6)))-p16-d16"
+"DC_HMBC_CFG4   = 1s/(cnst7+cnst6)-p16-d16"
+"DC_HMBC_CFG5   = 1s/(2*(cnst7-0.07*(cnst7-cnst6)))-p16-d16"
+"DC_HMBC_CFG6   = d7-p16-d16-4u"
+"DC_HMBC_CFG7   = p2+d0*2"
 "cnst47=(1-sfo2/sfo1)/(1+sfo2/sfo1)"   ; gradient ratio
 define list<gradient> EA1 = { 1.000 -cnst47}
 define list<gradient> EA2 = { -cnst47 1.000}
@@ -42,20 +44,24 @@ let pulprog = `
   (p2 ph0):f1
   DC_HMBC_CFG2 pl2:f2
 
-  ; second-order low-pass J-filter
+  ; third-order low-pass J-filter
   (p1 ph0):f1
   DC_HMBC_CFG3
-  p16:gp10*-3
+  p16:gp10*2.8
   d16
   (p3 ph7):f2
   DC_HMBC_CFG4
-  p16:gp10*2
+  p16:gp10*-1.6
+  d16
+  (p3 ph7):f2
+  DC_HMBC_CFG5
+  p16:gp10*-0.8
   d16
   (p3 ph7):f2
   4u
-  p16:gp10
+  p16:gp10*-0.4
   d16
-  DC_HMBC_CFG5  ; nJ(CH) evolution
+  DC_HMBC_CFG6
 
   ; coherence transfer to 13C and t1
   (p3 ph7):f2
@@ -65,7 +71,7 @@ let pulprog = `
   p16:gp1*EA1
   d16
   (p24:sp7 ph0):f2
-  DC_HMBC_CFG6
+  DC_HMBC_CFG7
   p16:gp1*EA2
   d16 pl2:f2
   (p3 ph5):f2
