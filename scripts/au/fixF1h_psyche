@@ -8,10 +8,10 @@
  * minimise chunking artefacts. So, SW_h will (in general) be a tiny bit
  * different from cnst38.
  *
- * v: 2.0.6
+ * v: 2.0.7
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 21 March 2021 */
+ * 07 April 2021 */
 
 double sfo1;
 FETCHPARS("SFO1", &sfo1) 
