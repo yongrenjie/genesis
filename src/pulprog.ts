@@ -490,7 +490,7 @@ class Parameter {
         if (this.definitionComment) {
             line += ` ; ${this.definitionComment}`;
         }
-        return line;
+        return line.trimEnd();
     }
 
     // Convert a Parameter into a postamble line.
