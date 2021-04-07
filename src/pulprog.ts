@@ -639,7 +639,7 @@ export function makePulprogText(backendModules: string[],
             preambles.push(...extraDipsiPreamble.split("\n"));
             mainpp.push(
                 ``,
-                `if "d29 > 1m"`,
+                `if "d30 > 1m"`,
                 `{`,
                 `  50u`,
                 `  p16:gp13`,
@@ -954,12 +954,6 @@ export function makePulprogText(backendModules: string[],
     );
     if (asapMixing) {
         pp.push(`"l6      = d15/(larger(p45,1u)*20)"  ; Number of ASAP loops`);
-    }
-    if (extraDipsiMixing) {
-        pp.push(
-             `"l15    = (d29/(p6*115.112))/2"   ; half the number of DIPSI-2 loops between 13C modules`,
-             `"l16    = l15*2"                  ; number of DIPSI-2 loops between 13C modules`,
-        );
     }
     pp.push(
         `"acqt0   = 0"`,

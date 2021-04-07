@@ -72,8 +72,6 @@ define list<gradient> GC_HSQC_F2J={cnst41}
 "l1      = 0"                 ; Running counter of 13C t1 increments
 "l2      = 0"                 ; Counter, even for echo, odd for antiecho
 "l3      = 0"                 ; Running counter for NS
-"l15    = (d29/(p6*115.112))/2"   ; half the number of DIPSI-2 loops between 13C modules
-"l16    = l15*2"                  ; number of DIPSI-2 loops between 13C modules
 "acqt0   = 0"
 baseopt_echo
 
@@ -159,7 +157,7 @@ baseopt_echo
   goscnp ph30 cpd2:f2
   50u do:f2
 
-if "d29 > 1m"
+if "d30 > 1m"
 {
   50u
   p16:gp13
@@ -365,7 +363,7 @@ ph30=0 2 2 0
 ;gpnam4: SMSQ10.100
 ;gpnam11: SMSQ10.100
 ;gpnam13: SMSQ10.100
-;gpz0: 24% (for purging)
+;gpz0: 29% (for purging)
 ;gpz3: 75% (13C alternate module CTP)
 ;gpz4: 70% (13C CTP)
 ;gpz11: 43% (1H purge gradient)
@@ -389,7 +387,6 @@ ph30=0 2 2 0
 ;d10: 1H t1
 ;d12: <1/4J(HH) CLIP-COSY mixing time
 ;d16: delay for homospoil/gradient recovery [200 us]
-;d29: DIPSI-2 mixing time (2nd 13C module)
 ;d30: DIPSI-2 mixing time (between 13C modules)
 ;l0: total number of t1 increments
 ;l1: running counter of t1 increments
@@ -424,5 +421,5 @@ ph30=0 2 2 0
 ;ns: 1 * n
 
 ; auprog: noah_hsqc:noah_hsqc:noah_clipcosy States
-; ngn-2.0.6: constructed from CI_HSQC, C_HSQC_F2J, H_CLIP_COSY
-; pulse programme generated on Wed Apr 07 2021 17:42:20 GMT+0100 (British Summer Time)
+; ngn-2.0.7: constructed from CI_HSQC, C_HSQC_F2J, H_CLIP_COSY
+; pulse programme generated on Wed Apr 07 2021 18:08:43 GMT+0100 (British Summer Time)
