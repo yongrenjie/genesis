@@ -9,8 +9,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout gh-pages branch
       uses: actions/checkout@v2
+      with:
+        ref: gh-pages
+
+    - name: Perform hard reset to master branch
+      run: |
+        git fetch origin master
+        git reset --hard origin/master
 
     - name: Setup node.js v14
       uses: actions/setup-node@v2
@@ -27,19 +34,11 @@ jobs:
         npm install mocha
         npm test
 
-    - name: Clone gh-pages branch
-      uses: actions/checkout@v2
-      with:
-        ref: gh-pages
-        path: gh-pages
-
-    - name: Update content of gh-pages clone
+    - name: Push content to gh-pages branch
       run: |
-        rm -rf gh-pages/build
-        cp -r build gh-pages
-        cd gh-pages
         git config --local user.name "GitHub Actions"
         git config --local user.email "<>"
-        git add -f build    # Need -f because build/ is gitignored.
-        git commit -m "Update compiled JavaScript" || true
-        git push
+        git add -A
+        git add -f build/    # Need -f because build/ is gitignored.
+        git commit -m "Update published website" || true
+        git push -f
