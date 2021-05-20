@@ -70,6 +70,11 @@ export const Kupce2019JMR = new Citation(
     [Eriks, Tim],
     JMR, 2019, 307, "", "106568", "10.1016/j.JMR.2019.106568"
 )
+export const Hansen2021AC = new Citation(
+    "2D NMR-Based Metabolomics with HSQC/TOCSY NOAH Supersequences",
+    ["A. L. Hansen", Eriks, "D.-W. Li", "L. Bruschweiler-Li", "R. Bruschweiler"],
+    "Analytical Chemistry", 2021, 93, 15, "6112-6119", "10.1021/acs.analchem.0c05205"
+)
 export const Koos2016ACIE = new Citation(
     "Clean In-Phase Experiment for the Rapid Acquisition of COSY-type Correlations",
     ["M. R. M. Koos", "G. Kummerlowe", "L. Kaltschnee", "C. M. Thiele", "B. Luy"],

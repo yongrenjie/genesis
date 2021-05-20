@@ -1,4 +1,4 @@
-import { Kupce2017ACIE } from "../citation.js";
+import { Kupce2017ACIE, Hansen2021AC } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 13C sensitivity-enhanced HSQC-TOCSY (with ZIP)
@@ -152,7 +152,7 @@ let pulprog = `
 const mod = new NOAHModule(
     "c13",
     "Stp",
-    [Kupce2017ACIE],
+    [Kupce2017ACIE, Hansen2021AC],
     "noah_hsqc",
     shortDescription,
     preamble,
