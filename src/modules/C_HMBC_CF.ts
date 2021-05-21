@@ -42,7 +42,7 @@ let pulprog = `
   DC_HMBC_CF2 pl2:f2
 
   ; second-order low-pass J-filter
-  (p1 ph0):f1
+  (lalign (p1 ph0):f1 (p3 ph7):f2 )
   DC_HMBC_CF3
   p16:gp10*-3
   d16
