@@ -3,7 +3,7 @@
  * Perform pure shift processing on NOAH PSYCHE module, i.e. extract the 1D FID
  * from the 2D interferogram. This is a heavily simplified/rewritten version of
  * the `pshift` AU programme in TopSpin. The major difference is that the drop
- * points are read from cnst50 instead of cnst4 as usual (in NOAH supersequences,
+ * points are read from cnst24 instead of cnst4 as usual (in NOAH supersequences,
  * cnst4 is reserved for 1J(NH) in 15N modules).
  *
  * v: 2.0.8
@@ -67,9 +67,9 @@ strcpy(outfile, NEWACQUPATH(new_expno, "fid"));
 RSER(1, new_expno, 1)
 
 // Get the appropriate number of drop points.
-float cnst50;
-FETCHPAR("CNST 50", &cnst50)
-int drop_points = 2 * ROUND(cnst50);  // *2 because complex points
+float cnst24;
+FETCHPAR("CNST 24", &cnst24)
+int drop_points = 2 * ROUND(cnst24);  // *2 because complex points
 
 // Get the number of complex points per chunk.
 // Note that if sw2/sw1 is not an exact integer, it gets rounded: this means that in effect
