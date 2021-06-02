@@ -8,12 +8,9 @@ let preamble = `
 "p2      = p1*2"
 "d10     = 3u"                         ; PSYCHE-JRES t1
 "in10    = (1/cnst38)/2"               ; PSYCHE-JRES increment
-"cnst21  = 10000"                      ; PSYCHE bandwidth
-"cnst22  = (cnst20/360)*sqrt((2*cnst21)/(p40/2000000))"       ; PSYCHE RF amplitude
-"spw40   = plw1*(cnst22/(250000/p1))*(cnst22/(250000/p1))"    ; PSYCHE power level
-"cnst23  = sqrt((p41/1000000)*cnst21*5/(2*PI))/(p41/1000000)" ; PSYCHE ZQS chirp RF amplitude
-"spw41   = plw1*(cnst23/(250000/p1))*(cnst23/(250000/p1))"    ; PSYCHE ZQS chirp RF amplitude
-"spw42   = spw41"                      ; PSYCHE ZQS chirp power
+"p40     = 30m"                                               ; PSYCHE saltire duration
+"cnst21  = (cnst20/360)*sqrt((2*10000)/(0.03/2))"             ; PSYCHE saltire RF amplitude
+"spw40   = plw1*(cnst21/(250000/p1))*(cnst21/(250000/p1))"    ; PSYCHE saltire power level
 `
 
 let pulprog = `
