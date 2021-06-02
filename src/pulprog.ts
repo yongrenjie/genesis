@@ -68,11 +68,11 @@ const allParams = {
     "sp34": "f2 channel - 180 pp BIBOP",
     "spnam34": "BUBI_13C_600u_RF10kHz",
     "sp40": "f1 channel - PSYCHE double saltire",
-    "spnam40": "PSYCHE_Saltire_30ms",
+    "spnam40": "Crp_psyche.20",
     "sp41": "f1 channel - PSYCHE ZQS low-to-high chirp",
-    "spnam41": "PSYCHE_Chirp_LH",
+    "spnam41": "wuchirpLH (generate via WaveMaker)",
     "sp42": "f1 channel - PSYCHE ZQS high-to-low chirp",
-    "spnam42": "PSYCHE_Chirp_HL",
+    "spnam42": "wuchirpHL (generate via WaveMaker)",
     "sp45": "f1 channel - CAWURST-2 pulse (180 degree)",
     "spnam45": "wuASAP (generate via WaveMaker)",
     "sp49": "f1 channel - first shaped pulse WURSTAM (adiabatic) for ROESY mixing (high shift)",
@@ -277,6 +277,8 @@ allGradients[19] = new Gradient({num: 19, val: 37, comment: "1H CTP"}); // stron
 const allWavemakers = new Array(64);
 allWavemakers[3] = ";sp3:wvm:wu180C13: cawurst-20(60 kHz, 0.5 ms; L2H)";
 allWavemakers[18] = ";sp18:wvm:wu180Jcomp: cawurst-40(280 ppm; Jcomp, L2H)";
+allWavemakers[41] = ";sp41:wvm:wuchirpLH: sm_chirp(10 kHz, 40 ms; L2H, Q=5) np=10000";
+allWavemakers[42] = ";sp41:wvm:wuchirpHL: sm_chirp(10 kHz, 40 ms; H2L, Q=5) np=10000";
 allWavemakers[45] = ";sp45:wvm:wuASAP: cawurst-2(30 ppm, 1.0 ms; Q=3)";
 allWavemakers[49] = ";sp49:wvm:wu180H1SL: wurstAM(p50, cnst49 ppm; B1max = 5.0 kHz)";
 allWavemakers[50] = ";sp50:wvm:wu180H1SL2: wurstAM(p50, cnst50 ppm; B1max = 5.0 kHz)";
