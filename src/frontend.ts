@@ -198,7 +198,7 @@ function updatePulprogText() {
     const moduleNames = chooseModules(getSelectedButtons());
     if (moduleNames.length > 0) {
         let ppText: string;
-        try { ppText = makePulprogText(moduleNames, allModules); }
+        try { ppText = makePulprogText(moduleNames, allModules, false); }
         catch (error) { console.error(error); ppText = ""; }
         pulprogTextarea.value = ppText;
     }

@@ -34,7 +34,7 @@ function onRequest(req, res) {
         try {
             let backendModules = querystring.parse(url.parse(req.url).query)["modules"].split(' ');
             res.writeHead(200, {"content-type": "text/plain"});
-            pptext = makePulprogText(backendModules, allModules);
+            pptext = makePulprogText(backendModules, allModules, true);
             if (pptext.length > 0) {
                 console.log("download was requested for: " + backendModules.join(", "));
             }

@@ -523,9 +523,12 @@ function removeDuplicateByKey<In, Out>(lines: In[],
  *                                    modules to be used in pulse programme
  *                                    construction.
  * @param {Map<string, NOAHModule>} allModules - Imported from allModules.js.
+ * @param {boolean} allowLoneModule - If set to False, then return the empty
+ *                                    string when NBL < 2.
  */
 export function makePulprogText(backendModules: string[],
-                                allModules: Map<string, NOAHModule>) {
+                                allModules: Map<string, NOAHModule>,
+                                allowLoneModule: boolean) {
     // Initialisation {{{2
     // Error out if any modules don't exist.
     const missingModules = backendModules.filter(name => !allModules.has(name));
@@ -832,7 +835,7 @@ export function makePulprogText(backendModules: string[],
     const fidRegexes = [/goscnp ph\d{1,2}/, /go=\d ph\d{1,2}/];
     const nbl = mainpp.filter(line => fidRegexes.some(rgx => line.search(rgx) != -1)).length;
     // Return an empty string if we have less than one module.
-    if (nbl < 2) return "";
+    if (nbl < 2 && !allowLoneModule) return "";
     const ppShortCodeName = `; ngn_noah${nbl}-${shortCodes.join("")}`;
 
     // Create citation texts.
