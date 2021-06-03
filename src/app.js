@@ -70,6 +70,8 @@ function onRequest(req, res) {
         contentType = "text/html";
     else if (pathname.endsWith(".js") || pathname.endsWith(".mjs"))
         contentType = "text/javascript";
+    else if (pathname.endsWith(".txt"))
+        contentType = "text/plain";
     else if (pathname.endsWith(".css"))
         contentType = "text/css";
     else if (pathname.endsWith(".png"))

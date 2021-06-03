@@ -37,7 +37,7 @@
         </div>
 
         <div id="devmode">
-            Developer mode:
+            Developer mode <a href="#faq_devmode">[?]</a>
             <div class="switch">
                 <input id="devmode_button" type="checkbox" class="switch-input" />
                 <label for="devmode_button" class="switch-label"></label>
@@ -520,7 +520,17 @@
                         <li>Hansen, A. L.; Kupče, Ē.; Li, D.-W.; Bruschweiler-Li, L.; Wang, C.; Brüschweiler, R. 2D NMR-Based Metabolomics with HSQC/TOCSY NOAH Supersequences. <i>Anal. Chem.</i> <b>2021,</b> <i>93</i> (15), 6112–6119. DOI: <a href="https://doi.org/10.1021/acs.analchem.0c05205">10.1021/acs.analchem.0c05205</a>.</li>
                     </ol>
                 </dd>
-                
+
+                <dt id="faq_devmode">What is "developer mode"?</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
+                <dd>
+                    <p>Internally, the website contains multiple "versions" of many NOAH modules. For example, there are several different sensitivity-enhanced HSQC sequences, each having different strengths and weaknesses: which of these to use depends on the context. If the seHSQC module is placed at the end of a sequence (e.g. NOAH-2 BS<sup>+</sup>), then we can use the original Cavanagh–Rance seHSQC, which has greater sensitivity than the versions specifically modified for use in NOAH. On the other hand, if there is a homonuclear module which follows (e.g. NOAH-2 S<sup>+</sup>C), then we should use the versions specifically designed to preserve the uncoupled proton magnetisation. (We have an upcoming paper which will explain this fully.)</p>
+
+                    <p>As another example, the NOAH HMBC module is usually configured to preserve one-bond C–H magnetisation using the <i>zz</i>-filter, which can be then used in a H–C HSQC experiment. However, if there is also a H–N module (HMQC or seHSQC) in the supersequence, then the filter must be modified to also preserve N–H magnetisation. This is possible (see <a href="#faq_cite">ref. 6</a>), but the resulting "double filter" is less effective at preserving C–H magnetisation. Thus, we want to only use the "double filter" when it's actually needed.
+
+                    <p>When using the "normal" interface, the website picks the "smartest" possible variants for use, based on decisions such as the above. Each version of a module is assigned an internal label, which you can see at the bottom of the generated pulse programme. In "developer mode", you have complete control over this and can pick exactly which version of a sequence you want. You can also access a few modules, or combinations thereof, which are not generally recommended: for example, the <sup>15</sup>N HSQC (without sensitivity enhancement) is available. The internal labels of the modules are described in more detail <a href="devmode_modules.txt">here</a>.</p>
+                </dd>
+
             </dl>
         </div><!-- /faq -->
 
