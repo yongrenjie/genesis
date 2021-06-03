@@ -455,7 +455,13 @@
                 <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
                 <dd>
                     <p><b>On Catalina:</b> Please update TopSpin to version 4.1.0 or later. On older versions of TopSpin for macOS, there is a bug in TopSpin which causes certain parts of AU programmes to not work on Catalina.</p>
-                    <p><b>On Big Sur:</b> The AU programmes are completely broken even on TopSpin 4.1.1. Sorry about that; we'll have to wait until Bruker provides a fix.</p>
+                    <p><b>On Big Sur:</b> AU programmes are broken even on TopSpin 4.1.1. However, there is a fix available for 4.1.1, courtesy of Gareth Morris and Marshall Smith (University of Manchester).</p>
+                    <ol>
+                        <li>Install the XCode Command Line Tools by running <span class="ms">xcode-select --install</span> in a terminal.</li>
+                        <li>In the file <span class="ms">/opt/topspin4.1.1/exp/stan/nmr/au/makeau</span>: uncomment line 20 (by removing the <span class="ms">#</span>), and remove the text <span class="ms">-Wl,-lcrt1.o</span> from line 494.</li>
+                        <li>In <span class="ms">/opt/topspin4.1.1/prog/include/lib/libcb.h</span>: change line 28 from <span class="ms">#include&lt;values.h&gt;</span> to <span class="ms">#include&lt;limits.h&gt;</span>, then below that, add two new lines <span class="ms">#define MININT INT_MIN</span> and <span class="ms">#define MAXINT INT_MAX</span>.</li>
+                        <li>In <span class="ms">/opt/topspin4.1.1/prog/include/lib/uni.h</span>: comment out line 182 by adding a <span class="ms">#</span> at its beginning.</li>
+                    </ol>
                 </dd>
 
                 <dt id="faq_nus">Can non-uniform sampling be used with NOAH sequences?</dt>
