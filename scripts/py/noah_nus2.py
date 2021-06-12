@@ -36,7 +36,9 @@ def enable_nus():
     # d11).
     pulprog = GETPAR("PULPROG")
     for directory in getParfileDirs(0):  # gets pulprog directories
+        found_pulprog = False
         if pulprog in os.listdir(directory):
+            found_pulprog = True
             # first, check if it has the NUS flag
             has_nus_flag = False
             with open(os.path.join(directory, pulprog), "r") as file:
@@ -44,7 +46,7 @@ def enable_nus():
                     if "#ifdef NUS" in line:
                         has_nus_flag = True
                         break
-            if has_nus_flag is False:
+            if not has_nus_flag:
                 ERRMSG("noah_nus2.py: This script is only compatible with"
                        " new pulse programmes (2021 onwards).\nFor older"
                        " NOAH pulse programmes, please use noah_nus.py.")
@@ -55,8 +57,17 @@ def enable_nus():
                         ERRMSG("noah_nus2.py: NUS is not compatible with QF"
                                " modules in NOAH.")
                         EXIT()
+            break
+    # Exit if pulse programme was not found
+    if not found_pulprog:
+        ERRMSG("noah_nus2.py: Pulse programme '{}'"
+               " was not found.".format(pulprog))
+        EXIT()
 
-    # Reset cnst39 back to 1.
+    # Reset FnTYPE.
+    PUTPAR("FnTYPE", "traditional(planes)")
+
+    # Reset cnst39 (15N k-scaling factor) back to 1.
     PUTPAR("CNST 39", "1")
 
     # Figure out how long the NUS list should be, based on NusAMOUNT and other
