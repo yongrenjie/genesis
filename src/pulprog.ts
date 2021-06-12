@@ -719,7 +719,7 @@ export function makePulprogText(backendModules: string[],
     if (ea1Present) mainpp.push(`  1m igrad EA1`);
     if (ea2Present) mainpp.push(`  1m igrad EA2`);
     if (d11Present) {
-        // This will break NUS, but noah_nus.py will already warn the user if there is a QF
+        // This will break NUS, but noah_nus2.py will already warn the user if there is a QF
         // module, so we don't need to warn them again here.
         if (cnst38Present) {
             mainpp.push(

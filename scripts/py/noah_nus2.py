@@ -1,9 +1,9 @@
 """
-noah_nus.py
+noah_nus2.py
 -----------
-Script to set up NUS for NOAH experiments. To turn on NUS, run `noah_nus` from
+Script to set up NUS for NOAH experiments. To turn on NUS, run `noah_nus2` from
 the TopSpin command line. To disable NUS on a dataset where it was previously
-enabled, run `noah_nus off`.
+enabled, run `noah_nus2 off`.
 
 v: 2.0.9
 Jonathan Yong & Tim Claridge, University of Oxford
@@ -25,8 +25,8 @@ def enable_nus():
     # Check if NUS is already enabled.
     zgoptns, vclist = GETPAR("ZGOPTNS"), GETPAR("VCLIST")
     if "-DNUS" in zgoptns and "noah" in vclist:
-        ERRMSG("noah_nus.py: NUS already enabled for this dataset.\n"
-               "Please disable NUS first with 'noah_nus off' before"
+        ERRMSG("noah_nus2.py: NUS already enabled for this dataset.\n"
+               "Please disable NUS first with 'noah_nus2 off' before"
                " reconfiguring NUS.")
         EXIT()
 
@@ -37,10 +37,22 @@ def enable_nus():
     pulprog = GETPAR("PULPROG")
     for directory in getParfileDirs(0):  # gets pulprog directories
         if pulprog in os.listdir(directory):
+            # first, check if it has the NUS flag
+            has_nus_flag = False
+            with open(os.path.join(directory, pulprog), "r") as file:
+                for line in file:
+                    if "#ifdef NUS" in line:
+                        has_nus_flag = True
+                        break
+            if has_nus_flag is False:
+                ERRMSG("noah_nus2.py: This script is only compatible with"
+                       " new pulse programmes (2021 onwards).\nFor older"
+                       " NOAH pulse programmes, please use noah_nus.py.")
+                EXIT()
             with open(os.path.join(directory, pulprog), "r") as file:
                 for line in file:
                     if "id11" in line or "cnst37" in line:
-                        ERRMSG("noah_nus.py: NUS is not compatible with QF"
+                        ERRMSG("noah_nus2.py: NUS is not compatible with QF"
                                " modules in NOAH.")
                         EXIT()
 
@@ -79,10 +91,10 @@ def enable_nus():
                        t1_incrs_full,
                        t1_incrs_nus
                        )
-    exit_code = os.system(nusstr)
+    exitcode = os.system(nusstr)
     # Check for errors.
-    if exit_code != 0:
-        ERRMSG("noah_nus.py: nussampler exited with code {}".format(exit_code))
+    if exitcode != 0:
+        ERRMSG("noah_nus2.py: nussampler exited with code {}".format(exitcode))
         EXIT()
 
     # Put the newly generated 'noah' list as the VCLIST parameter.
@@ -99,8 +111,8 @@ def disable_nus():
     # Check if NUS is already enabled.
     zgoptns, vclist = GETPAR("ZGOPTNS"), GETPAR("VCLIST")
     if not ("-DNUS" in zgoptns and "noah" in vclist):
-        ERRMSG("noah_nus.py: NUS has not been set up for this dataset yet.\n"
-               "It can be enabled using 'noah_nus on'.")
+        ERRMSG("noah_nus2.py: NUS has not been set up for this dataset yet.\n"
+               "It can be enabled using 'noah_nus2 on'.")
         EXIT()
     # To undo NUS is easier, since we don't need to generate the list.
     # Back-calculate TD1.
@@ -126,12 +138,12 @@ def disable_nus():
 if __name__ == "__main__":
     # Make sure that this is really a NOAH experiment.
     if "noah" not in GETPAR("PULPROG").lower():
-        ERRMSG("noah_nus.py: only intended for use with NOAH datasets")
+        ERRMSG("noah_nus2.py: only intended for use with NOAH datasets")
         EXIT()
     # If it didn't fail this check but NBL < 2, then it's not the original
-    # dataset and noah_nus won't have any effect.
+    # dataset and noah_nus2 won't have any effect.
     if int(GETPAR("NBL")) < 2:
-        ERRMSG("noah_nus.py: this is a processed dataset; please run this"
+        ERRMSG("noah_nus2.py: this is a processed dataset; please run this"
                " script on the original dataset used for acquisition.")
         EXIT()
 
@@ -142,6 +154,6 @@ if __name__ == "__main__":
     elif sys.argv[1] in ["off", "disable", "undo"]:
         disable_nus()
     else:
-        ERRMSG("noah_nus.py: unrecognised arguments.\n"
-               "Usage: 'noah_nus [on/off]'")
+        ERRMSG("noah_nus2.py: unrecognised arguments.\n"
+               "Usage: 'noah_nus2 [on/off]'")
         EXIT()

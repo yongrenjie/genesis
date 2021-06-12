@@ -74,8 +74,8 @@ fi
 npm install
 
 # Edit scripts
-# We first get the date by grepping in noah_nus.py. Note that this regex will fail in the year 2100.
-old_date=$(grep "^[[:digit:]]\{1,2\} [[:alpha:]]\{1,\} 20[[:digit:]]\{2\}" scripts/py/noah_nus.py)
+# We first get the date by grepping in noah_nus2.py. Note that this regex will fail in the year 2100.
+old_date=$(grep "^[[:digit:]]\{1,2\} [[:alpha:]]\{1,\} 20[[:digit:]]\{2\}" scripts/py/noah_nus2.py)
 new_date=$(date -u +"%d %B %Y")
 # Then we edit the version number and the date.
 for fname in scripts/py/*; do

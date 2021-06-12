@@ -413,7 +413,7 @@
                         <li><b>-DINVERT</b> and <b>-DINVERT1</b>: in HSQC-TOCSY spectra, causes 'direct' (HSQC) and 'indirect' (HSQC-TOCSY) responses to have opposite signs.
                     </ul>
                     <p>To see whether you need the flags with '1' in them, please check the header of the pulse programme. Usually, the flags ending in '1' are applied to the first of two <sup>13</sup>C modules in a supersequence; if you only have one <sup>13</sup>C module, it's unlikely you will ever need the '1'-suffixed flags.</p>
-                    <p>There is also the -DNUS flag, which (partially) turns on non-uniform sampling, but you should not set that manually unless you're absolutely certain what you're doing. Instead, please use the <span class="ms">noah_nus.py</span> script. See: <a href="#faq_nus">Can non-uniform sampling be used with NOAH sequences?</a> for more information.</p>
+                    <p>There is also the -DNUS flag, which (partially) turns on non-uniform sampling, but you should not set that manually unless you're absolutely certain what you're doing. Instead, please use the <span class="ms">noah_nus2.py</span> script. See: <a href="#faq_nus">Can non-uniform sampling be used with NOAH sequences?</a> for more information.</p>
                 </dd>
 
                 <dt id="faq_rga">Does rga work as expected?</dt>
@@ -472,18 +472,20 @@
                     <p>NUS can be enabled in the pulse sequence, but <b>not</b> in the conventional way of setting FnTYPE to 'non-uniform sampling'. For all pulse programmes downloaded from this website, please follow the steps below:</p>
 
                     <ol class="steps">
-                        <li><a href="scripts/py/noah_nus.py" download>Download the newest version of <span class="ms">noah_nus.py</span>.</a></li>
+                        <li><a href="scripts/py/noah_nus2.py" download>Download the newest version of <span class="ms">noah_nus2.py</span>.</a></li>
 
                         <li>Set up your experiment normally without NUS first, with the full value for TD1. Don't change any other parameters, such as FnTYPE.</li>
 
-                        <li>Specify the parameter NUSAmount and then run <span class="ms">noah_nus</span> in TopSpin.</li>
+                        <li>Specify the parameter NUSAmount and then run <span class="ms">noah_nus2</span> in TopSpin.</li>
                     </ol>
 
-                    <p>To disable NUS on a dataset where it was previously enabled, run <span class="ms">noah_nus off</span>.</p>
+                    <p>To disable NUS on a dataset where it was previously enabled, run <span class="ms">noah_nus2 off</span>.</p>
 
                     <p>The optimal sampling density depends on what spectra you're trying to run as well as your sample. However, there is nothing special about NOAH in this regard: the typical considerations (e.g. how sparse the spectrum is) are the same, and whatever works for the individual spectra will also work on NOAH.</p>
 
-                    <p><b>Incompatibilities:</b> The script will not work on old versions of pulse sequences, e.g. those found in the Supporting Information of older papers. It is also not compatible with the cnst37 and cnst39 scaling in <sup>1</sup>H and <sup>15</sup>N modules respectively. It also cannot be used with QF-style modules, namely QF COSY and 2DJ. The behaviour of <span class="ms">noah_nus.py</span> is currently as follows:
+                    <p><b>Incompatibilities:</b> The script will not work on old versions of pulse sequences, e.g. those found in the Supporting Information of older papers. For these, please use the old <span class="ms">noah_nus.py</span> script.
+
+                    It is also not compatible with the cnst37 and cnst39 scaling in <sup>1</sup>H and <sup>15</sup>N modules respectively. It also cannot be used with QF-style modules, namely QF COSY and 2DJ. The behaviour of <span class="ms">noah_nus2.py</span> is currently as follows:
 
                     <ul>
                         <li>If you try to enable NUS on a <sup>1</sup>H module requiring scaling (i.e. using cnst37), or a QF COSY, it will simply refuse to work.</li>
