@@ -9,8 +9,8 @@ C_HMBC_CF      zz-HMBC, as described in doi:10.1039/C8CC03296C, with
                second-order low-pass J filter.
 C_HMBC_CFTO    Same as above but with a third-order low-pass J filter. Generally
                should not be needed.
-C_HMBC_CFG     An experimental version -- this does not work as of now. Use at
-               own risk.
+C_HMBC_CFG     An experimental version -- this does not work and is not likely to
+               ever work! Use at your own risk!
 C_HMBC_CNF     Semi-adiabatic double filter which preserves CH and NH
                magnetisation, as described in doi:10.1016/j.jmr.2019.106568.
 C_HMBC_NOF     HMBC without the zz-filter. Note that this is not the same as the
@@ -26,10 +26,13 @@ N_HMQC         Standard HMQC, similar to that originally reported in
                doi:10.1002/anie.201705506, but gradient scheme has been slightly
                modified to reduce artefacts in later modules.
 N_HSQC         Standard NOAH HSQC. Not recommended for use as this causes f1
-               broadening in all subsequent modules.
-N_SEHSQC       NOAH seHSQC, 'version 2' / 'ZIP-seHSQC' (manuscript submitted).
-N_SEHSQC_DP    NOAH seHSQC, 'version 1' (manuscript submitted). Not recommended
-               for use as this causes f1 broadening in all subsequent modules.
+               broadening in all subsequent modules, see
+               doi:10.1016/j.jmr.2021.107027 for explanation.
+N_SEHSQC       NOAH seHSQC, 'version 2' / 'ZIP-seHSQC', as described in
+               doi:10.1016/j.jmr.2021.107027.
+N_SEHSQC_DP    NOAH seHSQC, 'version 1', as described in
+               doi:10.1016/j.jmr.2021.107027. Not recommended for use as this
+               causes f1 broadening in all subsequent modules.
 N_SEHSQC_OR    Cavanagh-Rance seHSQC, essentially the same as `hsqcetf3gpsi`.
 
 
@@ -42,16 +45,23 @@ C_HSQC_F2J     Standard NOAH HSQC, but without 13C decoupling during
                which purges antiphase contributions to peaks (i.e. 'CLIP'
                version).
 C_SEHSQC       NOAH seHSQC, 'version 2' / 'ZIP-seHSQC' as reported in
-               doi:10.1021/acs.analchem.0c05205.
-C_SEHSQC_DP    NOAH seHSQC, 'version 1' (manuscript submitted). Sensitivity is
-               not as good as in 'version 2', hence this is never recommended by
-               default.
+               doi:10.1021/acs.analchem.0c05205 and
+               doi:10.1016/j.jmr.2021.107027.
+C_SEHSQC_DP    NOAH seHSQC, 'version 1' as reported in
+               doi:10.1016/j.jmr.2021.107027. Sensitivity is not as good as in
+               'version 2', hence this is never recommended by default. However,
+               this could be better in specific scenarios as bulk magnetisation
+               is more uniformly preserved over the entire spectral window,
+               where 'version 2' has some regions where performance is quite
+               poorer than average.
 C_SEHSQC_OR    Cavanagh-Rance seHSQC, essentially a mixture of
-               `hsqcetgpsisp2.2` and `hsqcedetgpsisp2.3`.
+               `hsqcetgpsisp2.2` (for the non-edited) and `hsqcedetgpsisp2.3`
+               (for the edited).
 CI_HSQC        Standard NOAH HSQC, but with an additional variable `cnst32`
                which allows the user to control the amount of C-H magnetisation
                excited by the INEPT block. Any unexcited magnetisation is
-               returned to +z for use in other modules (manuscript submitted).
+               returned to +z for use in other modules. See
+               doi:10.1016/j.jmr.2021.107027.
 CI_HSQC_F2J    Same as C_HSQC_F2J, but is `cnst32`-compatible.
 
 
@@ -70,12 +80,15 @@ C_HSQC_COSY_DSE     'Double spin echo' version of HSQC-COSY experiment.
                     Lineshapes are not so good and bulk magnetisation is also
                     dephased, but this has the greatest raw sensitivity of all
                     the HSQC-COSY versions.
-C_HSQC_TOCSY        Standard NOAH HSQC with a TOCSY mixing block (manuscript
-                    submitted). This preserves bulk magnetisation.
+C_HSQC_TOCSY        Standard NOAH HSQC with a TOCSY mixing block, as reported in
+                    doi:10.1016/j.jmr.2021.107027. This preserves bulk
+                    magnetisation.
 C_SEHSQC_TOCSY      NOAH seHSQC, 'version 2' / 'ZIP-seHSQC' with a TOCSY mixing
-                    lock, as reported in doi:10.1021/acs.analchem.0c05205.
+                    lock, as reported in doi:10.1021/acs.analchem.0c05205. This
+                    also preserves bulk magnetisation.
 C_SEHSQC_TOCSY_OR   Cavanagh-Rance seHSQC with TOCSY mixing block, basically the
                     same as Bruker `hsqcdietgpsisp.2` and `hsqcdiedetgpsisp.3`.
+                    This doesn't preserve bulk magnetisation.
 CI_HSQC_COSY        Same as C_HSQC_COSY, but is `cnst32`-compatible.
 CI_HSQC_COSY_CLIP   Same as C_HSQC_COSY_CLIP, but has an additional variable
                     `cnst32` which changes the INEPT delay durations. This is
