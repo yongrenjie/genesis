@@ -1,6 +1,6 @@
-# gennoah
+# GENESIS: GENEration of Supersequences In Silico
 
-A web app to generate pretty much any NOAH pulse sequence you might want.
+A website to generate pretty much any NOAH pulse sequence you might want.
 
 **Warning:** This is a development version of the website. It may have bugs!
 
@@ -13,14 +13,14 @@ The website consists of two parts:
  - an interactive website where you can select modules and download the resulting pulse programme
  - an API which allows programmatic downloading of pulse programmes
 
-The first can always be accessed at https://yongrenjie.github.io/gennoah.
+The first can always be accessed at https://nmr-genesis.co.uk.
 
 The second relies on a (simple) Node.js server (which cannot be run on GitHub Pages).
 To get this to work, first [install Node.js](https://nodejs.org/en/download/), then do the following:
 
 ```
-git clone https://github.com/yongrenjie/gennoah   # or download a release
-cd gennoah
+git clone https://github.com/yongrenjie/genesis   # or download a release
+cd genesis
 node ./build/app.js
 ```
 
