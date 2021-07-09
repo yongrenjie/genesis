@@ -125,8 +125,7 @@ textarea#pulprog_text {
 
 h1 {
     text-align: center;
-    font-size: 250%;
-    font-weight: bold;
+    font-size: 200%;
     padding: 0;
     margin: 0;
 }
@@ -136,8 +135,8 @@ h1 {
 h2 {
     overflow: hidden;
     text-align: center;
-    font-size: 150%;
-    margin: 15px 0 15px 0;
+    font-size: 144%;
+    margin: 20px 0;
 }
 
 h2:before,
