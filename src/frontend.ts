@@ -29,17 +29,7 @@ function getSelectedButtons(): ButtonID[] {
 
 // getTrueModules :: ButtonID[] -> TrueModule[] {{{1
 /**
- * Determine which modules to use, based on the IDs of the buttons that the user selected.
- * It then sets the manual-modules input field to a space-separated list of modules.
- * The pulprog function takes the modules from there.
- * 
- * - The presence of 13C and/or 15N zz-filters in the HMBC module depends on the
- *   subsequent modules.
- * - The 15N seHSQC and 13C seHSQC depend on whether bulk magnetisation is required
- *   for subsequent modules. If it is not required, then we use the Bruker standard
- *   instead of the ZIP-seHSQC.
- * - Variable INEPT excitation is used in the first 13C module if there are two such
- *   modules.
+ * Determine which 'true' modules to use, based on the IDs of the buttons that the user selected.
  *
  * @param {string[]} selectedButtons - The IDs of the checked buttons on the website.
  * @returns {string[]} The names of the modules to construct the pulse programme from.
@@ -47,20 +37,7 @@ function getSelectedButtons(): ButtonID[] {
 function getTrueModules(selectedButtons: ButtonID[]): TrueModule[] {
     // Remove any selected "None" buttons.
     let modules = selectedButtons.filter(elem => !elem.includes("none"));
-    // Return early if none were selected
-    if (modules.length == 0) return [];
-
-    if (devModeButton.checked) {
-        const lastModule = modules[modules.length - 1];
-        // replace the last element if it's a 1H element
-        if (lastModule.startsWith("h1")) {
-            modules[modules.length - 1] = lastModule.replace("h1", "h").toUpperCase();
-        }
-        return modules;
-    }
-    else {
-        return simpleModulesToTrue(modules);
-    }
+    return devModeButton.checked ? modules : simpleModulesToTrue(modules);
 }
 // }}}1
 
@@ -180,35 +157,32 @@ function toggleDevMode() {
     // for (let ul of uls) {
     //     ul.style.gridTemplateRows = on ? "repeat(6, 30px)" : "repeat(6, 30px)";
     // }
-    // iterate over classes of experiments, except for 1H, which doesn't need to be
-    // toggled since nondevmode and devmode use the same inputs.
-    for (let ul of uls.slice(0, -1)) {
-        // iterate over each list item.
+
+    // Iterate over classes of experiments (which are ul's)
+    for (let ul of uls) {
+        // Iterate over every label
         for (let li of ul.children as HTMLCollectionOf<HTMLElement>) {
             const radioID = li.children[0].id;
+            // 'None' button must always be displayed, and the font shouldn't change.
             if (radioID.includes("none")) {
-                // 'none' button, must always be displayed
                 li.style.display = "block";
             }
-            else if (radioID[0] == radioID[0].toUpperCase()) {
-                // ID is a capitalised one, i.e. only for dev mode
-                li.style.display = on ? "block" : "none";
-            }
             else {
-                // ID is not a capitalised one, i.e. only outside of dev mode
-                li.style.display = on ? "none" : "block";
-            }
-        }
-    }
-    // adjust font size and font face when devmode is turned on
-    for (let ul of uls.slice(0, -1)) {
-        for (let li of ul.children as HTMLCollectionOf<HTMLElement>) {
-            if (!(li.children[0].id.includes("none"))) {
+                // Change visibility
+                if (radioID[0] === radioID[0].toUpperCase()) {
+                    li.style.display = on ? "block" : "none";
+                }
+                else {
+                    // ID is not a capitalised one, i.e. only outside of dev mode
+                    li.style.display = on ? "none" : "block";
+                }
+                // Change font size and font face.
                 li.style.fontSize = on ? "16px" : "inherit";
                 li.style.fontFamily = on ? "Inconsolata" : "inherit";
             }
         }
     }
+
     // if it's on, make the manual box visible
     const manualDiv = document.getElementById("manual-input");
     manualDiv!.style.display = on ? "block" : "none";
@@ -238,13 +212,8 @@ for (let inputName of inputNames) {
 // Update buttons when manual-modules textbox is changed {{{2
 function updateDevmodeButtons() {
     const moduleNames = manualInput.value.split(/\s+/).filter(m => m !== "");
-    // adjust 1H module names
-    const buttonIds = moduleNames.map(function (val) {
-        const v = val.toLowerCase();
-        return v.startsWith("h_") ? v.toLowerCase().replace("h_", "h1_") : v.toUpperCase()
-    });
     // select the correct buttons
-    const buttons = buttonIds
+    const buttons = moduleNames
         .map(name => document.getElementById(name) as HTMLInputElement)
         .filter(Boolean);  // remove null elements
     noneButtons.forEach(b => b.checked = true);   // reset any invalid elements
