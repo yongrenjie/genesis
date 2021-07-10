@@ -421,7 +421,7 @@ const asapMixingPPText = [
 // }}}2
 // }}}1
 
-// The Parameter class and a helper function {{{1
+// The Parameter class {{{1
 class Parameter {
     str: string;
     num?: number;
@@ -498,26 +498,29 @@ class Parameter {
         return `;${this.name()}: ${allParams[this.name()]}`;
     }
 }
+// }}}1
 
-// removeDuplicateByKey(xs, f) gives the same behaviour as 
-//     nubBy ((==) `on` f) xs
-// in Haskell.
+// removeDuplicateByKey(): a helper function {{{1
+/**
+ * Remove duplicates from a list according to a function f. In other words, if
+ * a list has two elements x1 and x2 such that f(x1) = f(x2), then x2 is
+ * removed from the list (this function retains only the first occurrence).
+ *
+ * removeDuplicateByKey(xs, f) gives the same behaviour as 
+ *     nubBy ((==) `on` f) xs
+ * in Haskell.
+ */
 function removeDuplicateByKey<In, Out>(lines: In[],
                                        keyfn: (k: In) => Out): In[] {
-    let keys = lines.map(keyfn);
-    let uniqueLines = lines.filter(function (l, pos) {
-        let k = keyfn(l);  // grab the key corresponding to each line
-        return keys.indexOf(k) == pos;
-        // indexOf gets the first occurrence of k in keys,
-        // so this returns true only if it's the first line with such a key.
-    });
-    return uniqueLines;
+    const keys = lines.map(keyfn);
+    return lines.filter((l, pos) => keys.indexOf(keyfn(l)) == pos);
 }
 
 // }}}1
 
-// The big function {{{1
-/** Construct the pulse programme.
+// makePulprogText(): the big function {{{1
+/**
+ * Construct the pulse programme.
  *
  * @param {string[]} backendModules - Array of strings indicating the backend
  *                                    modules to be used in pulse programme

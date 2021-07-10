@@ -1,7 +1,8 @@
-import { version } from "./version.js";
-import { makePulprogText } from "./pulprog.js";
 import allModules from "./allModules.js";
+import { makePulprogText } from "./pulprog.js";
+import { version } from "./version.js";
 
+// HTML elements
 const inputNames = ["hmbc", "n15", "ci13", "c13", "h1"];
 const devModeButton = document.getElementById("devmode_button") as HTMLInputElement;
 const pulprogTextarea = document.getElementById("pulprog_text") as HTMLTextAreaElement;
@@ -9,27 +10,29 @@ const manualInput = document.getElementById("manual-modules") as HTMLInputElemen
 const noneButtons = ["hmbc_none", "n15_none", "ci13_none", "c13_none", "h1_none"]
     .map(id => document.getElementById(id) as HTMLInputElement);
 
-// getSelectedButtons(): Function to determine which buttons are selected {{{1
+// Type synonyms, to make function signatures more useful
+type ButtonID = string;       // Generic button labels
+type SimpleModule = string;   // Non-devmode button labels
+type TrueModule = string;     // Devmode button labels, which correspond to the names of the NOAHModule objects
+
+// getSelectedButtons :: ButtonID[] {{{1
 /**
  * Obtain the IDs of the radio buttons that were selected by the user on the webpage.
  * @returns {string[]} The selected IDs.
  */
-function getSelectedButtons(): string[] {
+function getSelectedButtons(): ButtonID[] {
     /* Get an array of strings (the radio button IDs) corresponding to the modules
      * selected by the user (the 'frontend modules'). */
     return inputNames.map(inputName => document.querySelector(`input[name="${inputName}"]:checked`)!.id);
 }
 // }}}1
 
-// chooseModules(): Function to determine which modules to use {{{1
+// getTrueModules :: ButtonID[] -> TrueModule[] {{{1
 /**
  * Determine which modules to use, based on the IDs of the buttons that the user selected.
  * It then sets the manual-modules input field to a space-separated list of modules.
  * The pulprog function takes the modules from there.
- *
- * This function is 'intelligent' in that it takes care of a few details where the exact
- * variant chosen depends on what other modules are present in the sequence. In particular:
- *
+ * 
  * - The presence of 13C and/or 15N zz-filters in the HMBC module depends on the
  *   subsequent modules.
  * - The 15N seHSQC and 13C seHSQC depend on whether bulk magnetisation is required
@@ -41,46 +44,67 @@ function getSelectedButtons(): string[] {
  * @param {string[]} selectedButtons - The IDs of the checked buttons on the website.
  * @returns {string[]} The names of the modules to construct the pulse programme from.
  */
-function chooseModules(selectedButtons: string[]): string[] {
+function getTrueModules(selectedButtons: ButtonID[]): TrueModule[] {
     // Remove any selected "None" buttons.
-    let validModules = selectedButtons.filter(elem => !elem.includes("none"));
+    let modules = selectedButtons.filter(elem => !elem.includes("none"));
     // Return early if none were selected
-    if (validModules.length == 0) return [];
+    if (modules.length == 0) return [];
 
-    // If devmode is enabled, then we are (mostly) done, since the input IDs are already
-    // the correct names of the backend modules. We just need to capitalise the 1H module.
     if (devModeButton.checked) {
-        const lastValidModule = validModules[validModules.length - 1];
+        const lastModule = modules[modules.length - 1];
         // replace the last element if it's a 1H element
-        if (lastValidModule.startsWith("h1")) {
-            validModules[validModules.length - 1] = lastValidModule.replace("h1", "h").toUpperCase();
+        if (lastModule.startsWith("h1")) {
+            modules[modules.length - 1] = lastModule.replace("h1", "h").toUpperCase();
         }
-        return validModules;
+        return modules;
     }
-    // Otherwise we need to do some logic...
+    else {
+        return simpleModulesToTrue(modules);
+    }
+}
+// }}}1
+
+// convertSimpleModules :: SimpleModule[] -> TrueModule[] {{{1
+/**
+ * Determine which 'true' modules to use, based on the IDs of the buttons that the user selected.
+ *
+ * This function is 'intelligent' in that it takes care of a few details where the exact
+ * variant chosen depends on what other modules are present in the sequence. In particular:
+ *
+ * - The presence of 13C and/or 15N zz-filters in the HMBC module depends on the subsequent modules.
+ *
+ * - The 15N seHSQC and 13C seHSQC depend on whether bulk magnetisation is required for subsequent
+ *   modules. If it is not required, then we use the Bruker standard instead of the ZIP-seHSQC.
+ *
+ * - Variable INEPT excitation is used in the first 13C module if there are two such modules.
+ *
+ * @param {string[]} selectedButtons - The IDs of the checked buttons on the website.
+ * @returns {string[]} The names of the modules to construct the pulse programme from.
+ */
+function simpleModulesToTrue(simpleModules: string[]): string[] {
     // Figure out which type of modules are present
-    const nModulePresent = (validModules.findIndex(elem => elem.includes("n15")) !== -1);
-    const c1ModulePresent = (validModules.findIndex(elem => elem.includes("ci13")) !== -1);
-    const c2ModulePresent = (validModules.findIndex(elem => elem.includes("c13")) !== -1);
+    const nModulePresent = (simpleModules.findIndex(elem => elem.includes("n15")) !== -1);
+    const c1ModulePresent = (simpleModules.findIndex(elem => elem.includes("ci13")) !== -1);
+    const c2ModulePresent = (simpleModules.findIndex(elem => elem.includes("c13")) !== -1);
     const cModulePresent = (c1ModulePresent || c2ModulePresent);  // any 13C module
-    const hModulePresent = (validModules.findIndex(elem => elem.includes("h1")) !== -1);
+    const hModulePresent = (simpleModules.findIndex(elem => elem.includes("h1")) !== -1);
     // Initialise empty array of backend modules
-    let backendModules: string[] = [];
+    let trueModules: TrueModule[] = [];
     // Iterate over valid modules
-    for (let module of validModules) {
+    for (let module of simpleModules) {
 
         // Deal with HMBC module
         if (module.startsWith("hmbc")) {
-            if (nModulePresent) backendModules.push("C_HMBC_CNF");
-            else if (cModulePresent) backendModules.push("C_HMBC_CF");
-            else backendModules.push("C_HMBC_NOF");
+            if (nModulePresent) trueModules.push("C_HMBC_CNF");
+            else if (cModulePresent) trueModules.push("C_HMBC_CF");
+            else trueModules.push("C_HMBC_NOF");
         }
         // Deal with N15 module
         else if (module.startsWith("n15")) {
-            if (module === "n15_hmqc") backendModules.push("N_HMQC");
+            if (module === "n15_hmqc") trueModules.push("N_HMQC");
             else if (module === "n15_sehsqc") {
-                if (cModulePresent || hModulePresent) backendModules.push("N_SEHSQC");
-                else backendModules.push("N_SEHSQC_OR");   // Original CRK seHSQC
+                if (cModulePresent || hModulePresent) trueModules.push("N_SEHSQC");
+                else trueModules.push("N_SEHSQC_OR");   // Original CRK seHSQC
             }
         }
         // Deal with first C13 module (the one with variable INEPT excitation)
@@ -88,46 +112,46 @@ function chooseModules(selectedButtons: string[]): string[] {
             if (module === "ci13_hsqc_tocsy") {
                 // HSQC-TOCSY module
                 // if a second C13 module is present we need the modified INEPT block
-                if (c2ModulePresent) backendModules.push("CI_HSQC_TOCSY");
-                else backendModules.push("C_HSQC_TOCSY");
+                if (c2ModulePresent) trueModules.push("CI_HSQC_TOCSY");
+                else trueModules.push("C_HSQC_TOCSY");
             }
             else if (module === "ci13_hsqc") {
                 // HSQC module
                 // if a second C13 module is present we need the modified INEPT block
-                if (c2ModulePresent) backendModules.push("CI_HSQC");
-                else backendModules.push("C_HSQC");
+                if (c2ModulePresent) trueModules.push("CI_HSQC");
+                else trueModules.push("C_HSQC");
             }
             else if (module === "ci13_hsqc_cosy") {
                 // HSQC-COSY module
                 // if a second C13 module is present we need the modified INEPT block
-                if (c2ModulePresent) backendModules.push("CI_HSQC_COSY");
+                if (c2ModulePresent) trueModules.push("CI_HSQC_COSY");
                 // if there is a H1 module we need to preserve bulk
-                else if (hModulePresent) backendModules.push("C_HSQC_COSY");
+                else if (hModulePresent) trueModules.push("C_HSQC_COSY");
                 // otherwise we can use the best version with CLIP transfer
-                else backendModules.push("C_HSQC_COSY_CLIP");
+                else trueModules.push("C_HSQC_COSY_CLIP");
             }
             else if (module === "ci13_hsqc_f2j") {
                 // F2-coupled HSQC module
                 // if a second C13 module is present we need the modified INEPT block
-                if (c2ModulePresent) backendModules.push("CI_HSQC_F2J");
-                else backendModules.push("C_HSQC_F2J");
+                if (c2ModulePresent) trueModules.push("CI_HSQC_F2J");
+                else trueModules.push("C_HSQC_F2J");
             }
         }
         // Deal with second C13 module (without variable INEPT excitation)
         else if (module.startsWith("c13")) {
             // The only logic here is with the seHSQC variants: if a 1H module is present
             // then we use the ZIP-seHSQC version, if not then we can use CRK versions.
-            if (module === "c13_hsqc") backendModules.push("C_HSQC");
+            if (module === "c13_hsqc") trueModules.push("C_HSQC");
             else if (module === "c13_sehsqc") {
-                backendModules.push(hModulePresent ? "C_SEHSQC" : "C_SEHSQC_OR");
+                trueModules.push(hModulePresent ? "C_SEHSQC" : "C_SEHSQC_OR");
             }
-            else if (module === "c13_hsqc_f2j") backendModules.push("C_HSQC_F2J");
+            else if (module === "c13_hsqc_f2j") trueModules.push("C_HSQC_F2J");
             else if (module === "c13_hsqc_cosy") {
-                backendModules.push(hModulePresent ? "C_HSQC_COSY" : "C_HSQC_COSY_CLIP");
+                trueModules.push(hModulePresent ? "C_HSQC_COSY" : "C_HSQC_COSY_CLIP");
             }
-            else if (module === "c13_hsqc_tocsy") backendModules.push("C_HSQC_TOCSY");
+            else if (module === "c13_hsqc_tocsy") trueModules.push("C_HSQC_TOCSY");
             else if (module === "c13_sehsqc_tocsy") {
-                backendModules.push(hModulePresent ? "C_SEHSQC_TOCSY" : "C_SEHSQC_TOCSY_OR");
+                trueModules.push(hModulePresent ? "C_SEHSQC_TOCSY" : "C_SEHSQC_TOCSY_OR");
             }
         }
         // Deal with H1 module
@@ -135,15 +159,15 @@ function chooseModules(selectedButtons: string[]): string[] {
         // defining modules by using a convention where frontend module h1_xxx maps to backend
         // module H_XXX.
         else if (module.startsWith("h1")) {
-            backendModules.push(module.replace("h1", "h").toUpperCase())
+            trueModules.push(module.replace("h1", "h").toUpperCase())
         }
     }
-    return backendModules;
+    return trueModules;
 }
 // }}}1
 
 // Add page behaviour {{{1
-// Dev mode {{{2
+// Dev mode toggle {{{2
 /** Enable or disable developer mode depending on the state of devmode_button.
  */
 function toggleDevMode() {
@@ -197,9 +221,10 @@ document.getElementById("devmode_button")!.addEventListener("click", toggleDevMo
 // Call toggleDevMode() once upon page load so that the grid is styled correctly.
 toggleDevMode();
 // }}}2
+
 // Update manual-modules textbox when buttons are clicked {{{2
 function updateManualModulesValue() {
-    const moduleNames = chooseModules(getSelectedButtons());
+    const moduleNames = getTrueModules(getSelectedButtons());
     manualInput.value = moduleNames.join(' ');
     updatePulprogText();   // see https://stackoverflow.com/q/42427606
 }
@@ -209,21 +234,6 @@ for (let inputName of inputNames) {
         button.addEventListener("click", updateManualModulesValue);
     }
 }
-// }}}2
-// Update pulprog textarea when manual-modules textbox is changed {{{2
-function updatePulprogText() {
-    const moduleNames = manualInput.value
-        .toUpperCase().split(/\s+/).filter(m => m !== "");
-    if (moduleNames.length == 0) {
-        pulprogTextarea.value = "";
-        return;
-    }
-    let ppText: string;
-    try { ppText = makePulprogText(moduleNames, allModules, devModeButton.checked); }
-    catch (error) { ppText = ""; }
-    pulprogTextarea.value = ppText;
-}
-manualInput.addEventListener('input', updatePulprogText);
 // }}}2
 // Update buttons when manual-modules textbox is changed {{{2
 function updateDevmodeButtons() {
@@ -242,6 +252,22 @@ function updateDevmodeButtons() {
 }
 manualInput.addEventListener('input', updateDevmodeButtons);
 // }}}2
+// Update pulprog textarea when manual-modules textbox is changed {{{2
+function updatePulprogText() {
+    const moduleNames = manualInput.value
+        .toUpperCase().split(/\s+/).filter(m => m !== "");
+    if (moduleNames.length == 0) {
+        pulprogTextarea.value = "";
+        return;
+    }
+    let ppText: string;
+    try { ppText = makePulprogText(moduleNames, allModules, devModeButton.checked); }
+    catch (error) { ppText = ""; }
+    pulprogTextarea.value = ppText;
+}
+manualInput.addEventListener('input', updatePulprogText);
+// }}}2
+
 // Reset button {{{2
 function resetButtons() {
     noneButtons.forEach(b => b.checked = true);
