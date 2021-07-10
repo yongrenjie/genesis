@@ -839,7 +839,7 @@ export function makePulprogText(backendModules: string[],
     const nbl = mainpp.filter(line => fidRegexes.some(rgx => line.search(rgx) != -1)).length;
     // Return an empty string if we have less than one module.
     if (nbl < 2 && !allowLoneModule) return "";
-    const ppShortCodeName = `; ngn_noah${nbl}-${shortCodes.join("")}`;
+    const ppShortCodeName = `; gns_noah${nbl}-${shortCodes.join("")}`;
 
     // Create citation texts.
     const citationText = [...new Set(citations)]
@@ -982,8 +982,9 @@ export function makePulprogText(backendModules: string[],
         ...paramDefns,
         ``,
         auProgsStr,
-        `; ngn-${version}: constructed from ${backendModules.join(", ")}`,
-        `; pulse programme generated on ${(new Date()).toString()}`,
+        `; module identifiers: ${backendModules.join(" ")}`,
+        `; pulse programme created by genesis-v${version}, https://nmr-genesis.co.uk`,
+        `; ${(new Date()).toString()}`,
     );
     return pp.join("\n");
 }
