@@ -12,6 +12,7 @@ const noneButtons = ["hmbc_none", "n15_none", "ci13_none", "c13_none", "h1_none"
 
 // Type synonyms, to make function signatures more useful
 type ButtonID = string;       // Generic button labels
+type SimpleModule = string;   // Non-devmode button labels
 type TrueModule = string;     // Devmode button labels, which correspond to the names of the NOAHModule objects
 
 // getSelectedButtons :: ButtonID[] {{{1
@@ -40,7 +41,7 @@ function getTrueModules(selectedButtons: ButtonID[]): TrueModule[] {
 }
 // }}}1
 
-// convertSimpleModules :: SimpleModule[] -> TrueModule[] {{{1
+// simpleModulesToTrue :: SimpleModule[] -> TrueModule[] {{{1
 /**
  * Determine which 'true' modules to use, based on the IDs of the buttons that the user selected.
  *
@@ -57,7 +58,7 @@ function getTrueModules(selectedButtons: ButtonID[]): TrueModule[] {
  * @param {string[]} selectedButtons - The IDs of the checked buttons on the website.
  * @returns {string[]} The names of the modules to construct the pulse programme from.
  */
-function simpleModulesToTrue(simpleModules: string[]): string[] {
+function simpleModulesToTrue(simpleModules: SimpleModule[]): TrueModule[] {
     // Figure out which type of modules are present
     const nModulePresent = (simpleModules.findIndex(elem => elem.includes("n15")) !== -1);
     const c1ModulePresent = (simpleModules.findIndex(elem => elem.includes("ci13")) !== -1);
@@ -161,6 +162,114 @@ function simpleModulesToTrue(simpleModules: string[]): string[] {
 }
 // }}}1
 
+// trueModulesToSimple :: TrueModule[] -> SimpleModule[]  {{{1
+/**
+ * From a list of 'true' modules, determine whether there exists a set of 'simple' modules which
+ * correspond exactly to the true modules.
+ *
+ * @param {string[]} trueModules - The list of true modules to try to convert.
+ * @returns {string[]} The simplified modules which correspond to trueModules. Empty if a suitable
+ * set couldn't be found.
+ */
+function trueModulesToSimple(trueModules: TrueModule[]): SimpleModule[] {
+    // We try to 'pluck off' the result one category at a time, i.e. HMBC module first, then 15N,
+    // etc. If at the end we're left with some leftover modules, then this means that there *isn't*
+    // a suitable combination of 'simple' modules.
+    //
+    // On top of that, we also perform a check to make sure that convertSimpleModules(final_result)
+    // is equivalent to the input. This helps to prevent misidentification of variants (for example,
+    // C_HMBC_CF + C_SEHSQC_DP should NOT correspond to HMBC + seHSQC, because HMBC + seHSQC would
+    // ordinarily give seHSQC v2 not v1).
+    let simpleModules: string[] = [];
+    let trueModulesCopy = [...trueModules];  // for comparison later
+    let classifiers = ["C_HMBC_", "N_", "CI_", "C_", "H_"];
+
+    for (const [idx, cf] of classifiers.entries()) {
+        if (trueModules.length == 0) break;   // No more modules to check
+        if (trueModules[0].startsWith(cf)) {  // Pluck it off!
+            let nextTrueModule = trueModules.shift() as string;
+
+            if (idx == 0) {  // HMBC
+                simpleModules.push("hmbc_hmbc");
+            }
+            else if (idx == 1) {  // 15N
+                const n15Mapping = {
+                    "N_HMQC": "n15_hmqc",
+                    "N_HSQC": "",
+                    "N_SEHSQC": "n15_sehsqc",
+                    "N_SEHSQC_OR": "n15_sehsqc",
+                    "N_SEHSQC_DP": "n15_sehsqc",
+                };
+                if (nextTrueModule in n15Mapping) {
+                    simpleModules.push(n15Mapping[nextTrueModule]);
+                }
+            } 
+            else if (idx == 2) {  // 13C-INEPT
+                const ci13Mapping = {
+                    "CI_HSQC_TOCSY": "ci13_hsqc_tocsy",
+                    "CI_HSQC_COSY": "ci13_hsqc_cosy",
+                    "CI_HSQC_COSY_CLIP": "ci13_hsqc_cosy",
+                    "CI_HSQC_COSY_DSE": "ci13_hsqc_cosy",
+                    "CI_HSQC": "ci13_hsqc",
+                    "CI_HSQC_F2J": "ci13_hsqc_f2j",
+                };
+                if (nextTrueModule in ci13Mapping) {
+                    simpleModules.push(ci13Mapping[nextTrueModule]);
+                }
+            }
+            else if (idx == 3) {  // 13C
+                const c13Mapping = {
+                    "C_HSQC": "c13_hsqc",
+                    "C_HSQC_F2J": "c13_hsqc_f2j",
+                    "C_HSQC_COSY": "c13_hsqc_cosy",
+                    "C_HSQC_COSY_CLIP": "c13_hsqc_cosy",
+                    "C_HSQC_COSY_DSE": "c13_hsqc_cosy",
+                    "C_HSQC_TOCSY": "c13_hsqc_tocsy",
+                    "C_SEHSQC": "c13_sehsqc",
+                    "C_SEHSQC_OR": "c13_sehsqc",
+                    "C_SEHSQC_DP": "c13_sehsqc",
+                    "C_SEHSQC_TOCSY": "c13_sehsqc_tocsy",
+                    "C_SEHSQC_TOCSY_OR": "c13_sehsqc_tocsy",
+                };
+                if (nextTrueModule in c13Mapping) {
+                    simpleModules.push(c13Mapping[nextTrueModule]);
+                }
+            }
+            else if (idx == 4) {  // 1H
+                const h1Mapping = {
+                    "H_COSY": "h1_cosy",
+                    "H_COSY_QF": "h1_cosy_qf",
+                    "H_CLIP_COSY": "h1_clip_cosy",
+                    "H_DQF_COSY": "h1_dqf_cosy",
+                    "H_TOCSY": "h1_tocsy",
+                    "H_NOESY": "h1_noesy",
+                    "H_ROESY": "h1_roesy",
+                    "H_ROESY_AD": "h1_roesy_ad",
+                    "H_COSY_ROESY_ST": "h1_cosy_roesy_st",
+                    "H_COSY_NOESY": "h1_cosy_noesy",
+                    "H_COSY_NOESY_ST": "h1_cosy_noesy_st",
+                    "H_COSY_TOCSY": "h1_cosy_tocsy",
+                    "H_COSY_TOCSY_ST": "h1_cosy_tocsy_st",
+                    "H_JRES": "h1_jres",
+                    "H_PSYCHE_JRES": "h1_psyche_jres",
+                    "H_PSYCHE": "h1_psyche",
+                    "H_TSE_PSYCHE": "h1_tse_psyche",
+                };
+                if (nextTrueModule in h1Mapping) {
+                    simpleModules.push(h1Mapping[nextTrueModule]);
+                }
+            }
+        }
+    }
+
+    // Check for leeftover 'true' modules that weren't parsed.
+    if (trueModules.length > 0) return [];
+    // Check that simpleModulesToTrue is indeed an inverse.
+    if (simpleModulesToTrue(simpleModules).join(" ") !== trueModulesCopy.join(" ")) return [];
+    return simpleModules;
+}
+// }}}1
+
 // Add page behaviour {{{1
 // Dev mode toggle {{{2
 /** Enable or disable developer mode depending on the state of devmode_button.
@@ -206,11 +315,21 @@ function toggleDevMode() {
     manualDiv!.style.display = on ? "block" : "none";
     // Final actions
     if (devModeButton.checked) {
-        updateDevmodeButtons();
+        updateButtons();
     }
     else {
-        // TODO: create a reverse mapping from devmode buttons to normal buttons
-        resetButtons();
+        const trueModules = manualInput.value.split(/\s+/).filter(m => m !== "");
+        const simpleModuleNames = trueModulesToSimple(trueModules);
+        if (simpleModuleNames.length > 0) {
+            const buttons = simpleModuleNames
+                .map(name => document.getElementById(name) as HTMLInputElement)
+                .filter(Boolean);
+            noneButtons.forEach(b => b.checked = true);
+            buttons.forEach(b => b.checked = true);
+        }
+        else {
+            resetButtons();
+        }
     }
     setModuleListLengths();
 }
@@ -234,7 +353,7 @@ for (let inputName of inputNames) {
 }
 // }}}2
 // Update buttons when manual-modules textbox is changed {{{2
-function updateDevmodeButtons() {
+function updateButtons() {
     const moduleNames = manualInput.value.split(/\s+/).filter(m => m !== "");
     // select the correct buttons
     const buttons = moduleNames
@@ -243,7 +362,7 @@ function updateDevmodeButtons() {
     noneButtons.forEach(b => b.checked = true);   // reset any invalid elements
     buttons.forEach(b => b.checked = true);
 }
-manualInput.addEventListener('input', updateDevmodeButtons);
+manualInput.addEventListener('input', updateButtons);
 // }}}2
 // Update pulprog textarea when manual-modules textbox is changed {{{2
 function updatePulprogText() {
