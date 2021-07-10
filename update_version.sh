@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Script to automatically update gennoah version numbers. Updates the following list of files:
+# Script to automatically update genesis version numbers. Updates the following list of files:
 #   - package.json (and package-lock.json, via npm install)
 #   - src/version.js
 #   - any file in scripts/ (recursively)

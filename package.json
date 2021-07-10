@@ -1,17 +1,17 @@
 {
-    "name": "gennoah",
+    "name": "genesis",
     "version": "2.0.9",
     "author": "Jonathan Yong",
     "email": "jonathan.yong@chem.ox.ac.uk",
     "url": "https://github.com/yongrenjie",
     "description": "make NOAH pulse programmes",
-    "homepage": "https://github.com/yongrenjie/gennoah",
+    "homepage": "https://github.com/yongrenjie/genesis",
     "bugs": {
-        "url": "https://github.com/yongrenjie/gennoah/issues",
+        "url": "https://github.com/yongrenjie/genesis/issues",
         "email": "jonathan.yong@chem.ox.ac.uk"
     },
     "license": "MIT",
-    "repository": "github:yongrenjie/gennoah",
+    "repository": "github:yongrenjie/genesis",
     "scripts": {
         "start": "node build/app.js",
         "postinstall": "tsc",
