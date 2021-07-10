@@ -6,6 +6,8 @@ const inputNames = ["hmbc", "n15", "ci13", "c13", "h1"];
 const devModeButton = document.getElementById("devmode_button") as HTMLInputElement;
 const pulprogTextarea = document.getElementById("pulprog_text") as HTMLTextAreaElement;
 const manualInput = document.getElementById("manual-modules") as HTMLInputElement;
+const noneButtons = ["hmbc_none", "n15_none", "ci13_none", "c13_none", "h1_none"]
+    .map(id => document.getElementById(id) as HTMLInputElement);
 
 // getSelectedButtons(): Function to determine which buttons are selected {{{1
 /**
@@ -209,24 +211,39 @@ for (let inputName of inputNames) {
 // }}}2
 // Update pulprog textarea when manual-modules textbox is changed {{{2
 function updatePulprogText() {
-    const moduleNames = manualInput.value.split(/\s+/).filter(m => m !== "");
+    const moduleNames = manualInput.value
+        .toUpperCase().split(/\s+/).filter(m => m !== "");
     if (moduleNames.length == 0) {
         pulprogTextarea.value = "";
         return;
     }
     let ppText: string;
     try { ppText = makePulprogText(moduleNames, allModules, devModeButton.checked); }
-    catch (error) { console.error(error); ppText = ""; }
+    catch (error) { ppText = ""; }
     pulprogTextarea.value = ppText;
 }
 manualInput.addEventListener('input', updatePulprogText);
 // }}}2
+// Update buttons when manual-modules textbox is changed {{{2
+function updateDevmodeButtons() {
+    const moduleNames = manualInput.value.split(/\s+/).filter(m => m !== "");
+    // adjust 1H module names
+    const buttonIds = moduleNames.map(function (val) {
+        const v = val.toLowerCase();
+        return v.startsWith("h_") ? v.toLowerCase().replace("h_", "h1_") : v.toUpperCase()
+    });
+    // select the correct buttons
+    const buttons = buttonIds
+        .map(name => document.getElementById(name) as HTMLInputElement)
+        .filter(Boolean);  // remove null elements
+    noneButtons.forEach(b => b.checked = true);   // reset any invalid elements
+    buttons.forEach(b => b.checked = true);
+}
+manualInput.addEventListener('input', updateDevmodeButtons);
+// }}}2
 // Reset button {{{2
 function resetButtons() {
-    let noneButtonIDs = ["hmbc_none", "n15_none", "ci13_none", "c13_none", "h1_none"]
-    for (let id of noneButtonIDs) {
-        (document.getElementById(id) as HTMLInputElement).checked = true;
-    }
+    noneButtons.forEach(b => b.checked = true);
     updateManualModulesValue();
     updatePulprogText();
 }
