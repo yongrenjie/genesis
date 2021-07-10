@@ -1,7 +1,7 @@
 import { Kupce2017ACIE, Yong2021JMR } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 13C HSQC-TOCSY with Ernst angle excitation
+let shortDescription = `; 13C HSQC-TOCSY with variable INEPT excitation
 ;     [specify fraction of 1J(CH) magnetisation to use with cnst32]
 ;     [use -DINVERT1 for inversion of TOCSY peaks]`;
 
@@ -31,7 +31,7 @@ define list<gradient> GCI_HSQC_TOCSY={cnst41}
 `
 
 let pulprog = `
-  ; 13C-1H HSQC-TOCSY with Ernst angle excitation
+  ; 13C-1H HSQC-TOCSY with variable INEPT excitation
 
   ; INEPT
   (p1 ph0):f1

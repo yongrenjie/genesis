@@ -81,7 +81,6 @@ const allParams = {
     "spnam50": "wu180H1SL2 (generate via WaveMaker)",
 
     "cnst2": "= 1J(CH)",
-    "cnst3": "apparent J(CH) for Ernst angle excitation",
     "cnst4": "= 1J(NH)",
     "cnst6": "= minimum 1J(CH)",
     "cnst7": "= maximum 1J(CH)",
@@ -113,7 +112,6 @@ const allParams = {
     "d0": "13C t1",
     "d1": "relaxation delay",
     "d2": "1/2J(CH)",
-    "d3": "reduced 1/4J(CH) for Ernst angle excitation",
     "d4": "1/4J(CH)",
     "d6": "1/8J(CH) for all multiplicities, 1/4J(CH) for CH only",
     "d7": "1/(2*nJ(CH)), long-range coupling evolution",
