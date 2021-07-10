@@ -205,7 +205,13 @@ function toggleDevMode() {
     const manualDiv = document.getElementById("manual-input");
     manualDiv!.style.display = on ? "block" : "none";
     // Final actions
-    resetButtons();
+    if (devModeButton.checked) {
+        updateDevmodeButtons();
+    }
+    else {
+        // TODO: create a reverse mapping from devmode buttons to normal buttons
+        resetButtons();
+    }
     setModuleListLengths();
 }
 // Add toggle behaviour to the devmode button
