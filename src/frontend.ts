@@ -176,11 +176,12 @@ function toggleDevMode() {
             }
         }
     }
-    // make the font size smaller if devmode is enabled
+    // adjust font size and font face when devmode is turned on
     for (let ul of uls.slice(0, -1)) {
         for (let li of ul.children as HTMLCollectionOf<HTMLElement>) {
             if (!(li.children[0].id.includes("none"))) {
-                li.style.fontSize = on ? "14px" : "inherit";
+                li.style.fontSize = on ? "16px" : "inherit";
+                li.style.fontFamily = on ? "Inconsolata" : "inherit";
             }
         }
     }
