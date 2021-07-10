@@ -12,7 +12,6 @@ const noneButtons = ["hmbc_none", "n15_none", "ci13_none", "c13_none", "h1_none"
 
 // Type synonyms, to make function signatures more useful
 type ButtonID = string;       // Generic button labels
-type SimpleModule = string;   // Non-devmode button labels
 type TrueModule = string;     // Devmode button labels, which correspond to the names of the NOAHModule objects
 
 // getSelectedButtons :: ButtonID[] {{{1
@@ -67,7 +66,7 @@ function simpleModulesToTrue(simpleModules: string[]): string[] {
     const hModulePresent = (simpleModules.findIndex(elem => elem.includes("h1")) !== -1);
     // Initialise empty array of backend modules
     let trueModules: TrueModule[] = [];
-    // Iterate over valid modules
+    // Iterate over modules. Note that by now the None buttons have been removed.
     for (let module of simpleModules) {
 
         // Deal with HMBC module
@@ -132,11 +131,30 @@ function simpleModulesToTrue(simpleModules: string[]): string[] {
             }
         }
         // Deal with H1 module
-        // There's no logic to deal with here, so we can save ourselves the tedium of manually
-        // defining modules by using a convention where frontend module h1_xxx maps to backend
-        // module H_XXX.
+        // There's no real logic to deal with here, so we can just use a mapping. (In principle,
+        // we could just do module.replace("h1", "h").toUpperCase(), but that would rely on an
+        // unspoken convention that the non-devmode and devmode labels follow this pattern.)
         else if (module.startsWith("h1")) {
-            trueModules.push(module.replace("h1", "h").toUpperCase())
+            const h1mapping = {
+                "h1_cosy": "H_COSY",
+                "h1_cosy_qf": "H_COSY_QF",
+                "h1_clip_cosy": "H_CLIP_COSY",
+                "h1_dqf_cosy": "H_DQF_COSY",
+                "h1_tocsy": "H_TOCSY",
+                "h1_noesy": "H_NOESY",
+                "h1_roesy": "H_ROESY",
+                "h1_roesy_ad": "H_ROESY_AD",
+                "h1_cosy_roesy_st": "H_COSY_ROESY_ST",
+                "h1_cosy_noesy": "H_COSY_NOESY",
+                "h1_cosy_noesy_st": "H_COSY_NOESY_ST",
+                "h1_cosy_tocsy": "H_COSY_TOCSY",
+                "h1_cosy_tocsy_st": "H_COSY_TOCSY_ST",
+                "h1_jres": "H_JRES",
+                "h1_psyche_jres": "H_PSYCHE_JRES",
+                "h1_psyche": "H_PSYCHE",
+                "h1_tse_psyche": "H_TSE_PSYCHE",
+            };
+            trueModules.push(h1mapping[module]);
         }
     }
     return trueModules;
