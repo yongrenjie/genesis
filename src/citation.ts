@@ -115,5 +115,5 @@ export const Gyongyosi2021AC = new Citation(
 export const Yong2021JMR = new Citation(
     "Increasing Sensitivity and Versatility in NMR Supersequences with New HSQC-based Modules",
     [Jon, "A. L. Hansen", Eriks, Tim],
-    JMR, 2021, "", "", "", "10.1016/j.jmr.2021.107027"
+    JMR, 2021, 327, "", "107027", "10.1016/j.jmr.2021.107027"
 )
