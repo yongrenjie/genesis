@@ -19,7 +19,6 @@
 
         <title>GENESIS: NOAH pulse programmes</title>
     </head> <!--  }}}1 -->
-
     <body id="top">
         <div id="spinner-container"> <!-- {{{1 -->
             <div id="spinner-text">Loading modules... </div>
@@ -27,29 +26,26 @@
         </div> <!-- }}}1 -->
 
         <div id="main-wrapper">
-
             <h1>GENESIS: a NOAH pulse programme generator</h1>
 
             <h2 id="modules_h2">Module selector</h2>
 
-            <div id="warning">
-            </div>
+            <div id="warning"></div>
 
-            <div id="devmode">
+            <div id="devmode"> <!-- {{{1 -->
                 Developer mode <a href="#faq_devmode">[?]</a>
                 <div class="switch">
                     <input id="devmode_button" type="checkbox" class="switch-input" />
                     <label for="devmode_button" class="switch-label"></label>
                 </div>
-            </div>
+            </div> <!-- /devmode }}}1 -->
 
             <div id="chooser">
                 <div class="chooser-overall hmbc"> <!-- {{{1 -->
-                    <div class="chooser_text hmbc">
-                        <sup>13</sup>C HMBC
-                    </div>
+                    <div class="chooser_text hmbc"><sup>13</sup>C HMBC</div>
                     <div class="chooser_modules hmbc">
                         <ul>
+                            <!-- HMBC: non-devmode modules {{{2 -->
                             <li>
                                 <input type="radio" name="hmbc" id="hmbc_none" checked></input>
                                 <label for="hmbc_none">None</label>
@@ -58,6 +54,7 @@
                                 <input type="radio" name="hmbc" id="hmbc_hmbc"></input>
                                 <label for="hmbc_hmbc">HMBC</label>
                             </li>
+                            <!-- HMBC: devmode modules {{{2 -->
                             <li>
                                 <input type="radio" name="hmbc" id="C_HMBC_CNF"></input>
                                 <label for="C_HMBC_CNF">C_HMBC_CNF</label>
@@ -78,17 +75,15 @@
                                 <input type="radio" name="hmbc" id="C_HMBC_CFG"></input>
                                 <label for="C_HMBC_CFG">C_HMBC_CFG</label>
                             </li>
+                            <!-- end HMBC modules }}}2 -->
                         </ul>
                     </div>
                 </div> <!-- /chooser-overall hmbc }}}1 -->
-
                 <div class="chooser-overall n15"> <!-- {{{1 -->
-                    <div class="chooser_text n15">
-                        <sup>15</sup>N–<sup>1</sup>H
-                    </div>
+                    <div class="chooser_text n15"><sup>15</sup>N–<sup>1</sup>H</div>
                     <div class="chooser_modules n15">
                         <ul>
-                            <!-- nondevmode -->
+                            <!-- 15N: non-devmode modules {{{2 -->
                             <li>
                                 <input type="radio" name="n15" id="n15_none" checked></input>
                                 <label for="n15_none">None</label>
@@ -101,7 +96,7 @@
                                 <input type="radio" name="n15" id="n15_sehsqc"></input>
                                 <label for="n15_sehsqc">seHSQC</label>
                             </li>
-                            <!-- devmode -->
+                            <!-- 15N: devmode modules {{{2 -->
                             <li>
                                 <input type="radio" name="n15" id="N_HMQC"></input>
                                 <label for="N_HMQC">N_HMQC</label>
@@ -122,17 +117,15 @@
                                 <input type="radio" name="n15" id="N_SEHSQC_DP"></input>
                                 <label for="N_SEHSQC_DP">N_SEHSQC_DP</label>
                             </li>
+                            <!-- end 15N modules }}}2 -->
                         </ul>
                     </div>
                 </div> <!-- /chooser-overall n15 }}}1 -->
-
                 <div class="chooser-overall ci13"> <!-- {{{1 -->
-                    <div class="chooser_text ci13">
-                        <sup>13</sup>C–<sup>1</sup>H #1
-                    </div>
+                    <div class="chooser_text ci13"><sup>13</sup>C–<sup>1</sup>H #1</div>
                     <div class="chooser_modules ci13">
                         <ul>
-                            <!-- nondevmode -->
+                            <!-- 13C-INEPT: non-devmode modules {{{2 -->
                             <li>
                                 <input type="radio" name="ci13" id="ci13_none" checked></input>
                                 <label for="ci13_none">None</label>
@@ -153,7 +146,7 @@
                                 <input type="radio" name="ci13" id="ci13_hsqc_tocsy"></input>
                                 <label for="ci13_hsqc_tocsy">HSQC-TOCSY</label>
                             </li>
-                            <!-- devmode -->
+                            <!-- 13C-INEPT: devmode modules {{{2 -->
                             <li>
                                 <input type="radio" name="ci13" id="CI_HSQC_TOCSY"></input>
                                 <label for="CI_HSQC_TOCSY">CI_HSQC_TOCSY</label>
@@ -178,17 +171,15 @@
                                 <input type="radio" name="ci13" id="CI_HSQC_F2J"></input>
                                 <label for="CI_HSQC_F2J">CI_HSQC_F2J</label>
                             </li>
+                            <!-- end 13C-INEPT modules }}}2 -->
                         </ul>
                     </div>
                 </div> <!-- /chooser-overall ci13 }}}1 -->
-
                 <div class="chooser-overall c13"> <!-- {{{1 -->
-                    <div class="chooser_text c13">
-                        <sup>13</sup>C–<sup>1</sup>H #2
-                    </div>
+                    <div class="chooser_text c13"><sup>13</sup>C–<sup>1</sup>H #2</div>
                     <div class="chooser_modules c13">
                         <ul>
-                            <!-- nondevmode -->
+                            <!-- 13C: non-devmode modules {{{2 -->
                             <li>
                                 <input type="radio" name="c13" id="c13_none" checked></input>
                                 <label for="c13_none">None</label>
@@ -217,7 +208,7 @@
                                 <input type="radio" name="c13" id="c13_sehsqc_tocsy"></input>
                                 <label for="c13_sehsqc_tocsy">seHSQC-TOCSY</label>
                             </li>
-                            <!-- devmode -->
+                            <!-- 13C: devmode modules {{{2 -->
                             <li>
                                 <input type="radio" name="c13" id="C_HSQC"></input>
                                 <label for="C_HSQC">C_HSQC</label>
@@ -262,20 +253,19 @@
                                 <input type="radio" name="c13" id="C_SEHSQC_TOCSY_OR"></input>
                                 <label for="C_SEHSQC_TOCSY_OR">C_SEHSQC_TOCSY_OR</label>
                             </li>
+                            <!-- end 13C modules }}}2 -->
                         </ul>
                     </div>
                 </div> <!-- /chooser-overall c13 }}}1 -->
-
                 <div class="chooser-overall h1"> <!-- {{{1 -->
-                    <div class="chooser_text h1">
-                        <sup>1</sup>H–<sup>1</sup>H
-                    </div>
+                    <div class="chooser_text h1"><sup>1</sup>H–<sup>1</sup>H</div>
                     <div class="chooser_modules h1">
                         <!-- it is very important, when adding future modules here, that
                             the input id (and the label for-attribute) is h1_xxx_xxx and
                             corresponds EXACTLY to the backend module file which should be
                             H_XXX_XXX.js. -->
                         <ul>
+                            <!-- 1H: non-devmode modules {{{2 -->
                             <li id="li_h1_none">
                                 <input type="radio" name="h1" id="h1_none" checked></input>
                                 <label for="h1_none">None</label>
@@ -348,25 +338,26 @@
                                 <input type="radio" name="h1" id="h1_tse_psyche"></input>
                                 <label for="h1_tse_psyche">1D TSE-PSYCHE</label>
                             </li>
+                            <!-- end 1H modules }}}2 -->
                         </ul>
                     </div>
                 </div><!-- /chooser-overall h1 }}}1 -->
             </div><!-- /chooser -->
 
-            <div id="manual-input">
+            <div id="manual-input"> <!-- {{{1 -->
                 ...or choose your own: <input id="manual-modules" type="text" size=60 maxlength=1000>
-            </div><!-- /manual-input -->
+                </div><!-- /manual-input }}}1 -->
 
-            <div id="buttons">
+            <div id="buttons"> <!-- {{{1 -->
                 <input id="reset_button" type="button" value="Reset all">
                 <input id="download_button" type="button" value="Download pulse programme">
                 <input id="faq_button" type="button" value="Read the FAQ">
-            </div><!-- /buttons -->
+            </div><!-- /buttons }}}1 -->
 
-            <h2>Pulse programme text</h2>
+            <h2>Pulse programme text</h2> <!-- {{{1 --->
             <div id="pulprog">
                 <textarea id="pulprog_text" rows=30 placeholder="Select two or more modules to generate pulse programme..." readonly></textarea>
-            </div>
+            </div> <!-- }}}1 -->
 
             <h2 id="faq_h2">FAQ</h2> <!-- {{{1 -->
             <div id="faq">
@@ -540,7 +531,6 @@
 
             <span class="small">&copy; Jonathan Yong, 2020–2021. Source code is available on <a href="https://github.com/yongrenjie/genesis">GitHub</a>. Current version: v<span id="version"></span></span>
         </div><!-- /main-wrapper -->
-
 
         <script nomodule type="text/javascript">
             document.getElementById("spinner-container").innerHTML = "Your browser does not support JavaScript modules; please use an updated browser to view this website.";
