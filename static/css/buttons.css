@@ -123,3 +123,13 @@ div#devmode {
 .switch-input:checked + .switch-label::after {
     left: 1em;
 }
+
+div#manual-input {
+    display: none;  /* later changed with JavaScript */
+    text-align: center;
+}
+
+input#manual-modules {
+    margin: 0 10px;
+    font-family: "Inconsolata", monospace;
+}

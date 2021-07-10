@@ -5,8 +5,9 @@ import allModules from "./allModules.js";
 const inputNames = ["hmbc", "n15", "ci13", "c13", "h1"];
 const devModeButton = document.getElementById("devmode_button") as HTMLInputElement;
 const pulprogTextarea = document.getElementById("pulprog_text") as HTMLTextAreaElement;
+const manualInput = document.getElementById("manual-modules") as HTMLInputElement;
 
-// Function to determine which buttons are selected {{{1
+// getSelectedButtons(): Function to determine which buttons are selected {{{1
 /**
  * Obtain the IDs of the radio buttons that were selected by the user on the webpage.
  * @returns {string[]} The selected IDs.
@@ -18,9 +19,11 @@ function getSelectedButtons(): string[] {
 }
 // }}}1
 
-// Function to determine which modules to use {{{1
+// chooseModules(): Function to determine which modules to use {{{1
 /**
  * Determine which modules to use, based on the IDs of the buttons that the user selected.
+ * It then sets the manual-modules input field to a space-separated list of modules.
+ * The pulprog function takes the modules from there.
  *
  * This function is 'intelligent' in that it takes care of a few details where the exact
  * variant chosen depends on what other modules are present in the sequence. In particular:
@@ -179,6 +182,10 @@ function toggleDevMode() {
             }
         }
     }
+    // if it's on, make the manual box visible
+    const manualDiv = document.getElementById("manual-input");
+    manualDiv!.style.display = on ? "block" : "none";
+    // Final actions
     resetButtons();
     setModuleListLengths();
 }
@@ -187,31 +194,32 @@ document.getElementById("devmode_button")!.addEventListener("click", toggleDevMo
 // Call toggleDevMode() once upon page load so that the grid is styled correctly.
 toggleDevMode();
 // }}}2
-// Update pulprog text when radio buttons are changed {{{2
-/**
- * Updates the pulse programme textarea with the pulse programme corresponding
- * to the currently selected modules. If no modules are selected, or if fewer
- * than two modules are present, it empties the textarea (thereby resetting it
- * to its placeholder text).
- */
-function updatePulprogText() {
+// Update manual-modules textbox when buttons are clicked {{{2
+function updateManualModulesValue() {
     const moduleNames = chooseModules(getSelectedButtons());
-    if (moduleNames.length > 0) {
-        let ppText: string;
-        try { ppText = makePulprogText(moduleNames, allModules, false); }
-        catch (error) { console.error(error); ppText = ""; }
-        pulprogTextarea.value = ppText;
-    }
-    else {
-        pulprogTextarea.value = "";
-    }
+    manualInput.value = moduleNames.join(' ');
+    updatePulprogText();   // see https://stackoverflow.com/q/42427606
 }
 for (let inputName of inputNames) {
     let buttons = document.querySelectorAll(`input[name="${inputName}"]`);
     for (let button of buttons) {
-        button.addEventListener("click", updatePulprogText);
+        button.addEventListener("click", updateManualModulesValue);
     }
 }
+// }}}2
+// Update pulprog textarea when manual-modules textbox is changed {{{2
+function updatePulprogText() {
+    const moduleNames = manualInput.value.split(/\s+/).filter(m => m !== "");
+    if (moduleNames.length == 0) {
+        pulprogTextarea.value = "";
+        return;
+    }
+    let ppText: string;
+    try { ppText = makePulprogText(moduleNames, allModules, devModeButton.checked); }
+    catch (error) { console.error(error); ppText = ""; }
+    pulprogTextarea.value = ppText;
+}
+manualInput.addEventListener('input', updatePulprogText);
 // }}}2
 // Reset button {{{2
 function resetButtons() {
@@ -219,6 +227,7 @@ function resetButtons() {
     for (let id of noneButtonIDs) {
         (document.getElementById(id) as HTMLInputElement).checked = true;
     }
+    updateManualModulesValue();
     updatePulprogText();
 }
 document.getElementById("reset_button")!.addEventListener("click", resetButtons);
