@@ -13,7 +13,7 @@
     "license": "MIT",
     "repository": "github:yongrenjie/genesis",
     "scripts": {
-        "start": "node build/app.js",
+        "start": "tsc && node build/app.js",
         "postinstall": "tsc",
         "test": "tsc; mocha tests/"
     },
