@@ -15,24 +15,28 @@
  * Eriks Kupce, Bruker UK
  * 02 June 2021 */
 
-int    *irow;
-double *drow;
-int i, j, k;
-int fntype = 0;
-char path[PATH_MAX + 64], proc_nm[8];
+
+/******************
+ * Initialisation *
+ ******************/
+
+#define MALLOC_ERROR "cannot get enough memory"
+
+int    *irow;               // one 32-bit integer-typed FID
+double *drow;               // one 64-bit float-typed FID
+int i, j, k;                // loop indices
+char ser_path[PATH_MAX];    // path to various ser files
+char expno_path[PATH_MAX];  // path to the NOAH expno directory
 
 // Check if dataset is 2D
 int parmode;
 FETCHPAR("PARMODE", &parmode)
 if (parmode != 1) STOPMSG("Program is only suitable for 2D")
 
-// Check if NBL > 1. As of the time of writing, NBL can only go up to 5, so
-// the check for NBL > 8 is slightly excessive. However, this cap on NBL will
-// (in all likelihood) be increased in the future, so setting a higher check
-// on NBL future-proofs this script to some extent.
+// Check if NBL > 1 (i.e. whether splitting is truly required)
 int nbl;
 FETCHPAR("NBL", &nbl)
-if ((nbl < 2) || (nbl > 8)) STOPMSG("Program is only suitable for 2 <= NBL <= 7")
+if (nbl < 2) STOPMSG("Program is only suitable for NBL > 1")
 
 // Read in more parameters
 int dtypa, byteorder, tds, td1, td1s;
@@ -42,29 +46,30 @@ FETCHPARS("TD", &tds)
 FETCHPAR1("TD", &td1)
 FETCHPAR1S("TD", &td1s)
 
-int full_td1;   // 'full' value of TD1 post-reconstruction
 // Check whether NUS was used.
-int nus = 0;  // flag to indicate whether NUS was used
+int full_td1;   // 'full' value of TD1 post-reconstruction
+int nus = 0;                 // flag to indicate whether NUS was used
+char pp_name[PATH_MAX];      // pulse programme name
+FETCHPARS("PULPROG", pp_name)
 char zgoptns[128];
 double nusamount;
 FETCHPARS("ZGOPTNS", zgoptns);
-if (strstr(zgoptns, "-DNUS") != NULL) {
+if (strstr(zgoptns, "-DNUS") || strstr(pp_name, ".nus")) {
     nus = 1;
     FETCHPAR("NusAMOUNT", &nusamount)
-    full_td1 = (int) (td1 * 100 / nusamount + 0.5);
-    // (int) (x + 0.5) rounds x to nearest int
+    full_td1 = (int) ((td1 * 100 / nusamount) + 0.5);
 }
 
 // Each FID in a ser file starts at a 1024-byte boundary.
 int dlen;  // number of bytes per data point
 // tdr is tds, rounded up to the nearest multiple of 256 or 128 as appropriate.
 size_t tdr = (size_t) tds;
-// Integer data (TopSpin 3)
+// 32-bit integer data (TopSpin 3)
 if (dtypa == 0) {
     tdr = ((tdr + 255) / 256) * 256;
     dlen = 4;
 }
-// Float data (TopSpin 4)
+// 64-bit float data (TopSpin 4)
 else if (dtypa == 2) {
     tdr = ((tdr + 127) / 128) * 128;
     dlen = 8;
@@ -82,6 +87,11 @@ if ((td1s <= 0) || (td1s > 64 * 1024 * 1024)) STOPMSG("TD{F1} out of range")
 int td_times_nbl = td * nbl;
 if ((double) td_times_nbl >= 2. * 1024 * 1024 * 1024 / dlen) STOPMSG("amount of memory requested too large")
 
+
+/**************************************************
+ * Split up the ser file into individual datasets *
+ **************************************************/
+
 // Calculate the EXPNOs to write to. By default this is set to n * 1000 + 1 and onwards.
 int oexpno = expno;
 int nexpno = expno * 1000 + 1;
@@ -93,30 +103,31 @@ for (i = 0; i < nbl; i++) {
     ERRORABORT
 }
 
-// Open the files and error out if fopen() fails on any of them.
-FILE *fp_ser_combined;  // combined ser file in original expno
-strcpy(path, ACQUPATH("ser"));
-if ((fp_ser_combined = fopen(path, "rb")) == 0) STOPMSG(strcat(path, " - cannot open file for reading"))
+// Open the ser files (to read from and write to) and error out if fopen() fails on any of them.
+FILE *fp_ser_combined;
+strcpy(ser_path, ACQUPATH("ser"));
+if ((fp_ser_combined = fopen(ser_path, "rb")) == 0) STOPMSG(strcat(ser_path, ": cannot open file for reading"))
 // fp_new_sers[0] through fp_new_sers[nbl - 1] refer to the split ser files.
-FILE **fp_new_sers = calloc(nbl, sizeof(FILE *));
+FILE **fp_new_sers;
+if ((fp_new_sers = calloc(nbl, sizeof (FILE *))) == NULL) STOPMSG(MALLOC_ERROR)
 for (i = 0; i < nbl; i++) {
     // Set expno to the new ones so that ACQUPATH() returns the ser file of the new expno.
     expno = nexpno + i;
-    strcpy(path, ACQUPATH("ser"));
-    if ((fp_new_sers[i] = fopen(path, "wb")) == 0) STOPMSG(strcat(path, " - cannot open file for writing"))
+    strcpy(ser_path, ACQUPATH("ser"));
+    if ((fp_new_sers[i] = fopen(ser_path, "wb")) == 0) STOPMSG(strcat(ser_path, ": cannot open file for writing"))
 }
 // Reset expno.
 expno = oexpno;
 
 // Allocate memory buffers for reading in data.
 if (dtypa == 0) {
-    if ((irow = malloc(td_times_nbl * dlen)) == NULL) STOPMSG("cannot get enough memory")
+    if ((irow = malloc(td_times_nbl * dlen)) == NULL) STOPMSG(MALLOC_ERROR)
 }
 else if (dtypa == 2) {
-    if ((drow = malloc(td_times_nbl * dlen)) == NULL) STOPMSG("cannot get enough memory")
+    if ((drow = malloc(td_times_nbl * dlen)) == NULL) STOPMSG(MALLOC_ERROR)
 }
 
-// split
+// Perform the splitting
 k = td1s / nbl;
 
 if (dtypa == 0) {
@@ -138,36 +149,28 @@ else if (dtypa == 2) {
     }
 }
 
-// free memory
+// Free memory
 fclose(fp_ser_combined);
+free(fp_new_sers);
 for (i = 0; i < nbl; i++) fclose(fp_new_sers[i]);
 if (dtypa == 0) free(irow);
 else if (dtypa == 2) free(drow);
 
-/***** store parameters and generate audit entry ***/
+/*************************************************************
+ * Determine AU programmes for processing individual modules *
+ *************************************************************/
 
-td1  /= nbl;
-td1s /= nbl;
-strcpy(path, ACQUPATH(0));
-byteorder = local_endian();
-int ds_size[3];
-ds_size[0] = td;
-ds_size[1] = td1s;
-
-char pp_name[PATH_MAX];      // pulse programme name
-FETCHPARS("PULPROG", pp_name)
+// Attempt to locate pulse programme file. Use the compiled version if it can't find it.
 char pp_path[PATH_MAX];      // path to pulse programme file
 if (getParfileDirForRead(pp_name, PP_DIRS, pp_path) < 0) {
-    // if it can't find the pulse programme, use the compiled version.
     strcpy(pp_path, ACQUPATH("pulseprogram"));
 }
-// if some version of the pulse programme was found, hunt inside it for processing AU programmes
-int found_in_pp = 0;  // flag to keep track of whether the auprog was found in the pulse programme
-int x;  // loop counter
-// allocate memory. here we actually need malloc since it is dynamic.
-char **auto_auprogs = malloc(nbl * sizeof (char *));
+
+// If some version of the pulse programme was found, search inside it for processing AU programmes
+int x;
+char **auprogs = calloc(nbl, sizeof (char *));
 for (x = 0; x < nbl; x++) {
-    *(auto_auprogs + x) = malloc(PATH_MAX * sizeof (char));
+    *(auprogs + x) = calloc(PATH_MAX, sizeof (char));
 }
 if (*pp_path) {
     FILE *pulprog_fp = fopen(pp_path, "r");
@@ -176,14 +179,14 @@ if (*pp_path) {
     while (fgets(line, PATH_MAX, pulprog_fp) != NULL) {
         if (*line != ';') continue;                  // not a comment
         else if (!strstr(line, "auprog")) continue;  // auprog not in line
-        else {   // found the comment with auprog
+        else {                                       // found the comment with auprog
             char *s = line;
             for (x = 0; x < nbl; x++) {
-                while (*s++ != ':') ; // skip until after the first colon
-                while (isspace(*s)) s++; // skip any leading whitespace
-                // read in the name of the AU programme. Any trailing
-                // whitespace is OK as TopSpin will trim it off after STOREPAR.
-                char *t = *(auto_auprogs + x);
+                while (*s++ != ':') ;                // skip until after the first colon
+                while (isspace(*s)) s++;             // skip any leading whitespace
+                // Read in the name of the AU programme. Any trailing whitespace is OK as TopSpin
+                // will trim it off after STOREPAR.
+                char *t = *(auprogs + x);
                 // strcpy s into t until we hit a colon, newline or EOF
                 while (*s != ':' && *s != '\r' && *s != '\n' && *s != '\0' && *s != 'EOF') {
                     *t++ = *s++;
@@ -192,49 +195,56 @@ if (*pp_path) {
                 // if we reached the end of the line, break immediately
                 if (*s == '\r' || *s == '\n' || *s == '\0' || *s == 'EOF') break;
             }
-            // if we managed to read all NBL modules in, then the loop index
-            // x should be equal to nbl - 1 and we can turn on the flag.
-            if (x == nbl - 1) found_in_pp = 1;
             break;
         }
     }
     fclose(pulprog_fp);
 }
-  
+
+// Read in the USERPx parameters, which override the ones in the pulse programme.
 for (i = 0; i < nbl; i++) {
-    double ymin, ymax;
-    char  autext[PATH_MAX + 256];
-    char* hashbuf = autext + sprintf(autext, "created by splitx");
-
-    hashbuf += sprintf(hashbuf, " %d", nbl);
-    hashbuf += sprintf(hashbuf, " %d. dataset from\n       %s", i + 1, path);
-
-    DATASET(name, nexpno + i, procno, disk, user)
-
     char userPx[7];
-    char auprog[32];
-    // read from userPx first, these should override the autodetected ones
+    char auprog[128];
     sprintf(userPx, "userP%d", i + 1);
     FETCHPAR(userPx, auprog)
-    if (!*auprog && found_in_pp) { // not set
-        strcpy(auprog, *(auto_auprogs + i)); // get it from what we read earlier
+    if (*auprog) {
+        strcpy(*(auprogs + i), auprog);
     }
-    if (!*auprog) { // still not set
-        Proc_err(DEF_ERR_OPT, "Processing AU scripts not found, please specify as USERP1-USERP5.");
+}
+
+
+/************************************************ 
+ * Call processing AU programmes on each module * 
+ ************************************************/
+
+// Set up new parameters
+td1  /= nbl;
+td1s /= nbl;
+strcpy(expno_path, ACQUPATH(0));   // this points to the expno directory itself
+byteorder = local_endian();
+int ds_size[3];
+ds_size[0] = td;
+ds_size[1] = td1s;
+  
+for (i = 0; i < nbl; i++) {
+    // Open the appropriate dataset
+    DATASET(name, nexpno + i, procno, disk, user)
+    if (!*(auprogs[i])) {
+        Proc_err(DEF_ERR_OPT, "Processing AU script #%d not found, please specify as USERP%d.", i + 1, i + 1);
         ABORT
     }
-    STOREPAR("AUNMP", auprog)
 
+    // Store new parameters
+    STOREPAR("AUNMP", *(auprogs + i))
     STOREPAR("NBL", 1)
     STOREPARS("NBL", 1)
     STOREPARS("BYTORDA", byteorder)
     STOREPAR1("TD", td1)
     STOREPAR1S("TD", td1s)
 
-    /* If NUS is enabled, copy vclist -> nuslist and carry out NUS processing. */
+    // If NUS is enabled, copy vclist -> nuslist and enable NUS processing.
     if (nus == 1) {
     	char path_vclist[256], path_nuslist[256];
-
         strcpy(path_vclist, ACQUPATH("vclist"));
         strcpy(path_nuslist, ACQUPATH("nuslist"));
         if (access(path_vclist, F_OK) == 0) {
@@ -247,20 +257,25 @@ for (i = 0; i < nbl; i++) {
         }
     }
 
-    if (CheckSumFileMax(ACQUPATH("ser"), 0, hashbuf, 0, 0, byteorder, 0, parmode + 1, tds, ds_size, ds_size, &ymin, &ymax) > 0) {
+    // Create audit trail
+    double ymin, ymax;
+    char autext[PATH_MAX + 128];
+    sprintf(autext, "created by splitx_au; dataset %d of %d from %s", i + 1, nbl, expno_path);
+    if (CheckSumFileMax(ACQUPATH("ser"), 0, autext, 0, 0, byteorder, 0, parmode + 1, tds, ds_size, ds_size, &ymin, &ymax) > 0) {
         AuditCreate(ACQUPATH("audita.txt"), autext);
         STOREPARS("YMIN_a", ymin)
         STOREPARS("YMAX_a", ymax)
     }
-    XAUPW;
 
+    // Run the AU programme and update TopSpin
+    XAUPW
     REFRESHDATA
     XCMD("sendgui browse_update_tree")
     Show_meta(SM_RAW | SM_RAWP);
 }
 
-for (x = 0; x < nbl; x++) free(*(auto_auprogs + x));
-free(auto_auprogs);
+// Free memory
+free(auprogs);
 
 Show_status("splitx done.");
 QUIT
