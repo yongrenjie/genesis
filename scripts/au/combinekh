@@ -11,6 +11,10 @@
  * Eriks Kupce, Bruker UK
  * 02 June 2021 */
 
+#define MALLOC_ERROR "insufficient memory; aborting"
+#define READ_ERROR "file read failed; aborting"
+#define WRITE_ERROR "file write failed; aborting"
+
 /* calculate sensitivity factor k */
 float cnst37;
 FETCHPARS("CNST 37", &cnst37)
@@ -73,50 +77,71 @@ else nfid = 1;
 int dtypa;
 FETCHPARS("DTYPA", &dtypa)
 
-int dsize = 0; /* sizeof (data type) */
-if (dtypa == 0) dsize = sizeof (int);
-else STOPMSG("combinekh only works with TopSpin 3 (integer) data...")
+int dsize; /* sizeof (data type) */
 
-/* each row starts at a new block of 1024 bytes */
-/* hence we need to round TD up to the closest multiple of (1024/dsize) = 256 */
-td = (td % 256) ? td - (td % 256) + 256 : td;
-/* allocate memory */
-int *sum;
-if ((sum = malloc(dsize * td * nfid)) == NULL) {
-    STOPMSG("insufficient memory -- please don't use a potato for this")
-}
-int *row;
-if ((row = malloc(dsize * td * nfid)) == NULL) {
-    STOPMSG("insufficient memory -- please don't use a potato for this")
-}
-/* read in data and perform the summation */
-int m, i, j;
-for (m = 0; m < (td1/(k*nfid)); m++) {
-    /* initialise sum to zero */
-    for (j = 0; j < td*nfid; j++) {
-        *(sum+j) = 0;
-    }
-    /* read in k rows and add each of them to sum */
-    for (i = 0; i < k; i++) {
-        if (fread(row, dsize, td*nfid, fp) != td*nfid) {
-            STOPMSG("failed to read the necessary amount of data")
-        }
-        
-        for (j = 0; j < td*nfid; j++) {
-            *(sum+j) += *(row+j); /* TODO need to check for overflow */
-        }
-    }
-    /* write the sum to newser */
-    if (fwrite(sum, dsize, td*nfid, fq) != td*nfid) {
-        STOPMSG("failed to write to the new ser file")
-    }
-}
+if (dtypa == 0) {
+    dsize = sizeof (int);
+    /* round each block in FID to a multiple of 1024 bytes */
+    int n = 1024 / dsize;
+    td = (td % n) ? td - (td % n) + n : td;
+    /* allocate memory */
+    int *sum;
+    int *row;
+    if ((sum = malloc(dsize * td * nfid)) == NULL) STOPMSG(MALLOC_ERROR)
+    if ((row = malloc(dsize * td * nfid)) == NULL) STOPMSG(MALLOC_ERROR)
 
-/* clean up */
-free(sum);
-free(row);
-fclose(fp);
-fclose(fq);
+    /* read in data and perform the summation */
+    int m, i, j;
+    for (m = 0; m < (td1 / (k * nfid)); m++) {
+        /* initialise sum to zero */
+        for (j = 0; j < td * nfid; j++) *(sum + j) = 0;
+        /* read in k rows and add each of them to sum */
+        for (i = 0; i < k; i++) {
+            if (fread(row, dsize, td*nfid, fp) != td * nfid) STOPMSG(READ_ERROR)
+            for (j = 0; j < td * nfid; j++) *(sum + j) += *(row + j);
+        }
+        /* write the sum to newser */
+        if (fwrite(sum, dsize, td * nfid, fq) != td * nfid) STOPMSG(WRITE_ERROR)
+    }
+
+    /* clean up */
+    free(sum);
+    free(row);
+    fclose(fp);
+    fclose(fq);
+}
+else if (dtypa == 2) {
+    dsize = sizeof (double);
+    /* round each block in FID to a multiple of 1024 bytes */
+    int n = 1024 / dsize;
+    td = (td % n) ? td - (td % n) + n : td;
+    /* allocate memory */
+    double *sum;
+    double *row;
+    if ((sum = malloc(dsize * td * nfid)) == NULL) STOPMSG(MALLOC_ERROR)
+    if ((row = malloc(dsize * td * nfid)) == NULL) STOPMSG(MALLOC_ERROR)
+
+    /* read in data and perform the summation */
+    int m, i, j;
+    for (m = 0; m < (td1 / (k * nfid)); m++) {
+        /* initialise sum to zero */
+        for (j = 0; j < td * nfid; j++) *(sum + j) = 0;
+        /* read in k rows and add each of them to sum */
+        for (i = 0; i < k; i++) {
+            if (fread(row, dsize, td*nfid, fp) != td * nfid) STOPMSG(READ_ERROR)
+            for (j = 0; j < td * nfid; j++) *(sum + j) += *(row + j);
+        }
+        /* write the sum to newser */
+        if (fwrite(sum, dsize, td * nfid, fq) != td * nfid) STOPMSG(WRITE_ERROR)
+    }
+
+    /* clean up */
+    free(sum);
+    free(row);
+    fclose(fp);
+    fclose(fq);
+}
+else STOPMSG("unknown data type; aborting")
 
 /* backup old ser file */
 char serbak[PATH_MAX + 64];
@@ -149,7 +174,7 @@ STOREPAR1S("TD", td1/k)
 STOREPAR1("TD", td1/k)
 STOREPARS("NS", ns*k)
 STOREPAR("NS", ns*k) 
-/* prevent user from running combinek twice on the same dataset */
+/* prevent user from running combinekh twice on the same dataset */
 STOREPARS("CNST 37", 0.0)
 
 QUIT
