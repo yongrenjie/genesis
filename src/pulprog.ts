@@ -566,8 +566,8 @@ export function makePulprogText(backendModules: string[],
     const hasCModule          = CModules.length > 0;
     const hasMultipleCModules = CModules.length > 1;
     const extraDipsiMixing    = hasMultipleCModules && !CModules[0].hasDipsi();
-    const isInterleaved       = modules.some(mod => /\bl4\b/.test(mod.pulprog));
-    console.log(isInterleaved);
+    // TODO: formalise this
+    const hasInterleaved      = modules.some(mod => /\bd3\b/.test(mod.pulprog));
 
     // Initialise pulse programme components.
     // All these are arrays of strings.
@@ -788,8 +788,27 @@ export function makePulprogText(backendModules: string[],
         nt1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
         mainpp.push(`#endif /* NUS */`);
     }
+    // EA for interleaved modules {{{4
+    if (hasInterleaved) {
+        mainpp.push(`  1m igrad EA_TS`);
+    }
     // }}}4
     mainpp.push('}');
+
+    // incrementation every 4 rounds of l1 {{{3
+    if (hasInterleaved) {
+        mainpp.push(
+            ``,
+            `  ; incrementation on every fourth pass`,
+            `if "l1 % 4 == 0" {`,
+        );
+        const ht1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("ht1")).filter(Boolean);
+        ht1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
+        mainpp.push(
+            '  1m id3',
+            '}',
+        );
+    }
 
     // incrementation every (l0 / cnst37) rounds: 1H QF k-scaled modules (QF JRES / [TSE-]PSYCHE) {{{3
     if (d11Present && cnst38Present) {
@@ -958,6 +977,9 @@ export function makePulprogText(backendModules: string[],
         `"l1      = 0"                 ; Running counter for delay / phase incrementation`,
         `"l3      = 0"                 ; Running counter for NS`,
     );
+    if (hasInterleaved) {
+        pp.push(`define list<gradient> EA_TS={1 -1}`);
+    }
     if (asapMixing) {
         pp.push(`"l6      = d15/(larger(p45,1u)*20)"  ; Number of ASAP loops`);
     }
