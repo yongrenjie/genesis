@@ -20,11 +20,11 @@ if (rounded_cnst37 == 0) STOPMSG("combinekh has already been run on this dataset
 
 int l0;
 FETCHPARS("L 0", &l0)
-int k = l0 * 2 / rounded_cnst37;
+int k = l0 / rounded_cnst37;
 
 // Check for various errors.
 if (k == 1) STOP  // Nothing to do.
-else if ((l0 * 2) % rounded_cnst37 != 0) STOPMSG("error: TD1/cnst37 is not an integer")
+else if (l0 % rounded_cnst37 != 0) STOPMSG("error: TD1/cnst37 is not an integer")
 else if (k < 0) STOPMSG("error: cnst37 cannot be negative")
 
 /* open the ser file to read */

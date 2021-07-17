@@ -17,12 +17,7 @@ import { Citation } from "./citation.js";
 
 // String definitions {{{2
 const allParams = {
-    "aq": "acquisition time",
-    "ds": ">= 16",
-    "FnMODE": "echo-antiecho",
-    "NBL": "number of blocks (NOAH modules)",
-    "ns": "1 * n",
-
+    // p - Pulse widths {{{3
     "p1": "f1 channel -  90 degree high power pulse",
     "p2": "f1 channel - 180 degree high power pulse",
     "p3": "f2 channel -  90 degree high power pulse",
@@ -46,6 +41,7 @@ const allParams = {
     "p45": "f1 channel -  180 degree CAWURST-2 pulse",
     "p50": "f1 channel -  Adiabatic pulse for ROESY (half of total mixing time)\n;			 total mixing time = 2*p50",
 
+    // pl - Pulse power levels {{{3
     "pl0": "0 W",
     "pl1": "f1 channel - power level for pulse (default)",
     "pl2": "f2 channel - power level for pulse (default)",
@@ -55,6 +51,7 @@ const allParams = {
     "pl16": "f3 channel - power level for CPD/BB decoupling",
     "pl27": "f1 channel - power level for pulsed ROESY-spinlock",
 
+    // sp, spnam - Shaped pulses {{{3
     "sp3": "f2 channel - shaped pulse (180 degree inversion)",
     "spnam3": "Crp60,0.5,20.1 or WaveMaker",
     "sp7": "f2 channel - shaped pulse (180 degree refocusing)",
@@ -80,6 +77,7 @@ const allParams = {
     "sp50": "f1 channel - second shaped pulse WURSTAM (adiabatic) for ROESY mixing (low shift)",
     "spnam50": "wu180H1SL2 (generate via WaveMaker)",
 
+    // cnst - Constants {{{3
     "cnst2": "= 1J(CH)",
     "cnst4": "= 1J(NH)",
     "cnst6": "= minimum 1J(CH)",
@@ -109,9 +107,11 @@ const allParams = {
     "cnst50": "right edge of spectral window (ppm) [ca. -0.5]",
     "cnst51": "RF amplitude of ROESY spin lock (Hz)",
 
+    // d, in - Delays and increments {{{3
     "d0": "13C t1",
     "d1": "relaxation delay",
     "d2": "1/2J(CH)",
+    "d3": "13C t1 for interleaved/time-shared modules",
     "d4": "1/4J(CH)",
     "d6": "1/8J(CH) for all multiplicities, 1/4J(CH) for CH only",
     "d7": "1/(2*nJ(CH)), long-range coupling evolution",
@@ -120,10 +120,12 @@ const allParams = {
     "d10": "1H t1",
     "d11": "1H t1 (magnitude-mode)",
     "d12": "<1/4J(HH) CLIP-COSY mixing time",
+    "d13": "1H t1 for interleaved/time-shared modules",
     "d15": "optional ASAP mixing time [40-60 ms] (use `wvm`)",
     "d16": "delay for homospoil/gradient recovery [200 us]",
     "d19": "DIPSI-2 mixing time (1st 13C module)",
     "d20": "15N t1",
+    "d23": "15N t1 for interleaved/time-shared modules",
     "d24": "1/4J(NH)",
     "d26": "1/8J(NH) for all multiplicities, 1/4J(NH) for NH only",
     "d29": "DIPSI-2 mixing time (2nd 13C module)",
@@ -131,12 +133,15 @@ const allParams = {
 
     "inf1": "1/SW(C) = 2 * DW(C)",
     "in0": "1/(2 * SW(C)) = DW(C)",
+    "in3": "1/(2 * SW(C)) = DW(C)",
     "in10": "1/(SW(H)) = 2 * DW(H)",
+    "in13": "1/(SW(H)) = 2 * DW(H)",
     "in20": "1/(2 * SW(N)) = DW(N)",
+    "in23": "1/(2 * SW(N)) = DW(N)",
 
-    "l0": "total number of t1 increments",
-    "l1": "running counter of t1 increments",
-    "l2": "even for echo, odd for antiecho",
+    // l - Loop counters {{{3
+    "l0": "TD1 / NBL, i.e. 'true TD1'",
+    "l1": "running counter from 1 to TD1/NBL, for phase/delay incrementation",
     "l3": "running counter for scan number",
     "l6": "loop for ASAP mixing",
     "l7": "loop for ROESY spinlock = p15 / p25*2",
@@ -149,10 +154,18 @@ const allParams = {
     "l17": "DIPSI-2 (between 13C modules): half the number of DIPSI-2 cycles",
     "l18": "DIPSI-2 (between 13C modules): actual number of DIPSI-2 cycles",
 
+    // Miscellaneous {{{3
     "cpd2": "13C decoupling according to sequence defined by cpdprg2",
     "cpd3": "15N decoupling according to sequence defined by cpdprg3",
     "pcpd2": "f2 channel - 90 degree pulse for decoupling sequence",
     "pcpd3": "f3 channel - 90 degree pulse for decoupling sequence",
+
+    "aq": "acquisition time",
+    "ds": ">= 16",
+    "FnMODE": "echo-antiecho",
+    "NBL": "number of blocks (NOAH modules)",
+    "ns": "1 * n",
+    // }}}3
 }
 
 // Phases {{{2
@@ -553,6 +566,8 @@ export function makePulprogText(backendModules: string[],
     const hasCModule          = CModules.length > 0;
     const hasMultipleCModules = CModules.length > 1;
     const extraDipsiMixing    = hasMultipleCModules && !CModules[0].hasDipsi();
+    const isInterleaved       = modules.some(mod => /\bl4\b/.test(mod.pulprog));
+    console.log(isInterleaved);
 
     // Initialise pulse programme components.
     // All these are arrays of strings.
@@ -710,112 +725,101 @@ export function makePulprogText(backendModules: string[],
         nusRedefinitions.push(`#endif`);
         mainpp.splice(4, 0, ...nusRedefinitions);
     }
-    // EA incrementation {{{3
+    // incrementation on every round of l1 {{{3
     mainpp.push(
         ``,
-        `  ; echo/antiecho loop`,
-        `  "l2 = l2 + 1"`,
-        `  1m igrad EA`,
+        `  ; incrementation on every pass`,
+        `  1m iu1`
     );
+    // gradients (EA, EA1, EA2) {{{4
+    mainpp.push(`  1m igrad EA`);
     if (ea1Present) mainpp.push(`  1m igrad EA1`);
     if (ea2Present) mainpp.push(`  1m igrad EA2`);
-    if (d11Present) {
-        // This will break NUS, but noah_nus2.py will already warn the user if there is a QF
-        // module, so we don't need to warn them again here.
-        if (cnst38Present) {
-            mainpp.push(
-                `if "l2 % (l0 * 2 / cnst37) == 0"`,
-                `{`,
-                `  1m id11`,
-                `}`,
-            );
-        }
-        else {
-            mainpp.push(`  1m id11`);
-        }
+    // 1H t1 for QF modules (d11) which aren't k-scaled {{{4
+    if (d11Present && !cnst38Present) {
+        mainpp.push(`  1m id11`);
     }
+    // Some pulse phases (e.g. seHSQC) {{{4
     const eaPhaseInstructions = phases.map(p => allPhases[p].makeInstruction("ea")).filter(Boolean);
     eaPhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
+    // Write data to disk {{{4
     mainpp.push(
         `  30m wr #0 if #0 zd`,
-        `  lo to 3 times 2`,
     );
 
-    // 13C t1 incrementation {{{3
-    // General stuff: increment l1 and NUS list, if it's being used.
+    // incrementation every 2 rounds of l1 {{{3
     mainpp.push(
         ``,
-        `  ; t1 incrementation`,
-        `  "l1 = l1 + 1"`,
+        `  ; incrementation on every second pass`,
+        `if "l1 % 2 == 0" {`,
+    );
+    // NUS list {{{4
+    mainpp.push(
         `#ifdef NUS`,
         `  1m t1list.inc`,
         `#endif`,
     );
-
-    // Actual 13C t1 incrementation.
+    // 13C phases (a slightly misleading name; this includes 1H phases) {{{4
     const ct1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("ct1")).filter(Boolean);
     ct1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
+    // 13C t1 {{{4
     if (d0Present) {
         mainpp.push(
             ``,
-            `  ; 13C t1 incrementation`,
             `#ifdef NUS`,
             `#else`,
-            `  1m id0`,
+            `  1m id0   ; 13C t1`,
             `#endif`,
         );
     }
-
-    // 1H t1 incrementation {{{3
-    const ht1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("ht1")).filter(Boolean);
-    ht1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
-    if (d10Present) {
-        // if NUS is enabled, increment the phases and don't perform the cnst37 check.
+    // 1H t1 {{{4
+    if (d10Present && !cnst38Present) {
         mainpp.push(
-            ``,
-            `  ; 1H t1 incrementation`,
             `#ifdef NUS`,
+            `#else`,
+            `  1m id10    ; 1H t1`,
+            `#endif /* NUS */`,
         );
-        ht1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
-        mainpp.push(`#else`);
-        // here is if we don't have NUS. we need to perform the cnst37 check depending
-        // on whether cnst38 is in the pulse programme (as cnst37 isn't yet in it!)
-        if (cnst38Present) {
-            mainpp.push(
-                `if "l1 % (l0 * 2 / cnst37) == 0"`,
-                `{`,
-                `  1m id10`,
-            );
-            ht1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
-            mainpp.push(`}`);
-        }
-        else {
-            mainpp.push(`  1m id10`);
-            ht1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
-        }
+    }
+    // 15N phases (but only if NUS is enabled, which disables cnst39) {{{4
+    if (hasNModule) {
+        const nt1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("nt1")).filter(Boolean);
+        mainpp.push(`#ifdef NUS`);
+        nt1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
         mainpp.push(`#endif /* NUS */`);
     }
+    // }}}4
+    mainpp.push('}');
 
-    // 15N t1 incrementation {{{3
-    const nt1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("nt1")).filter(Boolean);
-    if (hasNModule) {
-        // k-scaling (cnst39 > 1) is incompatible with NUS, which explains the logic
-        // used in this part: cnst39 and d20 should only be changed if NUS is off (if
-        // NUS is on, then d20 is changed at the top of the pulse programme when t1list
-        // is incremented)
+    // incrementation every (l0 / cnst37) rounds: 1H QF k-scaled modules (QF JRES / [TSE-]PSYCHE) {{{3
+    if (d11Present && cnst38Present) {
         mainpp.push(
-            ``,
-            `  ; 15N t1 incrementation`,
-            `#ifdef NUS`,
-        );
-        nt1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
-        // here is if we don't have NUS. we can perform the cnst39 check as before.
-        mainpp.push(
-            `#else`,
-            `if "l1 % cnst39 == 0"`,
+            `if "l1 % (l0 / cnst37) == 0"`,  // TODO: TEST cnst37 modules
             `{`,
+            `  1m id11`,
+            `}`,
         );
-        if (d20Present) mainpp.push(`  1m id20`);
+    }
+    // incrementation every (2 * l0 / cnst37) rounds: 1H phase-sensitive k-scaled modules (PSYCHE JRES) {{{3
+    if (d10Present && cnst38Present) {
+        mainpp.push(
+            `if "l1 % (2 * l0 / cnst37) == 0"`,   /* TODO: Test cnst37 modules */
+            `{`,
+            `  1m id10`,
+            `}`,
+        );
+    }
+
+    // incrementation every (2 * cnst39) rounds: 15N modules without NUS {{{3
+    if (hasNModule) {
+        const nt1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("nt1")).filter(Boolean);
+        mainpp.push(
+            `#ifdef NUS`,
+            `#else`,
+            `if "l1 % (2 * cnst39) == 0"`,
+            `{`,
+            `  1m id20`,
+        );
         nt1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
         mainpp.push(
             `}`,
@@ -824,8 +828,7 @@ export function makePulprogText(backendModules: string[],
     }
 
     // Final loop and exit {{{3
-    mainpp.push(``);
-    mainpp.push(`  lo to 4 times l0`);     // loop over t1 increments
+    mainpp.push(`  lo to 4 times l0`);     // loop TD1/NBL times
     // BLKGRAD and exit.
     mainpp.push(``, `50u BLKGRAD`, `exit`);
     const mainppText = mainpp.join("\n");  // convenience string for future use
@@ -951,9 +954,8 @@ export function makePulprogText(backendModules: string[],
         `#endif`,
         ``,
         preamblesText,
-        `"l0      = td1/${2*nbl}"             ; Total number of 13C t1 increments`,
-        `"l1      = 0"                 ; Running counter of 13C t1 increments`,
-        `"l2      = 0"                 ; Counter, even for echo, odd for antiecho`,
+        `"l0      = td1/${nbl}"               ; TD1/NBL`,
+        `"l1      = 0"                 ; Running counter for delay / phase incrementation`,
         `"l3      = 0"                 ; Running counter for NS`,
     );
     if (asapMixing) {

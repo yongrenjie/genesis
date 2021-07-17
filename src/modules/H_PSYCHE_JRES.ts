@@ -15,7 +15,7 @@ let preamble = `
 
 let pulprog = `
   ; PSYCHE 2D J spectrum (phase-sensitive)
-if "l2 % 2 == 0"
+if "l1 % 2 == 0"
 {
   (p1 ph0):f1
   50u
