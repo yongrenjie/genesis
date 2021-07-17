@@ -228,6 +228,7 @@ function trueModulesToSimple(trueModules: TrueModule[]): SimpleModule[] {
                     "C_SEHSQC": "c13_sehsqc",
                     "C_SEHSQC_OR": "c13_sehsqc",
                     "C_SEHSQC_DP": "c13_sehsqc",
+                    "C_SEHSQC_IPAP": "",
                     "C_SEHSQC_TOCSY": "c13_sehsqc_tocsy",
                     "C_SEHSQC_TOCSY_OR": "c13_sehsqc_tocsy",
                 };

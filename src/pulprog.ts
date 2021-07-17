@@ -223,8 +223,11 @@ allPhases[14] = new Phase({num: 14, str: "0 1 2 3"});
 allPhases[15] = new Phase({num: 15, str: "0 1"});
 allPhases[16] = new Phase({num: 16, str: "1 3", ea: "i", ct1: "r"});  // DQF-COSY ph
 allPhases[17] = new Phase({num: 17, str: "1 1 3 3"});
+allPhases[18] = new Phase({num: 18, str: "0 2", ht1: "i2"});  // time-shared 13C coherence transfer
+allPhases[19] = new Phase({num: 19, str: "1 1 3 3", ct1: "i2"});  // time-shared 13C seHSQC
 // ... plenty of empty slots to use
 // below are for receivers
+allPhases[24] = new Phase({num: 24, str: "0 2 2 0", ht1: "i2"});
 allPhases[25] = new Phase({num: 25, str: "0 0 2 2", ct1: "i2"});      // HSQC-COSY
 allPhases[26] = new Phase({num: 26, str: "0 2"});
 allPhases[27] = new Phase({num: 27, str: "1 3 3 1", nt1: "i2"});
