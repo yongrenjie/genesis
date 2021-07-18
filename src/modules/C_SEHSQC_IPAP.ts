@@ -2,7 +2,8 @@ import { Kupce2017ACIE, Hansen2021AC, Yong2021JMR } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 13C sensitivity-enhanced HSQC, IPAP mode
-;     [use -DEDIT for multiplicity editing]`
+;     [use -DEDIT for multiplicity editing]
+;     [set userPx to 'noah_hsqc noah_TS' to perform addition/subtraction of IP/AP multiplets]`
 
 let preamble = `
 "p2      = p1*2"                       ; 1H hard 180
@@ -134,15 +135,17 @@ if "l1 % 2 == 0" {
   DC_SEHSQC_IA11
   p16:gp4*EA_TS*GC_SEHSQC_IA
   d16
+  goscnp ph24       ; acquire 13C seHSQC
 }
 else {
   DC_SEHSQC_IA12
   (center (p2 ph0):f1 (p14:sp3 ph0):f2 )
   DC_SEHSQC_IA13
   p16:gp4*EA_TS*GC_SEHSQC_IA
-  d16
-}
+  d16 ip24
   goscnp ph24       ; acquire 13C seHSQC
+  dp24
+}
 `
 
 const mod = new NOAHModule(
