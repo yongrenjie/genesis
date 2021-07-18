@@ -7,7 +7,6 @@ let preamble = `
 "p2      = p1*2"                       ; 1H hard 180
 "d2      = 0.5s/cnst2"                 ; JCOMP
 "d4      = 0.25s/cnst2"                ; 13C INEPT
-"d7      = 0.5s/cnst13"                ; 13C LR coupling evolution
 "d0      = 3u"                         ; 13C t1
 "in0     = inf1/2"                     ; 13C increment
 define delay DC_HMBC_CFG1
@@ -22,7 +21,7 @@ define delay DC_HMBC_CFG7
 "DC_HMBC_CFG3   = 1s/(2*(cnst6+0.07*(cnst7-cnst6)))-p16-d16"
 "DC_HMBC_CFG4   = 1s/(cnst7+cnst6)-p16-d16"
 "DC_HMBC_CFG5   = 1s/(2*(cnst7-0.07*(cnst7-cnst6)))-p16-d16"
-"DC_HMBC_CFG6   = d7-p16-d16-4u"
+"DC_HMBC_CFG6   = (0.5s/cnst13)-p16-d16-4u"
 "DC_HMBC_CFG7   = p2+d0*2"
 "cnst47=(1-sfo2/sfo1)/(1+sfo2/sfo1)"   ; gradient ratio
 define list<gradient> EA1 = { 1.000 -cnst47}

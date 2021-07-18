@@ -114,7 +114,6 @@ const allParams = {
     "d3": "13C t1 for interleaved/time-shared modules",
     "d4": "1/4J(CH)",
     "d6": "1/8J(CH) for all multiplicities, 1/4J(CH) for CH only",
-    "d7": "1/(2*nJ(CH)), long-range coupling evolution",
     "d8": "delay for NOE buildup",
     "d9": "DIPSI-2 mixing time (TOCSY)",
     "d10": "1H t1",
