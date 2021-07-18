@@ -135,7 +135,7 @@ if "l1 % 2 == 0" {
   DC_SEHSQC_IA11
   p16:gp4*EA_TS*GC_SEHSQC_IA
   d16
-  goscnp ph24       ; acquire 13C seHSQC
+  goscnp ph24
 }
 else {
   DC_SEHSQC_IA12
@@ -143,10 +143,21 @@ else {
   DC_SEHSQC_IA13
   p16:gp4*EA_TS*GC_SEHSQC_IA
   d16 ip24
-  goscnp ph24       ; acquire 13C seHSQC
+  GOSCNP ph24       ; acquire 13C seHSQC
   dp24
 }
 `
+
+// When the pulprog generator is 'counting' NBL, it does so by counting the
+// number of goscnp or go= statements.  Therefore, if we have two goscnp
+// statements, it will think that this module is actually two modules (it's not
+// smart enough to understand that they're in mutually exclusive if/else
+// blocks).  The way around this is to use GOSCNP for one of them. Because the
+// search for goscnp/go= is case-sensitive, it doesn't pick up GOSCNP; and in
+// the generator there is a line which makes sure that all GOSCNP statements
+// are changed to small caps before being output. So this is a hacky, but
+// general and extensible, way to have multiple goscnp statements inside what
+// is technically only one module.
 
 const mod = new NOAHModule(
     "c13",

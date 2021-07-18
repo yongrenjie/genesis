@@ -583,7 +583,7 @@ export function makePulprogText(backendModules: string[],
     const dipsiGen = makeDipsiGenerator();
     dipsiGen.next(); // so that we can pass next() a parameter next time.
 
-    // Construct the beginning of the pulse programme (ze, d1 etc.) {{{2
+    // Construct the beginning of mainpp (ze, d1 etc.) {{{2
     // Figure out which nucleus to stop decoupling on, if any.
     let stopDec = "";
     const lastModule = modules[n - 1];
@@ -614,7 +614,7 @@ export function makePulprogText(backendModules: string[],
         `  4u UNBLKGRAD`,
     );
 
-    // Construct the main pulse programme {{{2
+    // Construct the body of mainpp {{{2
     // Generator which spits out numbers to multiply purge gradients by.
     function* gradGenFunc() {
         yield* [1.77, 2.32, -1.29, 0.71];
@@ -691,7 +691,7 @@ export function makePulprogText(backendModules: string[],
         }
     }
 
-    // Construct the end of the pulse programme (EA/t1 incrementation) {{{2
+    // Construct the end of mainpp (EA/t1 incrementation) {{{2
     // Initialisation {{{3
     // Use a regex to find all phases in the pulse programme text
     let phasesSet = new Set(mainpp.join("\n").match(/ph\d{1,2}/g));
@@ -853,7 +853,6 @@ export function makePulprogText(backendModules: string[],
     // BLKGRAD and exit.
     mainpp.push(``, `50u BLKGRAD`, `exit`);
     const mainppText = mainpp.join("\n");  // convenience string for future use
-
     // Postprocess preambles {{{2
     // Generate a pulse programme name by postprocessing shortCodes, as well as
     // counting the number of FID periods (i.e. the NBL parameter).
@@ -896,6 +895,11 @@ export function makePulprogText(backendModules: string[],
         ...preambleParams.map(p => p.toPreamble(longestName, longestDefn)),
         ...defineGradLines
     ].join("\n");
+
+    // Postprocess mainpp {{{2
+    // Change any GOSCNP's to goscnp's (this is a hacky workaround for modules
+    // like C_SEHSQC_IPAP)
+    mainpp = mainpp.map(line => line.replace("GOSCNP", "goscnp"));
 
     // Create postamble components {{{2
     // Phase definitions {{{3
