@@ -84,6 +84,7 @@ const allParams = {
     "cnst7": "= maximum 1J(CH)",
     "cnst12": "> J(HH), ca. 30 Hz for CLIP-COSY mixing",
     "cnst13": "= nJ(CH) long-range",
+    "cnst14": "= second nJ(CH) long-range for interleaved HMBC",
     "cnst16": "15N CTP gradient lengthening factor",
     "cnst17": "= -0.5 for Crp60comp.4",
     "cnst20": "PSYCHE saltire flip angle (degrees)",
