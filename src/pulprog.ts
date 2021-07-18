@@ -142,7 +142,7 @@ const allParams = {
     // l - Loop counters {{{3
     "l0": "TD1 / NBL, i.e. 'true TD1'",
     "l1": "running counter from 1 to TD1/NBL, for phase/delay incrementation",
-    "l3": "running counter for scan number",
+    "l2": "running counter for scan number",
     "l6": "loop for ASAP mixing",
     "l7": "loop for ROESY spinlock = p15 / p25*2",
     "l11": "DIPSI-2 (1H module): half the number of DIPSI-2 cycles",
@@ -595,7 +595,7 @@ export function makePulprogText(backendModules: string[],
         `2 30m`,             // NS loop (go=2 phXX) goes back to here
         `3 5m${stopDec}`,    // EA loop goes back to here
         `4 50u UNBLKGRAD`,   // t1 loop goes back to here
-        `  "l3 = l3 + 1"`,
+        `  1m iu2`,
         ``,
         `  ; Cleanup`,
     );
@@ -978,7 +978,7 @@ export function makePulprogText(backendModules: string[],
         preamblesText,
         `"l0      = td1/${nbl}"               ; TD1/NBL`,
         `"l1      = 0"                 ; Running counter for delay / phase incrementation`,
-        `"l3      = 0"                 ; Running counter for NS`,
+        `"l2      = 0"                 ; Running counter for NS`,
     );
     if (hasInterleaved) {
         pp.push(`define list<gradient> EA_TS={1 -1}`);

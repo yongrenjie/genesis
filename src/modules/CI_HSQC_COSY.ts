@@ -46,7 +46,7 @@ let pulprog = `
   ; INEPT with variable excitation
   (p1 ph0):f1
 #ifdef EDIT1
-if "l3 % 2 == 1"
+if "l2 % 2 == 1"
 {
   DCI_HSQC_COSY3
   (p14:sp3 ph0):f2
@@ -61,7 +61,7 @@ else
   DCI_HSQC_COSY2 pl2:f2
 }
 #else
-if "l3 % 2 == 1"
+if "l2 % 2 == 1"
 {
   DCI_HSQC_COSY1
   (p14:sp3 ph0):f2
@@ -119,7 +119,7 @@ else
 
   ; coherence transfer
   (p1 ph0):f1
-if "l3 % 2 == 1"   ; relayed COSY peak suppression
+if "l2 % 2 == 1"   ; relayed COSY peak suppression
 {
   d12
 }

@@ -86,7 +86,7 @@ let pulprog = `
 
   ; coherence transfer
   (p1 ph0):f1
-if "l3 % 2 == 1"   ; relayed COSY peak suppression
+if "l2 % 2 == 1"   ; relayed COSY peak suppression
 {
   d12
 }
