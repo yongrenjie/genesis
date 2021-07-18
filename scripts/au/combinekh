@@ -1,8 +1,7 @@
 /* combinekh
  * ---------
  * Adds up series of k adjacent FIDs in a ser file. The value of k is read from
- * the status parameters l0 and cnst37. l0 in turn is indirectly calculated
- * from td1 in the NOAH pulse programmes. cnst37 is the "final" td1, i.e. the
+ * the status parameters td1 and cnst37. cnst37 is the "final" td1, i.e. the
  * number of FIDs after running combinekh. For use with 1H 2DJ or PSYCHE NOAH
  * modules.
  *
@@ -21,14 +20,13 @@ FETCHPARS("CNST 37", &cnst37)
 int rounded_cnst37;
 rounded_cnst37 = (int) (cnst37 + 0.5); /* round to nearest integer */
 if (rounded_cnst37 == 0) STOPMSG("combinekh has already been run on this dataset")
-
-int l0;
-FETCHPARS("L 0", &l0)
-int k = l0 / rounded_cnst37;
+int td1;
+FETCHPAR1S("TD", &td1)
+int k = td1 / rounded_cnst37;
 
 // Check for various errors.
 if (k == 1) STOP  // Nothing to do.
-else if (l0 % rounded_cnst37 != 0) STOPMSG("error: TD1/cnst37 is not an integer")
+else if (td1 % rounded_cnst37 != 0) STOPMSG("error: TD1/cnst37 is not an integer")
 else if (k < 0) STOPMSG("error: cnst37 cannot be negative")
 
 /* open the ser file to read */
@@ -51,9 +49,6 @@ if ((fq = fopen(newser, "wb")) == NULL) {
 int ns;
 FETCHPARS("NS", &ns)
 
-/* number of t1 increments */
-int td1;
-FETCHPAR1S("TD", &td1)
 /* Round TD1 down to the nearest multiple of 2k.
  * This allows combinek to work even when acquisition is incomplete. */
 td1 = td1 - (td1 % (2 * k));
