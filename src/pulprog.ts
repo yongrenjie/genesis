@@ -14,6 +14,7 @@ import { Citation } from "./citation.js";
 // 7 - ROESY spin lock
 // 8 - TOCSY DIPSI-2
 // 9 - 13C module second DIPSI-2
+// 10 - 1H module second DIPSI-2
 
 // String definitions {{{2
 const allParams = {
@@ -121,6 +122,7 @@ const allParams = {
     "d11": "1H t1 (magnitude-mode)",
     "d12": "<1/4J(HH) CLIP-COSY mixing time",
     "d13": "1H t1 for interleaved/time-shared modules",
+    "d14": "DIPSI-2 mixing time (TOCSY 2)",
     "d15": "optional ASAP mixing time [40-60 ms] (use `wvm`)",
     "d16": "delay for homospoil/gradient recovery [200 us]",
     "d19": "DIPSI-2 mixing time (1st 13C module)",
@@ -153,6 +155,8 @@ const allParams = {
     "l16": "DIPSI-2 (2nd 13C module): actual number of DIPSI-2 cycles",
     "l17": "DIPSI-2 (between 13C modules): half the number of DIPSI-2 cycles",
     "l18": "DIPSI-2 (between 13C modules): actual number of DIPSI-2 cycles",
+    "l19": "DIPSI-2 (2nd 1H module): half the number of DIPSI-2 cycles",
+    "l20": "DIPSI-2 (2nd 1H module): actual number of DIPSI-2 cycles",
 
     // Miscellaneous {{{3
     "cpd2": "13C decoupling according to sequence defined by cpdprg2",
@@ -223,8 +227,9 @@ allPhases[14] = new Phase({num: 14, str: "0 1 2 3"});
 allPhases[15] = new Phase({num: 15, str: "0 1"});
 allPhases[16] = new Phase({num: 16, str: "1 3", ea: "i", ct1: "r"});  // DQF-COSY ph
 allPhases[17] = new Phase({num: 17, str: "1 1 3 3"});
-allPhases[18] = new Phase({num: 18, str: "0 2", ht1: "i2"});  // time-shared 13C coherence transfer
-allPhases[19] = new Phase({num: 19, str: "1 1 3 3", ct1: "i2"});  // time-shared 13C seHSQC
+allPhases[18] = new Phase({num: 18, str: "0 2", ht1: "i2"});  // time-shared 13C coherence transfer (replaces ph5)
+allPhases[19] = new Phase({num: 19, str: "1 1 3 3", ct1: "i2"});  // time-shared 13C seHSQC (replaces ph9)
+allPhases[20] = new Phase({num: 20, str: "0 2", ct1: "i", ht1: "r"});  // time-shared 1H States (replaces ph6)
 // ... plenty of empty slots to use
 // below are for receivers
 allPhases[24] = new Phase({num: 24, str: "0 2 2 0", ht1: "i2"});
@@ -389,6 +394,11 @@ function* makeDipsiGenerator(): Generator<string[], any, "c13" | "h1"> {
             // first 1H DIPSI-2 mixing.
             n_h1_modules++;
             moduleType = yield makeDipsi("8", 12, 9);
+        }
+        else if ((moduleType == "h1") && (n_h1_modules == 1)) {
+            // second 1H DIPSI-2 mixing.
+            n_h1_modules++;
+            moduleType = yield makeDipsi("10", 20, 14);
         }
         else {
             throw new Error("too much DIPSI mixing! what are you doing!")
@@ -639,7 +649,7 @@ export function makePulprogText(backendModules: string[],
         let ppLines = trimNewlines(mod.pulprog).split("\n");
         // Handle DIPSI-2 inside pp_lines.
         let ppDipsiLineNo = ppLines.findIndex(line => line.includes("|DIPSI|"));
-        if (ppDipsiLineNo != -1) {  // means it was found
+        while (ppDipsiLineNo != -1) {  // means it was found
             if (mod.category == "c13" || mod.category == "h1") {
                 let [dipsiPP, dipsiPreamble] = dipsiGen.next(mod.category).value;
                 ppLines[ppDipsiLineNo] = dipsiPP;
@@ -648,6 +658,7 @@ export function makePulprogText(backendModules: string[],
             else {
                 throw new Error("DIPSI-2 found inside wrong type of module")
             }
+            ppDipsiLineNo = ppLines.findIndex(line => line.includes("|DIPSI|"));
         }
         mainpp.push(...ppLines);
 
@@ -710,8 +721,10 @@ export function makePulprogText(backendModules: string[],
     // Check for d0, d10, d11, d20, EA1, EA2
     const mainppTemp = mainpp.join("\n");
     const d0Present = (mainppTemp.search(/\bd0\b/) != -1);
+    const d3Present = (mainppTemp.search(/\bd3\b/) != -1);
     const d10Present = (mainppTemp.search(/\bd10\b/) != -1);
     const d11Present = (mainppTemp.search(/\bd11\b/) != -1);
+    const d13Present = (mainppTemp.search(/\bd13\b/) != -1);
     const d20Present = (mainppTemp.search(/\bd20\b/) != -1);
     const ea1Present = (mainppTemp.search(/\bEA1\b/) != -1);
     const ea2Present = (mainppTemp.search(/\bEA2\b/) != -1);
@@ -807,10 +820,9 @@ export function makePulprogText(backendModules: string[],
         );
         const ht1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("ht1")).filter(Boolean);
         ht1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
-        mainpp.push(
-            '  1m id3',
-            '}',
-        );
+        if (d3Present)  mainpp.push('  1m id3');
+        if (d13Present) mainpp.push('  1m id13');
+        mainpp.push('}');
     }
 
     // incrementation every (l0 / cnst37) rounds: 1H QF k-scaled modules (QF JRES / [TSE-]PSYCHE) {{{3
