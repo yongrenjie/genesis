@@ -26,6 +26,7 @@ import C_SEHSQC_OR from "./modules/C_SEHSQC_OR.js";
 import C_SEHSQC_IPAP from "./modules/C_SEHSQC_IPAP.js";
 import C_SEHSQC_TOCSY from "./modules/C_SEHSQC_TOCSY.js";
 import C_SEHSQC_TOCSY_OR from "./modules/C_SEHSQC_TOCSY_OR.js";
+import H_CC_T from "./modules/H_CC_T.js";
 import H_CLIP_COSY from "./modules/H_CLIP_COSY.js";
 import H_COSY from "./modules/H_COSY.js";
 import H_COSY_NOESY from "./modules/H_COSY_NOESY.js";
@@ -81,6 +82,7 @@ const allModules: Map<string, NOAHModule> = new Map([
     ["C_SEHSQC_IPAP", C_SEHSQC_IPAP],
     ["C_SEHSQC_TOCSY", C_SEHSQC_TOCSY],
     ["C_SEHSQC_TOCSY_OR", C_SEHSQC_TOCSY_OR],
+    ["H_CC_T", H_CC_T],
     ["H_CLIP_COSY", H_CLIP_COSY],
     ["H_COSY", H_COSY],
     ["H_COSY_NOESY", H_COSY_NOESY],
