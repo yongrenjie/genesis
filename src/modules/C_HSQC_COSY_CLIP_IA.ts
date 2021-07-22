@@ -1,8 +1,7 @@
 import { Kupce2017ACIE, Gyongyosi2021AC } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 13C HSQC-CLIP-COSY (interleaved IPAP mode)
-;     [use -DEDIT for multiplicity editing (not recommended)]`
+let shortDescription = `; 13C HSQC-CLIP-COSY (interleaved IPAP mode)`
 
 let preamble = `
 "p2      = p1*2"                       ; 1H hard 180
@@ -52,28 +51,11 @@ let pulprog = `
   d3
   (p2 ph7):f1
   d3
-
-  ; optional multiplicity editing
-  ; edited part from hsqcedetgpsisp2.3
-  ; nonedited part from hsqcetgpsisp2.2
-#ifdef EDIT
-  p16:gp4
-  d16
-  DC_HSQCC_CLIA2
-  (p31:sp18 ph0):f2
-  (p2 ph0):f1
-  DC_HSQCC_CLIA3
-  4u
-  (p31:sp18 ph0):f2
-  2u
-  2u pl2:f2
-#else
   p16:gp4
   d16
   (p24:sp7 ph0):f2
   4u
   DC_HSQCC_CLIA4 pl2:f2
-#endif /* EDIT */
 
   (p3 ph7):f2
   p16:gp11*0.5  ; purge gradient
