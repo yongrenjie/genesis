@@ -14,22 +14,18 @@ define delay DC_HSQCC_CLIA1
 define delay DC_HSQCC_CLIA2
 define delay DC_HSQCC_CLIA3
 define delay DC_HSQCC_CLIA4
-define delay DC_HSQCC_CLIA5
-define delay DC_HSQCC_CLIA6
-define delay DC_HSQCC_CLI7
-define delay DC_HSQCC_CLI8
-define delay DC_HSQCC_CLA7
-define delay DC_HSQCC_CLA8
+define delay DC_HSQCC_CLI5
+define delay DC_HSQCC_CLI6
+define delay DC_HSQCC_CLA5
+define delay DC_HSQCC_CLA6
 "DC_HSQCC_CLIA1 = d4-larger(p2,p14)/2"
-"DC_HSQCC_CLIA2 = d2-p16-d16-p2-d3*2-p3*2/PI"
-"DC_HSQCC_CLIA3 = d2-p2+p3*2/PI"
-"DC_HSQCC_CLIA4 = p16+d16+p2+d3*2-4u"
-"DC_HSQCC_CLIA5 = d12-d4-p14/2"
-"DC_HSQCC_CLIA6 = d4-p14/2"
-"DC_HSQCC_CLI7 = d2-p2/2"
-"DC_HSQCC_CLI8 = d2-p2/2-p16-d16"
-"DC_HSQCC_CLA7 = d2-p14/2"
-"DC_HSQCC_CLA8 = d2-p14/2-p16-d16"
+"DC_HSQCC_CLIA2 = p16+d16+p2+d3*2-4u"
+"DC_HSQCC_CLIA3 = d12-d4-p14/2"
+"DC_HSQCC_CLIA4 = d4-p14/2"
+"DC_HSQCC_CLI5 = d2-p2/2"
+"DC_HSQCC_CLI6 = d2-p2/2-p16-d16"
+"DC_HSQCC_CLA5 = d2-p14/2"
+"DC_HSQCC_CLA6 = d2-p14/2-p16-d16"
 "cnst43  = sfo2/sfo1"                  ; gradient ratio
 define list<gradient> GC_HSQCC_CLIA={cnst43}
 `
@@ -55,7 +51,7 @@ let pulprog = `
   d16
   (p24:sp7 ph0):f2
   4u
-  DC_HSQCC_CLIA4 pl2:f2
+  DC_HSQCC_CLIA2 pl2:f2
 
   (p3 ph7):f2
   p16:gp11*0.5  ; purge gradient
@@ -67,9 +63,9 @@ let pulprog = `
 
   d12
   (p2 ph17):f1
-  DC_HSQCC_CLIA5
+  DC_HSQCC_CLIA3
   (p14:sp3 ph21):f2
-  DC_HSQCC_CLIA6 pl2:f2
+  DC_HSQCC_CLIA4 pl2:f2
   (p1 ph17):f1
   d12
   (p2 ph3):f1
@@ -87,18 +83,18 @@ let pulprog = `
   (p3 ph12):f2
 if "l1 % 2 == 0"
 {
-  DC_HSQCC_CLI7
+  DC_HSQCC_CLI5
   4u
   (p2 ph1):f1
-  DC_HSQCC_CLI8 pl12:f2
+  DC_HSQCC_CLI6 pl12:f2
   4u
 }
 else
 {
-  DC_HSQCC_CLA7
+  DC_HSQCC_CLA5
   4u
   (center (p2 ph1):f1 (p14:sp3 ph0):f2)
-  DC_HSQCC_CLA8 pl12:f2
+  DC_HSQCC_CLA6 pl12:f2
   4u
 }
   p16:gp4*EA_TS*GC_HSQCC_CLIA
