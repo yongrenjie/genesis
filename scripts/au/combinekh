@@ -33,17 +33,13 @@ else if (k < 0) STOPMSG("error: cnst37 cannot be negative")
 char ser[PATH_MAX + 64];
 strcpy(ser, ACQUPATH("ser"));
 FILE *fp;
-if ((fp = fopen(ser, "rb")) == NULL) {
-    STOPMSG("cannot read ser file")
-}
+if ((fp = fopen(ser, "rb")) == NULL) STOPMSG(READ_ERROR)
 
 /* open the newser file to write */
 char newser[PATH_MAX + 64];
 strcpy(newser, ACQUPATH("newser"));
 FILE *fq;
-if ((fq = fopen(newser, "wb")) == NULL) {
-    STOPMSG("cannot open newser file for writing")
-}
+if ((fq = fopen(newser, "wb")) == NULL) STOPMSG(WRITE_ERROR)
 
 /* number of scans */
 int ns;
@@ -92,7 +88,7 @@ if (dtypa == 0) {
         for (j = 0; j < td * nfid; j++) *(sum + j) = 0;
         /* read in k rows and add each of them to sum */
         for (i = 0; i < k; i++) {
-            if (fread(row, dsize, td*nfid, fp) != td * nfid) STOPMSG(READ_ERROR)
+            if (fread(row, dsize, td * nfid, fp) != td * nfid) STOPMSG(READ_ERROR)
             for (j = 0; j < td * nfid; j++) *(sum + j) += *(row + j);
         }
         /* write the sum to newser */
@@ -123,7 +119,7 @@ else if (dtypa == 2) {
         for (j = 0; j < td * nfid; j++) *(sum + j) = 0;
         /* read in k rows and add each of them to sum */
         for (i = 0; i < k; i++) {
-            if (fread(row, dsize, td*nfid, fp) != td * nfid) STOPMSG(READ_ERROR)
+            if (fread(row, dsize, td * nfid, fp) != td * nfid) STOPMSG(READ_ERROR)
             for (j = 0; j < td * nfid; j++) *(sum + j) += *(row + j);
         }
         /* write the sum to newser */
@@ -141,24 +137,17 @@ else STOPMSG("unknown data type; aborting")
 /* backup old ser file */
 char serbak[PATH_MAX + 64];
 strcpy(serbak, ACQUPATH("ser.bak"));
-if ((fp = fopen(ser, "rb")) == NULL) {
-    STOPMSG("cannot read ser file")
-}
-if ((fq = fopen(serbak, "wb")) == NULL) {
-    STOPMSG("cannot open ser.bak file for writing")
-}
+if ((fp = fopen(ser, "rb")) == NULL) STOPMSG(READ_ERROR)
+if ((fq = fopen(serbak, "wb")) == NULL) STOPMSG(WRITE_ERROR)
+
 int c;
 while ((c = getc(fp)) != EOF) putc(c,fq);
 fclose(fp);
 fclose(fq);
 
 /* overwrite ser file with newser */
-if ((fp = fopen(newser, "rb")) == NULL) {
-    STOPMSG("cannot read newser file")
-}
-if ((fq = fopen(ser, "wb")) == NULL) {
-    STOPMSG("cannot open ser file for writing")
-}
+if ((fp = fopen(newser, "rb")) == NULL) STOPMSG(READ_ERROR)
+if ((fq = fopen(ser, "wb")) == NULL) STOPMSG(WRITE_ERROR)
 while ((c = getc(fp)) != EOF) putc(c,fq);
 fclose(fp);
 fclose(fq);

@@ -8,6 +8,10 @@
  * Eriks Kupce, Bruker UK
  * 02 June 2021 */
 
+#define MALLOC_ERROR "insufficient memory; aborting"
+#define READ_ERROR "file read failed; aborting"
+#define WRITE_ERROR "file write failed; aborting"
+
 /* read sensitivity factor k */
 float cnst39;
 FETCHPARS("CNST 39", &cnst39)
@@ -18,23 +22,19 @@ k = (int) (cnst39 + 0.5); /* round to nearest integer - directly casting always 
    We don't spawn a message box if k == 1, because the user may have purposely chosen that */
 if (k == 0)      STOPMSG("combinek has already been run on this dataset")
 else if (k == 1) STOP
-else if (k < 0)  STOPMSG("error: cnst15 cannot be negative")
+else if (k < 0)  STOPMSG("error: cnst39 cannot be negative")
 
 /* open the ser file to read */
 char ser[PATH_MAX + 64];
 strcpy(ser, ACQUPATH("ser"));
 FILE *fp;
-if ((fp = fopen(ser, "rb")) == NULL) {
-    STOPMSG("cannot read ser file")
-}
+if ((fp = fopen(ser, "rb")) == NULL) STOPMSG(READ_ERROR)
 
 /* open the newser file to write */
 char newser[PATH_MAX + 64];
 strcpy(newser, ACQUPATH("newser"));
 FILE *fq;
-if ((fq = fopen(newser, "wb")) == NULL) {
-    STOPMSG("cannot open newser file for writing")
-}
+if ((fq = fopen(newser, "wb")) == NULL) STOPMSG(WRITE_ERROR)
 
 /* number of scans */
 int ns;
@@ -68,71 +68,87 @@ int dtypa;
 FETCHPARS("DTYPA", &dtypa)
 
 int dsize = 0; /* sizeof (data type) */
-if (dtypa == 0) dsize = sizeof (int);
+
+if (dtypa == 0) {
+    dsize = sizeof (int);
+    /* round each block in FID to a multiple of 1024 bytes */
+    int n = 1024 / dsize;
+    td = (td % n) ? td - (td % n) + n : td;
+    /* allocate memory */
+    int *sum;
+    int *row;
+    if ((sum = malloc(dsize * td * nfid)) == NULL) STOPMSG(MALLOC_ERROR)
+    if ((row = malloc(dsize * td * nfid)) == NULL) STOPMSG(MALLOC_ERROR)
+
+    /* read in data and perform the summation */
+    int m, i, j;
+    for (m = 0; m < (td1 / (k * nfid)); m++) {
+        /* initialise sum to zero */
+        for (j = 0; j < td * nfid; j++) *(sum+j) = 0;
+        /* read in k rows and add each of them to sum */
+        for (i = 0; i < k; i++) {
+            if (fread(row, dsize, td * nfid, fp) != td * nfid) STOPMSG(READ_ERROR)
+            for (j = 0; j < td * nfid; j++) *(sum + j) += *(row + j); 
+        }
+        /* write the sum to newser */
+        if (fwrite(sum, dsize, td * nfid, fq) != td * nfid) STOPMSG(WRITE_ERROR)
+    }
+
+    /* clean up */
+    free(sum);
+    free(row);
+    fclose(fp);
+    fclose(fq);
+}
+else if (dtypa == 2) {
+    dsize = sizeof (double);
+    /* round each block in FID to a multiple of 1024 bytes */
+    int n = 1024 / dsize;
+    td = (td % n) ? td - (td % n) + n : td;
+
+    /* allocate memory */
+    double *sum;
+    double *row;
+    if ((sum = malloc(dsize * td * nfid)) == NULL) STOPMSG(MALLOC_ERROR)
+    if ((row = malloc(dsize * td * nfid)) == NULL) STOPMSG(MALLOC_ERROR)
+
+    /* read in data and perform the summation */
+    int m, i, j;
+    for (m = 0; m < (td1 / (k * nfid)); m++) {
+        /* initialise sum to zero */
+        for (j = 0; j < td * nfid; j++) *(sum+j) = 0;
+        /* read in k rows and add each of them to sum */
+        for (i = 0; i < k; i++) {
+            if (fread(row, dsize, td * nfid, fp) != td * nfid) STOPMSG(READ_ERROR)
+            for (j = 0; j < td * nfid; j++) *(sum + j) += *(row + j); 
+        }
+        /* write the sum to newser */
+        if (fwrite(sum, dsize, td * nfid, fq) != td * nfid) STOPMSG(WRITE_ERROR)
+    }
+
+    /* clean up */
+    free(sum);
+    free(row);
+    fclose(fp);
+    fclose(fq);
+}
 else STOPMSG("combinek only works with TopSpin 3 (integer) data...")
 
-/* each row starts at a new block of 1024 bytes */
-/* hence we need to round TD up to the closest multiple of (1024/dsize) = 256 */
-td = (td % 256) ? td - (td % 256) + 256 : td;
-/* allocate memory */
-int *sum;
-if ((sum = malloc(dsize * td * nfid)) == NULL) {
-    STOPMSG("insufficient memory -- please don't use a potato for this")
-}
-int *row;
-if ((row = malloc(dsize * td * nfid)) == NULL) {
-    STOPMSG("insufficient memory -- please don't use a potato for this")
-}
-/* read in data and perform the summation */
-int m, i, j;
-for (m = 0; m < (td1/(k*nfid)); m++) {
-    /* initialise sum to zero */
-    for (j = 0; j < td*nfid; j++) {
-        *(sum+j) = 0;
-    }
-    /* read in k rows and add each of them to sum */
-    for (i = 0; i < k; i++) {
-        if (fread(row, dsize, td*nfid, fp) != td*nfid) {
-            STOPMSG("failed to read the necessary amount of data")
-        }
-        
-        for (j = 0; j < td*nfid; j++) {
-            *(sum+j) += *(row+j); /* TODO need to check for overflow */
-        }
-    }
-    /* write the sum to newser */
-    if (fwrite(sum, dsize, td*nfid, fq) != td*nfid) {
-        STOPMSG("failed to write to the new ser file")
-    }
-}
-
-/* clean up */
-free(sum);
-free(row);
-fclose(fp);
-fclose(fq);
 
 /* backup old ser file */
 char serbak[PATH_MAX + 64];
 strcpy(serbak, ACQUPATH("ser.bak"));
-if ((fp = fopen(ser, "rb")) == NULL) {
-    STOPMSG("cannot read ser file")
-}
-if ((fq = fopen(serbak, "wb")) == NULL) {
-    STOPMSG("cannot open ser.bak file for writing")
-}
+if ((fp = fopen(ser, "rb")) == NULL) STOPMSG(READ_ERROR)
+if ((fq = fopen(serbak, "wb")) == NULL) STOPMSG(WRITE_ERROR)
+
 int c;
 while ((c = getc(fp)) != EOF) putc(c,fq);
 fclose(fp);
 fclose(fq);
 
 /* overwrite ser file with newser */
-if ((fp = fopen(newser, "rb")) == NULL) {
-    STOPMSG("cannot read newser file")
-}
-if ((fq = fopen(ser, "wb")) == NULL) {
-    STOPMSG("cannot open ser file for writing")
-}
+if ((fp = fopen(newser, "rb")) == NULL) STOPMSG(READ_ERROR)
+if ((fq = fopen(ser, "wb")) == NULL) STOPMSG(WRITE_ERROR)
 while ((c = getc(fp)) != EOF) putc(c,fq);
 fclose(fp);
 fclose(fq);
