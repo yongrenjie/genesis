@@ -15,6 +15,7 @@ import C_HMBC_NOF from "./modules/C_HMBC_NOF.js";
 import C_HSQC from "./modules/C_HSQC.js";
 import C_HSQC_COSY from "./modules/C_HSQC_COSY.js";
 import C_HSQC_COSY_CLIP from "./modules/C_HSQC_COSY_CLIP.js";
+import C_HSQC_COSY_CLIP_IA from "./modules/C_HSQC_COSY_CLIP_IA.js";
 import C_HSQC_COSY_DSE from "./modules/C_HSQC_COSY_DSE.js";
 import C_HSQC_F2J from "./modules/C_HSQC_F2J.js";
 import C_HSQC_TOCSY from "./modules/C_HSQC_TOCSY.js";
@@ -66,6 +67,7 @@ const allModules: Map<string, NOAHModule> = new Map([
     ["C_HSQC", C_HSQC],
     ["C_HSQC_COSY", C_HSQC_COSY],
     ["C_HSQC_COSY_CLIP", C_HSQC_COSY_CLIP],
+    ["C_HSQC_COSY_CLIP_IA", C_HSQC_COSY_CLIP_IA],
     ["C_HSQC_COSY_DSE", C_HSQC_COSY_DSE],
     ["C_HSQC_F2J", C_HSQC_F2J],
     ["C_HSQC_TOCSY", C_HSQC_TOCSY],

@@ -15,6 +15,7 @@ import { Citation } from "./citation.js";
 // 8 - TOCSY DIPSI-2
 // 9 - 13C module second DIPSI-2
 // 10 - 1H module second DIPSI-2
+// 11 - DIPSI-2 between 13C modules
 
 // String definitions {{{2
 const allParams = {
@@ -230,9 +231,10 @@ allPhases[17] = new Phase({num: 17, str: "1 1 3 3"});
 allPhases[18] = new Phase({num: 18, str: "0 2", ht1: "i2"});  // time-shared 13C coherence transfer (replaces ph5)
 allPhases[19] = new Phase({num: 19, str: "1 1 3 3", ct1: "i2"});  // time-shared 13C seHSQC (replaces ph9)
 allPhases[20] = new Phase({num: 20, str: "0 2", ct1: "i", ht1: "r"});  // time-shared 1H States (replaces ph6)
+allPhases[21] = new Phase({num: 21, str: "0", ht1: "i2"});  // time-shared 13C (replaces ph13)
 // ... plenty of empty slots to use
 // below are for receivers
-allPhases[24] = new Phase({num: 24, str: "0 2 2 0", ht1: "i2"});
+allPhases[24] = new Phase({num: 24, str: "0 2 2 0", ht1: "i2"});      // 13C EA for interleaved (replaces ph30)
 allPhases[25] = new Phase({num: 25, str: "0 0 2 2", ct1: "i2"});      // HSQC-COSY
 allPhases[26] = new Phase({num: 26, str: "0 2"});
 allPhases[27] = new Phase({num: 27, str: "1 3 3 1", nt1: "i2"});
@@ -668,7 +670,7 @@ export function makePulprogText(backendModules: string[],
             && mod.category === "c13" && !mod.hasDipsi()
             && nextMod !== undefined && nextMod.category === "c13"
         ) {
-            let [extraDipsiPP, extraDipsiPreamble] = makeDipsi("10", 18, 30);
+            let [extraDipsiPP, extraDipsiPreamble] = makeDipsi("11", 18, 30);
             preambles.push(...extraDipsiPreamble.split("\n"));
             mainpp.push(
                 ``,
