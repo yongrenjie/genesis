@@ -44,6 +44,7 @@ import H_ROESY_AD from "./modules/H_ROESY_AD.js";
 import H_TOCSY from "./modules/H_TOCSY.js";
 import H_TSE_PSYCHE from "./modules/H_TSE_PSYCHE.js";
 import H_TT_CN from "./modules/H_TT_CN.js";
+import H_TT_CR from "./modules/H_TT_CR.js";
 import N_HMQC from "./modules/N_HMQC.js";
 import N_HSQC from "./modules/N_HSQC.js";
 import N_SEHSQC from "./modules/N_SEHSQC.js";
@@ -96,6 +97,7 @@ const allModules: Map<string, NOAHModule> = new Map([
     ["H_TOCSY", H_TOCSY],
     ["H_TSE_PSYCHE", H_TSE_PSYCHE],
     ["H_TT_CN", H_TT_CN],
+    ["H_TT_CR", H_TT_CR],
     ["N_HMQC", N_HMQC],
     ["N_HSQC", N_HSQC],
     ["N_SEHSQC", N_SEHSQC],

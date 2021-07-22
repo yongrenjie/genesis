@@ -81,7 +81,7 @@ div.chooser_modules>ul {
 
 /* set a manual limit on the height of the 1H box */
 div.chooser_modules.h1>ul {
-    grid-template-rows: repeat(10, auto);
+    grid-template-rows: repeat(11, auto);
 }
 /* then set the 1H None label to be longer */
 li#li_h1_none {
