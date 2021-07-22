@@ -332,7 +332,7 @@ function toggleDevMode() {
             resetButtons();
         }
     }
-    setModuleListLengths();
+    setModuleGridRows();
 }
 // Add toggle behaviour to the devmode button
 document.getElementById("devmode_button")!.addEventListener("click", toggleDevMode);
@@ -435,17 +435,20 @@ for (let dt of dts as NodeListOf<HTMLElement>) {
 // Set the length of the five module boxes {{{2
 /**
  * Sets the grid-template-rows property of each module selector box to be equal
- * to the number of visible items -- except for the 1H box which is manually
+ * to the number of visible items -- except for the 1H box which is set to be
+ * ceil((n_items - 1)/2) + 1.
  * set to be 8 items long via CSS.
  */
-function setModuleListLengths() {
-    let uls = [...document.querySelectorAll("div.chooser_modules:not(.h1)>ul")] as Array<HTMLElement>;
-    let lengths = uls.map(ul => ([...ul.children] as Array<HTMLElement>).filter(li => li.style.display != "none").length);
+function setModuleGridRows() {
+    let uls = [...document.querySelectorAll("div.chooser_modules>ul")] as Array<HTMLElement>;
+    let nrows = uls.map(ul => ([...ul.children] as Array<HTMLElement>).filter(li => li.style.display != "none").length);
+    // manually adjust 1H box
+    nrows[nrows.length - 1] = Math.ceil((nrows[nrows.length - 1] - 1)/2) + 1;
     uls.forEach(function (ul, i) {
-        ul.style.gridTemplateRows = `repeat(${lengths[i]}, auto)`;
+        ul.style.gridTemplateRows = `repeat(${nrows[i]}, auto)`;
     });
 }
-setModuleListLengths();
+setModuleGridRows();
 // }}}2
 // Modify version number-dependent parts {{{2
 // Update the version number on the page
