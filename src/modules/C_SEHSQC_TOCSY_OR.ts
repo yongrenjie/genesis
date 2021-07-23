@@ -37,7 +37,7 @@ let pulprog = `
   ; INEPT
   (p1 ph0):f1
   DC_SEHSQCT_OR1
-  (center (p2 ph0):f1 (p14:sp3 ph13):f2 )
+  (center (p2 ph0):f1 (p14:sp3 ph0):f2 )
   DC_SEHSQCT_OR1 pl2:f2
   (p1 ph1):f1 
   (p3 ph5):f2
@@ -81,7 +81,7 @@ let pulprog = `
 
 #ifdef INVERT
   DC_SEHSQCT_OR6
-  (center (p2 ph0):f1 (p14:sp3 ph13):f2 )
+  (center (p2 ph0):f1 (p14:sp3 ph0):f2 )
   4u
   p16:gp4*GC_SEHSQCT_OR*EA
   d16 pl12:f2

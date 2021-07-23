@@ -223,7 +223,6 @@ allPhases[9] = new Phase({num: 9, str: "1 1 3 3", ea: "i2"});    // seHSQC
 allPhases[10] = new Phase({num: 10, str: "3 3 1 1", ea: "i2"});  // seHSQC
 allPhases[11] = new Phase({num: 11, str: "0 0 0 0 2 2 2 2"});
 allPhases[12] = new Phase({num: 12, str: "0 2"});
-allPhases[13] = new Phase({num: 13, str: "0", ct1: "i2"});
 allPhases[14] = new Phase({num: 14, str: "0 1 2 3"});
 allPhases[15] = new Phase({num: 15, str: "0 1"});
 allPhases[16] = new Phase({num: 16, str: "1 3", ea: "i", ct1: "r"});  // DQF-COSY ph
@@ -231,7 +230,6 @@ allPhases[17] = new Phase({num: 17, str: "1 1 3 3"});
 allPhases[18] = new Phase({num: 18, str: "0 2", ht1: "i2"});  // time-shared 13C coherence transfer (replaces ph5)
 allPhases[19] = new Phase({num: 19, str: "1 1 3 3", ct1: "i2"});  // time-shared 13C seHSQC (replaces ph9)
 allPhases[20] = new Phase({num: 20, str: "0 2", ct1: "i", ht1: "r"});  // time-shared 1H States (replaces ph6)
-allPhases[21] = new Phase({num: 21, str: "0", ht1: "i2"});  // time-shared 13C (replaces ph13)
 // ... plenty of empty slots to use
 // below are for receivers
 allPhases[24] = new Phase({num: 24, str: "0 2 2 0", ht1: "i2"});      // 13C EA for interleaved (replaces ph30)

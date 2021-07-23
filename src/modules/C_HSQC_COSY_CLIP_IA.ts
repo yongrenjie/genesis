@@ -64,7 +64,7 @@ let pulprog = `
   d12
   (p2 ph17):f1
   DC_HSQCC_CLIA3
-  (p14:sp3 ph21):f2
+  (p14:sp3 ph0):f2
   DC_HSQCC_CLIA4 pl2:f2
   (p1 ph17):f1
   d12

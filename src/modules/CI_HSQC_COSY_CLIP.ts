@@ -83,7 +83,7 @@ let pulprog = `
   d12
   (p2 ph17):f1
   DCI_HSQCC_CL5
-  (p14:sp3 ph13):f2
+  (p14:sp3 ph0):f2
   DCI_HSQCC_CL6 pl2:f2
   (p1 ph17):f1
   d12
