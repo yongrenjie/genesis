@@ -232,6 +232,7 @@ allPhases[19] = new Phase({num: 19, str: "1 1 3 3", ct1: "i2"});  // time-shared
 allPhases[20] = new Phase({num: 20, str: "0 2", ct1: "i", ht1: "r"});  // time-shared 1H States (replaces ph6)
 // ... plenty of empty slots to use
 // below are for receivers
+allPhases[23] = new Phase({num: 23, str: "0 0 2 2", ht1: "i2"});      // HSQC-COSY interleaved (replaces ph25)
 allPhases[24] = new Phase({num: 24, str: "0 2 2 0", ht1: "i2"});      // 13C EA for interleaved (replaces ph30)
 allPhases[25] = new Phase({num: 25, str: "0 0 2 2", ct1: "i2"});      // HSQC-COSY
 allPhases[26] = new Phase({num: 26, str: "0 2"});
