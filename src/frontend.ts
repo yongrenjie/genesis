@@ -89,8 +89,8 @@ function simpleModulesToTrue(simpleModules: SimpleModule[]): TrueModule[] {
             if (module === "ci13_hsqc_tocsy") {
                 // HSQC-TOCSY module
                 // if a second C13 module is present we need the modified INEPT block
-                if (c2ModulePresent) trueModules.push("CI_HSQC_TOCSY");
-                else trueModules.push("C_HSQC_TOCSY");
+                if (c2ModulePresent) trueModules.push("CI_HSQCT");
+                else trueModules.push("C_HSQCT");
             }
             else if (module === "ci13_hsqc") {
                 // HSQC module
@@ -101,17 +101,17 @@ function simpleModulesToTrue(simpleModules: SimpleModule[]): TrueModule[] {
             else if (module === "ci13_hsqc_cosy") {
                 // HSQC-COSY module
                 // if a second C13 module is present we need the modified INEPT block
-                if (c2ModulePresent) trueModules.push("CI_HSQC_COSY");
+                if (c2ModulePresent) trueModules.push("CI_HSQCC");
                 // if there is a H1 module we need to preserve bulk
-                else if (hModulePresent) trueModules.push("C_HSQC_COSY");
+                else if (hModulePresent) trueModules.push("C_HSQCC");
                 // otherwise we can use the best version with CLIP transfer
-                else trueModules.push("C_HSQC_COSY_CLIP");
+                else trueModules.push("C_HSQCC_CLIP");
             }
             else if (module === "ci13_hsqc_f2j") {
                 // F2-coupled HSQC module
                 // if a second C13 module is present we need the modified INEPT block
-                if (c2ModulePresent) trueModules.push("CI_HSQC_F2J");
-                else trueModules.push("C_HSQC_F2J");
+                if (c2ModulePresent) trueModules.push("CI_HSQCJ");
+                else trueModules.push("C_HSQCJ");
             }
         }
         // Deal with second C13 module (without variable INEPT excitation)
@@ -122,13 +122,13 @@ function simpleModulesToTrue(simpleModules: SimpleModule[]): TrueModule[] {
             else if (module === "c13_sehsqc") {
                 trueModules.push(hModulePresent ? "C_SEHSQC" : "C_SEHSQC_OR");
             }
-            else if (module === "c13_hsqc_f2j") trueModules.push("C_HSQC_F2J");
+            else if (module === "c13_hsqc_f2j") trueModules.push("C_HSQCJ");
             else if (module === "c13_hsqc_cosy") {
-                trueModules.push(hModulePresent ? "C_HSQC_COSY" : "C_HSQC_COSY_CLIP");
+                trueModules.push(hModulePresent ? "C_HSQCC" : "C_HSQCC_CLIP");
             }
-            else if (module === "c13_hsqc_tocsy") trueModules.push("C_HSQC_TOCSY");
+            else if (module === "c13_hsqc_tocsy") trueModules.push("C_HSQCT");
             else if (module === "c13_sehsqc_tocsy") {
-                trueModules.push(hModulePresent ? "C_SEHSQC_TOCSY" : "C_SEHSQC_TOCSY_OR");
+                trueModules.push(hModulePresent ? "C_SEHSQCT" : "C_SEHSQCT_OR");
             }
         }
         // Deal with H1 module
@@ -140,18 +140,18 @@ function simpleModulesToTrue(simpleModules: SimpleModule[]): TrueModule[] {
                 "h1_cosy": "H_COSY",
                 "h1_cosy_qf": "H_COSY_QF",
                 "h1_clip_cosy": "H_CLIP_COSY",
-                "h1_dqf_cosy": "H_DQF_COSY",
+                "h1_dqf_cosy": "H_DQFCOSY",
                 "h1_tocsy": "H_TOCSY",
                 "h1_noesy": "H_NOESY",
                 "h1_roesy": "H_ROESY",
                 "h1_roesy_ad": "H_ROESY_AD",
-                "h1_cosy_roesy_st": "H_COSY_ROESY_ST",
-                "h1_cosy_noesy": "H_COSY_NOESY",
-                "h1_cosy_noesy_st": "H_COSY_NOESY_ST",
-                "h1_cosy_tocsy": "H_COSY_TOCSY",
-                "h1_cosy_tocsy_st": "H_COSY_TOCSY_ST",
+                "h1_cosy_roesy_st": "H_CORO_ST",
+                "h1_cosy_noesy": "H_CONO",
+                "h1_cosy_noesy_st": "H_CONO_ST",
+                "h1_cosy_tocsy": "H_COTO",
+                "h1_cosy_tocsy_st": "H_COTO_ST",
                 "h1_jres": "H_JRES",
-                "h1_psyche_jres": "H_PSYCHE_JRES",
+                "h1_psyche_jres": "H_JRES_PS",
                 "h1_psyche": "H_PSYCHE",
                 "h1_tse_psyche": "H_TSE_PSYCHE",
             };
@@ -195,7 +195,6 @@ function trueModulesToSimple(trueModules: TrueModule[]): SimpleModule[] {
             else if (idx == 1) {  // 15N
                 const n15Mapping = {
                     "N_HMQC": "n15_hmqc",
-                    "N_HSQC": "",
                     "N_SEHSQC": "n15_sehsqc",
                     "N_SEHSQC_OR": "n15_sehsqc",
                     "N_SEHSQC_DP": "n15_sehsqc",
@@ -206,12 +205,12 @@ function trueModulesToSimple(trueModules: TrueModule[]): SimpleModule[] {
             } 
             else if (idx == 2) {  // 13C-INEPT
                 const ci13Mapping = {
-                    "CI_HSQC_TOCSY": "ci13_hsqc_tocsy",
-                    "CI_HSQC_COSY": "ci13_hsqc_cosy",
-                    "CI_HSQC_COSY_CLIP": "ci13_hsqc_cosy",
-                    "CI_HSQC_COSY_DSE": "ci13_hsqc_cosy",
+                    "CI_HSQCT": "ci13_hsqc_tocsy",
+                    "CI_HSQCC": "ci13_hsqc_cosy",
+                    "CI_HSQCC_CLIP": "ci13_hsqc_cosy",
+                    "CI_HSQCC_DSE": "ci13_hsqc_cosy",
                     "CI_HSQC": "ci13_hsqc",
-                    "CI_HSQC_F2J": "ci13_hsqc_f2j",
+                    "CI_HSQCJ": "ci13_hsqc_f2j",
                 };
                 if (nextTrueModule in ci13Mapping) {
                     simpleModules.push(ci13Mapping[nextTrueModule]);
@@ -220,17 +219,16 @@ function trueModulesToSimple(trueModules: TrueModule[]): SimpleModule[] {
             else if (idx == 3) {  // 13C
                 const c13Mapping = {
                     "C_HSQC": "c13_hsqc",
-                    "C_HSQC_F2J": "c13_hsqc_f2j",
-                    "C_HSQC_COSY": "c13_hsqc_cosy",
-                    "C_HSQC_COSY_CLIP": "c13_hsqc_cosy",
-                    "C_HSQC_COSY_DSE": "c13_hsqc_cosy",
-                    "C_HSQC_TOCSY": "c13_hsqc_tocsy",
+                    "C_HSQCJ": "c13_hsqc_f2j",
+                    "C_HSQCC": "c13_hsqc_cosy",
+                    "C_HSQCC_CLIP": "c13_hsqc_cosy",
+                    "C_HSQCC_DSE": "c13_hsqc_cosy",
+                    "C_HSQCT": "c13_hsqc_tocsy",
                     "C_SEHSQC": "c13_sehsqc",
                     "C_SEHSQC_OR": "c13_sehsqc",
                     "C_SEHSQC_DP": "c13_sehsqc",
-                    "C_SEHSQC_IPAP": "",
-                    "C_SEHSQC_TOCSY": "c13_sehsqc_tocsy",
-                    "C_SEHSQC_TOCSY_OR": "c13_sehsqc_tocsy",
+                    "C_SEHSQCT": "c13_sehsqc_tocsy",
+                    "C_SEHSQCT_OR": "c13_sehsqc_tocsy",
                 };
                 if (nextTrueModule in c13Mapping) {
                     simpleModules.push(c13Mapping[nextTrueModule]);
@@ -241,20 +239,20 @@ function trueModulesToSimple(trueModules: TrueModule[]): SimpleModule[] {
                     "H_COSY": "h1_cosy",
                     "H_COSY_QF": "h1_cosy_qf",
                     "H_CLIP_COSY": "h1_clip_cosy",
-                    "H_DQF_COSY": "h1_dqf_cosy",
+                    "H_DQFCOSY": "h1_dqf_cosy",
                     "H_TOCSY": "h1_tocsy",
                     "H_NOESY": "h1_noesy",
                     "H_ROESY": "h1_roesy",
                     "H_ROESY_AD": "h1_roesy_ad",
-                    "H_COSY_ROESY_ST": "h1_cosy_roesy_st",
-                    "H_COSY_NOESY": "h1_cosy_noesy",
-                    "H_COSY_NOESY_ST": "h1_cosy_noesy_st",
-                    "H_COSY_TOCSY": "h1_cosy_tocsy",
-                    "H_COSY_TOCSY_ST": "h1_cosy_tocsy_st",
+                    "H_CORO_ST": "h1_cosy_roesy_st",
+                    "H_CONO": "h1_cosy_noesy",
+                    "H_CONO_ST": "h1_cosy_noesy_st",
+                    "H_COTO": "h1_cosy_tocsy",
+                    "H_COTO_ST": "h1_cosy_tocsy_st",
                     "H_JRES": "h1_jres",
-                    "H_PSYCHE_JRES": "h1_psyche_jres",
+                    "H_JRES_PS": "h1_psyche_jres",
                     "H_PSYCHE": "h1_psyche",
-                    "H_TSE_PSYCHE": "h1_tse_psyche",
+                    "H_PSYCHE_TSE": "h1_tse_psyche",
                 };
                 if (nextTrueModule in h1Mapping) {
                     simpleModules.push(h1Mapping[nextTrueModule]);
@@ -375,7 +373,7 @@ function updatePulprogText() {
     }
     let ppText: string;
     try { ppText = makePulprogText(moduleNames, allModules, devModeButton.checked); }
-    catch (error) { ppText = ""; }
+    catch (error) { console.error(error); ppText = ""; }
     pulprogTextarea.value = ppText;
 }
 manualInput.addEventListener('input', updatePulprogText);

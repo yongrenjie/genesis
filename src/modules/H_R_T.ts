@@ -4,13 +4,13 @@ import NOAHModule from "../noahModule.js";
 let shortDescription = `; 1H interleaved ROESY/TOCSY`
 
 let preamble = `
-"d13     = 3u"                         ; ROESY t1
-"in13    = 2*dw"                       ; ROESY increment
-"cnst51  = abs(cnst49-cnst50)*sfo1*1.732/2"                   ; rf amplitude for spin lock
-"spw49   = plw1*(cnst51*4*p1/1000000)*(cnst51*4*p1/1000000)"  ; power level for spin lock
-"spw50   = spw49"
-"l11     = (d9/(p6*115.112))/2"        ; half the number of TOCSY loops
-"l12     = l11*2"                      ; number of TOCSY loops
+"d13    = 3u"                         ; ROESY t1
+"in13   = 2*dw"                       ; ROESY increment
+"cnst51 = abs(cnst49-cnst50)*sfo1*1.732/2"                   ; rf amplitude for spin lock
+"spw49  = plw1*(cnst51*4*p1/1000000)*(cnst51*4*p1/1000000)"  ; power level for spin lock
+"spw50  = spw49"
+"l11    = (d9/(p6*115.112))/2"        ; half the number of TOCSY loops
+"l12    = l11*2"                      ; number of TOCSY loops
 `
 
 let pulprog = `

@@ -4,9 +4,9 @@ import NOAHModule from "../noahModule.js";
 let shortDescription = `; 1H ROESY with 180(x),180(-x) spin lock`;
 
 let preamble = `
-"d10     = 3u"                         ; ROESY t1
-"in10    = 2*dw"                       ; ROESY increment
-"l7      = p15/(p25*2)"                ; ROESY spin lock loop counter
+"d10  = 3u"                         ; ROESY t1
+"in10 = 2*dw"                       ; ROESY increment
+"l7   = p15/(p25*2)"                ; ROESY spin lock loop counter
 `
 
 let pulprog = `

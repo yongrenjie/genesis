@@ -4,12 +4,12 @@ import NOAHModule from "../noahModule.js";
 let shortDescription = `; 1H COSY + TOCSY (echo/antiecho F1)`;
 
 let preamble = `
-"d10     = 3u"                         ; COSY/TOCSY t1
-"in10    = 2*dw"                       ; COSY/TOCSY increment
-define delay DH_COSY_TOCSY1
-define delay DH_COSY_TOCSY2
-"DH_COSY_TOCSY1  = p16+d16+4u-d10"
-"DH_COSY_TOCSY2  = p16+d16"
+"d10    = 3u"                         ; COSY/TOCSY t1
+"in10   = 2*dw"                       ; COSY/TOCSY increment
+define delay D[ID]a
+define delay D[ID]b
+"D[ID]a = p16+d16+4u-d10"
+"D[ID]b = p16+d16"
 `
 
 let pulprog = `
@@ -17,7 +17,7 @@ let pulprog = `
 
   ; COSY
   (p1 ph5):f1
-  DH_COSY_TOCSY1
+  D[ID]a
   (p2 ph0):f1
   4u
   p16:gp5
@@ -47,7 +47,7 @@ let pulprog = `
   4u
 
   (p1 ph0):f1
-  DH_COSY_TOCSY2
+  D[ID]b
   de
   4u
   (p2 ph7):f1

@@ -4,14 +4,14 @@ import NOAHModule from "../noahModule.js";
 let shortDescription = "; 1H interleaved TOCSY/TOCSY and COSY/NOESY (States F1)";
 
 let preamble = `
-"d13     = 3u"                         ; COSY/NOESY t1
-"in13    = 2*dw"                       ; COSY/NOESY increment
-"l11     = (d9/(p6*115.112))/2"        ; half the number of short TOCSY loops
-"l12     = l11*2"                      ; number of short TOCSY loops
-"l19     = (d14/(p6*115.112))/2"       ; half the number of long TOCSY loops
-"l20     = l19*2"                      ; number of long TOCSY loops
-define delay DH_TT_CN1
-"DH_TT_CN1 = d8-4u-de-aq-4u-p16-d16-p32-30u"     ; NOE mixing time
+"d13    = 3u"                         ; COSY/NOESY t1
+"in13   = 2*dw"                       ; COSY/NOESY increment
+"l11    = (d9/(p6*115.112))/2"        ; half the number of short TOCSY loops
+"l12    = l11*2"                      ; number of short TOCSY loops
+"l19    = (d14/(p6*115.112))/2"       ; half the number of long TOCSY loops
+"l20    = l19*2"                      ; number of long TOCSY loops
+define delay D[ID]a
+"D[ID]a = d8-4u-de-aq-4u-p16-d16-p32-30u"     ; NOE mixing time
 `
 
 let pulprog = `
@@ -60,7 +60,7 @@ else
   20u groff
   p16:gp11
   d16 pl1:f1
-  DH_TT_CN1 st  ; NOE mixing time
+  D[ID]a st  ; NOE mixing time
   (p1 ph0):f1
 }
   goscnp ph26  ; acquire H-H TOCSY number 2

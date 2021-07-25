@@ -10,22 +10,22 @@ let preamble = `
 "d4      = 0.25s/cnst2"                ; 13C INEPT
 "d0      = 3u"                         ; 13C HSQC t1
 "in0     = inf1/2"                     ; 13C HSQC increment
-define delay DC_SEHSQC_OR1
-define delay DC_SEHSQC_OR2
-define delay DC_SEHSQC_OR3
-define delay DC_SEHSQC_OR4
-define delay DC_SEHSQC_OR5
-define delay DC_SEHSQC_OR6
-define delay DC_SEHSQC_OR7
-"DC_SEHSQC_OR1 = d4-larger(p2,p14)/2"          ; INEPT
-"DC_SEHSQC_OR2 = d2-p16-d16-p2-d0*2-p3*2/PI"   ; 13C editing period
-"DC_SEHSQC_OR3 = d2-p2+p3*2/PI"                ; 13C editing period
-"DC_SEHSQC_OR4 = p16+d16+p2+d0*2-4u"           ; 13C post-t1, if no editing
-"DC_SEHSQC_OR5 = d6-cnst17*p24/2-p19-d16"      ; first spin echo after t1
-"DC_SEHSQC_OR6 = d4-larger(p2,p14)/2-p16-d16"  ; second spin echo after t1
-"DC_SEHSQC_OR7 = p16+d16-p1*0.78+de+8u"        ; final spin echo for refocusing gradient
-"cnst43  = sfo2/sfo1"                  ; gradient ratio
-define list<gradient> GC_SEHSQC_OR={cnst43}
+define delay D[ID]a
+define delay D[ID]b
+define delay D[ID]c
+define delay D[ID]d
+define delay D[ID]e
+define delay D[ID]f
+define delay D[ID]g
+"D[ID]a = d4-larger(p2,p14)/2"          ; INEPT
+"D[ID]b = d2-p16-d16-p2-d0*2-p3*2/PI"   ; 13C editing period
+"D[ID]c = d2-p2+p3*2/PI"                ; 13C editing period
+"D[ID]d = p16+d16+p2+d0*2-4u"           ; 13C post-t1, if no editing
+"D[ID]e = d6-cnst17*p24/2-p19-d16"      ; first spin echo after t1
+"D[ID]f = d4-larger(p2,p14)/2-p16-d16"  ; second spin echo after t1
+"D[ID]g = p16+d16-p1*0.78+de+8u"        ; final spin echo for refocusing gradient
+"cnst43 = sfo2/sfo1"                    ; gradient ratio
+define list<gradient> G[ID]={cnst43}
 `
 
 let pulprog = `
@@ -33,11 +33,11 @@ let pulprog = `
 
   ; forward INEPT
   (p1 ph0):f1
-  DC_SEHSQC_OR1
+  D[ID]a
   4u
   (center (p2 ph0):f1 (p14:sp3 ph0):f2 )
   4u
-  DC_SEHSQC_OR1 pl2:f2
+  D[ID]a pl2:f2
   4u
   (p1 ph1):f1 (p3 ph5):f2
 
@@ -52,10 +52,10 @@ let pulprog = `
 #ifdef EDIT
   p16:gp4*EA
   d16
-  DC_SEHSQC_OR2
+  D[ID]b
   (p31:sp18 ph0):f2
   (p2 ph0):f1
-  DC_SEHSQC_OR3
+  D[ID]c
   4u
   (p31:sp18 ph0):f2
   2u
@@ -65,16 +65,16 @@ let pulprog = `
   d16
   (p24:sp7 ph0):f2
   4u
-  DC_SEHSQC_OR4 pl2:f2
+  D[ID]d pl2:f2
 #endif /* EDIT */
 
   ; reverse INEPT for first component
   (center (p1 ph0):f1 (p3 ph7):f2 )
   p19:gp6
   d16
-  DC_SEHSQC_OR5
+  D[ID]e
   (center (p2 ph0):f1 (p24:sp7 ph0):f2 )
-  DC_SEHSQC_OR5
+  D[ID]e
   p19:gp6
   d16 pl2:f2
 #ifdef EDIT
@@ -86,18 +86,18 @@ let pulprog = `
   ; reverse INEPT for second component
   p16:gp7
   d16
-  DC_SEHSQC_OR6
+  D[ID]f
   (center (p2 ph0):f1 (p14:sp3 ph0):f2 )
-  DC_SEHSQC_OR6
+  D[ID]f
   p16:gp7
   d16
   (p1 ph0):f1
 
   ; spin echo for refocusing gradient
-  DC_SEHSQC_OR7
+  D[ID]g
   (p2 ph0):f1
   4u
-  p16:gp4*GC_SEHSQC_OR
+  p16:gp4*G[ID]
   d16 pl12:f2
   4u
   goscnp ph30 cpd2:f2   ; acquire 13C HSQC

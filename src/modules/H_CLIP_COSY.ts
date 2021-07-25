@@ -4,9 +4,9 @@ import NOAHModule from "../noahModule.js";
 let shortDescription = `; 1H CLIP-COSY (States)`;
 
 let preamble = `
-"d10     = 3u"                         ; CLIP-COSY t1
-"d12     = 0.25s/cnst12"               ; CLIP-COSY mixing (< 1/4J(HH))
-"in10    = 2*dw"                       ; CLIP-COSY increment
+"d10  = 3u"                         ; CLIP-COSY t1
+"d12  = 0.25s/cnst12"               ; CLIP-COSY mixing (< 1/4J(HH))
+"in10 = 2*dw"                       ; CLIP-COSY increment
 `
 
 let pulprog = `

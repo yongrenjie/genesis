@@ -4,14 +4,14 @@ import NOAHModule from "../noahModule.js";
 let shortDescription = "; 1H COSY and NOESY (echo/antiecho F1)";
 
 let preamble = `
-"d10     = 3u"                         ; COSY/NOESY t1
-"in10    = 2*dw"                       ; COSY/NOESY increment
-define delay DH_COSY_NOESY1
-define delay DH_COSY_NOESY2
-define delay DH_COSY_NOESY3
-"DH_COSY_NOESY1  = p16+d16+4u-d10"
-"DH_COSY_NOESY2  = d8-4u-p16-d16-de-aq-4u-p16-d16-p32-30u"     ; NOE mixing time
-"DH_COSY_NOESY3  = p16+d16"
+"d10    = 3u"                         ; COSY/NOESY t1
+"in10   = 2*dw"                       ; COSY/NOESY increment
+define delay D[ID]a
+define delay D[ID]b
+define delay D[ID]c
+"D[ID]a = p16+d16+4u-d10"
+"D[ID]b = d8-4u-p16-d16-de-aq-4u-p16-d16-p32-30u"     ; NOE mixing time
+"D[ID]c = p16+d16"
 `
 
 let pulprog = `
@@ -19,7 +19,7 @@ let pulprog = `
 
   ; COSY
   (p1 ph5)
-  DH_COSY_NOESY1
+  D[ID]a
   (p2 ph0)
   4u
   p16:gp5
@@ -38,9 +38,9 @@ let pulprog = `
   20u groff
   p16:gp11
   d16 pl1:f1
-  DH_COSY_NOESY2 st  ; NOE mixing time
+  D[ID]b st  ; NOE mixing time
   (p1 ph7):f1
-  DH_COSY_NOESY3
+  D[ID]c
   de
   4u
   (p2 ph7):f1

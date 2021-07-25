@@ -4,10 +4,10 @@ import NOAHModule from "../noahModule.js";
 let shortDescription = `; 1H phase-sensitive TOCSY`;
 
 let preamble = `
-"l11     = (d9/(p6*115.112))/2"        ; half the number of TOCSY loops
-"l12     = l11*2"                      ; number of TOCSY loops
-"d13     = 3u"                         ; TOCSY t1
-"in13    = 2*dw"                       ; TOCSY increment
+"l11  = (d9/(p6*115.112))/2"        ; half the number of TOCSY loops
+"l12  = l11*2"                      ; number of TOCSY loops
+"d13  = 3u"                         ; TOCSY t1
+"in13 = 2*dw"                       ; TOCSY increment
 `
 
 let pulprog = `

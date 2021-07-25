@@ -11,26 +11,26 @@ let preamble = `
 "d4      = 0.25s/cnst2"                ; 13C INEPT
 "d0      = 3u"                         ; 13C t1
 "in0     = inf1/2"                     ; 13C increment
-define delay DC_HSQC_TOCSY1
-define delay DC_HSQC_TOCSY2
-define delay DC_HSQC_TOCSY3
-define delay DC_HSQC_TOCSY4
-define delay DC_HSQC_TOCSY5
-define delay DC_HSQC_TOCSY6
-define delay DC_HSQC_TOCSY7
-define delay DC_HSQC_TOCSY8
-define delay DC_HSQC_TOCSY9
-"DC_HSQC_TOCSY1   = d4-p14/2"
-"DC_HSQC_TOCSY2   = d4+p14/2"
-"DC_HSQC_TOCSY3   = p16+d16+p2/2+d0-p3*2/PI+4u"
-"DC_HSQC_TOCSY4   = d2+p3+p2/2"
-"DC_HSQC_TOCSY5   = DC_HSQC_TOCSY3+p3-p2/2"
-"DC_HSQC_TOCSY6   = d4+p14/2-p16-d16"
-"DC_HSQC_TOCSY7   = d2-p14/2-p16-d16-4u"
-"DC_HSQC_TOCSY8   = d2+p14/2-p16-d16-de"
-"DC_HSQC_TOCSY9   = de+4u"
+define delay D[ID]a
+define delay D[ID]b
+define delay D[ID]c
+define delay D[ID]d
+define delay D[ID]e
+define delay D[ID]f
+define delay D[ID]g
+define delay D[ID]h
+define delay D[ID]i
+"D[ID]a   = d4-p14/2"
+"D[ID]b   = d4+p14/2"
+"D[ID]c   = p16+d16+p2/2+d0-p3*2/PI+4u"
+"D[ID]d   = d2+p3+p2/2"
+"D[ID]e   = D[ID]c+p3-p2/2"
+"D[ID]f   = d4+p14/2-p16-d16"
+"D[ID]g   = d2-p14/2-p16-d16-4u"
+"D[ID]h   = d2+p14/2-p16-d16-de"
+"D[ID]i   = de+4u"
 "cnst41  = 2*sfo2/sfo1"                ; gradient ratio
-define list<gradient> GC_HSQC_TOCSY={cnst41}
+define list<gradient> G[ID]={cnst41}
 `
 
 let pulprog = `
@@ -38,13 +38,13 @@ let pulprog = `
 
   ; INEPT
   (p1 ph0):f1
-  DC_HSQC_TOCSY1
+  D[ID]a
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_HSQC_TOCSY2 pl2:f2
+  D[ID]b pl2:f2
   (p1 ph1):f1
   (p3 ph5):f2
-  DC_HSQC_TOCSY3
+  D[ID]c
 
   ; t1 period
 #ifdef EDIT
@@ -64,26 +64,26 @@ let pulprog = `
 
   ; multiplicity editing
 #ifdef EDIT
-  DC_HSQC_TOCSY4
+  D[ID]d
   (p31:sp18 ph0):f2
-  DC_HSQC_TOCSY5
+  D[ID]e
   (p2 ph1):f1
   d2 pl2:f2
 #else
   (p14:sp3 ph0):f2
-  DC_HSQC_TOCSY3 pl2:f2
+  D[ID]c pl2:f2
 #endif /* EDIT */
 
   ; reverse INEPT
   (p3 ph7):f2
   (p1 ph2):f1
-  DC_HSQC_TOCSY1
+  D[ID]a
   (p14:sp3 ph0):f2
   (p2 ph1):f1
 
   p16:gp13
   d16
-  DC_HSQC_TOCSY6 pl10:f1
+  D[ID]f pl10:f1
 
   |DIPSI|
   4u
@@ -91,17 +91,17 @@ let pulprog = `
   d16 pl1:f1
 
 #ifdef INVERT
-  DC_HSQC_TOCSY7
+  D[ID]g
   (p14:sp3 ph0):f2 
   (p2 ph1):f1 
-  p16:gp4*GC_HSQC_TOCSY*EA
+  p16:gp4*G[ID]*EA
   d16 pl12:f2 
-  DC_HSQC_TOCSY8
+  D[ID]h
 #else
-  DC_HSQC_TOCSY9
+  D[ID]i
   (p2 ph1):f1
   4u
-  p16:gp4*GC_HSQC_TOCSY*EA
+  p16:gp4*G[ID]*EA
   d16 pl12:f2
   4u
 #endif /* INVERT */

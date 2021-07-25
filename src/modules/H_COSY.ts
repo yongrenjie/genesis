@@ -4,8 +4,8 @@ import NOAHModule from "../noahModule.js";
 let shortDescription = `; 1H phase-sensitive COSY`;
 
 let preamble = `
-"d10     = 3u"                         ; COSY t1
-"in10    = 2*dw"                       ; COSY increment
+"d10  = 3u"                         ; COSY t1
+"in10 = 2*dw"                       ; COSY increment
 `
 
 let pulprog = `

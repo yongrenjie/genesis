@@ -10,24 +10,24 @@ let preamble = `
 "d12     = 0.25s/cnst12"               ; COSY mixing (< 1/4J(HH))
 "d3      = 3u"                         ; 13C HSQC t1
 "in3     = inf1/2"                     ; 13C HSQC increment
-define delay DC_HSQCC_DSEIA1
-define delay DC_HSQCC_DSEIA2
-define delay DC_HSQCC_DSEIA3
-define delay DC_HSQCC_DSEIA4
-define delay DC_HSQCC_DSEIA5
-define delay DC_HSQCC_DSEI6
-define delay DC_HSQCC_DSEA6
-define delay DC_HSQCC_DSEIA7
-"DC_HSQCC_DSEIA1    = d4-p14/2"
-"DC_HSQCC_DSEIA2    = d4+p14/2"
-"DC_HSQCC_DSEIA3    = p16+d16+p2/2+d3-p3*2/PI+4u"
-"DC_HSQCC_DSEIA4    = d4-p14/2"
-"DC_HSQCC_DSEIA5    = d12-d4-p14/2"
-"DC_HSQCC_DSEI6     = d2-p31/2"
-"DC_HSQCC_DSEA6     = d2+p31/2"
-"DC_HSQCC_DSEIA7    = d2+p31/2-p16-d16-p3-4u-de"
+define delay D[ID]a
+define delay D[ID]b
+define delay D[ID]c
+define delay D[ID]d
+define delay D[ID]e
+define delay D[ID]f
+define delay D[ID]g
+define delay D[ID]h
+"D[ID]a  = d4-p14/2"
+"D[ID]b  = d4+p14/2"
+"D[ID]c  = p16+d16+p2/2+d3-p3*2/PI+4u"
+"D[ID]d  = d4-p14/2"
+"D[ID]e  = d12-d4-p14/2"
+"D[ID]f  = d2-p31/2"
+"D[ID]g  = d2+p31/2"
+"D[ID]h  = d2+p31/2-p16-d16-p3-4u-de"
 "cnst41  = 2*sfo2/sfo1"                ; gradient ratio
-define list<gradient> GC_HSQCC_DSEIA={cnst41}
+define list<gradient> G[ID]={cnst41}
 `
 
 let pulprog = `
@@ -35,13 +35,13 @@ let pulprog = `
 
   ; INEPT
   (p1 ph0):f1
-  DC_HSQCC_DSEIA1
+  D[ID]a
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_HSQCC_DSEIA2 pl2:f2
+  D[ID]b pl2:f2
   (p1 ph1):f1
   (p3 ph18):f2
-  DC_HSQCC_DSEIA3
+  D[ID]c
 
   (p14:sp3 ph0):f2
   4u
@@ -54,29 +54,29 @@ let pulprog = `
   p16:gp4
   d16
   (p14:sp3 ph0):f2
-  DC_HSQCC_DSEIA3 pl2:f2
+  D[ID]c pl2:f2
 
   ; reverse INEPT
   (p3 ph7):f2
   (p1 ph1):f1
-  DC_HSQCC_DSEIA4  ; d4-p14/2
+  D[ID]d  ; d4-p14/2
   (p14:sp3 ph0):f2
-  DC_HSQCC_DSEIA5  ; d12-d4-p14/2
+  D[ID]e  ; d12-d4-p14/2
   (p2 ph1):f1
   d12
   (p1 ph1):f1
 if "l1 % 2 == 0"
 {
-  DC_HSQCC_DSEI6         ; d2-p31/2
+  D[ID]f         ; d2-p31/2
   (p31:sp18 ph0):f2
 }
 else
 {
-  DC_HSQCC_DSEA6         ; d2+p31/2
+  D[ID]g         ; d2+p31/2
 }
   (p2 ph1):f1
-  DC_HSQCC_DSEIA7 pl2:f2 ; d2+p31/2-(...)
-  p16:gp4*GC_HSQCC_DSEIA*EA_TS
+  D[ID]h pl2:f2 ; d2+p31/2-(...)
+  p16:gp4*G[ID]*EA_TS
   d16
   (p3 ph0):f2
   4u pl12:f2

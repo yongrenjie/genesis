@@ -547,19 +547,19 @@ function removeDuplicateByKey<In, Out>(lines: In[],
 /**
  * Construct the pulse programme.
  *
- * @param {string[]} backendModules - Array of strings indicating the backend
- *                                    modules to be used in pulse programme
- *                                    construction.
+ * @param {string[]} trueModuleNames - Array of strings indicating the backend
+ *                                     modules to be used in pulse programme
+ *                                     construction.
  * @param {Map<string, NOAHModule>} allModules - Imported from allModules.js.
  * @param {boolean} allowLoneModule - If set to False, then return the empty
  *                                    string when NBL < 2.
  */
-export function makePulprogText(backendModules: string[],
+export function makePulprogText(trueModuleNames: string[],
                                 allModules: Map<string, NOAHModule>,
                                 allowLoneModule: boolean) {
     // Initialisation {{{2
     // Error out if any modules don't exist.
-    const missingModules = backendModules.filter(name => !allModules.has(name));
+    const missingModules = trueModuleNames.filter(name => !allModules.has(name));
     if (missingModules.length > 0) {
         const errMsg = `module(s) ${missingModules.join(", ")} not found`;
         console.error(errMsg);
@@ -569,7 +569,7 @@ export function makePulprogText(backendModules: string[],
     // that allModules *does* contain the modules, hence allModules.get(name) cannot
     // possibly return undefined. TypeScript can't figure this out, so it thinks that
     // modules has type Array<NOAHModule | undefined>.
-    const modules = backendModules.map(name => allModules.get(name)) as NOAHModule[];
+    const modules = trueModuleNames.map(name => allModules.get(name)) as NOAHModule[];
     const n       = modules.length;
     // Set some flags that will help us later
     const hasHmbcModule       = modules.some(mod => mod.category === "hmbc");
@@ -641,7 +641,10 @@ export function makePulprogText(backendModules: string[],
         // The preambles will later be postprocessed.
         shortCodes.push(mod.shortCode);
         shortDescriptions.push(...mod.shortDescription.split("\n"));
-        preambles.push(...mod.preamble.split("\n"));
+        preambles.push(...mod.preamble
+            .split("\n")
+            .map(l => l.replace(/\[ID\]/g, trueModuleNames[i]))
+        );
         citations.push(...mod.citations);
 
         // Collect the pulse programmes themselves.
@@ -661,7 +664,9 @@ export function makePulprogText(backendModules: string[],
             }
             ppDipsiLineNo = ppLines.findIndex(line => line.includes("|DIPSI|"));
         }
-        mainpp.push(...ppLines);
+        mainpp.push(...ppLines
+            .map(l => l.replace(/\[ID\]/g, trueModuleNames[i]))
+        );
 
         // Add anything that we might need between modules: extra DIPSI-2, ASAP
         // mixing, or general purge gradients.
@@ -1024,7 +1029,7 @@ export function makePulprogText(backendModules: string[],
         ...paramDefns,
         ``,
         auProgsStr,
-        `; module identifiers: ${backendModules.join(" ")}`,
+        `; module identifiers: ${trueModuleNames.join(" ")}`,
         `; pulse programme created by genesis-v${version}, https://nmr-genesis.co.uk`,
         `; ${(new Date()).toString()}`,
     );

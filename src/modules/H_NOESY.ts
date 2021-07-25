@@ -4,10 +4,10 @@ import NOAHModule from "../noahModule.js";
 let shortDescription = `; 1H phase-sensitive NOESY`;
 
 let preamble = `
-"d10     = 3u"                         ; NOESY t1
-"in10    = 2*dw"                       ; NOESY increment
-define delay DH_NOESY1
-"DH_NOESY1   = d8-p32-p16-d16-30u"
+"d10    = 3u"                         ; NOESY t1
+"in10   = 2*dw"                       ; NOESY increment
+define delay D[ID]a
+"D[ID]a = d8-p32-p16-d16-30u"
 `
 
 let pulprog = `
@@ -22,7 +22,7 @@ let pulprog = `
   p16:gp11
   d16 pl1:f1
   4u
-  DH_NOESY1
+  D[ID]a
   (p1 ph0):f1
 
   goscnp ph26

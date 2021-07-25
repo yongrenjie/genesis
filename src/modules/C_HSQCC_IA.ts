@@ -1,7 +1,7 @@
 import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 13C interleaved HSQC-COSY / HSQC`
+let shortDescription = `; 13C interleaved HSQC-COSY / HSQC (TSE version)`
 
 let preamble = `
 "p2      = p1*2"                       ; 1H hard 180
@@ -10,28 +10,28 @@ let preamble = `
 "d12     = 0.25s/cnst12"               ; COSY mixing (< 1/4J(HH))
 "d3      = 3u"                         ; 13C interleaved t1
 "in3     = inf1/2"                     ; 13C interleaved increment
-define delay DC_HSQCC_IA1
-define delay DC_HSQCC_IA2
-define delay DC_HSQCC_IA3
-define delay DC_HSQCC_IA4
-define delay DC_HSQCC_IA5
-define delay DC_HSQCC_IA6
-define delay DC_HSQCC_IA7
-define delay DC_HSQCC_IA8
-define delay DC_HSQCC_I9
-define delay DC_HSQCC_A9
-define delay DC_HSQCC_IA10
-"DC_HSQCC_IA1   = d4-p14/2"
-"DC_HSQCC_IA2   = d4+p14/2"
-"DC_HSQCC_IA3   = p16+d16+p2/2+d3-p3*2/PI+4u"
-"DC_HSQCC_IA4   = d2+p3+p2/2"
-"DC_HSQCC_IA5   = DC_HSQCC_IA3+p3-p2/2"
-"DC_HSQCC_IA6   = d4-p14/2"
-"DC_HSQCC_IA7   = d4+p14/2"
-"DC_HSQCC_IA8   = d12-d2-p14/2"
-"DC_HSQCC_I9    = d2+p14/2"
-"DC_HSQCC_A9    = d2-p14/2"
-"DC_HSQCC_IA10  = d2+p14/2-p16-d16-de"
+define delay D[ID]a
+define delay D[ID]b
+define delay D[ID]c
+define delay D[ID]d
+define delay D[ID]e
+define delay D[ID]f
+define delay D[ID]g
+define delay D[ID]h
+define delay D[ID]i
+define delay D[ID]j
+define delay D[ID]k
+"D[ID]a  = d4-p14/2"
+"D[ID]b  = d4+p14/2"
+"D[ID]c  = p16+d16+p2/2+d3-p3*2/PI+4u"
+"D[ID]d  = d2+p3+p2/2"
+"D[ID]e  = D[ID]c+p3-p2/2"
+"D[ID]f  = d4-p14/2"
+"D[ID]g  = d4+p14/2"
+"D[ID]h  = d12-d2-p14/2"
+"D[ID]i  = d2+p14/2"
+"D[ID]j  = d2-p14/2"
+"D[ID]k  = d2+p14/2-p16-d16-de"
 "cnst41  = 2*sfo2/sfo1"                ; gradient ratio
 define list<gradient> GC_HSQC_COSY={cnst41}
 `
@@ -41,13 +41,13 @@ let pulprog = `
 
   ; INEPT
   (p1 ph0):f1
-  DC_HSQCC_IA1
+  D[ID]a
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_HSQCC_IA2 pl2:f2
+  D[ID]b pl2:f2
   (p1 ph1):f1
   (p3 ph18):f2
-  DC_HSQCC_IA3
+  D[ID]c
 
   ; t1 period
   (p14:sp3 ph0):f2
@@ -61,15 +61,15 @@ let pulprog = `
   p16:gp4
   d16
   (p14:sp3 ph0):f2
-  DC_HSQCC_IA3 pl2:f2
+  D[ID]c pl2:f2
 
   ; reverse INEPT
   (p3 ph7):f2
   (p1 ph0):f1
-  DC_HSQCC_IA6
+  D[ID]f
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_HSQCC_IA7 pl2:f2
+  D[ID]g pl2:f2
 
   ; coherence transfer
   (p1 ph0):f1
@@ -79,9 +79,9 @@ if "l2 % 2 == 1"   ; relayed COSY peak suppression
 }
 else
 {
-  DC_HSQCC_IA8  ; d12-d2-p14/2
+  D[ID]h  ; d12-d2-p14/2
   (p14:sp3 ph0):f2
-  DC_HSQCC_A9  ; d2-p14/2
+  D[ID]j  ; d2-p14/2
 }
   (p2 ph0):f1
   d12
@@ -89,16 +89,16 @@ else
 
 if "l1 % 2 == 0"
 {
-  DC_HSQCC_I9  ; d2+p14/2
+  D[ID]i  ; d2+p14/2
   (p2 ph0):f1
 }
 else
 {
-  DC_HSQCC_A9  ; d2-p14/2
+  D[ID]j  ; d2-p14/2
   (p14:sp3 ph0):f2
   (p2 ph0):f1
 }
-  DC_HSQCC_IA10  ; d2+p14/2-p16-d16-de
+  D[ID]k  ; d2+p14/2-p16-d16-de
   p16:gp4*GC_HSQC_COSY*EA_TS
   d16 pl12:f2
   goscnp ph25 cpd2:f2

@@ -9,22 +9,22 @@ let preamble = `
 "d4      = 0.25s/cnst2"                ; 13C INEPT
 "d3      = 3u"                         ; 13C t1
 "in3     = inf1/2"                     ; 13C increment
-define delay DC_HSQCT_IA1
-define delay DC_HSQCT_IA2
-define delay DC_HSQCT_IA3
-define delay DC_HSQCT_IA4
-define delay DC_HSQCT_A5
-define delay DC_HSQCT_I5
-define delay DC_HSQCT_IA6
-"DC_HSQCT_IA1   = d4-p14/2"
-"DC_HSQCT_IA2   = d4+p14/2"
-"DC_HSQCT_IA3   = p16+d16+p2/2+d3-p3*2/PI+4u"
-"DC_HSQCT_IA4   = d4+p14/2-p16-d16"
-"DC_HSQCT_A5    = d2-p14/2-p16-d16"
-"DC_HSQCT_I5    = d2+p14/2-p16-d16"
-"DC_HSQCT_IA6   = d2+p14/2-p16-d16-de"
+define delay D[ID]a
+define delay D[ID]b
+define delay D[ID]c
+define delay D[ID]d
+define delay D[ID]e
+define delay D[ID]f
+define delay D[ID]g
+"D[ID]a   = d4-p14/2"
+"D[ID]b   = d4+p14/2"
+"D[ID]c   = p16+d16+p2/2+d3-p3*2/PI+4u"
+"D[ID]d   = d4+p14/2-p16-d16"
+"D[ID]e    = d2-p14/2-p16-d16"
+"D[ID]f    = d2+p14/2-p16-d16"
+"D[ID]g   = d2+p14/2-p16-d16-de"
 "cnst41  = 2*sfo2/sfo1"                ; gradient ratio
-define list<gradient> GC_HSQCT_IA={cnst41}
+define list<gradient> G[ID]={cnst41}
 `
 
 let pulprog = `
@@ -32,13 +32,13 @@ let pulprog = `
 
   ; INEPT
   (p1 ph0):f1
-  DC_HSQCT_IA1
+  D[ID]a
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_HSQCT_IA2 pl2:f2
+  D[ID]b pl2:f2
   (p1 ph1):f1
   (p3 ph18):f2
-  DC_HSQCT_IA3
+  D[ID]c
 
   (p14:sp3 ph0):f2
   4u
@@ -51,18 +51,18 @@ let pulprog = `
   p16:gp4
   d16
   (p14:sp3 ph0):f2
-  DC_HSQCT_IA3 pl2:f2
+  D[ID]c pl2:f2
 
   ; reverse INEPT
   (p3 ph7):f2
   (p1 ph2):f1
-  DC_HSQCT_IA1
+  D[ID]a
   (p14:sp3 ph0):f2
   (p2 ph1):f1
 
   p16:gp13
   d16
-  DC_HSQCT_IA4 pl10:f1
+  D[ID]d pl10:f1
 
   |DIPSI|
   4u
@@ -71,18 +71,18 @@ let pulprog = `
 
 if "l1 % 2 == 0"
 {
-  DC_HSQCT_A5
+  D[ID]e
   (p14:sp3 ph0):f2 
   (p2 ph1):f1 
 }
 else
 {
-  DC_HSQCT_I5
+  D[ID]f
   (p2 ph1):f1
 }
-  p16:gp4*GC_HSQCT_IA*EA_TS
+  p16:gp4*G[ID]*EA_TS
   d16 pl12:f2 
-  DC_HSQCT_IA6
+  D[ID]g
   goscnp ph24 cpd2:f2   ; acquire 13C HSQC-TOCSY
   50u do:f2
 `

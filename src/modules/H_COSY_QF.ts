@@ -4,8 +4,8 @@ import NOAHModule from "../noahModule.js";
 let shortDescription = `; 1H magnitude-mode COSY`;
 
 let preamble = `
-"d11     = 3u"                         ; COSY t1
-"in11    = 2*dw"                       ; COSY increment
+"d11  = 3u"                         ; COSY t1
+"in11 = 2*dw"                       ; COSY increment
 `
 
 let pulprog = `
