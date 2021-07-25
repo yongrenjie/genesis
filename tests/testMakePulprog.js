@@ -48,27 +48,27 @@ function assertPPEqual(pp1, pp2) {
 
 describe("makePulprogText regression tests", function() {
     it("NOAH-2 SCc: HSQC + CLIP-COSY", function() {
-        const v206_pp = fs.readFileSync("./tests/pp_latest/ngn_noah2-SCc", "utf8");
+        const v206_pp = fs.readFileSync("./tests/pp_latest/gns_noah2-SCc", "utf8");
         const new_pp = makePulprogText(["C_HSQC", "H_CLIP_COSY"], allModules);
         assertPPEqual(v206_pp, new_pp);
     });
     it("NOAH-3 SSjCc: HSQC + coupled HSQC + CLIP-COSY", function() {
-        const v206_pp = fs.readFileSync("./tests/pp_latest/ngn_noah3-SSjCc", "utf8");
+        const v206_pp = fs.readFileSync("./tests/pp_latest/gns_noah3-SSjCc", "utf8");
         const new_pp = makePulprogText(["CI_HSQC", "C_HSQC_F2J", "H_CLIP_COSY"], allModules);
         assertPPEqual(v206_pp, new_pp);
     });
     it("NOAH-3 StST: HSQC-TOCSY + HSQC + TOCSY", function() {
-        const v206_pp = fs.readFileSync("./tests/pp_latest/ngn_noah3-StST", "utf8");
+        const v206_pp = fs.readFileSync("./tests/pp_latest/gns_noah3-StST", "utf8");
         const new_pp = makePulprogText(["CI_HSQC_TOCSY", "C_HSQC", "H_TOCSY"], allModules);
         assertPPEqual(v206_pp, new_pp);
     });
     it("NOAH-4 SpnSpCT: 15N seHSQC + 13C seHSQC + COSY + TOCSY", function() {
-        const v206_pp = fs.readFileSync("./tests/pp_latest/ngn_noah4-SpnSpCT", "utf8");
+        const v206_pp = fs.readFileSync("./tests/pp_latest/gns_noah4-SpnSpCT", "utf8");
         const new_pp = makePulprogText(["N_SEHSQC", "C_SEHSQC", "H_COSY_TOCSY"], allModules);
         assertPPEqual(v206_pp, new_pp);
     });
     it("NOAH-5 BSpnSpCT: 13C HMBC + 15N seHSQC + 13C seHSQC + COSY + TOCSY", function() {
-        const v206_pp = fs.readFileSync("./tests/pp_latest/ngn_noah5-BSpnSpCT", "utf8");
+        const v206_pp = fs.readFileSync("./tests/pp_latest/gns_noah5-BSpnSpCT", "utf8");
         const new_pp = makePulprogText(["C_HMBC_CNF", "N_SEHSQC", "C_SEHSQC", "H_COSY_TOCSY"], allModules);
         assertPPEqual(v206_pp, new_pp);
     });

@@ -1,4 +1,4 @@
-; ngn_noah4-SpnSpCT
+; gns_noah4-SpnSpCT
 
 ; 15N sensitivity-enhanced HSQC
 ;     [set SW(ppm) as cnst40; optional k-scaling with cnst39]
@@ -15,6 +15,14 @@
 ;E. Kupce, T. D. W. Claridge
 ;Angew. Chem. Int. Ed. 2017, 56 (39), 11779-11783
 ;NOAH: NMR Supersequences for Small Molecule Analysis and Structure Elucidation
+
+;J. R. J. Yong, A. L. Hansen, E. Kupce, T. D. W. Claridge
+;J. Magn. Reson. 2021, 327, 107027
+;Increasing Sensitivity and Versatility in NMR Supersequences with New HSQC-based Modules
+
+;A. L. Hansen, E. Kupce, D.-W. Li, L. Bruschweiler-Li, R. Bruschweiler
+;Anal. Chem. 2021, 93 (15), 6112-6119
+;2D NMR-Based Metabolomics with HSQC/TOCSY NOAH Supersequences
 
 #include <Avance.incl>
 #include <Grad.incl>
@@ -69,8 +77,8 @@ define delay DN_SEHSQC7
 "DC_SEHSQC8     = d6-cnst17*p24/2-p19-d16"      ; first spin echo after t1
 "DC_SEHSQC9     = d4-larger(p2,p14)/2-p16-d16"  ; second spin echo after t1
 "DC_SEHSQC10    = p16+d16-p1*0.78+de+8u"        ; final spin echo for refocusing gradient
-"DH_COSY_TOCSY1 = p16+d16+4u-d10"              
-"DH_COSY_TOCSY2 = p16+d16"                     
+"DH_COSY_TOCSY1 = p16+d16+4u-d10"
+"DH_COSY_TOCSY2 = p16+d16"
 "DN_SEHSQC1     = d24-p22/2"                    ; zz-filter
 "DN_SEHSQC2     = d24+p22/2"                    ; zz-filter
 "DN_SEHSQC3     = d24-larger(p2,p22)/2"         ; INEPT
@@ -80,10 +88,9 @@ define delay DN_SEHSQC7
 "DN_SEHSQC7     = p17+d16-p1*0.78+de+8u"        ; final spin echo for refocusing gradient
 define list<gradient> GC_SEHSQC={cnst41}
 define list<gradient> GN_SEHSQC={cnst44}
-"l0      = td1/8"             ; Total number of 13C t1 increments
-"l1      = 0"                 ; Running counter of 13C t1 increments
-"l2      = 0"                 ; Counter, even for echo, odd for antiecho
-"l3      = 0"                 ; Running counter for NS
+"l0      = td1/4"               ; TD1/NBL
+"l1      = 0"                 ; Running counter for delay / phase incrementation
+"l2      = 0"                 ; Running counter for NS
 "acqt0   = 0"
 baseopt_echo
 
@@ -97,7 +104,7 @@ baseopt_echo
   "d10=(in10*t1list)+3u"
   "d20=(in20*t1list)+3u"
 #endif
-  "l3 = l3 + 1"
+  1m iu2
 
   ; Cleanup
   4u pl2:f2
@@ -388,15 +395,14 @@ baseopt_echo
 
   go=2 ph31
 
-  ; echo/antiecho loop
-  "l2 = l2 + 1"
+  ; incrementation on every pass
+  1m iu1
   1m igrad EA
   1m ip9*2
   30m wr #0 if #0 zd
-  lo to 3 times 2
 
-  ; t1 incrementation
-  "l1 = l1 + 1"
+  ; incrementation on every second pass
+if "l1 % 2 == 0" {
 #ifdef NUS
   1m t1list.inc
 #endif
@@ -404,31 +410,28 @@ baseopt_echo
   1m ip30*2
   1m ip31*2
 
-  ; 13C t1 incrementation
 #ifdef NUS
 #else
-  1m id0
+  1m id0   ; 13C t1
 #endif
-
-  ; 1H t1 incrementation
 #ifdef NUS
 #else
-  1m id10
+  1m id10    ; 1H t1
 #endif /* NUS */
-
-  ; 15N t1 incrementation
 #ifdef NUS
   1m ip4*2
   1m ip29*2
+#endif /* NUS */
+}
+#ifdef NUS
 #else
-if "l1 % cnst39 == 0"
+if "l1 % (2 * cnst39) == 0"
 {
   1m id20
   1m ip4*2
   1m ip29*2
 }
 #endif /* NUS */
-
   lo to 4 times l0
 
 50u BLKGRAD
@@ -454,7 +457,7 @@ ph31=0 2
 ;gpnam8: SMSQ10.100
 ;gpnam9: SMSQ10.100
 ;gpnam11: SMSQ10.100
-;gpz0: 24% (for purging)
+;gpz0: 29% (for purging)
 ;gpz2: 80% (15N CTP)
 ;gpz4: 70% (13C CTP)
 ;gpz5: 10% (1H CTP)
@@ -491,10 +494,8 @@ ph31=0 2
 ;d20: 15N t1
 ;d24: 1/4J(NH)
 ;d26: 1/8J(NH) for all multiplicities, 1/4J(NH) for NH only
-;l0: total number of t1 increments
-;l1: running counter of t1 increments
-;l2: even for echo, odd for antiecho
-;l3: running counter for scan number
+;l0: TD1 / NBL, i.e. 'true TD1'
+;l1: running counter from 1 to TD1/NBL, for phase/delay incrementation
 ;l11: DIPSI-2 (1H module): half the number of DIPSI-2 cycles
 ;l12: DIPSI-2 (1H module): actual number of DIPSI-2 cycles
 ;p1: f1 channel -  90 degree high power pulse
@@ -534,5 +535,6 @@ ph31=0 2
 ;ns: 1 * n
 
 ; auprog: noah_nhsqc:noah_hsqc:noah_cosy:noah_tocsy
-; ngn-2.0.6: constructed from N_SEHSQC, C_SEHSQC, H_COSY_TOCSY
-; pulse programme generated on Wed Apr 07 2021 17:42:40 GMT+0100 (British Summer Time)
+; module identifiers: N_SEHSQC C_SEHSQC H_COSY_TOCSY
+; pulse programme created by genesis-v2.0.10, https://nmr-genesis.co.uk
+; Sun Jul 25 2021 16:47:02 GMT+0100 (British Summer Time)

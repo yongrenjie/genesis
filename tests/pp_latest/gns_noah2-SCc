@@ -1,4 +1,4 @@
-; ngn_noah2-SCc
+; gns_noah2-SCc
 
 ; 13C HSQC
 ;     [use -DEDIT for multiplicity editing]
@@ -41,17 +41,16 @@ define delay DC_HSQC6
 "in0      = inf1/2"                            ; 13C HSQC increment
 "in10     = 2*dw"                              ; CLIP-COSY increment
 "p2       = p1*2"                              ; 1H hard 180
-"DC_HSQC1 = d4-p14/2"                         
-"DC_HSQC2 = d4+p14/2"                         
-"DC_HSQC3 = p16+d16+p2/2+d0-p3*2/PI+4u"       
-"DC_HSQC4 = d2+p3+p2/2"                       
-"DC_HSQC5 = DC_HSQC3+p3-p2/2"                 
+"DC_HSQC1 = d4-p14/2"
+"DC_HSQC2 = d4+p14/2"
+"DC_HSQC3 = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DC_HSQC4 = d2+p3+p2/2"
+"DC_HSQC5 = DC_HSQC3+p3-p2/2"
 "DC_HSQC6 = DC_HSQC2-p16-d16-p3-de+p1*2/PI-8u"
 define list<gradient> GC_HSQC={cnst41}
-"l0      = td1/4"             ; Total number of 13C t1 increments
-"l1      = 0"                 ; Running counter of 13C t1 increments
-"l2      = 0"                 ; Counter, even for echo, odd for antiecho
-"l3      = 0"                 ; Running counter for NS
+"l0      = td1/2"               ; TD1/NBL
+"l1      = 0"                 ; Running counter for delay / phase incrementation
+"l2      = 0"                 ; Running counter for NS
 "acqt0   = 0"
 baseopt_echo
 
@@ -64,7 +63,7 @@ baseopt_echo
   "d0=(in0*t1list)+3u"
   "d10=(in10*t1list)+3u"
 #endif
-  "l3 = l3 + 1"
+  1m iu2
 
   ; Cleanup
   4u pl2:f2
@@ -178,15 +177,14 @@ baseopt_echo
 
   go=2 ph26
 
-  ; echo/antiecho loop
-  "l2 = l2 + 1"
+  ; incrementation on every pass
+  1m iu1
   1m igrad EA
   1m ip6
   30m wr #0 if #0 zd
-  lo to 3 times 2
 
-  ; t1 incrementation
-  "l1 = l1 + 1"
+  ; incrementation on every second pass
+if "l1 % 2 == 0" {
 #ifdef NUS
   1m t1list.inc
 #endif
@@ -194,18 +192,15 @@ baseopt_echo
   1m rp6
   1m ip30*2
 
-  ; 13C t1 incrementation
 #ifdef NUS
 #else
-  1m id0
+  1m id0   ; 13C t1
 #endif
-
-  ; 1H t1 incrementation
 #ifdef NUS
 #else
-  1m id10
+  1m id10    ; 1H t1
 #endif /* NUS */
-
+}
   lo to 4 times l0
 
 50u BLKGRAD
@@ -225,7 +220,7 @@ ph30=0 2 2 0
 ;gpnam0: SMSQ10.100
 ;gpnam4: SMSQ10.100
 ;gpnam11: SMSQ10.100
-;gpz0: 24% (for purging)
+;gpz0: 29% (for purging)
 ;gpz4: 70% (13C CTP)
 ;gpz11: 43% (1H purge gradient)
 ;gpz12: 11% (1H ZQ filter)
@@ -246,10 +241,8 @@ ph30=0 2 2 0
 ;d10: 1H t1
 ;d12: <1/4J(HH) CLIP-COSY mixing time
 ;d16: delay for homospoil/gradient recovery [200 us]
-;l0: total number of t1 increments
-;l1: running counter of t1 increments
-;l2: even for echo, odd for antiecho
-;l3: running counter for scan number
+;l0: TD1 / NBL, i.e. 'true TD1'
+;l1: running counter from 1 to TD1/NBL, for phase/delay incrementation
 ;p1: f1 channel -  90 degree high power pulse
 ;p2: f1 channel - 180 degree high power pulse
 ;p3: f2 channel -  90 degree high power pulse
@@ -275,5 +268,6 @@ ph30=0 2 2 0
 ;ns: 1 * n
 
 ; auprog: noah_hsqc:noah_clipcosy States
-; ngn-2.0.6: constructed from C_HSQC, H_CLIP_COSY
-; pulse programme generated on Wed Apr 07 2021 17:42:11 GMT+0100 (British Summer Time)
+; module identifiers: C_HSQC H_CLIP_COSY
+; pulse programme created by genesis-v2.0.10, https://nmr-genesis.co.uk
+; Sun Jul 25 2021 16:46:41 GMT+0100 (British Summer Time)

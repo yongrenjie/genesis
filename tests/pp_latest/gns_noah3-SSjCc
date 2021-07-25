@@ -1,4 +1,4 @@
-; ngn_noah3-SSjCc
+; gns_noah3-SSjCc
 
 ; 13C HSQC with variable INEPT excitation
 ;     [specify fraction of 1J(CH) magnetisation to use with cnst32]
@@ -16,6 +16,10 @@
 ;E. Kupce, T. D. W. Claridge
 ;Angew. Chem. Int. Ed. 2017, 56 (39), 11779-11783
 ;NOAH: NMR Supersequences for Small Molecule Analysis and Structure Elucidation
+
+;J. R. J. Yong, A. L. Hansen, E. Kupce, T. D. W. Claridge
+;J. Magn. Reson. 2021, 327, 107027
+;Increasing Sensitivity and Versatility in NMR Supersequences with New HSQC-based Modules
 
 ;M. R. M. Koos, G. Kummerlowe, L. Kaltschnee, C. M. Thiele, B. Luy
 ;Angew. Chem. Int. Ed. 2016, 55 (27), 7655-7659
@@ -55,23 +59,22 @@ define delay DC_HSQC_F2J6
 "p2           = p1*2"                                    ; 1H hard 180
 "DCI_HSQC1    = (asin(cnst32)/(2*PI*cnst2))-p14/2000000"
 "DCI_HSQC2    = (asin(cnst32)/(2*PI*cnst2))+p14/2000000"
-"DCI_HSQC3    = p16+d16+p2/2+d0-p3*2/PI+4u"             
-"DCI_HSQC4    = d2+p3+p2/2"                             
-"DCI_HSQC5    = DCI_HSQC3+p3-p2/2"                      
-"DCI_HSQC6    = d4-p14/2"                               
-"DCI_HSQC7    = d4+p14/2-p16-d16-p3-de+p1*2/PI-8u"      
-"DC_HSQC_F2J1 = d4-p14/2"                               
-"DC_HSQC_F2J2 = d4+p14/2"                               
-"DC_HSQC_F2J3 = p16+d16+p2/2+d0-p3*2/PI+4u"             
-"DC_HSQC_F2J4 = d2+p3+p2/2"                             
-"DC_HSQC_F2J5 = DC_HSQC_F2J3+p3-p2/2"                   
-"DC_HSQC_F2J6 = DC_HSQC_F2J2-p16-d16-p3-de+p1*2/PI-8u"  
+"DCI_HSQC3    = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DCI_HSQC4    = d2+p3+p2/2"
+"DCI_HSQC5    = DCI_HSQC3+p3-p2/2"
+"DCI_HSQC6    = d4-p14/2"
+"DCI_HSQC7    = d4+p14/2-p16-d16-p3-de+p1*2/PI-8u"
+"DC_HSQC_F2J1 = d4-p14/2"
+"DC_HSQC_F2J2 = d4+p14/2"
+"DC_HSQC_F2J3 = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DC_HSQC_F2J4 = d2+p3+p2/2"
+"DC_HSQC_F2J5 = DC_HSQC_F2J3+p3-p2/2"
+"DC_HSQC_F2J6 = DC_HSQC_F2J2-p16-d16-p3-de+p1*2/PI-8u"
 define list<gradient> GCI_HSQC={cnst41}
 define list<gradient> GC_HSQC_F2J={cnst41}
-"l0      = td1/6"             ; Total number of 13C t1 increments
-"l1      = 0"                 ; Running counter of 13C t1 increments
-"l2      = 0"                 ; Counter, even for echo, odd for antiecho
-"l3      = 0"                 ; Running counter for NS
+"l0      = td1/3"               ; TD1/NBL
+"l1      = 0"                 ; Running counter for delay / phase incrementation
+"l2      = 0"                 ; Running counter for NS
 "acqt0   = 0"
 baseopt_echo
 
@@ -84,7 +87,7 @@ baseopt_echo
   "d0=(in0*t1list)+3u"
   "d10=(in10*t1list)+3u"
 #endif
-  "l3 = l3 + 1"
+  1m iu2
 
   ; Cleanup
   4u pl2:f2
@@ -163,7 +166,7 @@ if "d30 > 1m"
   p16:gp13
   d16 pl10:f1
 						;begin DIPSI2
-10 p6*3.556 ph3
+11 p6*3.556 ph3
   p6*4.556 ph1
   p6*3.222 ph3
   p6*3.167 ph1
@@ -202,7 +205,7 @@ if "d30 > 1m"
   p6*4.167 ph3
   p6*2.944 ph1
   p6*4.111 ph3
-  lo to 10 times l18
+  lo to 11 times l18
 						;end DIPSI2
   p16:gp13*1.333
   d16
@@ -314,15 +317,14 @@ if "d30 > 1m"
 
   go=2 ph26
 
-  ; echo/antiecho loop
-  "l2 = l2 + 1"
+  ; incrementation on every pass
+  1m iu1
   1m igrad EA
   1m ip6
   30m wr #0 if #0 zd
-  lo to 3 times 2
 
-  ; t1 incrementation
-  "l1 = l1 + 1"
+  ; incrementation on every second pass
+if "l1 % 2 == 0" {
 #ifdef NUS
   1m t1list.inc
 #endif
@@ -330,18 +332,15 @@ if "d30 > 1m"
   1m rp6
   1m ip30*2
 
-  ; 13C t1 incrementation
 #ifdef NUS
 #else
-  1m id0
+  1m id0   ; 13C t1
 #endif
-
-  ; 1H t1 incrementation
 #ifdef NUS
 #else
-  1m id10
+  1m id10    ; 1H t1
 #endif /* NUS */
-
+}
   lo to 4 times l0
 
 50u BLKGRAD
@@ -388,10 +387,8 @@ ph30=0 2 2 0
 ;d12: <1/4J(HH) CLIP-COSY mixing time
 ;d16: delay for homospoil/gradient recovery [200 us]
 ;d30: DIPSI-2 mixing time (between 13C modules)
-;l0: total number of t1 increments
-;l1: running counter of t1 increments
-;l2: even for echo, odd for antiecho
-;l3: running counter for scan number
+;l0: TD1 / NBL, i.e. 'true TD1'
+;l1: running counter from 1 to TD1/NBL, for phase/delay incrementation
 ;l17: DIPSI-2 (between 13C modules): half the number of DIPSI-2 cycles
 ;l18: DIPSI-2 (between 13C modules): actual number of DIPSI-2 cycles
 ;p1: f1 channel -  90 degree high power pulse
@@ -421,5 +418,6 @@ ph30=0 2 2 0
 ;ns: 1 * n
 
 ; auprog: noah_hsqc:noah_hsqc:noah_clipcosy States
-; ngn-2.0.7: constructed from CI_HSQC, C_HSQC_F2J, H_CLIP_COSY
-; pulse programme generated on Wed Apr 07 2021 18:08:43 GMT+0100 (British Summer Time)
+; module identifiers: CI_HSQC C_HSQC_F2J H_CLIP_COSY
+; pulse programme created by genesis-v2.0.10, https://nmr-genesis.co.uk
+; Sun Jul 25 2021 16:46:46 GMT+0100 (British Summer Time)

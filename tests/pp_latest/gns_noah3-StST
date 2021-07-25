@@ -1,6 +1,6 @@
-; ngn_noah3-StST
+; gns_noah3-StST
 
-; 13C HSQC-TOCSY with Ernst angle excitation
+; 13C HSQC-TOCSY with variable INEPT excitation
 ;     [specify fraction of 1J(CH) magnetisation to use with cnst32]
 ;     [use -DINVERT1 for inversion of TOCSY peaks]
 ; 13C HSQC
@@ -16,6 +16,10 @@
 ;E. Kupce, T. D. W. Claridge
 ;Angew. Chem. Int. Ed. 2017, 56 (39), 11779-11783
 ;NOAH: NMR Supersequences for Small Molecule Analysis and Structure Elucidation
+
+;J. R. J. Yong, A. L. Hansen, E. Kupce, T. D. W. Claridge
+;J. Magn. Reson. 2021, 327, 107027
+;Increasing Sensitivity and Versatility in NMR Supersequences with New HSQC-based Modules
 
 #include <Avance.incl>
 #include <Grad.incl>
@@ -53,24 +57,23 @@ define delay DC_HSQC6
 "p2              = p1*2"                                    ; 1H hard 180
 "DCI_HSQC_TOCSY1 = (asin(cnst32)/(2*PI*cnst2))-p14/2000000"
 "DCI_HSQC_TOCSY2 = (asin(cnst32)/(2*PI*cnst2))+p14/2000000"
-"DCI_HSQC_TOCSY3 = p16+d16+p2/2+d0-p3*2/PI+4u"             
-"DCI_HSQC_TOCSY4 = d4-p14/2"                               
-"DCI_HSQC_TOCSY5 = d4+p14/2-p16-d16"                       
-"DCI_HSQC_TOCSY6 = d2-p14/2-p16-d16-4u"                    
-"DCI_HSQC_TOCSY7 = d2+p14/2-p16-d16-de"                    
-"DCI_HSQC_TOCSY8 = de+4u"                                  
-"DC_HSQC1        = d4-p14/2"                               
-"DC_HSQC2        = d4+p14/2"                               
-"DC_HSQC3        = p16+d16+p2/2+d0-p3*2/PI+4u"             
-"DC_HSQC4        = d2+p3+p2/2"                             
-"DC_HSQC5        = DC_HSQC3+p3-p2/2"                       
-"DC_HSQC6        = DC_HSQC2-p16-d16-p3-de+p1*2/PI-8u"      
+"DCI_HSQC_TOCSY3 = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DCI_HSQC_TOCSY4 = d4-p14/2"
+"DCI_HSQC_TOCSY5 = d4+p14/2-p16-d16"
+"DCI_HSQC_TOCSY6 = d2-p14/2-p16-d16-4u"
+"DCI_HSQC_TOCSY7 = d2+p14/2-p16-d16-de"
+"DCI_HSQC_TOCSY8 = de+4u"
+"DC_HSQC1        = d4-p14/2"
+"DC_HSQC2        = d4+p14/2"
+"DC_HSQC3        = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DC_HSQC4        = d2+p3+p2/2"
+"DC_HSQC5        = DC_HSQC3+p3-p2/2"
+"DC_HSQC6        = DC_HSQC2-p16-d16-p3-de+p1*2/PI-8u"
 define list<gradient> GCI_HSQC_TOCSY={cnst41}
 define list<gradient> GC_HSQC={cnst41}
-"l0      = td1/6"             ; Total number of 13C t1 increments
-"l1      = 0"                 ; Running counter of 13C t1 increments
-"l2      = 0"                 ; Counter, even for echo, odd for antiecho
-"l3      = 0"                 ; Running counter for NS
+"l0      = td1/3"               ; TD1/NBL
+"l1      = 0"                 ; Running counter for delay / phase incrementation
+"l2      = 0"                 ; Running counter for NS
 "acqt0   = 0"
 baseopt_echo
 
@@ -83,7 +86,7 @@ baseopt_echo
   "d0=(in0*t1list)+3u"
   "d10=(in10*t1list)+3u"
 #endif
-  "l3 = l3 + 1"
+  1m iu2
 
   ; Cleanup
   4u pl2:f2
@@ -101,7 +104,7 @@ baseopt_echo
 
 
   ; MODULE 1
-  ; 13C-1H HSQC-TOCSY with Ernst angle excitation
+  ; 13C-1H HSQC-TOCSY with variable INEPT excitation
 
   ; INEPT
   (p1 ph0):f1
@@ -342,15 +345,14 @@ baseopt_echo
 
   go=2 ph26
 
-  ; echo/antiecho loop
-  "l2 = l2 + 1"
+  ; incrementation on every pass
+  1m iu1
   1m igrad EA
   1m ip6
   30m wr #0 if #0 zd
-  lo to 3 times 2
 
-  ; t1 incrementation
-  "l1 = l1 + 1"
+  ; incrementation on every second pass
+if "l1 % 2 == 0" {
 #ifdef NUS
   1m t1list.inc
 #endif
@@ -358,18 +360,15 @@ baseopt_echo
   1m rp6
   1m ip30*2
 
-  ; 13C t1 incrementation
 #ifdef NUS
 #else
-  1m id0
+  1m id0   ; 13C t1
 #endif
-
-  ; 1H t1 incrementation
 #ifdef NUS
 #else
-  1m id10
+  1m id10    ; 1H t1
 #endif /* NUS */
-
+}
   lo to 4 times l0
 
 50u BLKGRAD
@@ -391,7 +390,7 @@ ph30=0 2 2 0
 ;gpnam4: SMSQ10.100
 ;gpnam11: SMSQ10.100
 ;gpnam13: SMSQ10.100
-;gpz0: 24% (for purging)
+;gpz0: 29% (for purging)
 ;gpz3: 75% (13C alternate module CTP)
 ;gpz4: 70% (13C CTP)
 ;gpz11: 43% (1H purge gradient)
@@ -415,10 +414,8 @@ ph30=0 2 2 0
 ;d10: 1H t1
 ;d16: delay for homospoil/gradient recovery [200 us]
 ;d19: DIPSI-2 mixing time (1st 13C module)
-;l0: total number of t1 increments
-;l1: running counter of t1 increments
-;l2: even for echo, odd for antiecho
-;l3: running counter for scan number
+;l0: TD1 / NBL, i.e. 'true TD1'
+;l1: running counter from 1 to TD1/NBL, for phase/delay incrementation
 ;l11: DIPSI-2 (1H module): half the number of DIPSI-2 cycles
 ;l12: DIPSI-2 (1H module): actual number of DIPSI-2 cycles
 ;l13: DIPSI-2 (1st 13C module): half the number of DIPSI-2 cycles
@@ -450,5 +447,6 @@ ph30=0 2 2 0
 ;ns: 1 * n
 
 ; auprog: noah_hsqc:noah_hsqc:noah_tocsy States
-; ngn-2.0.6: constructed from CI_HSQC_TOCSY, C_HSQC, H_TOCSY
-; pulse programme generated on Wed Apr 07 2021 17:42:27 GMT+0100 (British Summer Time)
+; module identifiers: CI_HSQC_TOCSY C_HSQC H_TOCSY
+; pulse programme created by genesis-v2.0.10, https://nmr-genesis.co.uk
+; Sun Jul 25 2021 16:46:52 GMT+0100 (British Summer Time)
