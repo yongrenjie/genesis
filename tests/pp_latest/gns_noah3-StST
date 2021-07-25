@@ -29,47 +29,47 @@
 define list<loopcounter> t1list=<$VCLIST>
 #endif
 
-define delay DCI_HSQC_TOCSY1
-define delay DCI_HSQC_TOCSY2
-define delay DCI_HSQC_TOCSY3
-define delay DCI_HSQC_TOCSY4
-define delay DCI_HSQC_TOCSY5
-define delay DCI_HSQC_TOCSY6
-define delay DCI_HSQC_TOCSY7
-define delay DCI_HSQC_TOCSY8
-define delay DC_HSQC1
-define delay DC_HSQC2
-define delay DC_HSQC3
-define delay DC_HSQC4
-define delay DC_HSQC5
-define delay DC_HSQC6
-"cnst41          = 2*sfo2/sfo1"                             ; gradient ratio
-"d0              = 3u"                                      ; 13C t1
-"d2              = 0.5s/cnst2"                              ; JCOMP
-"d4              = 0.25s/cnst2"                             ; 13C INEPT
-"d10             = 3u"                                      ; TOCSY t1
-"in0             = inf1/2"                                  ; 13C increment
-"in10            = 2*dw"                                    ; TOCSY increment
-"l11             = (d9/(p6*115.112))/2"                     ; half the number of TOCSY loops
-"l12             = l11*2"                                   ; number of TOCSY loops
-"l13             = (d19/(p6*115.112))/2"                    ; half the number of DIPSI-2 loops
-"l14             = l13*2"                                   ; number of DIPSI-2 loops
-"p2              = p1*2"                                    ; 1H hard 180
-"DCI_HSQC_TOCSY1 = (asin(cnst32)/(2*PI*cnst2))-p14/2000000"
-"DCI_HSQC_TOCSY2 = (asin(cnst32)/(2*PI*cnst2))+p14/2000000"
-"DCI_HSQC_TOCSY3 = p16+d16+p2/2+d0-p3*2/PI+4u"
-"DCI_HSQC_TOCSY4 = d4-p14/2"
-"DCI_HSQC_TOCSY5 = d4+p14/2-p16-d16"
-"DCI_HSQC_TOCSY6 = d2-p14/2-p16-d16-4u"
-"DCI_HSQC_TOCSY7 = d2+p14/2-p16-d16-de"
-"DCI_HSQC_TOCSY8 = de+4u"
-"DC_HSQC1        = d4-p14/2"
-"DC_HSQC2        = d4+p14/2"
-"DC_HSQC3        = p16+d16+p2/2+d0-p3*2/PI+4u"
-"DC_HSQC4        = d2+p3+p2/2"
-"DC_HSQC5        = DC_HSQC3+p3-p2/2"
-"DC_HSQC6        = DC_HSQC2-p16-d16-p3-de+p1*2/PI-8u"
-define list<gradient> GCI_HSQC_TOCSY={cnst41}
+define delay DCI_HSQCTa
+define delay DCI_HSQCTb
+define delay DCI_HSQCTc
+define delay DCI_HSQCTd
+define delay DCI_HSQCTe
+define delay DCI_HSQCTf
+define delay DCI_HSQCTg
+define delay DCI_HSQCTh
+define delay DC_HSQCa
+define delay DC_HSQCb
+define delay DC_HSQCc
+define delay DC_HSQCd
+define delay DC_HSQCe
+define delay DC_HSQCf
+"cnst41     = 2*sfo2/sfo1"                             ; gradient ratio
+"d0         = 3u"                                      ; 13C t1
+"d2         = 0.5s/cnst2"                              ; JCOMP
+"d4         = 0.25s/cnst2"                             ; 13C INEPT
+"d10        = 3u"                                      ; TOCSY t1
+"in0        = inf1/2"                                  ; 13C increment
+"in10       = 2*dw"                                    ; TOCSY increment
+"l11        = (d9/(p6*115.112))/2"                     ; half the number of TOCSY loops
+"l12        = l11*2"                                   ; number of TOCSY loops
+"l13        = (d19/(p6*115.112))/2"                    ; half the number of DIPSI-2 loops
+"l14        = l13*2"                                   ; number of DIPSI-2 loops
+"p2         = p1*2"                                    ; 1H hard 180
+"DCI_HSQCTa = (asin(cnst32)/(2*PI*cnst2))-p14/2000000"
+"DCI_HSQCTb = (asin(cnst32)/(2*PI*cnst2))+p14/2000000"
+"DCI_HSQCTc = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DCI_HSQCTd = d4-p14/2"
+"DCI_HSQCTe = d4+p14/2-p16-d16"
+"DCI_HSQCTf = d2-p14/2-p16-d16-4u"
+"DCI_HSQCTg = d2+p14/2-p16-d16-de"
+"DCI_HSQCTh = de+4u"
+"DC_HSQCa   = d4-p14/2"
+"DC_HSQCb   = d4+p14/2"
+"DC_HSQCc   = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DC_HSQCd   = d2+p3+p2/2"
+"DC_HSQCe   = DC_HSQCc+p3-p2/2"
+"DC_HSQCf   = DC_HSQCb-p16-d16-p3-de+p1*2/PI-8u"
+define list<gradient> GCI_HSQCT={cnst41}
 define list<gradient> GC_HSQC={cnst41}
 "l0      = td1/3"               ; TD1/NBL
 "l1      = 0"                 ; Running counter for delay / phase incrementation
@@ -108,13 +108,13 @@ baseopt_echo
 
   ; INEPT
   (p1 ph0):f1
-  DCI_HSQC_TOCSY1
+  DCI_HSQCTa
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DCI_HSQC_TOCSY2 pl2:f2
+  DCI_HSQCTb pl2:f2
   (p1 ph1):f1
   (p3 ph5):f2
-  DCI_HSQC_TOCSY3
+  DCI_HSQCTc
 
   ; t1 period
   (p14:sp3 ph0):f2
@@ -128,18 +128,18 @@ baseopt_echo
   p16:gp3
   d16
   (p14:sp3 ph0):f2
-  DCI_HSQC_TOCSY3 pl2:f2
+  DCI_HSQCTc pl2:f2
 
   ; reverse INEPT
   (p3 ph7):f2
   (p1 ph2):f1
-  DCI_HSQC_TOCSY4
+  DCI_HSQCTd
   (p14:sp3 ph0):f2
   (p2 ph1):f1
 
   p16:gp13
   d16
-  DCI_HSQC_TOCSY5 pl10:f1
+  DCI_HSQCTe pl10:f1
 
 						;begin DIPSI2
 5 p6*3.556 ph3
@@ -189,17 +189,17 @@ baseopt_echo
   d16 pl1:f1
 
 #ifdef INVERT1
-  DCI_HSQC_TOCSY6
+  DCI_HSQCTf
   (p14:sp3 ph0):f2
   (p2 ph1):f1
-  p16:gp3*GCI_HSQC_TOCSY*EA
+  p16:gp3*GCI_HSQCT*EA
   d16 pl12:f2
-  DCI_HSQC_TOCSY7
+  DCI_HSQCTg
 #else
-  DCI_HSQC_TOCSY8
+  DCI_HSQCTh
   (p2 ph1):f1
   4u
-  p16:gp3*GCI_HSQC_TOCSY*EA
+  p16:gp3*GCI_HSQCT*EA
   d16 pl12:f2
   4u
 #endif /* INVERT1 */
@@ -220,13 +220,13 @@ baseopt_echo
 
   ; INEPT
   (p1 ph0):f1
-  DC_HSQC1
+  DC_HSQCa
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_HSQC2 pl2:f2
+  DC_HSQCb pl2:f2
   (p1 ph1):f1
   (p3 ph5):f2
-  DC_HSQC3
+  DC_HSQCc
 
   ; t1 period
 #ifdef EDIT
@@ -246,26 +246,26 @@ baseopt_echo
 
   ; multiplicity editing
 #ifdef EDIT
-  DC_HSQC4
+  DC_HSQCd
   (p31:sp18 ph0):f2
-  DC_HSQC5
+  DC_HSQCe
   (p2 ph1):f1
   d2 pl2:f2
 #else
   (p14:sp3 ph0):f2
-  DC_HSQC3 pl2:f2
+  DC_HSQCc pl2:f2
 #endif /* EDIT */
 
   ; reverse INEPT
   (p3 ph7):f2
   (p1 ph0):f1
-  DC_HSQC1
+  DC_HSQCa
   (p14:sp3 ph0):f2
   (p2 ph1):f1
   4u
   p16:gp4*EA*GC_HSQC
   d16 pl2:f2
-  DC_HSQC6
+  DC_HSQCf
   (p3 ph0):f2
   4u pl12:f2
   goscnp ph30 cpd2:f2
@@ -447,6 +447,6 @@ ph30=0 2 2 0
 ;ns: 1 * n
 
 ; auprog: noah_hsqc:noah_hsqc:noah_tocsy States
-; module identifiers: CI_HSQC_TOCSY C_HSQC H_TOCSY
+; module identifiers: CI_HSQCT C_HSQC H_TOCSY
 ; pulse programme created by genesis-v2.0.10, https://nmr-genesis.co.uk
-; Sun Jul 25 2021 16:46:52 GMT+0100 (British Summer Time)
+; Sun Jul 25 2021 18:38:32 GMT+0100 (British Summer Time)

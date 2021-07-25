@@ -33,45 +33,45 @@
 define list<loopcounter> t1list=<$VCLIST>
 #endif
 
-define delay DCI_HSQC1
-define delay DCI_HSQC2
-define delay DCI_HSQC3
-define delay DCI_HSQC4
-define delay DCI_HSQC5
-define delay DCI_HSQC6
-define delay DCI_HSQC7
-define delay DC_HSQC_F2J1
-define delay DC_HSQC_F2J2
-define delay DC_HSQC_F2J3
-define delay DC_HSQC_F2J4
-define delay DC_HSQC_F2J5
-define delay DC_HSQC_F2J6
-"cnst41       = 2*sfo2/sfo1"                             ; gradient ratio
-"d0           = 3u"                                      ; 13C HSQC t1
-"d2           = 0.5s/cnst2"                              ; JCOMP
-"d4           = 0.25s/cnst2"                             ; 13C INEPT
-"d10          = 3u"                                      ; CLIP-COSY t1
-"d12          = 0.25s/cnst12"                            ; CLIP-COSY mixing (< 1/4J(HH))
-"in0          = inf1/2"                                  ; 13C HSQC increment
-"in10         = 2*dw"                                    ; CLIP-COSY increment
-"l17          = (d30/(p6*115.112))/2"                    ; half the number of DIPSI-2 loops
-"l18          = l17*2"                                   ; number of DIPSI-2 loops
-"p2           = p1*2"                                    ; 1H hard 180
-"DCI_HSQC1    = (asin(cnst32)/(2*PI*cnst2))-p14/2000000"
-"DCI_HSQC2    = (asin(cnst32)/(2*PI*cnst2))+p14/2000000"
-"DCI_HSQC3    = p16+d16+p2/2+d0-p3*2/PI+4u"
-"DCI_HSQC4    = d2+p3+p2/2"
-"DCI_HSQC5    = DCI_HSQC3+p3-p2/2"
-"DCI_HSQC6    = d4-p14/2"
-"DCI_HSQC7    = d4+p14/2-p16-d16-p3-de+p1*2/PI-8u"
-"DC_HSQC_F2J1 = d4-p14/2"
-"DC_HSQC_F2J2 = d4+p14/2"
-"DC_HSQC_F2J3 = p16+d16+p2/2+d0-p3*2/PI+4u"
-"DC_HSQC_F2J4 = d2+p3+p2/2"
-"DC_HSQC_F2J5 = DC_HSQC_F2J3+p3-p2/2"
-"DC_HSQC_F2J6 = DC_HSQC_F2J2-p16-d16-p3-de+p1*2/PI-8u"
+define delay DCI_HSQCa
+define delay DCI_HSQCb
+define delay DCI_HSQCc
+define delay DCI_HSQCd
+define delay DCI_HSQCe
+define delay DCI_HSQCf
+define delay DCI_HSQCg
+define delay DC_HSQCJa
+define delay DC_HSQCJb
+define delay DC_HSQCJc
+define delay DC_HSQCJd
+define delay DC_HSQCJe
+define delay DC_HSQCJf
+"cnst41    = 2*sfo2/sfo1"                             ; gradient ratio
+"d0        = 3u"                                      ; 13C HSQC t1
+"d2        = 0.5s/cnst2"                              ; JCOMP
+"d4        = 0.25s/cnst2"                             ; 13C INEPT
+"d10       = 3u"                                      ; CLIP-COSY t1
+"d12       = 0.25s/cnst12"                            ; CLIP-COSY mixing (< 1/4J(HH))
+"in0       = inf1/2"                                  ; 13C HSQC increment
+"in10      = 2*dw"                                    ; CLIP-COSY increment
+"l17       = (d30/(p6*115.112))/2"                    ; half the number of DIPSI-2 loops
+"l18       = l17*2"                                   ; number of DIPSI-2 loops
+"p2        = p1*2"                                    ; 1H hard 180
+"DCI_HSQCa = (asin(cnst32)/(2*PI*cnst2))-p14/2000000"
+"DCI_HSQCb = (asin(cnst32)/(2*PI*cnst2))+p14/2000000"
+"DCI_HSQCc = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DCI_HSQCd = d2+p3+p2/2"
+"DCI_HSQCe = DCI_HSQCc+p3-p2/2"
+"DCI_HSQCf = d4-p14/2"
+"DCI_HSQCg = d4+p14/2-p16-d16-p3-de+p1*2/PI-8u"
+"DC_HSQCJa = d4-p14/2"
+"DC_HSQCJb = d4+p14/2"
+"DC_HSQCJc = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DC_HSQCJd = d2+p3+p2/2"
+"DC_HSQCJe = DC_HSQCJc+p3-p2/2"
+"DC_HSQCJf = DC_HSQCJb-p16-d16-p3-de+p1*2/PI-8u"
 define list<gradient> GCI_HSQC={cnst41}
-define list<gradient> GC_HSQC_F2J={cnst41}
+define list<gradient> GC_HSQCJ={cnst41}
 "l0      = td1/3"               ; TD1/NBL
 "l1      = 0"                 ; Running counter for delay / phase incrementation
 "l2      = 0"                 ; Running counter for NS
@@ -109,13 +109,13 @@ baseopt_echo
 
   ; INEPT
   (p1 ph0):f1
-  DCI_HSQC1
+  DCI_HSQCa
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DCI_HSQC2 pl2:f2
+  DCI_HSQCb pl2:f2
   (p1 ph1):f1
   (p3 ph5):f2
-  DCI_HSQC3
+  DCI_HSQCc
 
   ; t1 period
 #ifdef EDIT1
@@ -135,26 +135,26 @@ baseopt_echo
 
   ; multiplicity editing
 #ifdef EDIT1
-  DCI_HSQC4
+  DCI_HSQCd
   (p31:sp18 ph0):f2
-  DCI_HSQC5
+  DCI_HSQCe
   (p2 ph1):f1
   d2 pl2:f2
 #else
   (p14:sp3 ph0):f2
-  DCI_HSQC3 pl2:f2
+  DCI_HSQCc pl2:f2
 #endif /* EDIT1 */
 
   ; reverse INEPT
   (p3 ph7):f2
   (p1 ph0):f1
-  DCI_HSQC6
+  DCI_HSQCf
   (p14:sp3 ph0):f2
   (p2 ph1):f1
   4u
   p16:gp3*GCI_HSQC*EA
   d16 pl2:f2
-  DCI_HSQC7
+  DCI_HSQCg
   (p3 ph0):f2
   4u pl12:f2
   goscnp ph30 cpd2:f2
@@ -225,13 +225,13 @@ if "d30 > 1m"
 
   ; INEPT
   (p1 ph0):f1
-  DC_HSQC_F2J1
+  DC_HSQCJa
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_HSQC_F2J2 pl2:f2
+  DC_HSQCJb pl2:f2
   (p1 ph1):f1
   (p3 ph5):f2
-  DC_HSQC_F2J3
+  DC_HSQCJc
 
   ; t1 period
 #ifdef EDIT
@@ -251,26 +251,26 @@ if "d30 > 1m"
 
   ; multiplicity editing
 #ifdef EDIT
-  DC_HSQC_F2J4
+  DC_HSQCJd
   (p31:sp18 ph0):f2
-  DC_HSQC_F2J5
+  DC_HSQCJe
   (p2 ph1):f1
   d2 pl2:f2
 #else
   (p14:sp3 ph0):f2
-  DC_HSQC_F2J3 pl2:f2
+  DC_HSQCJc pl2:f2
 #endif /* EDIT */
 
   ; reverse INEPT
   (p3 ph7):f2
   (p1 ph0):f1
-  DC_HSQC_F2J1
+  DC_HSQCJa
   (p14:sp3 ph0):f2
   (p2 ph1):f1
   4u
-  p16:gp4*EA*GC_HSQC_F2J
+  p16:gp4*EA*GC_HSQCJ
   d16 pl2:f2
-  DC_HSQC_F2J6
+  DC_HSQCJf
   (p3 ph0):f2
   4u
   goscnp ph30
@@ -418,6 +418,6 @@ ph30=0 2 2 0
 ;ns: 1 * n
 
 ; auprog: noah_hsqc:noah_hsqc:noah_clipcosy States
-; module identifiers: CI_HSQC C_HSQC_F2J H_CLIP_COSY
+; module identifiers: CI_HSQC C_HSQCJ H_CLIP_COSY
 ; pulse programme created by genesis-v2.0.10, https://nmr-genesis.co.uk
-; Sun Jul 25 2021 16:46:46 GMT+0100 (British Summer Time)
+; Sun Jul 25 2021 18:38:26 GMT+0100 (British Summer Time)

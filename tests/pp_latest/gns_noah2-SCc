@@ -26,12 +26,12 @@
 define list<loopcounter> t1list=<$VCLIST>
 #endif
 
-define delay DC_HSQC1
-define delay DC_HSQC2
-define delay DC_HSQC3
-define delay DC_HSQC4
-define delay DC_HSQC5
-define delay DC_HSQC6
+define delay DC_HSQCa
+define delay DC_HSQCb
+define delay DC_HSQCc
+define delay DC_HSQCd
+define delay DC_HSQCe
+define delay DC_HSQCf
 "cnst41   = 2*sfo2/sfo1"                       ; gradient ratio
 "d0       = 3u"                                ; 13C HSQC t1
 "d2       = 0.5s/cnst2"                        ; JCOMP
@@ -41,12 +41,12 @@ define delay DC_HSQC6
 "in0      = inf1/2"                            ; 13C HSQC increment
 "in10     = 2*dw"                              ; CLIP-COSY increment
 "p2       = p1*2"                              ; 1H hard 180
-"DC_HSQC1 = d4-p14/2"
-"DC_HSQC2 = d4+p14/2"
-"DC_HSQC3 = p16+d16+p2/2+d0-p3*2/PI+4u"
-"DC_HSQC4 = d2+p3+p2/2"
-"DC_HSQC5 = DC_HSQC3+p3-p2/2"
-"DC_HSQC6 = DC_HSQC2-p16-d16-p3-de+p1*2/PI-8u"
+"DC_HSQCa = d4-p14/2"
+"DC_HSQCb = d4+p14/2"
+"DC_HSQCc = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DC_HSQCd = d2+p3+p2/2"
+"DC_HSQCe = DC_HSQCc+p3-p2/2"
+"DC_HSQCf = DC_HSQCb-p16-d16-p3-de+p1*2/PI-8u"
 define list<gradient> GC_HSQC={cnst41}
 "l0      = td1/2"               ; TD1/NBL
 "l1      = 0"                 ; Running counter for delay / phase incrementation
@@ -85,13 +85,13 @@ baseopt_echo
 
   ; INEPT
   (p1 ph0):f1
-  DC_HSQC1
+  DC_HSQCa
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_HSQC2 pl2:f2
+  DC_HSQCb pl2:f2
   (p1 ph1):f1
   (p3 ph5):f2
-  DC_HSQC3
+  DC_HSQCc
 
   ; t1 period
 #ifdef EDIT
@@ -111,26 +111,26 @@ baseopt_echo
 
   ; multiplicity editing
 #ifdef EDIT
-  DC_HSQC4
+  DC_HSQCd
   (p31:sp18 ph0):f2
-  DC_HSQC5
+  DC_HSQCe
   (p2 ph1):f1
   d2 pl2:f2
 #else
   (p14:sp3 ph0):f2
-  DC_HSQC3 pl2:f2
+  DC_HSQCc pl2:f2
 #endif /* EDIT */
 
   ; reverse INEPT
   (p3 ph7):f2
   (p1 ph0):f1
-  DC_HSQC1
+  DC_HSQCa
   (p14:sp3 ph0):f2
   (p2 ph1):f1
   4u
   p16:gp4*EA*GC_HSQC
   d16 pl2:f2
-  DC_HSQC6
+  DC_HSQCf
   (p3 ph0):f2
   4u pl12:f2
   goscnp ph30 cpd2:f2
@@ -270,4 +270,4 @@ ph30=0 2 2 0
 ; auprog: noah_hsqc:noah_clipcosy States
 ; module identifiers: C_HSQC H_CLIP_COSY
 ; pulse programme created by genesis-v2.0.10, https://nmr-genesis.co.uk
-; Sun Jul 25 2021 16:46:41 GMT+0100 (British Summer Time)
+; Sun Jul 25 2021 18:38:18 GMT+0100 (British Summer Time)
