@@ -108,7 +108,7 @@ export const Cicero2001JMR = new Citation(
     JMR, 2001, 148, 1, "209-213", "10.1006/jmre.2000.2234"
 )
 export const Gyongyosi2021AC = new Citation(
-    "Expedited Nuclear Magnetic Resonance Assignment of Small- to Medium-Sized Molecules with Improved HSQC−CLIP−COSY Experiments",
+    "Expedited Nuclear Magnetic Resonance Assignment of Small- to Medium-Sized Molecules with Improved HSQC-CLIP-COSY Experiments",
     ["T. Gyongyosi", "I. Timari", "D. Sinnaeve", "B. Luy", "K. E. Kover"],
     AC, 2021, 93, 6, "3096-3102", "10.1021/acs.analchem.0c04124"
 )
