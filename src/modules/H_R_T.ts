@@ -1,7 +1,7 @@
 import { Kupce2017ACIE, Thiele2009CEJ } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 1H interleaved ROESY/TOCSY`
+let shortDescription = `; 1H ROESY + TOCSY`
 
 let preamble = `
 "d13    = 3u"                         ; ROESY t1

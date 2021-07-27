@@ -1,7 +1,8 @@
 import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = "; 1H interleaved TOCSY/TOCSY and COSY/NOESY (States F1)";
+let shortDescription = `; 1H TOCSY (mixing time: d9) + COSY
+; 1H TOCSY (mixing time: d14) + NOESY`;
 
 let preamble = `
 "d13    = 3u"                         ; COSY/NOESY t1

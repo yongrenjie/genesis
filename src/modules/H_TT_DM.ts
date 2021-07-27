@@ -1,7 +1,8 @@
 import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 1H interleaved TOCSY with different mixing times`;
+let shortDescription = `; 1H TOCSY (mixing time: d9)
+; 1H TOCSY (mixing time: d14)`;
 
 let preamble = `
 "l11  = (d9/(p6*115.112))/2"        ; half the number of TOCSY loops

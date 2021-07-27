@@ -1,7 +1,7 @@
 import { Kupce2017ACIE, Kupce2018CC } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 13C HMBC (interleaved for two different nJ(CH))`;
+let shortDescription = `; 13C HMBC + HMBC (with different nJCH evolution delays)`;
 
 let preamble = `
 "p2     = p1*2"                       ; 1H hard 180
