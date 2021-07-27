@@ -582,6 +582,10 @@ export function makePulprogText(trueModuleNames: string[],
     const extraDipsiMixing    = hasMultipleCModules && !CModules[0].hasDipsi();
     // TODO: formalise this
     const hasInterleaved      = modules.some(mod => /\bd3\b/.test(mod.pulprog));
+    // The value of this flag is hardcoded, but is placed here in anticipation
+    // of other situations in which we might not want to have the NUS flag,
+    // e.g.  time-shared modules.
+    const useNusFlag          = true;
 
     // Initialise pulse programme components.
     // All these are arrays of strings.
@@ -738,13 +742,13 @@ export function makePulprogText(trueModuleNames: string[],
     // search in mainppTemp. We have to check the preamble of the module itself.
     const cnst38Present = lastModule.preamble.includes("cnst38");
     // Add in NUS redefinitions of t1 delays (to be used with -DNUS zgoptn flag)
-    if (d0Present || d10Present || d11Present || d20Present) {
+    if (useNusFlag && (d0Present || d10Present || d11Present || d20Present)) {
         let nusRedefinitions = [``, `#ifdef NUS`];
         if (d0Present) nusRedefinitions.push(`  "d0=(in0*t1list)+3u"`);
         if (d10Present) nusRedefinitions.push(`  "d10=(in10*t1list)+3u"`);
         if (d11Present) nusRedefinitions.push(`  "d11=(in11*t1list)+3u"`);
         if (d20Present) nusRedefinitions.push(`  "d20=(in20*t1list)+3u"`);
-        nusRedefinitions.push(`#endif`);
+        nusRedefinitions.push(`#endif /* NUS */`);
         mainpp.splice(4, 0, ...nusRedefinitions);
     }
     // incrementation on every round of l1 {{{3
@@ -776,35 +780,42 @@ export function makePulprogText(trueModuleNames: string[],
         `if "l1 % 2 == 0" {`,
     );
     // NUS list {{{4
-    mainpp.push(
-        `#ifdef NUS`,
-        `  1m t1list.inc`,
-        `#endif`,
-    );
+    if (useNusFlag) {
+        mainpp.push(
+            `#ifdef NUS`,
+            `  1m t1list.inc`,
+            `#endif /* NUS */`,
+        );
+    }
     // 13C phases (a slightly misleading name; this includes 1H phases) {{{4
     const ct1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("ct1")).filter(Boolean);
     ct1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
     // 13C t1 {{{4
     if (d0Present) {
-        mainpp.push(
-            ``,
-            `#ifdef NUS`,
-            `#else`,
-            `  1m id0   ; 13C t1`,
-            `#endif`,
-        );
+        if (useNusFlag) {
+            mainpp.push(
+                `#ifdef NUS`,
+                `#else`,
+                `  1m id0`,
+                `#endif /* NUS */`,
+            );
+        }
+        else mainpp.push(`  1m id0`);
     }
     // 1H t1 {{{4
     if (d10Present && !cnst38Present) {
-        mainpp.push(
-            `#ifdef NUS`,
-            `#else`,
-            `  1m id10    ; 1H t1`,
-            `#endif /* NUS */`,
-        );
+        if (useNusFlag) {
+            mainpp.push(
+                `#ifdef NUS`,
+                `#else`,
+                `  1m id10`,
+                `#endif /* NUS */`,
+            );
+        }
+        else mainpp.push(`  1m id10`);
     }
     // 15N phases (but only if NUS is enabled, which disables cnst39) {{{4
-    if (hasNModule) {
+    if (hasNModule && useNusFlag) {
         const nt1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("nt1")).filter(Boolean);
         mainpp.push(`#ifdef NUS`);
         nt1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
@@ -853,18 +864,31 @@ export function makePulprogText(trueModuleNames: string[],
     // incrementation every (2 * cnst39) rounds: 15N modules without NUS {{{3
     if (hasNModule) {
         const nt1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("nt1")).filter(Boolean);
-        mainpp.push(
-            `#ifdef NUS`,
-            `#else`,
-            `if "l1 % (2 * cnst39) == 0"`,
-            `{`,
-            `  1m id20`,
-        );
-        nt1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
-        mainpp.push(
-            `}`,
-            `#endif /* NUS */`
-        );
+        if (useNusFlag) {
+            mainpp.push(
+                `#ifdef NUS`,
+                `#else`,
+                `if "l1 % (2 * cnst39) == 0"`,
+                `{`,
+                `  1m id20`,
+            );
+            nt1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
+            mainpp.push(
+                `}`,
+                `#endif /* NUS */`
+            );
+        }
+        else {
+            mainpp.push(
+                `if "l1 % (2 * cnst39) == 0"`,
+                `{`,
+                `  1m id20`,
+            );
+            nt1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
+            mainpp.push(
+                `}`,
+            );
+        }
     }
 
     // Final loop and exit {{{3
@@ -993,10 +1017,16 @@ export function makePulprogText(trueModuleNames: string[],
         `#include <Grad.incl>`,
         `#include <Delay.incl>`,
         ``,
-        `#ifdef NUS`,
-        `define list<loopcounter> t1list=<$VCLIST>`,
-        `#endif`,
-        ``,
+    );
+    if (useNusFlag) {
+        pp.push(
+            `#ifdef NUS`,
+            `define list<loopcounter> t1list=<$VCLIST>`,
+            `#endif /* NUS */`,
+            ``,
+        );
+    }
+    pp.push(
         preamblesText,
         `"l0      = td1/${nbl}"               ; TD1/NBL`,
         `"l1      = 0"                 ; Running counter for delay / phase incrementation`,
