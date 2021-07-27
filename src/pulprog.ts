@@ -1028,7 +1028,7 @@ export function makePulprogText(trueModuleNames: string[],
     }
     pp.push(
         preamblesText,
-        `"l0      = td1/${nbl}"               ; TD1/NBL`,
+        `"l0      = td1/${nbl}"             ; TD1/NBL`,
         `"l1      = 0"                 ; Running counter for delay / phase incrementation`,
         `"l2      = 0"                 ; Running counter for NS`,
     );
