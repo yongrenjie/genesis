@@ -13,8 +13,8 @@ let preamble = `
 "in20   = 1000000/(2*cnst40*sfo3)"    ; 15N HMQC increment: cnst40 = SW(15N)
 define delay D[ID]a
 define delay D[ID]b
-"D[ID]a = p2/2+d20-4u+p21*2/PI+p17+d16"
-"D[ID]b = d24-p17-d16-de-8u+p1*2/PI"
+"D[ID]a = p17+d16+p2/2+d20+4u-p21*2/PI"
+"D[ID]b = d24-p17-d16-de-4u+p1*2/PI"
 "p17    = p16*cnst16"                 ; Longer gradients for 15N HMQC
 "cnst44 = 2*sfo3/sfo1"                ; gradient ratio
 define list<gradient> G[ID]={cnst44}
@@ -29,23 +29,20 @@ let pulprog = `
   d24
   (p1 ph2):f1
   (p21 ph4):f3
+  D[ID]a
+  (p22 ph0):f3
+  4u
+  p17:gp2
+  d16
+
+  d20
+  (p2 ph11)
+  d20
 
   4u
-  ; p16:gp2*-1*EA
-  ; d16
-  D[ID]a
-  (p22 ph4):f3
-  d20
   p17:gp2
   d16
-  (p2 ph11)
-  p17:gp2
-  d16
-  d20
-  (p22 ph7):f3
-  4u
-  ; p16:gp2*-1*EA
-  ; d16
+  (p22 ph0):f3
   D[ID]a
   (p21 ph7):f3
   d24
@@ -55,7 +52,6 @@ let pulprog = `
   d16
   D[ID]b
   4u pl16:f3
-  4u
 
   goscnp ph29 cpd3:f3
   50u do:f3
