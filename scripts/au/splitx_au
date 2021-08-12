@@ -23,9 +23,9 @@
 
 int    *irow, *irow_sum, *irow_diff;   // one 32-bit integer-typed FID
 double *drow, *drow_sum, *drow_diff;   // one 64-bit float-typed FID
-int i, j, k, n;                        // loop indices
-char ser_path[PATH_MAX];               // path to various ser files
-char expno_path[PATH_MAX];             // path to the NOAH expno directory
+int    i, j, k, n;                     // loop indices
+char   ser_path[PATH_MAX];             // path to various ser files
+char   expno_path[PATH_MAX];           // path to the NOAH expno directory
 
 // Check if dataset is 2D
 int parmode;
@@ -378,6 +378,11 @@ for (i = 0; i < nbl; i++) {
     STOREPARS("BYTORDA", byteorder)
     STOREPAR1("TD", half_resolution ? td1 / 2 : td1)
     STOREPAR1S("TD", half_resolution ? td1s / 2 : td1s)
+    if (half_resolution && !has_secondary_dataset) {
+        int ns;
+        FETCHPAR("NS", &ns)
+        STOREPAR("NS", ns * 2)
+    }
 
     // If NUS is enabled, copy vclist -> nuslist and enable NUS processing.
     if (nus == 1) {
@@ -390,7 +395,7 @@ for (i = 0; i < nbl; i++) {
             STOREPAR("Mdd_CsALG", 1)
             STOREPAR("Mdd_CsNITER", 50)
             STOREPAR("Mdd_CsVE", 0)
-            STOREPAR1S("NusTD", full_td1 / nbl) /* TODO: does this work with TS modules? */
+            STOREPAR1S("NusTD", full_td1 / nbl)
         }
     }
 
@@ -443,7 +448,7 @@ for (i = 0; i < nbl; i++) {
                 STOREPAR("Mdd_CsALG", 1)
                 STOREPAR("Mdd_CsNITER", 50)
                 STOREPAR("Mdd_CsVE", 0)
-                STOREPAR1S("NusTD", full_td1 / nbl) /* TODO: does this work with TS modules? */
+                STOREPAR1S("NusTD", full_td1 / nbl)
             }
         }
 
