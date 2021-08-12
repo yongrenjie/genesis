@@ -581,7 +581,7 @@ export function makePulprogText(trueModuleNames: string[],
     const hasMultipleCModules = CModules.length > 1;
     const extraDipsiMixing    = hasMultipleCModules && !CModules[0].hasDipsi();
     // TODO: formalise this
-    const hasInterleaved      = modules.some(mod => /\bd3\b/.test(mod.pulprog));
+    const hasInterleaved      = modules.some(mod => /\bd1?3\b/.test(mod.pulprog));
     // The value of this flag is hardcoded, but is placed here in anticipation
     // of other situations in which we might not want to have the NUS flag,
     // e.g.  time-shared modules.
