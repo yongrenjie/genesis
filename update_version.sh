@@ -14,12 +14,18 @@
 #
 # The old version number is read automatically from the output of `git tag`.
 
+# cd to the correct directory
+cd $(dirname "$0")
+
+# Get the current version number from git tag
+git_vno=$(git for-each-ref --sort=creatordate --format '%(refname)' refs/tags | sed 's:refs/tags/::' | grep "^v[[:digit:]]\{1,\}\.[[:digit:]]\{1,\}\.[[:digit:]]\{1,\}" | tail -n 1 | sed 's/v//')
+
 usage() {
     cat << EOM
 Usage:
   $0 <NEW_VERSION>
 
-(The current version number is $(git tag -l | tail -n 1 | sed 's/v//'))
+(The current version number is $git_vno)
 EOM
 }
 
@@ -48,12 +54,6 @@ if ! [ -z "$(git status --porcelain=v1 2>/dev/null)" ]; then
     git_dirty
     exit 1
 fi
-
-# cd to the correct directory
-cd $(dirname "$0")
-
-# Get the current version number from git tag
-git_vno=$(git tag -l | grep "^v[[:digit:]]\{1,\}\.[[:digit:]]\{1,\}\.[[:digit:]]\{1,\}" | tail -n 1 | sed 's/v//')
 
 # Escape the dots in version numbers
 old_vno=${git_vno//./\\.}
