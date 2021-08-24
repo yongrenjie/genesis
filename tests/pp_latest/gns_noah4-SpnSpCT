@@ -30,7 +30,7 @@
 
 #ifdef NUS
 define list<loopcounter> t1list=<$VCLIST>
-#endif
+#endif /* NUS */
 
 define delay DC_SEHSQCa
 define delay DC_SEHSQCb
@@ -88,7 +88,7 @@ define delay DN_SEHSQCg
 "DN_SEHSQCg = p17+d16-p1*0.78+de+8u"        ; final spin echo for refocusing gradient
 define list<gradient> GC_SEHSQC={cnst41}
 define list<gradient> GN_SEHSQC={cnst44}
-"l0      = td1/4"               ; TD1/NBL
+"l0      = td1/4"             ; TD1/NBL
 "l1      = 0"                 ; Running counter for delay / phase incrementation
 "l2      = 0"                 ; Running counter for NS
 "acqt0   = 0"
@@ -103,7 +103,7 @@ baseopt_echo
   "d0=(in0*t1list)+3u"
   "d10=(in10*t1list)+3u"
   "d20=(in20*t1list)+3u"
-#endif
+#endif /* NUS */
   1m iu2
 
   ; Cleanup
@@ -405,18 +405,17 @@ baseopt_echo
 if "l1 % 2 == 0" {
 #ifdef NUS
   1m t1list.inc
-#endif
+#endif /* NUS */
   1m ip5*2
   1m ip30*2
   1m ip31*2
-
 #ifdef NUS
 #else
-  1m id0   ; 13C t1
-#endif
+  1m id0
+#endif /* NUS */
 #ifdef NUS
 #else
-  1m id10    ; 1H t1
+  1m id10
 #endif /* NUS */
 #ifdef NUS
   1m ip4*2
@@ -537,4 +536,4 @@ ph31=0 2
 ; auprog: noah_nhsqc:noah_hsqc:noah_cosy:noah_tocsy
 ; module identifiers: N_SEHSQC C_SEHSQC H_COTO
 ; pulse programme created by genesis-v2.0.10, https://nmr-genesis.co.uk
-; Sun Jul 25 2021 18:38:44 GMT+0100 (British Summer Time)
+; Tue Aug 24 2021 18:10:51 GMT+0100 (British Summer Time)

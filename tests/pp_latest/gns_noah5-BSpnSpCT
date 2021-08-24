@@ -35,7 +35,7 @@
 
 #ifdef NUS
 define list<loopcounter> t1list=<$VCLIST>
-#endif
+#endif /* NUS */
 
 define delay DC_HMBC_CNFa
 define delay DC_HMBC_CNFb
@@ -106,7 +106,7 @@ define delay DN_SEHSQCg
 define list<gradient> GC_HMBC_CNF={cnst41}
 define list<gradient> GC_SEHSQC={cnst41}
 define list<gradient> GN_SEHSQC={cnst44}
-"l0      = td1/5"               ; TD1/NBL
+"l0      = td1/5"             ; TD1/NBL
 "l1      = 0"                 ; Running counter for delay / phase incrementation
 "l2      = 0"                 ; Running counter for NS
 "l6      = d15/(larger(p45,1u)*20)"  ; Number of ASAP loops
@@ -122,7 +122,7 @@ baseopt_echo
   "d0=(in0*t1list)+3u"
   "d10=(in10*t1list)+3u"
   "d20=(in20*t1list)+3u"
-#endif
+#endif /* NUS */
   1m iu2
 
   ; Cleanup
@@ -521,18 +521,17 @@ if "d15 > 1m"
 if "l1 % 2 == 0" {
 #ifdef NUS
   1m t1list.inc
-#endif
+#endif /* NUS */
   1m ip5*2
   1m ip30*2
   1m ip31*2
-
 #ifdef NUS
 #else
-  1m id0   ; 13C t1
-#endif
+  1m id0
+#endif /* NUS */
 #ifdef NUS
 #else
-  1m id10    ; 1H t1
+  1m id10
 #endif /* NUS */
 #ifdef NUS
   1m ip4*2
@@ -667,4 +666,4 @@ ph31=0 2
 ; auprog: noah_hmbc:noah_nhsqc:noah_hsqc:noah_cosy:noah_tocsy
 ; module identifiers: C_HMBC_CNF N_SEHSQC C_SEHSQC H_COTO
 ; pulse programme created by genesis-v2.0.10, https://nmr-genesis.co.uk
-; Sun Jul 25 2021 18:38:47 GMT+0100 (British Summer Time)
+; Tue Aug 24 2021 18:10:55 GMT+0100 (British Summer Time)

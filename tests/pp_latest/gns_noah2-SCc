@@ -24,7 +24,7 @@
 
 #ifdef NUS
 define list<loopcounter> t1list=<$VCLIST>
-#endif
+#endif /* NUS */
 
 define delay DC_HSQCa
 define delay DC_HSQCb
@@ -48,7 +48,7 @@ define delay DC_HSQCf
 "DC_HSQCe = DC_HSQCc+p3-p2/2"
 "DC_HSQCf = DC_HSQCb-p16-d16-p3-de+p1*2/PI-8u"
 define list<gradient> GC_HSQC={cnst41}
-"l0      = td1/2"               ; TD1/NBL
+"l0      = td1/2"             ; TD1/NBL
 "l1      = 0"                 ; Running counter for delay / phase incrementation
 "l2      = 0"                 ; Running counter for NS
 "acqt0   = 0"
@@ -62,7 +62,7 @@ baseopt_echo
 #ifdef NUS
   "d0=(in0*t1list)+3u"
   "d10=(in10*t1list)+3u"
-#endif
+#endif /* NUS */
   1m iu2
 
   ; Cleanup
@@ -187,18 +187,17 @@ baseopt_echo
 if "l1 % 2 == 0" {
 #ifdef NUS
   1m t1list.inc
-#endif
+#endif /* NUS */
   1m ip5*2
   1m rp6
   1m ip30*2
-
 #ifdef NUS
 #else
-  1m id0   ; 13C t1
-#endif
+  1m id0
+#endif /* NUS */
 #ifdef NUS
 #else
-  1m id10    ; 1H t1
+  1m id10
 #endif /* NUS */
 }
   lo to 4 times l0
@@ -270,4 +269,4 @@ ph30=0 2 2 0
 ; auprog: noah_hsqc:noah_clipcosy States
 ; module identifiers: C_HSQC H_CLIP_COSY
 ; pulse programme created by genesis-v2.0.10, https://nmr-genesis.co.uk
-; Sun Jul 25 2021 18:38:18 GMT+0100 (British Summer Time)
+; Tue Aug 24 2021 18:10:33 GMT+0100 (British Summer Time)
