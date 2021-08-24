@@ -153,7 +153,7 @@ function simpleModulesToTrue(simpleModules: SimpleModule[]): TrueModule[] {
                 "h1_jres": "H_JRES",
                 "h1_psyche_jres": "H_JRES_PS",
                 "h1_psyche": "H_PSYCHE",
-                "h1_tse_psyche": "H_TSE_PSYCHE",
+                "h1_tse_psyche": "H_PSYCHE_TSE",
             };
             trueModules.push(h1mapping[module]);
         }
