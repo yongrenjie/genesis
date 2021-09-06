@@ -29,6 +29,7 @@ import C_SEHSQC from "./modules/C_SEHSQC.js";
 import C_SEHSQC_DP from "./modules/C_SEHSQC_DP.js";
 import C_SEHSQCJ from "./modules/C_SEHSQCJ.js";
 import C_SEHSQCJ_K from "./modules/C_SEHSQCJ_K.js";
+import C_SEHSQCJ_OR from "./modules/C_SEHSQCJ_OR.js";
 import C_SEHSQC_OR from "./modules/C_SEHSQC_OR.js";
 import C_SEHSQC_IA from "./modules/C_SEHSQC_IA.js";
 import C_SEHSQCT from "./modules/C_SEHSQCT.js";
@@ -94,6 +95,7 @@ const allModules: Map<string, NOAHModule> = new Map([
     ["C_SEHSQC_DP", C_SEHSQC_DP],
     ["C_SEHSQCJ", C_SEHSQCJ],
     ["C_SEHSQCJ_K", C_SEHSQCJ_K],
+    ["C_SEHSQCJ_OR", C_SEHSQCJ_OR],
     ["C_SEHSQC_OR", C_SEHSQC_OR],
     ["C_SEHSQC_IA", C_SEHSQC_IA],
     ["C_SEHSQCT", C_SEHSQCT],

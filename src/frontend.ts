@@ -122,6 +122,9 @@ function simpleModulesToTrue(simpleModules: SimpleModule[]): TrueModule[] {
             else if (module === "c13_sehsqc") {
                 trueModules.push(hModulePresent ? "C_SEHSQC" : "C_SEHSQC_OR");
             }
+            else if (module === "c13_sehsqc_f2j") {
+                trueModules.push(hModulePresent ? "C_SEHSQCJ" : "C_SEHSQCJ_OR");
+            }
             else if (module === "c13_hsqc_f2j") trueModules.push("C_HSQCJ");
             else if (module === "c13_hsqc_cosy") {
                 trueModules.push(hModulePresent ? "C_HSQCC" : "C_HSQCC_CLIP");
@@ -227,6 +230,8 @@ function trueModulesToSimple(trueModules: TrueModule[]): SimpleModule[] {
                     "C_SEHSQC": "c13_sehsqc",
                     "C_SEHSQC_OR": "c13_sehsqc",
                     "C_SEHSQC_DP": "c13_sehsqc",
+                    "C_SEHSQCJ": "c13_sehsqc_f2j",
+                    "C_SEHSQCJ_OR": "c13_sehsqc_f2j",
                     "C_SEHSQCT": "c13_sehsqc_tocsy",
                     "C_SEHSQCT_OR": "c13_sehsqc_tocsy",
                 };

@@ -1,7 +1,7 @@
 import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 13C sensitivity-enhanced HSQC
+let shortDescription = `; 13C F2-coupled sensitivity-enhanced HSQC
 ;     [use -DEDIT for multiplicity editing]`
 
 let preamble = `
@@ -29,7 +29,7 @@ define list<gradient> G[ID]={cnst43}
 `
 
 let pulprog = `
-  ; 13C-1H seHSQC
+  ; 13C-1H F2-coupled seHSQC
 
   ; forward INEPT
   (p1 ph0):f1
@@ -98,15 +98,15 @@ let pulprog = `
   (p2 ph0):f1
   4u
   p16:gp4*G[ID]
-  d16 pl12:f2
+  d16
   4u
-  goscnp ph30 cpd2:f2   ; acquire 13C seHSQC
-  50u do:f2
+  goscnp ph30   ; acquire 13C seHSQC
+  50u
 `
 
 const mod = new NOAHModule(
     "c13",
-    "Sp",
+    "Spj",
     [Kupce2017ACIE],
     "noah_hsqc",
     shortDescription,

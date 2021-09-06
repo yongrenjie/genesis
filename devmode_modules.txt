@@ -68,6 +68,8 @@ C_SEHSQC_DP
 C_SEHSQC_OR
     Cavanagh-Rance seHSQC, essentially a mixture of `hsqcetgpsisp2.2` (for the
     non-edited) and `hsqcedetgpsisp2.3` (for the edited).
+C_SEHSQCJ_OR
+    Same as C_SEHSQC_OR but without 13C decoupling during acquitision.
 CI_HSQC
     Standard NOAH HSQC, but with an additional variable `cnst32` which allows
     the user to control the amount of C-H magnetisation excited by the INEPT
