@@ -41,6 +41,7 @@ import H_COSY from "./modules/H_COSY.js";
 import H_CONO from "./modules/H_CONO.js";
 import H_CONO_ST from "./modules/H_CONO_ST.js";
 import H_COSY_QF from "./modules/H_COSY_QF.js";
+import H_CORO from "./modules/H_CORO.js";
 import H_CORO_ST from "./modules/H_CORO_ST.js";
 import H_COTO from "./modules/H_COTO.js";
 import H_COTO_ST from "./modules/H_COTO_ST.js";
@@ -108,6 +109,7 @@ const allModules: Map<string, NOAHModule> = new Map([
     ["H_CONO", H_CONO],
     ["H_CONO_ST", H_CONO_ST],
     ["H_COSY_QF", H_COSY_QF],
+    ["H_CORO", H_CORO],
     ["H_CORO_ST", H_CORO_ST],
     ["H_COTO", H_COTO],
     ["H_COTO_ST", H_COTO_ST],

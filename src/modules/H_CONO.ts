@@ -47,7 +47,7 @@ let pulprog = `
   4u
   p16:gp5*EA
   d16
-  goscnp ph30    ; acquire phase sensitive H-H NOESY
+  goscnp ph30    ; acquire H-H NOESY
 `
 
 const mod = new NOAHModule(
