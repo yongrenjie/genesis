@@ -14,6 +14,7 @@ import C_HMBC_CFTO from "./modules/C_HMBC_CFTO.js";
 import C_HMBC_CFG from "./modules/C_HMBC_CFG.js";
 import C_HMBC_CNF from "./modules/C_HMBC_CNF.js";
 import C_HMBC_NOF from "./modules/C_HMBC_NOF.js";
+import C_HMQC from "./modules/C_HMQC.js";
 import C_HSQC from "./modules/C_HSQC.js";
 import C_HSQCC from "./modules/C_HSQCC.js";
 import C_HSQCC_CLIP from "./modules/C_HSQCC_CLIP.js";
@@ -80,6 +81,7 @@ const allModules: Map<string, NOAHModule> = new Map([
     ["C_HMBC_CFG", C_HMBC_CFG],
     ["C_HMBC_CNF", C_HMBC_CNF],
     ["C_HMBC_NOF", C_HMBC_NOF],
+    ["C_HMQC", C_HMQC],
     ["C_HSQC", C_HSQC],
     ["C_HSQCC", C_HSQCC],
     ["C_HSQCC_IA", C_HSQCC_IA],

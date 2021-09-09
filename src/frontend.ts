@@ -133,6 +133,7 @@ function simpleModulesToTrue(simpleModules: SimpleModule[]): TrueModule[] {
             else if (module === "c13_sehsqc_tocsy") {
                 trueModules.push(hModulePresent ? "C_SEHSQCT" : "C_SEHSQCT_OR");
             }
+            else if (module === "c13_hmqc") trueModules.push("C_HMQC");
         }
         // Deal with H1 module
         // There's no real logic to deal with here, so we can just use a mapping. (In principle,
@@ -221,6 +222,7 @@ function trueModulesToSimple(trueModules: TrueModule[]): SimpleModule[] {
             }
             else if (idx == 3) {  // 13C
                 const c13Mapping = {
+                    "C_HMQC": "c13_hmqc",
                     "C_HSQC": "c13_hsqc",
                     "C_HSQCJ": "c13_hsqc_f2j",
                     "C_HSQCC": "c13_hsqc_cosy",
