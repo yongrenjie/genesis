@@ -553,10 +553,14 @@ function removeDuplicateByKey<In, Out>(lines: In[],
  * @param {Map<string, NOAHModule>} allModules - Imported from allModules.js.
  * @param {boolean} allowLoneModule - If set to False, then return the empty
  *                                    string when NBL < 2.
+ * @param {boolean} allowHmbcHom - If set to False, then return the empty
+ *                                 string when HMBC is followed directly by a
+ *                                 homonuclear module.
  */
 export function makePulprogText(trueModuleNames: string[],
                                 allModules: Map<string, NOAHModule>,
-                                allowLoneModule: boolean) {
+                                allowLoneModule: boolean,
+                                allowHmbcHom: boolean) {
     // Initialisation {{{2
     // Error out if any modules don't exist.
     const missingModules = trueModuleNames.filter(name => !allModules.has(name));
@@ -580,12 +584,17 @@ export function makePulprogText(trueModuleNames: string[],
     const hasCModule          = CModules.length > 0;
     const hasMultipleCModules = CModules.length > 1;
     const extraDipsiMixing    = hasMultipleCModules && !CModules[0].hasDipsi();
-    // TODO: formalise this
     const hasInterleaved      = modules.some(mod => /\bd1?3\b/.test(mod.pulprog));
     // The value of this flag is hardcoded, but is placed here in anticipation
     // of other situations in which we might not want to have the NUS flag,
     // e.g.  time-shared modules.
     const useNusFlag          = true;
+
+    // Exit immediately if HMBC is followed directly by a homonuclear module.
+    if (!allowHmbcHom &&
+        hasHmbcModule && !hasNModule && !hasCModule && hasHModule) {
+        return "";
+    }
 
     // Initialise pulse programme components.
     // All these are arrays of strings.

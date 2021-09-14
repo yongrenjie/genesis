@@ -321,6 +321,16 @@ function toggleDevMode() {
     // if it's on, make the manual box visible
     const manualDiv = document.getElementById("manual-input");
     manualDiv!.style.display = on ? "block" : "none";
+
+    // Toggle pulprog placeholder text
+    const textArea = document.getElementById("pulprog_text") as HTMLTextAreaElement;
+    if (devModeButton.checked) {
+        textArea.placeholder = "Select one or more modules to generate pulse programme...";
+    }
+    else {
+        textArea.placeholder = "Select two or more modules to generate pulse programme... \n\n(note: HMBC should not be followed directly by a 1H–1H module)";
+    }
+
     // Final actions
     if (devModeButton.checked) {
         updateButtons();
@@ -381,7 +391,12 @@ function updatePulprogText() {
         return;
     }
     let ppText: string;
-    try { ppText = makePulprogText(moduleNames, allModules, devModeButton.checked); }
+    try {
+        ppText = makePulprogText(moduleNames, allModules,
+            devModeButton.checked,
+            devModeButton.checked
+        ); 
+    }
     catch (error) { console.error(error); ppText = ""; }
     pulprogTextarea.value = ppText;
 }
