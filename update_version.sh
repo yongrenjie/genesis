@@ -90,6 +90,7 @@ done
 # Create zip file of scripts
 long_name="noah_scripts_v${new_vno}"
 cp -r scripts ${long_name}
+rm static/downloads/*
 zip -r "static/downloads/${long_name}.zip" "${long_name}" -x '*.DS_Store*'
 rm -r ${long_name}
 
