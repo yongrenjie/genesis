@@ -16,7 +16,7 @@ jobs:
 
     - name: Perform hard reset to master branch
       run: |
-        git fetch origin master
+        git fetch origin master --tags
         git reset --hard origin/master
 
     - name: Setup node.js v14
@@ -34,11 +34,16 @@ jobs:
         npm install mocha
         npm test
 
+    - name: Build old versions of website
+      run: |
+        ./create_old_versions.sh
+
     - name: Push content to gh-pages branch
       run: |
         git config --local user.name "GitHub Actions"
         git config --local user.email "<>"
         git add -A
         git add -f build/    # Need -f because build/ is gitignored.
+        git add -f */*/*/build/
         git commit -m "Update published website" || true
         git push -f
