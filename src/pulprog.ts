@@ -584,22 +584,25 @@ export function makePulprogText(trueModuleNames: string[],
     const hasCModule          = CModules.length > 0;
     const hasMultipleCModules = CModules.length > 1;
     const extraDipsiMixing    = hasMultipleCModules && !CModules[0].hasDipsi();
-    const hasInterleaved      = modules.some(mod => /\bd1?3\b/.test(mod.pulprog));
+    const hasInterleaved      = modules.some(mod => mod.interleaved);
     // The value of this flag is hardcoded, but is placed here in anticipation
     // of other situations in which we might not want to have the NUS flag,
-    // e.g.  time-shared modules.
+    // e.g. time-shared modules.
     const useNusFlag          = true;
 
     // Exit immediately if HMBC is followed directly by a homonuclear module.
     if (!allowHmbcHom &&
         hasHmbcModule && !hasNModule && !hasCModule && hasHModule) {
-        return "";
+        return "HMBC + homonuclear module combinations are not very effective\nPlease use developer mode if you really want these";
     }
 
     // Initialise pulse programme components.
     // All these are arrays of strings.
+    let nbl: number = 0;
+    let nAdvertisedModules: number = 0;   // may differ from NBL because of interleaved modules
     let pp: string[] = [];
     let shortCodes: string[] = [];
+    let shortCodesInterleaved: string[] = [];
     let shortDescriptions: string[] = [];
     let preambles: string[] = [];
     let citations: Citation[] = [];
@@ -650,9 +653,20 @@ export function makePulprogText(trueModuleNames: string[],
     for (const [i, mod] of modules.entries()) {  // n is the number of backend modules
         const nextMod = modules[i + 1];
 
+        nbl += mod.nfid;
+        const interleavedFactor = mod.interleaved ? 2 : 1;
+        nAdvertisedModules += mod.nfid * interleavedFactor;
+
         // Collect shortCodes, shortDescriptions, and preambles.
         // The preambles will later be postprocessed.
-        shortCodes.push(mod.shortCode);
+        const codes = mod.shortCode.split(" ");
+        if (codes.length == 2) {  // interleaved modules
+            shortCodes.push(codes[0]);
+            shortCodesInterleaved.push(codes[1]);
+        }
+        else {
+            shortCodes.push(mod.shortCode);
+        }
         shortDescriptions.push(...mod.shortDescription.split("\n"));
         preambles.push(...mod.preamble
             .split("\n")
@@ -906,13 +920,15 @@ export function makePulprogText(trueModuleNames: string[],
     mainpp.push(``, `50u BLKGRAD`, `exit`);
     const mainppText = mainpp.join("\n");  // convenience string for future use
     // Postprocess preambles {{{2
-    // Generate a pulse programme name by postprocessing shortCodes, as well as
-    // counting the number of FID periods (i.e. the NBL parameter).
-    const fidRegexes = [/goscnp ph\d{1,2}/, /go=\d ph\d{1,2}/];
-    const nbl = mainpp.filter(line => fidRegexes.some(rgx => line.search(rgx) != -1)).length;
-    // Return an empty string if we have less than one module.
+    //
+    // Return an empty string if we have more than five or less than one module.
+    if (nbl > 5) return "NBL > 5 is not currently supported by TopSpin";
     if (nbl < 2 && !allowLoneModule) return "";
-    const ppShortCodeName = `; gns_noah${nbl}-${shortCodes.join("")}`;
+    // Construct pulse programme name
+    let ppShortCodeName = `gns_noah${nAdvertisedModules}-${shortCodes.join("")}`;
+    if (shortCodesInterleaved.length > 0) {
+        ppShortCodeName += `-${shortCodesInterleaved.join("")}`;
+    }
 
     // Create citation texts.
     const citationText = [...new Set(citations)]
@@ -1010,9 +1026,11 @@ export function makePulprogText(trueModuleNames: string[],
 
     // Finally, string everything together {{{2
     pp.push(
-        ppShortCodeName,
+        `; ${ppShortCodeName}`,
         ``,
         ...shortDescriptions,
+        ``,
+        `; set 'NBL' TopSpin parameter to ${nbl}`,
         ``,
         `;$CLASS=HighRes`,
         `;$DIM=2D`,

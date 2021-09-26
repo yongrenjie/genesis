@@ -328,7 +328,7 @@ function toggleDevMode() {
         textArea.placeholder = "Select one or more modules to generate pulse programme...";
     }
     else {
-        textArea.placeholder = "Select two or more modules to generate pulse programme... \n\n(note: HMBC should not be followed directly by a 1H–1H module)";
+        textArea.placeholder = "Select two or more modules to generate pulse programme...";
     }
 
     // Final actions
@@ -415,9 +415,9 @@ document.getElementById("reset_button")!.addEventListener("click", resetButtons)
 /**
  * Triggers a download for the pulse programme file.
  */
-function savePPFile() {
+function savePPFile(): void {
     const ppText = (document.getElementById("pulprog_text") as HTMLTextAreaElement).value;
-    if (ppText.length > 0) {
+    if (ppText.length > 0 && ppText.startsWith("; ")) {
         // use application/octet-stream to stop browsers from adding an extension
         const ppBlob = new Blob([ppText], {type: "application/octet-stream"});
         // replace this with below
