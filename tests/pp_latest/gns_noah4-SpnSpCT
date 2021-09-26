@@ -535,5 +535,5 @@ ph31=0 2
 
 ; auprog: noah_nhsqc:noah_hsqc:noah_cosy:noah_tocsy
 ; module identifiers: N_SEHSQC C_SEHSQC H_COTO
-; pulse programme created by genesis-v2.0.10, https://nmr-genesis.co.uk
-; Tue Aug 24 2021 18:10:51 GMT+0100 (British Summer Time)
+; pulse programme created by genesis-v2.0.13, https://nmr-genesis.co.uk
+; Sun Sep 26 2021 19:11:30 GMT+0100 (British Summer Time)

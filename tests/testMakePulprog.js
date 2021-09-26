@@ -46,30 +46,47 @@ function assertPPEqual(pp1, pp2) {
     assert.equal(pp1Lines.join("\n"), pp2Lines.join("\n"))
 }
 
+
+function makeTest(fname, moduleCodes) {
+    function theTest() {
+        const old_pp = fs.readFileSync(fname, "utf8");
+        const new_pp = makePulprogText(moduleCodes, allModules);
+        assertPPEqual(old_pp, new_pp);
+    }
+    return theTest;
+}
+
 describe("makePulprogText regression tests", function() {
-    it("NOAH-2 SCc: HSQC + CLIP-COSY", function() {
-        const v206_pp = fs.readFileSync("./tests/pp_latest/gns_noah2-SCc", "utf8");
-        const new_pp = makePulprogText(["C_HSQC", "H_CLIP_COSY"], allModules);
-        assertPPEqual(v206_pp, new_pp);
+    describe("standard experiments", function() {
+        it("NOAH-2 SCc: HSQC + CLIP-COSY",
+            makeTest("./tests/pp_latest/gns_noah2-SCc",
+                ["C_HSQC", "H_CLIP_COSY"]));
+        it("NOAH-3 SSjCc: HSQC + coupled HSQC + CLIP-COSY",
+            makeTest("./tests/pp_latest/gns_noah3-SSjCc",
+                ["CI_HSQC", "C_HSQCJ", "H_CLIP_COSY"]));
+        it("NOAH-3 StST: HSQC-TOCSY + HSQC + TOCSY",
+            makeTest("./tests/pp_latest/gns_noah3-StST",
+                ["CI_HSQCT", "C_HSQC", "H_TOCSY"]));
+        it("NOAH-4 SpnSpCT: 15N seHSQC + 13C seHSQC + COSY + TOCSY",
+            makeTest("./tests/pp_latest/gns_noah4-SpnSpCT",
+                ["N_SEHSQC", "C_SEHSQC", "H_COTO"]));
+        it("NOAH-5 BSpnSpCT: 13C HMBC + 15N seHSQC + 13C seHSQC + COSY + TOCSY",
+            makeTest("./tests/pp_latest/gns_noah5-BSpnSpCT",
+                ["C_HMBC_CNF", "N_SEHSQC", "C_SEHSQC", "H_COTO"]));
     });
-    it("NOAH-3 SSjCc: HSQC + coupled HSQC + CLIP-COSY", function() {
-        const v206_pp = fs.readFileSync("./tests/pp_latest/gns_noah3-SSjCc", "utf8");
-        const new_pp = makePulprogText(["CI_HSQC", "C_HSQCJ", "H_CLIP_COSY"], allModules);
-        assertPPEqual(v206_pp, new_pp);
-    });
-    it("NOAH-3 StST: HSQC-TOCSY + HSQC + TOCSY", function() {
-        const v206_pp = fs.readFileSync("./tests/pp_latest/gns_noah3-StST", "utf8");
-        const new_pp = makePulprogText(["CI_HSQCT", "C_HSQC", "H_TOCSY"], allModules);
-        assertPPEqual(v206_pp, new_pp);
-    });
-    it("NOAH-4 SpnSpCT: 15N seHSQC + 13C seHSQC + COSY + TOCSY", function() {
-        const v206_pp = fs.readFileSync("./tests/pp_latest/gns_noah4-SpnSpCT", "utf8");
-        const new_pp = makePulprogText(["N_SEHSQC", "C_SEHSQC", "H_COTO"], allModules);
-        assertPPEqual(v206_pp, new_pp);
-    });
-    it("NOAH-5 BSpnSpCT: 13C HMBC + 15N seHSQC + 13C seHSQC + COSY + TOCSY", function() {
-        const v206_pp = fs.readFileSync("./tests/pp_latest/gns_noah5-BSpnSpCT", "utf8");
-        const new_pp = makePulprogText(["C_HMBC_CNF", "N_SEHSQC", "C_SEHSQC", "H_COTO"], allModules);
-        assertPPEqual(v206_pp, new_pp);
+    describe("TS/interleaved experiments", function() {
+        it("p-NOAH 5",
+            makeTest("./tests/pp_latest/gns_noah4-BkQdseiaSpjT",
+                ["C_HMBC_CF_K", "C_HSQCC_DIA", "C_SEHSQCJ", "H_TOCSY"]));
+        it("p-NOAH 6",
+            makeTest("./tests/pp_latest/gns_noah4-BQdseiaSpiaT",
+                ["C_HMBC_CF", "C_HSQCC_DIA", "C_SEHSQC_IA", "H_TOCSY"]));
+        it("p-NOAH 8",
+            makeTest("./tests/pp_latest/gns_noah4-BbQdseiaSpiaTT",
+                ["C_HMBC_CFDD", "C_HSQCC_DIA", "C_SEHSQC_IA", "H_TT_DM"]));
+        it("p-NOAH 10",
+            makeTest("./tests/pp_latest/gns_noah5-BbQclipiaSpiaTcTr",
+                ["C_HMBC_CFDD", "C_HSQCC_CIA", "C_SEHSQC_IA", "H_TT_CR"]));
     });
 });
+
