@@ -1,0 +1,715 @@
+; gns_noah4-BbQdseiaSpiaTT
+
+; 13C HMBC + HMBC (with different nJCH evolution delays)
+; 13C HSQC-COSY + HSQC
+; 13C sensitivity-enhanced HSQC, IPAP mode
+;     [use -DEDIT for multiplicity editing]
+;     [set userPx to 'noah_hsqc noah_TS' to perform addition/subtraction of IP/AP multiplets]
+; 1H TOCSY (mixing time: d9)
+; 1H TOCSY (mixing time: d14)
+
+;$CLASS=HighRes
+;$DIM=2D
+;$TYPE=
+;$SUBTYPE=
+;$COMMENT=
+
+;E. Kupce, T. D. W. Claridge
+;Angew. Chem. Int. Ed. 2017, 56 (39), 11779-11783
+;NOAH: NMR Supersequences for Small Molecule Analysis and Structure Elucidation
+
+;E. Kupce, T. D. W. Claridge
+;Chem. Commun. 2018, 54 (52), 7139-7142
+;Molecular Structure from a Single NMR Supersequence
+
+;A. L. Hansen, E. Kupce, D.-W. Li, L. Bruschweiler-Li, R. Bruschweiler
+;Anal. Chem. 2021, 93 (15), 6112-6119
+;2D NMR-Based Metabolomics with HSQC/TOCSY NOAH Supersequences
+
+;J. R. J. Yong, A. L. Hansen, E. Kupce, T. D. W. Claridge
+;J. Magn. Reson. 2021, 327, 107027
+;Increasing Sensitivity and Versatility in NMR Supersequences with New HSQC-based Modules
+
+#include <Avance.incl>
+#include <Grad.incl>
+#include <Delay.incl>
+
+#ifdef NUS
+define list<loopcounter> t1list=<$VCLIST>
+#endif /* NUS */
+
+define delay DC_HMBC_CFDDa
+define delay DC_HMBC_CFDDb
+define delay DC_HMBC_CFDDc
+define delay DC_HMBC_CFDDd
+define delay DC_HMBC_CFDDe
+define delay DC_HMBC_CFDDf
+define delay DC_HMBC_CFDDg
+define delay DC_HSQCC_DIAa
+define delay DC_HSQCC_DIAb
+define delay DC_HSQCC_DIAc
+define delay DC_HSQCC_DIAd
+define delay DC_HSQCC_DIAe
+define delay DC_HSQCC_DIAf
+define delay DC_HSQCC_DIAg
+define delay DC_HSQCC_DIAh
+define delay DC_SEHSQC_IAa
+define delay DC_SEHSQC_IAb
+define delay DC_SEHSQC_IAc
+define delay DC_SEHSQC_IAd
+define delay DC_SEHSQC_IAe
+define delay DC_SEHSQC_IAf
+define delay DC_SEHSQC_IAg
+define delay DC_SEHSQC_IAh
+define delay DC_SEHSQC_IAi
+define delay DC_SEHSQC_IAj
+define delay DC_SEHSQC_IAk
+define delay DC_SEHSQC_IAl
+define delay DC_SEHSQC_IAm
+"cnst41        = 2*sfo2/sfo1"                    ; gradient ratio
+"d2            = 0.5s/cnst2"                     ; JCOMP
+"d3            = 3u"                             ; 13C interleaved t1
+"d4            = 0.25s/cnst2"                    ; 13C INEPT
+"d12           = 0.25s/cnst12"                   ; COSY mixing (< 1/4J(HH))
+"d13           = 3u"                             ; TOCSY t1
+"in3           = inf1/2"                         ; 13C interleaved increment
+"in13          = 2*dw"                           ; TOCSY increment
+"l11           = (d9/(p6*115.112))/2"            ; half the number of TOCSY loops
+"l12           = l11*2"                          ; number of TOCSY loops
+"l17           = (d30/(p6*115.112))/2"           ; half the number of DIPSI-2 loops
+"l18           = l17*2"                          ; number of DIPSI-2 loops
+"l19           = (d14/(p6*115.112))/2"           ; half the number of long TOCSY loops
+"l20           = l19*2"                          ; number of long TOCSY loops
+"p2            = p1*2"                           ; 1H hard 180
+"DC_HMBC_CFDDa = d4-p14/2"
+"DC_HMBC_CFDDb = d4+p14/2"
+"DC_HMBC_CFDDc = (0.5s/cnst6)-p16-d16"
+"DC_HMBC_CFDDd = (0.5s/cnst7)-p16-d16"
+"DC_HMBC_CFDDe = (0.5s/cnst13)-p16-d16-4u"
+"DC_HMBC_CFDDf = (0.5s/cnst14)-p16-d16-4u"
+"DC_HMBC_CFDDg = p16+d16+p2/2+d3-p3*2/PI+4u"
+"DC_HSQCC_DIAa = d4-p14/2"
+"DC_HSQCC_DIAb = d4+p14/2"
+"DC_HSQCC_DIAc = p16+d16+p2/2+d3-p3*2/PI+4u"
+"DC_HSQCC_DIAd = d4-p14/2"
+"DC_HSQCC_DIAe = d12-d4-p14/2"
+"DC_HSQCC_DIAf = d2-p31/2"
+"DC_HSQCC_DIAg = d2+p31/2"
+"DC_HSQCC_DIAh = d2+p31/2-p16-d16-p3-4u-de"
+"DC_SEHSQC_IAa = d4-p14/2"                       ; zz-filter
+"DC_SEHSQC_IAb = d4+p14/2"                       ; zz-filter
+"DC_SEHSQC_IAc = d4-larger(p2,p14)/2"            ; INEPT
+"DC_SEHSQC_IAd = p16+d16+p2+d3*2-4u-p3*2/PI"     ; 13C pre-t1 if editing
+"DC_SEHSQC_IAe = d2-p16-d16+p3*2/PI"             ; 13C editing period
+"DC_SEHSQC_IAf = d2-p2-p3*2/PI"                  ; 13C editing period
+"DC_SEHSQC_IAg = p16+d16+p2/2+d3-4u-p3*2/PI"     ; 13C pre-/post-t1 if no editing
+"DC_SEHSQC_IAh = d6-cnst17*p24/2-p19-d16"        ; first spin echo after t1
+"DC_SEHSQC_IAi = d4-larger(p2,p14)/2-p16-d16"    ; second spin echo after t1
+"DC_SEHSQC_IAj = d4-p2/2"                        ; final spin echo for refocusing gradient
+"DC_SEHSQC_IAk = d4-p2/2-p16-d16-de"             ; final spin echo for refocusing gradient
+"DC_SEHSQC_IAl = d4-larger(p2,p14)/2"            ; final spin echo for refocusing gradient
+"DC_SEHSQC_IAm = d4-larger(p2,p14)/2-p16-d16-de" ; final spin echo for refocusing gradient
+define list<gradient> GC_HMBC_CFDD={cnst41}
+define list<gradient> GC_HSQCC_DIA={cnst41}
+define list<gradient> GC_SEHSQC_IA={cnst41}
+"l0      = td1/4"             ; TD1/NBL
+"l1      = 0"                 ; Running counter for delay / phase incrementation
+"l2      = 0"                 ; Running counter for NS
+define list<gradient> EA_TS={1 -1}
+"l6      = d15/(larger(p45,1u)*20)"  ; Number of ASAP loops
+"acqt0   = 0"
+baseopt_echo
+
+1 ze
+2 30m
+3 5m
+4 50u UNBLKGRAD
+  1m iu2
+
+  ; Cleanup
+  4u pl2:f2
+  (p3 ph0):f2
+  4u pl1:f1
+  p16:gp0
+  d16
+  (p1 ph0):f1
+  4u
+  p16:gp0*1.37
+  d16
+  4u BLKGRAD
+  d1 st0
+  4u UNBLKGRAD
+
+
+  ; MODULE 1
+  ; 13C-1H HMBC
+
+  ; zz-filter
+  (p1 ph0):f1
+  DC_HMBC_CFDDa
+  (p14:sp3 ph0):f2
+  (p2 ph0):f1
+  DC_HMBC_CFDDb
+  (p1 ph0):f1
+  DC_HMBC_CFDDa
+  (p14:sp3 ph0):f2
+  (p2 ph0):f1
+  DC_HMBC_CFDDb pl2:f2
+
+  ; second-order low-pass J-filter
+  (lalign (p1 ph0):f1 (p3 ph7):f2 )
+  DC_HMBC_CFDDc
+  p16:gp10*-3
+  d16
+  (p3 ph7):f2
+  DC_HMBC_CFDDd
+  p16:gp10*2
+  d16
+  (p3 ph7):f2
+  4u
+  p16:gp10
+  d16
+  ; nJCH evolution
+if "l1 % 2 == 0" {
+  DC_HMBC_CFDDe
+}
+else {
+  DC_HMBC_CFDDf
+}
+
+  ; coherence transfer to 13C and t1
+  (p3 ph7):f2
+  DC_HMBC_CFDDg
+  (p14:sp3 ph0):f2
+  4u
+  p16:gp1
+  d16
+  d3
+  (p2 ph11):f1
+  d3
+  4u
+  p16:gp1
+  d16
+  (p14:sp3 ph0):f2
+  DC_HMBC_CFDDg pl2:f2
+  (p3 ph18):f2
+  (p2 ph0):f1
+  4u
+  p16:gp1*EA_TS*GC_HMBC_CFDD
+  d16
+  4u
+  goscnp ph24
+
+  ; Cleanup
+  4u pl1:f1
+  4u pl2:f2
+  (p3 ph0):f2
+  4u
+  p16:gp0*1.77
+  2m st
+
+
+  ; MODULE 2
+  ; 13C-1H HSQC-COSY
+
+  ; INEPT
+  (p1 ph0):f1
+  DC_HSQCC_DIAa
+  (p14:sp3 ph0):f2
+  (p2 ph0):f1
+  DC_HSQCC_DIAb pl2:f2
+  (p1 ph1):f1
+  (p3 ph18):f2
+  DC_HSQCC_DIAc
+
+  (p14:sp3 ph0):f2
+  4u
+  p16:gp4
+  d16
+  d3
+  (p2 ph11):f1
+  d3
+  4u
+  p16:gp4
+  d16
+  (p14:sp3 ph0):f2
+  DC_HSQCC_DIAc pl2:f2
+
+  ; reverse INEPT
+  (p3 ph7):f2
+  (p1 ph1):f1
+  DC_HSQCC_DIAd  ; d4-p14/2
+  (p14:sp3 ph0):f2
+  DC_HSQCC_DIAe  ; d12-d4-p14/2
+  (p2 ph1):f1
+  d12
+  (p1 ph1):f1
+if "l1 % 2 == 0"
+{
+  DC_HSQCC_DIAf         ; d2-p31/2
+  (p31:sp18 ph0):f2
+}
+else
+{
+  DC_HSQCC_DIAg         ; d2+p31/2
+}
+  (p2 ph1):f1
+  DC_HSQCC_DIAh pl2:f2 ; d2+p31/2-(...)
+  p16:gp4*GC_HSQCC_DIA*EA_TS
+  d16
+  (p3 ph0):f2
+  4u pl12:f2
+  goscnp ph24 cpd2:f2   ; acquire 13C HSQC-COSY
+  50u do:f2
+
+if "d30 > 1m"
+{
+  50u
+  p16:gp13
+  d16 pl10:f1
+						;begin DIPSI2
+11 p6*3.556 ph3
+  p6*4.556 ph1
+  p6*3.222 ph3
+  p6*3.167 ph1
+  p6*0.333 ph3
+  p6*2.722 ph1
+  p6*4.167 ph3
+  p6*2.944 ph1
+  p6*4.111 ph3
+
+  p6*3.556 ph1
+  p6*4.556 ph3
+  p6*3.222 ph1
+  p6*3.167 ph3
+  p6*0.333 ph1
+  p6*2.722 ph3
+  p6*4.167 ph1
+  p6*2.944 ph3
+  p6*4.111 ph1
+
+  p6*3.556 ph1
+  p6*4.556 ph3
+  p6*3.222 ph1
+  p6*3.167 ph3
+  p6*0.333 ph1
+  p6*2.722 ph3
+  p6*4.167 ph1
+  p6*2.944 ph3
+  p6*4.111 ph1
+
+  p6*3.556 ph3
+  p6*4.556 ph1
+  p6*3.222 ph3
+  p6*3.167 ph1
+  p6*0.333 ph3
+  p6*2.722 ph1
+  p6*4.167 ph3
+  p6*2.944 ph1
+  p6*4.111 ph3
+  lo to 11 times l18
+						;end DIPSI2
+  p16:gp13*1.333
+  d16
+}
+
+  ; Cleanup
+  4u pl1:f1
+  4u pl2:f2
+  (p3 ph0):f2
+  4u
+  p16:gp0*2.32
+  2m st
+
+
+  ; MODULE 3
+  ; 13C-1H seHSQC (with ZIP element)
+
+  ; ZIP
+  (p1 ph0):f1
+  DC_SEHSQC_IAa
+  (p14:sp3 ph0):f2
+  (p2 ph0):f1
+  DC_SEHSQC_IAb
+  (p1 ph0):f1
+  DC_SEHSQC_IAa
+  (p14:sp3 ph0):f2
+  (p2 ph0):f1
+  DC_SEHSQC_IAb            ; 13C-1H: y,  12C-1H: z
+
+  ; forward INEPT
+#ifdef EDIT
+  (p1 ph1):f1
+#else
+  (p1 ph3):f1
+#endif /* EDIT */
+  DC_SEHSQC_IAc
+  4u
+  (center (p2 ph0):f1 (p14:sp3 ph0):f2 )
+  4u
+  DC_SEHSQC_IAc pl2:f2
+  4u
+  (p1 ph1):f1 (p3 ph18):f2
+
+  ; t1 evolution with optional multiplicity editing
+#ifdef EDIT
+  4u
+  DC_SEHSQC_IAd
+  (p31:sp18 ph0):f2
+  p16:gp4
+  d16 pl2:f2
+
+  d3
+  (p2 ph7):f1
+  d3
+
+  p16:gp4
+  d16
+  DC_SEHSQC_IAe
+  (p31:sp18 ph0):f2
+  (p2 ph0):f1
+  DC_SEHSQC_IAf pl2:f2
+#else
+  4u
+  DC_SEHSQC_IAg 
+  (p24:sp7 ph0):f2
+  p16:gp4
+  d16 pl2:f2
+
+  d3
+  (p2 ph7):f1
+  d3
+
+  p16:gp4
+  d16
+  (p24:sp7 ph0):f2
+  4u
+  DC_SEHSQC_IAg pl2:f2
+#endif /* EDIT */
+
+  ; reverse INEPT for first component
+  (center (p1 ph0):f1 (p3 ph7):f2 )
+  p19:gp6
+  d16
+  DC_SEHSQC_IAh
+  (center (p2 ph0):f1 (p24:sp7 ph0):f2 )
+  DC_SEHSQC_IAh
+  p19:gp6
+  d16 pl2:f2
+  (center (p1 ph1):f1 (p3 ph19):f2 )
+
+  ; reverse INEPT for second component
+  p16:gp7
+  d16
+  DC_SEHSQC_IAi
+  (center (p2 ph0):f1 (p14:sp3 ph0):f2 )
+  DC_SEHSQC_IAi
+  p16:gp7
+  d16
+  (p1 ph0):f1
+
+  ; spin echo, IP/AP selection, and refocusing gradient
+if "l1 % 2 == 0" {
+  DC_SEHSQC_IAj
+  (p2 ph0):f1
+  DC_SEHSQC_IAk
+  p16:gp4*EA_TS*GC_SEHSQC_IA
+  d16
+  goscnp ph24
+}
+else {
+  DC_SEHSQC_IAl
+  (center (p2 ph0):f1 (p14:sp3 ph0):f2 )
+  DC_SEHSQC_IAm
+  p16:gp4*EA_TS*GC_SEHSQC_IA
+  d16 ip24
+  goscnp ph24       ; acquire 13C seHSQC
+  dp24
+}
+
+  ; ASAP mixing
+if "d15 > 1m"
+{
+  50u
+  p16:gp0*0.4
+  d16
+  4u
+						;begin ASAP
+6 (p45:sp45 ph=0.0):f1
+  (p45:sp45 ph=150.0):f1
+  (p45:sp45 ph=60.0):f1
+  (p45:sp45 ph=150.0):f1
+  (p45:sp45 ph=0.0):f1
+  (p45:sp45 ph=0.0):f1
+  (p45:sp45 ph=150.0):f1
+  (p45:sp45 ph=60.0):f1
+  (p45:sp45 ph=150.0):f1
+  (p45:sp45 ph=0.0):f1
+  (p45:sp45 ph=180.0):f1
+  (p45:sp45 ph=330.0):f1
+  (p45:sp45 ph=240.0):f1
+  (p45:sp45 ph=330.0):f1
+  (p45:sp45 ph=180.0):f1
+  (p45:sp45 ph=180.0):f1
+  (p45:sp45 ph=330.0):f1
+  (p45:sp45 ph=240.0):f1
+  (p45:sp45 ph=330.0):f1
+  (p45:sp45 ph=180.0):f1
+  lo to 6 times l6
+						;end ASAP
+  4u pl1:f1
+}
+
+  ; Cleanup
+  4u pl1:f1
+  4u pl2:f2
+  (p3 ph0):f2
+  4u
+  p16:gp0*-1.29
+  2m st
+
+
+  ; MODULE 4
+  ; 1H-1H interleaved TOCSY + TOCSY
+
+  (p1 ph20):f1
+  d13
+  (p1 ph0):f1
+  10u gron12
+  (p32:sp29 ph0):f1
+  20u groff
+  d16 pl10:f1
+
+if "l1 % 2 == 0"
+{
+						;begin DIPSI2
+8 p6*3.556 ph3
+  p6*4.556 ph1
+  p6*3.222 ph3
+  p6*3.167 ph1
+  p6*0.333 ph3
+  p6*2.722 ph1
+  p6*4.167 ph3
+  p6*2.944 ph1
+  p6*4.111 ph3
+
+  p6*3.556 ph1
+  p6*4.556 ph3
+  p6*3.222 ph1
+  p6*3.167 ph3
+  p6*0.333 ph1
+  p6*2.722 ph3
+  p6*4.167 ph1
+  p6*2.944 ph3
+  p6*4.111 ph1
+
+  p6*3.556 ph1
+  p6*4.556 ph3
+  p6*3.222 ph1
+  p6*3.167 ph3
+  p6*0.333 ph1
+  p6*2.722 ph3
+  p6*4.167 ph1
+  p6*2.944 ph3
+  p6*4.111 ph1
+
+  p6*3.556 ph3
+  p6*4.556 ph1
+  p6*3.222 ph3
+  p6*3.167 ph1
+  p6*0.333 ph3
+  p6*2.722 ph1
+  p6*4.167 ph3
+  p6*2.944 ph1
+  p6*4.111 ph3
+  lo to 8 times l12
+						;end DIPSI2
+}
+else
+{
+						;begin DIPSI2
+10 p6*3.556 ph3
+  p6*4.556 ph1
+  p6*3.222 ph3
+  p6*3.167 ph1
+  p6*0.333 ph3
+  p6*2.722 ph1
+  p6*4.167 ph3
+  p6*2.944 ph1
+  p6*4.111 ph3
+
+  p6*3.556 ph1
+  p6*4.556 ph3
+  p6*3.222 ph1
+  p6*3.167 ph3
+  p6*0.333 ph1
+  p6*2.722 ph3
+  p6*4.167 ph1
+  p6*2.944 ph3
+  p6*4.111 ph1
+
+  p6*3.556 ph1
+  p6*4.556 ph3
+  p6*3.222 ph1
+  p6*3.167 ph3
+  p6*0.333 ph1
+  p6*2.722 ph3
+  p6*4.167 ph1
+  p6*2.944 ph3
+  p6*4.111 ph1
+
+  p6*3.556 ph3
+  p6*4.556 ph1
+  p6*3.222 ph3
+  p6*3.167 ph1
+  p6*0.333 ph3
+  p6*2.722 ph1
+  p6*4.167 ph3
+  p6*2.944 ph1
+  p6*4.111 ph3
+  lo to 10 times l20
+						;end DIPSI2
+}
+
+  p16:gp11
+  d16
+  10u gron12*1.333
+  (p32*0.75:sp29 ph0):f1
+  20u groff
+  d16 pl1:f1
+  4u
+  (p1 ph0):f1
+
+  go=2 ph26
+
+  ; incrementation on every pass
+  1m iu1
+  1m igrad EA
+  30m wr #0 if #0 zd
+
+  ; incrementation on every second pass
+if "l1 % 2 == 0" {
+#ifdef NUS
+  1m t1list.inc
+#endif /* NUS */
+  1m ip19*2
+  1m ip20
+  1m igrad EA_TS
+}
+
+  ; incrementation on every fourth pass
+if "l1 % 4 == 0" {
+  1m ip18*2
+  1m rp20
+  1m ip24*2
+  1m id3
+  1m id13
+}
+  lo to 4 times l0
+
+50u BLKGRAD
+exit
+
+ph0=0
+ph1=1
+ph3=3
+ph7=0 0 2 2
+ph11=0 0 0 0 2 2 2 2
+ph18=0 2
+ph19=1 1 3 3
+ph20=0 2
+ph24=0 2 2 0
+ph26=0 2
+
+;gpnam0: SMSQ10.100
+;gpnam1: SMSQ10.100
+;gpnam4: SMSQ10.100
+;gpnam6: SMSQ10.100
+;gpnam7: SMSQ10.100
+;gpnam10: SMSQ10.100
+;gpnam11: SMSQ10.100
+;gpnam13: SMSQ10.100
+;gpz0: 29% (for purging)
+;gpz1: 80% (HMBC CTP)
+;gpz4: 70% (13C CTP)
+;gpz6: 11% (13C spin echo CTP)
+;gpz7: -5% (13C spin echo CTP)
+;gpz10: 5% (HMBC J-filter)
+;gpz11: 43% (1H purge gradient)
+;gpz12: 11% (1H ZQ filter)
+;gpz13: 19% (13C DIPSI-2 purge gradients)
+
+;WaveMaker shaped pulses (use 'wvm -a' to generate)
+;sp3:wvm:wu180C13: cawurst-20(60 kHz, 0.5 ms; L2H)
+;sp18:wvm:wu180Jcomp: cawurst-40(280 ppm; Jcomp, L2H)
+;sp45:wvm:wuASAP: cawurst-2(30 ppm, 1.0 ms; Q=3)
+;cpd2:wvm:wudec: cawurst_d-20(220 ppm, 1.4 ms; L2H)
+
+;cnst2: = 1J(CH)
+;cnst6: = minimum 1J(CH)
+;cnst7: = maximum 1J(CH)
+;cnst12: > J(HH), ca. 30 Hz for CLIP-COSY mixing
+;cnst13: = nJ(CH) long-range
+;cnst14: = second nJ(CH) long-range for interleaved HMBC
+;cnst17: = -0.5 for Crp60comp.4
+;cnst41: gradient ratio (2*C/H)
+;cpd2: 13C decoupling according to sequence defined by cpdprg2
+;d1: relaxation delay
+;d2: 1/2J(CH)
+;d3: 13C t1 for interleaved/time-shared modules
+;d4: 1/4J(CH)
+;d6: 1/8J(CH) for all multiplicities, 1/4J(CH) for CH only
+;d9: DIPSI-2 mixing time (TOCSY)
+;d12: <1/4J(HH) CLIP-COSY mixing time
+;d13: 1H t1 for interleaved/time-shared modules
+;d14: DIPSI-2 mixing time (TOCSY 2)
+;d15: optional ASAP mixing time [40-60 ms] (use `wvm`)
+;d16: delay for homospoil/gradient recovery [200 us]
+;d30: DIPSI-2 mixing time (between 13C modules)
+;l0: TD1 / NBL, i.e. 'true TD1'
+;l1: running counter from 1 to TD1/NBL, for phase/delay incrementation
+;l6: loop for ASAP mixing
+;l11: DIPSI-2 (1H module): half the number of DIPSI-2 cycles
+;l12: DIPSI-2 (1H module): actual number of DIPSI-2 cycles
+;l17: DIPSI-2 (between 13C modules): half the number of DIPSI-2 cycles
+;l18: DIPSI-2 (between 13C modules): actual number of DIPSI-2 cycles
+;l19: DIPSI-2 (2nd 1H module): half the number of DIPSI-2 cycles
+;l20: DIPSI-2 (2nd 1H module): actual number of DIPSI-2 cycles
+;p1: f1 channel -  90 degree high power pulse
+;p2: f1 channel - 180 degree high power pulse
+;p3: f2 channel -  90 degree high power pulse
+;p6: f1 channel -  90 degree low power pulse
+;p14: f2 channel - 180 degree shaped pulse for inversion
+;     = 500usec for Crp60,0.5,20.1
+;p16: gradient pulse   [1 ms]
+;p19: gradient pulse 2 [600 us]
+;p24: f2 channel - 180 degree shaped pulse for refocusing
+;      = 2msec for Crp60comp.4
+;p31: f2 channel - 180 degree shaped pulse for inversion with J-compensation
+;p32: f1 channel - 180 degree shaped pulse (adiabatic)      [20 msec]
+;     smoothed chirp (sweepwidth, 20% smoothing, 10000 points)
+;p45: f1 channel -  180 degree CAWURST-2 pulse
+;pl1: f1 channel - power level for pulse (default)
+;pl2: f2 channel - power level for pulse (default)
+;pl10: f1 channel - power level for TOCSY-spinlock
+;pl12: f2 channel - power level for CPD/BB decoupling
+;sp3: f2 channel - shaped pulse (180 degree inversion)
+;sp7: f2 channel - shaped pulse (180 degree refocusing)
+;sp18: f2 channel - shaped pulse (180 degree with J-compensation)
+;sp29: f1 channel - shaped pulse (adiabatic)
+;sp45: f1 channel - CAWURST-2 pulse (180 degree)
+;spnam3: Crp60,0.5,20.1 or WaveMaker
+;spnam7: Crp60comp.4
+;spnam18: Crp60_xfilt.2 or WaveMaker
+;spnam29: Crp60,20,20.10
+;spnam45: wuASAP (generate via WaveMaker)
+;aq: acquisition time
+;ds: >= 16
+;FnMODE: echo-antiecho
+;NBL: number of blocks (NOAH modules)
+;ns: 1 * n
+
+; auprog: noah_hmbc noah_hmbc:noah_hsqc noah_TS:noah_hsqc noah_split:noah_tocsy States noah_tocsy States
+; module identifiers: C_HMBC_CFDD C_HSQCC_DIA C_SEHSQC_IA H_TT_DM
+; pulse programme created by genesis-v2.0.13, https://nmr-genesis.co.uk
+; Sun Sep 26 2021 19:11:30 GMT+0100 (British Summer Time)
