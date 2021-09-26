@@ -23,11 +23,17 @@ Usage:
    The pulse programmes should then appear in the current working directory.
 
 More functionality to be added later.
+
+In order to generate the regression tests, launch the local version using `npm
+test`, cd to the `tests` directory containing this script, and run
+
+    python download.py -a 127.0.0.1:5555 -f regression_tests.txt -o ./pp_latest
 """
 
 import argparse
 import os
 import sys
+from pathlib import Path
 
 import requests
 
@@ -46,14 +52,18 @@ def main(args):
                 print((f"modules {' '.join(modules)} gave error code"
                        f" {r.status_code}"), file=sys.stderr)
             else:
+                dirname = (Path(args.output)
+                           if args.output is not None
+                           else Path.cwd())
                 fname = r.text.splitlines()[0][1:].strip()
-                with open(fname, 'w') as outfile:
+                with open(dirname / fname, 'w') as outfile:
                     print(r.text, file=outfile)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file", help="File containing module lists", type=str)
+    parser.add_argument("-o", "--output", help="Output directory", type=str)
     parser.add_argument("-a", "--address",
                         help=("Domain name (e.g. 'nmr-genesis.co.uk' or IP (e.g."
                               " '127.0.0.1:5555') to download from"),
