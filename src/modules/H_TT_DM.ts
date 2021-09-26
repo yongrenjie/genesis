@@ -1,8 +1,7 @@
 import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 1H TOCSY (mixing time: d9)
-; 1H TOCSY (mixing time: d14)`;
+let shortDescription = `; 1H interleaved 2x TOCSY (two different mixing times)`
 
 let preamble = `
 "l11  = (d9/(p6*115.112))/2"        ; half the number of TOCSY loops
@@ -47,12 +46,14 @@ else
 
 const mod = new NOAHModule(
     "h1",
-    "TT",
+    "T T",
     [Kupce2017ACIE],
     "noah_tocsy States noah_tocsy States",
     shortDescription,
     preamble,
-    pulprog
+    pulprog,
+    1,
+    true
 );
 export default mod;
 

@@ -1,7 +1,7 @@
 import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 1H phase-sensitive TOCSY`;
+let shortDescription = `; 1H phase-sensitive TOCSY (double NS, half TD1)`;
 
 let preamble = `
 "l11  = (d9/(p6*115.112))/2"        ; half the number of TOCSY loops
@@ -42,7 +42,9 @@ const mod = new NOAHModule(
     "noah_tocsy States noah_add",
     shortDescription,
     preamble,
-    pulprog
+    pulprog,
+    1,
+    false
 );
 export default mod;
 

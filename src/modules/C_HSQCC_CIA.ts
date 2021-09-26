@@ -1,7 +1,7 @@
 import { Kupce2017ACIE, Gyongyosi2021AC } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 13C HSQC-CLIP-COSY + HSQC`
+let shortDescription = `; 13C TS HSQC-CLIP-COSY + HSQC`
 
 let preamble = `
 "p2      = p1*2"                       ; 1H hard 180
@@ -105,12 +105,14 @@ else
 
 const mod = new NOAHModule(
     "c13",
-    "Qclipia",
+    "Qc S",
     [Kupce2017ACIE, Gyongyosi2021AC],
     "noah_hsqc noah_TS",
     shortDescription,
     preamble,
-    pulprog
+    pulprog,
+    1,
+    true
 );
 export default mod;
 

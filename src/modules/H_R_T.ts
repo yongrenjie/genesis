@@ -1,7 +1,7 @@
 import { Kupce2017ACIE, Thiele2009CEJ } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 1H ROESY + TOCSY`
+let shortDescription = `; 1H interleaved ROESY + TOCSY`
 
 let preamble = `
 "d13    = 3u"                         ; ROESY t1
@@ -51,12 +51,14 @@ else
 
 const mod = new NOAHModule(
     "h1",
-    "Rt",
+    "R T",
     [Kupce2017ACIE, Thiele2009CEJ],
     "noah_roesy States noah_tocsy States",
     shortDescription,
     preamble,
-    pulprog
+    pulprog,
+    1,
+    true
 );
 export default mod;
 

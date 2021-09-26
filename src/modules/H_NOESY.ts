@@ -35,7 +35,9 @@ const mod = new NOAHModule(
     "noah_noesy States",
     shortDescription,
     preamble,
-    pulprog
+    pulprog,
+    1,
+    false
 );
 export default mod;
 

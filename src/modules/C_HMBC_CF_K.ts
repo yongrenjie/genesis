@@ -1,7 +1,7 @@
 import { Kupce2017ACIE, Kupce2018CC } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 13C HMBC (half resolution)`;
+let shortDescription = `; 13C HMBC (double NS, half TD1)`;
 
 let preamble = `
 "p2     = p1*2"                       ; 1H hard 180
@@ -86,7 +86,9 @@ const mod = new NOAHModule(
     "noah_hmbc noah_add",
     shortDescription,
     preamble,
-    pulprog
+    pulprog,
+    1,
+    false
 );
 export default mod;
 

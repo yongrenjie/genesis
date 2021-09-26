@@ -100,7 +100,9 @@ const mod = new NOAHModule(
     "noah_hsqc",
     shortDescription,
     preamble,
-    pulprog
+    pulprog,
+    1,
+    false
 );
 export default mod;
 

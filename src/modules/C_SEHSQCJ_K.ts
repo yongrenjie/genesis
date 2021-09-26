@@ -1,7 +1,7 @@
 import { Kupce2017ACIE, Hansen2021AC, Yong2021JMR } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 13C sensitivity-enhanced HSQC (F2 coupled, half resolution)
+let shortDescription = `; 13C sensitivity-enhanced HSQC (F2 coupled, double NS, half TD1)
 ;     [use -DEDIT for multiplicity editing]`
 
 let preamble = `
@@ -138,7 +138,9 @@ const mod = new NOAHModule(
     "noah_hsqc noah_add",
     shortDescription,
     preamble,
-    pulprog
+    pulprog,
+    1,
+    false
 );
 export default mod;
 

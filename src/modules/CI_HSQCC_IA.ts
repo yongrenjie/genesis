@@ -124,12 +124,14 @@ else
 
 const mod = new NOAHModule(
     "c13",
-    "Qia",
+    "Q S",
     [Kupce2017ACIE],
     "noah_hsqc noah_TS",
     shortDescription,
     preamble,
-    pulprog
+    pulprog,
+    1,
+    true
 );
 export default mod;
 

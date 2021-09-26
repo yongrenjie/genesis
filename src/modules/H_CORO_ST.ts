@@ -43,7 +43,9 @@ const mod = new NOAHModule(
     "noah_cosy States:noah_roesy States",
     shortDescription,
     preamble,
-    pulprog
+    pulprog,
+    2,
+    false
 );
 export default mod;
 

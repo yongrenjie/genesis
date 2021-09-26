@@ -2,8 +2,7 @@ import { Kupce2017ACIE, Hansen2021AC, Yong2021JMR } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 13C sensitivity-enhanced HSQC, IPAP mode
-;     [use -DEDIT for multiplicity editing]
-;     [set userPx to 'noah_hsqc noah_TS' to perform addition/subtraction of IP/AP multiplets]`
+;     [use -DEDIT for multiplicity editing]`
 
 let preamble = `
 "p2      = p1*2"                       ; 1H hard 180
@@ -161,12 +160,14 @@ else {
 
 const mod = new NOAHModule(
     "c13",
-    "Spia",
+    "Sip Sap",
     [Kupce2017ACIE, Hansen2021AC, Yong2021JMR],
     "noah_hsqc noah_split",
     shortDescription,
     preamble,
-    pulprog
+    pulprog,
+    1,
+    true
 );
 export default mod;
 

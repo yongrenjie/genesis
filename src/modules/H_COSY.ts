@@ -31,7 +31,9 @@ const mod = new NOAHModule(
     "noah_cosy",
     shortDescription,
     preamble,
-    pulprog
+    pulprog,
+    1,
+    false
 );
 export default mod;
 

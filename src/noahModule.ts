@@ -10,6 +10,8 @@ class NOAHModule {
     shortDescription: string;
     preamble: string;
     pulprog: string;
+    nfid: number;
+    interleaved: boolean;
 
     constructor(category: ModuleCategory,
                 shortCode: string,
@@ -17,7 +19,9 @@ class NOAHModule {
                 auprog: string,
                 shortDescription: string,
                 preamble: string,
-                pulprog: string) {
+                pulprog: string,
+                nfid: number,
+                interleaved: boolean) {
         this.category = category;
         this.shortCode = shortCode;
         this.citations = citations;
@@ -25,6 +29,8 @@ class NOAHModule {
         this.shortDescription = shortDescription;
         this.preamble = preamble;
         this.pulprog = pulprog;
+        this.nfid = nfid;
+        this.interleaved = interleaved;
     }
 
     // Parse the pulse programme to figure out which nuclei the pulse programme

@@ -27,7 +27,9 @@ const mod = new NOAHModule(
     "noah_jres QF",
     shortDescription,
     preamble,
-    pulprog
+    pulprog,
+    1,
+    false
 );
 export default mod;
 
