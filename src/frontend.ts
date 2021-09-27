@@ -441,6 +441,19 @@ function goToFAQ(){
 }
 document.getElementById("faq_button")!.addEventListener("click", goToFAQ);
 // }}}2
+// Make devmode button and FAQ collapsibles accessible {{{2
+let faqLabels = [...document.querySelectorAll("label.toggle-label"),
+                 ...document.querySelectorAll("label.switch-label")] as HTMLLabelElement[];
+faqLabels.forEach(label => {
+    label.addEventListener('keydown', e => {
+    // 32 === spacebar; 13 === enter
+        if (e.which === 32 || e.which === 13) {
+            e.preventDefault();
+            label.click();
+        };
+    });
+});
+// }}}2
 // Set the length of the five module boxes {{{2
 /**
  * Sets the grid-template-rows property of each module selector box to be equal

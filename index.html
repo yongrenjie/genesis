@@ -37,7 +37,7 @@
                 Developer mode <a href="#faq_devmode">[?]</a>
                 <div class="switch">
                     <input id="devmode_button" type="checkbox" class="switch-input" />
-                    <label for="devmode_button" class="switch-label"></label>
+                    <label for="devmode_button" class="switch-label" tabindex="0"></label>
                 </div>
             </div> <!-- /devmode }}}1 -->
 
@@ -528,7 +528,7 @@
                 <div class="faq-headings">Acquiring NOAH experiments</div>
 
                 <input id="faq_acquire" class="toggle-button" type="checkbox"> <!-- {{{2 --->
-                <label for="faq_acquire" class="toggle-label">Acquiring NOAH experiments: an overview</label>
+                <label for="faq_acquire" class="toggle-label" tabindex="0">Acquiring NOAH experiments: an overview</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
                         <p>Nearly all of the setup is the same as for a standard <sup>13</sup>C–<sup>1</sup>H 2D experiment. There are two parameters which require additional consideration:</p>
@@ -549,7 +549,7 @@
                 </div>
 
                 <input id="faq_zgoptns" class="toggle-button" type="checkbox">
-                <label for="faq_zgoptns" class="toggle-label">What are acquisition flags, and how do I use them?</label>
+                <label for="faq_zgoptns" class="toggle-label" tabindex="0">What are acquisition flags, and how do I use them?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
                         <p>Acquisition flags are ways of conditionally running (technically, compiling) parts of a pulse programme. They are useful when we don&rsquo;t want to create two versions of what&rsquo;s essentially the same module with just small changes. In this case, you can enable acquisition flags to turn on/off optional features. The available acquisition flags are listed near the top of the pulse programme. To turn on an acquisition flag, such as <span class="ms">-DEDIT</span>, simply include it in the TopSpin acquisition parameter <b>zgoptns</b> (accessible via <span class="ms">ased</span>).</p>
@@ -565,7 +565,7 @@
                 </div> <!-- }}}2 -->
 
                 <input id="faq_nus" class="toggle-button" type="checkbox"> <!-- {{{2 --->
-                <label for="faq_nus" class="toggle-label">Can non-uniform sampling be used with NOAH sequences?</label>
+                <label for="faq_nus" class="toggle-label" tabindex="0">Can non-uniform sampling be used with NOAH sequences?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
                         <p>NUS can be enabled in the pulse sequence, but <b>not</b> in the conventional way of setting FnTYPE to <span class="ms">non-uniform sampling</span>. For all pulse programmes downloaded from this website, please follow the steps below:</p>
@@ -588,7 +588,7 @@
                 </div> <!-- }}}2 --->
 
                 <input id="faq_rga" class="toggle-button" type="checkbox"> <!-- {{{2 --->
-                <label for="faq_rga" class="toggle-label">Does rga work as expected?</label>
+                <label for="faq_rga" class="toggle-label" tabindex="0">Does rga work as expected?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
                         <p>No, it doesn&rsquo;t. It tries to optimise the receiver gain for the first module, instead of the entire supersequence as a whole. If the first module has low intrinsic sensitivity (which is typically the case), then <span class="ms">rga</span> will suggest unreasonably large values for the receiver gain, leading to ADC overflows for the more sensitive modules.</p>
@@ -598,7 +598,7 @@
                 </div> <!-- }}}2 --->
 
                 <input id="faq_weird" class="toggle-button" type="checkbox"> <!-- {{{2 --->
-                <label for="faq_weird" class="toggle-label">During acquisition, is it normal that TopSpin shows weird numbers in the progress bar?</label>
+                <label for="faq_weird" class="toggle-label" tabindex="0">During acquisition, is it normal that TopSpin shows weird numbers in the progress bar?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
                         <p>Yes. Using the same example as before, if you are running a NOAH-4 experiment with 256 <i>t</i><sub>1</sub> increments (i.e. TD1 = 1024), then the progress line in the status bar will inch towards &ldquo;1024/256&rdquo;.</p>
@@ -606,7 +606,7 @@
                 </div> <!-- }}}2 --->
 
                 <input id="faq_automation" class="toggle-button" type="checkbox"> <!-- {{{2 --->
-                <label for="faq_automation" class="toggle-label">How can NOAH experiments be set up for use in automation?</label>
+                <label for="faq_automation" class="toggle-label" tabindex="0">How can NOAH experiments be set up for use in automation?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
                         <p>The acquisition AU programme (AUNM) should be set to <span class="ms">au_zgcosy</span>, to avoid issues with <span class="ms">rga</span> (see above). The processing AU programme (AUNMP) should be set to <span class="ms">splitx_au</span>. If the pulse programmes and AU scripts are up-to-date, then there is no need to set the user processing parameters.</p>
@@ -615,7 +615,7 @@
                 </div> <!-- }}}2 --->
 
                 <input id="faq_diffparams" class="toggle-button" type="checkbox"> <!-- {{{2 --->
-                <label for="faq_diffparams" class="toggle-label">Is it possible to have different values of SW/TD2/RG/&lt;other parameter&gt; for different modules?</label>
+                <label for="faq_diffparams" class="toggle-label" tabindex="0">Is it possible to have different values of SW/TD2/RG/&lt;other parameter&gt; for different modules?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
                         <p>In a way, yes, but as far as we are aware it has to be hardcoded in the pulse programme (and often in a nontrivial way). That would make the pulse programme overly specialised for a particular sample/spectrometer, and isn&rsquo;t something we want to do here.</p>
@@ -625,7 +625,7 @@
                 <div class="faq-headings">Processing NOAH experiments</div>
 
                 <input id="faq_process" class="toggle-button" type="checkbox"> <!-- {{{2 --->
-                <label for="faq_process" class="toggle-label">Processing NOAH experiments: an overview</label>
+                <label for="faq_process" class="toggle-label" tabindex="0">Processing NOAH experiments: an overview</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
                         <p>If you acquired this data under automation, it should have already been set up such that your data is automatically processed. If your NOAH dataset was acquired with experiment number (expno) <i>m</i>, then check whether you already have datasets in expnos (1000 × <i>m</i>) + 1 onwards. If those exist, then chances are these <i>are</i> the individual processed 2D spectra. If not, then read on...</p>
@@ -638,7 +638,7 @@
                 </div> <!-- }}}2 --->
 
                 <input id="faq_macos" class="toggle-button" type="checkbox"> <!-- {{{2 --->
-                <label for="faq_macos" class="toggle-label">I&rsquo;m using macOS Catalina / Big Sur and the processing doesn&rsquo;t work.</label>
+                <label for="faq_macos" class="toggle-label" tabindex="0">I&rsquo;m using macOS Catalina / Big Sur and the processing doesn&rsquo;t work.</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
                         <p><b>On Catalina:</b> Please update TopSpin to version 4.1.0 or later. On older versions of TopSpin for macOS, there is a bug in TopSpin which causes certain parts of AU programmes to not work on Catalina.</p>
@@ -655,7 +655,7 @@
                 <div class="faq-headings">General NOAH questions</div>
 
                 <input id="faq_download" class="toggle-button" type="checkbox"> <!-- {{{2 --->
-                <label for="faq_download" class="toggle-label">Download all NOAH scripts</label>
+                <label for="faq_download" class="toggle-label" tabindex="0">Download all NOAH scripts</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
                         <p><a class="scripts" download>Click here to download the AU and Python scripts (.zip).</a> We assume you know what you&rsquo;re doing here. (If not, the other entries in this FAQ have more information.)</p>
@@ -663,7 +663,7 @@
                 </div> <!-- }}}2 -->
 
                 <input id="faq_cite" class="toggle-button" type="checkbox"> <!-- {{{2 --->
-                <label for="faq_cite" class="toggle-label">What papers should I cite / where can I find out more about NOAH experiments?</label>
+                <label for="faq_cite" class="toggle-label" tabindex="0">What papers should I cite / where can I find out more about NOAH experiments?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
                         <p>Thanks for asking. Firstly, note that the pulse programmes provided above will already suggest references that are relevant. If you&rsquo;re interested in reading more, the original NOAH paper is:</p>
@@ -689,7 +689,7 @@
                 <div class="faq-headings">About this website</div>
 
                 <input id="faq_devmode" class="toggle-button" type="checkbox"> <!-- {{{2 --->
-                <label for="faq_devmode" class="toggle-label">What is &ldquo;developer mode&rdquo;? What do those module codes mean?</label>
+                <label for="faq_devmode" class="toggle-label" tabindex="0">What is &ldquo;developer mode&rdquo;? What do those module codes mean?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
                         <p>Internally, the website contains multiple &ldquo;versions&rdquo; of many NOAH modules. For example, there are several different sensitivity-enhanced HSQC sequences, each having different strengths and weaknesses: which of these to use depends on the context. If the seHSQC module is placed at the end of a sequence (e.g. NOAH-2 BS<sup>+</sup>), then we can use the original Cavanagh–Rance seHSQC, which has greater sensitivity than the versions specifically modified for use in NOAH. On the other hand, if there is a homonuclear module which follows (e.g. NOAH-2 S<sup>+</sup>C), then we should use the versions specifically designed to preserve the uncoupled proton magnetisation. (We have an upcoming paper which will explain this fully.)</p>
@@ -699,7 +699,7 @@
                 </div> <!-- }}}2 --->
 
                 <input id="faq_reproducibility" class="toggle-button" type="checkbox"> <!-- {{{2 --->
-                <label for="faq_reproducibility" class="toggle-label">Can I access old versions of the GENESIS website?</label>
+                <label for="faq_reproducibility" class="toggle-label" tabindex="0">Can I access old versions of the GENESIS website?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
                         <p>Yes; you can navigate to version X.Y.Z of the website using the URL <span class="ms">https://nmr-genesis.co.uk/X/Y/Z</span>. For example, version 2.0.13 can be accessed <a href="https://nmr-genesis.co.uk/2/0/13">here</a>.</p>
@@ -709,7 +709,7 @@
                 </div> <!-- }}}2 --->
 
                 <input id="faq_jon" class="toggle-button" type="checkbox"> <!-- {{{2 --->
-                <label for="faq_jon" class="toggle-label">Who made this website? How do I contact them?</label>
+                <label for="faq_jon" class="toggle-label" tabindex="0">Who made this website? How do I contact them?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
                         <p>The GENESIS website was written, and is maintained, by Jonathan Yong; that&rsquo;s me! As of the time of writing, I am a PhD student at Oxford, and have been working with Tim Claridge (Oxford) and Ēriks Kupče (Bruker UK) on developing NOAH experiments.</p>
