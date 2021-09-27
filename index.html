@@ -576,13 +576,11 @@
                         </ol>
                         <p>To disable NUS on a dataset where it was previously enabled, run <span class="ms">noah_nus2 off</span>.</p>
                         <p>The optimal sampling density depends on what spectra you&rsquo;re trying to run as well as your sample. However, there is nothing special about NOAH in this regard: the typical considerations (e.g. how sparse the spectrum is) are the same, and whatever works for the individual spectra will also work on NOAH.</p>
-                        <p><b>Incompatibilities:</b>
+                        <p><b>Incompatibilities</b>
                         <ul>
                             <li>The script will not work on old versions of pulse sequences, e.g. those found in the Supporting Information of older papers. For these, please use the old <span class="ms">noah_nus.py</span> script.</li>
                             <li>NUS is not compatible with the cnst39 scaling in <sup>15</sup>N modules respectively. If you try to enable this on a dataset with cnst39 &gt; 1, the script will silently reset cnst39 back to 1.</li>
-                            <li>NUS does not work with with QF-style modules (namely QF COSY) or cnst37-scaled <sup>1</sup>H modules (2DJ and PSYCHE). The script will fail if called on these sequences.</li>
-                            <li>It also cannot be used with QF-style modules, namely QF COSY and 2DJ.</li>
-                            <li>Lastly, it is not compatible with time-shared / interleaved experiments.</li>
+                            <li>Finally, NUS totally does not work with with QF-style modules (namely QF COSY), cnst37-scaled <sup>1</sup>H modules (2DJ and PSYCHE), or time-shared / interleaved experiments. The <span class="ms">-DNUS</span> flag is not encoded in these pulse sequences, so the script will not work at all.</li>
                         </ul>
 
                         </p>

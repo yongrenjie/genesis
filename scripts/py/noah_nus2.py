@@ -30,10 +30,7 @@ def enable_nus():
                " reconfiguring NUS.")
         EXIT()
 
-    # Check if the pulse programme contains 1H QF module, or more precisely,
-    # whether it contains the text "id11" (non-QF modules use d10 instead of
-    # d11). We also reject "cnst37" (as it appears in PSYCHE 2DJ but without
-    # d11).
+    # Check if the pulse programme supports -DNUS flag
     pulprog = GETPAR("PULPROG")
     for directory in getParfileDirs(0):  # gets pulprog directories
         found_pulprog = False
@@ -47,16 +44,14 @@ def enable_nus():
                         has_nus_flag = True
                         break
             if not has_nus_flag:
-                ERRMSG("noah_nus2.py: This script is only compatible with"
-                       " new pulse programmes (2021 onwards).\nFor older"
-                       " NOAH pulse programmes, please use noah_nus.py.")
+                ERRMSG("noah_nus2.py: This pulse programme does not support"
+                       " the -DNUS acquisition flag. Please re-download the"
+                       " pulse programme from the GENESIS website (https://"
+                       "nmr-genesis.co.uk), and make sure that this NOAH"
+                       " experiment does not contain any modules that are"
+                       " incompatible with NUS (e.g. QF COSY, 2DJ, or PSYCHE)."
+                       )
                 EXIT()
-            with open(os.path.join(directory, pulprog), "r") as file:
-                for line in file:
-                    if "id11" in line or "cnst37" in line:
-                        ERRMSG("noah_nus2.py: NUS is not compatible with QF"
-                               " modules in NOAH.")
-                        EXIT()
             break
     # Exit if pulse programme was not found
     if not found_pulprog:
