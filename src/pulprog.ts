@@ -588,7 +588,7 @@ export function makePulprogText(trueModuleNames: string[],
     // The value of this flag is hardcoded, but is placed here in anticipation
     // of other situations in which we might not want to have the NUS flag,
     // e.g. time-shared modules.
-    const useNusFlag          = true;
+    const useNusFlag          = !hasInterleaved;
 
     // Exit immediately if HMBC is followed directly by a homonuclear module.
     if (!allowHmbcHom &&
