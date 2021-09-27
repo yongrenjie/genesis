@@ -63,16 +63,7 @@ html {
     font-family: "Source Sans Pro", sans-serif;
     box-sizing: border-box;
     font-size: 18px;
-    /* uncomment this for smooth scroll */
-    /* scroll-behavior: smooth; */
 }
-
-/* uncomment this for smooth scroll */
-/* @media screen and (prefers-reduced-motion: reduce) { */
-/* 	html { */
-/* 		scroll-behavior: auto; */
-/* 	} */
-/* } */
 
 *, *:before, *:after {
     box-sizing: inherit;
@@ -184,17 +175,6 @@ div#spinner {
   100% { transform: rotate(360deg); }
 }
 
-dt {
-    font-size: 120%;
-    font-weight: bold;
-    padding: 2ex 0 0 0;
-}
-
-dd {
-    margin-top: 1ex;
-    margin-bottom: 1.5ex;
-}
-
 sup, sub {
     font-size: 70%;
     vertical-align: baseline;
@@ -209,71 +189,4 @@ sub {
 div#warning {
     text-align: center;
     color: #ff0000;
-}
-
-div#faq {
-    margin-bottom: 30px;
-}
-
-ul#faq_toc {
-    font-size: 110%;
-    margin: 20px 60px;
-    line-height: 1.5;
-}
-
-ol.steps {
-    counter-reset: list;
-}
-
-ol.steps > li {
-    margin: 0 0 1ex 0;
-    list-style: none;
-    position: relative;
-}
-
-ol.steps > li:before {
-    content: "Step " counter(list) ": ";
-    counter-increment: list;
-    position: absolute;
-    left: -3.2em;
-}
-
-ol.steps > li > p:first-child {
-    font-style: italic;
-}
-
-/* https://stackoverflow.com/a/4615631/7115316 */
-ol.citation-start {
-    counter-reset: cite-counter;
-}
-
-ol.citation-start li, ol.citation li {
-    margin: 0 0 0.7ex 0;
-    list-style: none;
-    position: relative;
-}
-
-ol.citation-start li:before, ol.citation li:before {
-    content: "[" counter(cite-counter) "] ";
-    counter-increment: cite-counter;
-    position: absolute;
-    left: -1.4em;
-}
-
-dd>ul {
-    margin-block-start: 0;
-    margin-block-end: 0;
-}
-
-dd>ul>li {
-    margin: 0 0 1ex 0;
-}
-
-span.ms {
-    font-family: "Inconsolata", monospace;
-    background-color: #eeeeee;
-}
-
-span.small {
-    font-size: 80%;
 }

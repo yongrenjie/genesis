@@ -441,19 +441,6 @@ function goToFAQ(){
 }
 document.getElementById("faq_button")!.addEventListener("click", goToFAQ);
 // }}}2
-// Programmatically generate the FAQ table of contents {{{2
-const toc = document.getElementById("faq_toc");
-const dts = document.querySelectorAll("dl>dt");
-for (let dt of dts as NodeListOf<HTMLElement>) {
-    let a = document.createElement("a");
-    let text = document.createTextNode(dt.innerText);
-    a.appendChild(text);
-    a.href = `#${dt.id}`;
-    let li = document.createElement("li");
-    li.appendChild(a);
-    toc!.appendChild(li);
-}
-// }}}2
 // Set the length of the five module boxes {{{2
 /**
  * Sets the grid-template-rows property of each module selector box to be equal
