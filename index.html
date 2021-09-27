@@ -688,12 +688,22 @@
                 <div class="faq-headings">About this website</div>
 
                 <input id="faq_devmode" class="toggle-button" type="checkbox"> <!-- {{{2 --->
-                <label for="faq_devmode" class="toggle-label">What is &ldquo;developer mode&rdquo;?</label>
+                <label for="faq_devmode" class="toggle-label">What is &ldquo;developer mode&rdquo;? What do those module codes mean?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
                         <p>Internally, the website contains multiple &ldquo;versions&rdquo; of many NOAH modules. For example, there are several different sensitivity-enhanced HSQC sequences, each having different strengths and weaknesses: which of these to use depends on the context. If the seHSQC module is placed at the end of a sequence (e.g. NOAH-2 BS<sup>+</sup>), then we can use the original Cavanagh–Rance seHSQC, which has greater sensitivity than the versions specifically modified for use in NOAH. On the other hand, if there is a homonuclear module which follows (e.g. NOAH-2 S<sup>+</sup>C), then we should use the versions specifically designed to preserve the uncoupled proton magnetisation. (We have an upcoming paper which will explain this fully.)</p>
                         <p>As another example, the NOAH HMBC module is usually configured to preserve one-bond C–H magnetisation using the <i>zz</i>-filter, which can be then used in a H–C HSQC experiment. However, if there is also a H–N module (HMQC or seHSQC) in the supersequence, then the filter must be modified to also preserve N–H magnetisation. This is possible (see <a href=g#faq_cite">ref. 6</a>), but the resulting &ldquo;double filter&rdquo; is less effective at preserving C–H magnetisation. Thus, we want to only use the &ldquo;double filter&rdquo; when it's actually needed.
                         <p>When using the &ldquo;normal&rdquo; interface, the website picks the &ldquo;smartest&rdquo; possible variants for use, based on decisions such as the above. Each version of a module is assigned an internal label, which you can see at the bottom of the generated pulse programme. In &ldquo;developer mode&rdquo;, you have complete control over this and can pick exactly which version of a sequence you want. You can also access a few modules, or combinations thereof, which are not generally recommended: for example, the <sup>15</sup>N HSQC (without sensitivity enhancement) is available. The internal labels of the modules are described in more detail <a href="devmode_modules.txt">here</a>.</p>
+                    </div>
+                </div> <!-- }}}2 --->
+
+                <input id="faq_reproducibility" class="toggle-button" type="checkbox"> <!-- {{{2 --->
+                <label for="faq_reproducibility" class="toggle-label">Can I access old versions of the GENESIS website?</label>
+                <div class="toggle-content">
+                    <div class="toggle-content-inner">
+                        <p>Yes; you can navigate to version X.Y.Z of the website using the URL <span class="ms">https://nmr-genesis.co.uk/X/Y/Z</span>. For example, version 2.0.13 can be accessed <a href="https://nmr-genesis.co.uk/2/0/13">here</a>.</p>
+                        <p>This is most likely to be useful for purposes of reproducibility. If you have an old pulse programme and want to find out which version of GENESIS created it, simply scroll to the bottom of the pulse programme: there will be a comment there with the version number.</p>
+                        <p>Note that versions prior to v2.0.6 are not accessible. This is because v2.0.6 marked a migration from JavaScript to TypeScript, which made the build process quite different. In any case, there should not be any reason to access versions prior to v2.0.10, since these were only ever used internally.</p>
                     </div>
                 </div> <!-- }}}2 --->
 
