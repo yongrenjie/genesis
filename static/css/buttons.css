@@ -69,16 +69,16 @@ div#devmode {
     font-size: 70%;
 }
 
-.switch {
+div#devmode-inner {
     position: relative;
     top: 0.18em;
     display: inline-block;
     margin-left: 0.3em;
 }
-.switch-input {
+.devmode-input {
     display: none;
 }
-.switch-label {
+.devmode-label {
     display: block;
     width: 2em;
     height: 1em;
@@ -88,15 +88,15 @@ div#devmode {
     user-select: none;
 }
 
-.switch-label::before,
-.switch-label::after {
+.devmode-label::before,
+.devmode-label::after {
     content: "";
     display: block;
     position: absolute;
     cursor: pointer;
 }
 
-.switch-label::before {
+.devmode-label::before {
     width: 100%;
     height: 100%;
     background-color: #dedede;
@@ -105,7 +105,7 @@ div#devmode {
     transition: background-color 0.25s ease;
 }
 
-.switch-label::after {
+.devmode-label::after {
     top: 0;
     left: 0;
     width: 1em;
@@ -117,10 +117,10 @@ div#devmode {
     transition: left 0.25s ease;
 }
 
-.switch-input:checked + .switch-label::before {
+.devmode-input:checked + .devmode-label::before {
     background-color: #46d13f;
 }
-.switch-input:checked + .switch-label::after {
+.devmode-input:checked + .devmode-label::after {
     left: 1em;
 }
 

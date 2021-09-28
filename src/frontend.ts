@@ -443,7 +443,7 @@ document.getElementById("faq_button")!.addEventListener("click", goToFAQ);
 // }}}2
 // Make devmode button and FAQ collapsibles accessible {{{2
 let faqLabels = [...document.querySelectorAll("label.toggle-label"),
-                 ...document.querySelectorAll("label.switch-label")] as HTMLLabelElement[];
+                 ...document.querySelectorAll("label.devmode-label")] as HTMLLabelElement[];
 faqLabels.forEach(label => {
     label.addEventListener('keydown', e => {
     // 32 === spacebar; 13 === enter
