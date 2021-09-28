@@ -545,21 +545,22 @@
                             <li><b>cnst40</b>: for <sup>15</sup>N experiments this is the nitrogen SW in ppm. (The nitrogen transmitter offset is O3P.)</li>
                         </ul>
                     </div>
-                </div>
+                </div> <!-- }}}2 -->
 
-                <input id="faq_zgoptns" class="toggle-button" type="checkbox">
+                <input id="faq_zgoptns" class="toggle-button" type="checkbox"> <!-- {{{2 -->
                 <label for="faq_zgoptns" class="toggle-label" tabindex="0">What are acquisition flags, and how do I use them?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
-                        <p>Acquisition flags are ways of conditionally running (technically, compiling) parts of a pulse programme. They are useful when we don&rsquo;t want to create two versions of what&rsquo;s essentially the same module with just small changes. In this case, you can enable acquisition flags to turn on/off optional features. The available acquisition flags are listed near the top of the pulse programme. To turn on an acquisition flag, such as <span class="ms">-DEDIT</span>, simply include it in the TopSpin acquisition parameter <b>zgoptns</b> (accessible via <span class="ms">ased</span>).</p>
+                        <p>Acquisition flags are ways of conditionally running (technically, compiling) parts of a pulse programme. They are useful when we don&rsquo;t want to create two versions of what&rsquo;s essentially the same module with just small changes. In this case, you can enable acquisition flags to turn on/off optional features. The available acquisition flags are listed near the top of the pulse programme.</p>
+                        <p>To turn on an acquisition flag, such as <span class="ms">-DEDIT</span>, simply include it in the TopSpin acquisition parameter <b>zgoptns</b> (accessible via <span class="ms">ased</span>). To enable multiple acquisition flags, simply specify all of them together but separated by spaces.</p>
                         <p>There are currently a handful of acquisition flags:</p>
                         <ul>
                             <li><b>-DEDIT</b> and <b>-DEDIT1</b>: enables multiplicity editing in HSQC or HSQC-COSY spectra.</li>
                             <li><b>-DTEDIT</b>: enables multiplicity editing in HSQC-TOCSY spectra.</li>
                             <li><b>-DINVERT</b> and <b>-DINVERT1</b>: in HSQC-TOCSY spectra, causes &ldquo;direct&rdquo; (HSQC) and &ldquo;indirect&rdquo; (HSQC-TOCSY) responses to have opposite signs.
                         </ul>
-                        <p>To see whether you need the flags with &lsquo;1&rsquo; in them, please check the header of the pulse programme. Usually, the flags ending in &lsquo;1&rsquo; are applied to the first of two <sup>13</sup>C modules in a supersequence; if you only have one <sup>13</sup>C module, it&rsquo;s unlikely you will ever need the &lsquo;1&rsquo;-suffixed flags.</p>
-                        <p>There is also the -DNUS flag, which (partially) turns on non-uniform sampling, but you should not set that manually unless you&rsquo;re absolutely certain what you&rsquo;re doing. Instead, please use the <span class="ms">noah_nus2.py</span> script. See: <a href="#faq_nus">Can non-uniform sampling be used with NOAH sequences?</a> for more information.</p>
+                        <p>To see whether you need the flags with &lsquo;1&rsquo; in them, please check the comments near the top of the pulse programme. Usually, the flags ending in &lsquo;1&rsquo; are applied to the first of two <sup>13</sup>C modules in a supersequence. If you only have one <sup>13</sup>C module, it&rsquo;s unlikely you will ever need the &lsquo;1&rsquo;-suffixed flags.</p>
+                        <p>There is also the <span class="ms">-DNUS</span> flag, which (partially) turns on non-uniform sampling, but you should not set that manually unless you&rsquo;re absolutely certain what you&rsquo;re doing. Instead, please use the <span class="ms">noah_nus2.py</span> script. The next FAQ entry deals with the issue of NUS.
                     </div>
                 </div> <!-- }}}2 -->
 
