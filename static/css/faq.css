@@ -32,7 +32,7 @@ input.toggle-button {
     font-size: 100%;
     cursor: pointer;
     margin: 0.5em 0 0 0;
-    background: #f9f9f9;
+    background: #f4f4f4;
 }
 
 .toggle-label:hover {

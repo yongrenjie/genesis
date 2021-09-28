@@ -535,6 +535,7 @@
                             <li><b>NBL</b> should be set to the total number of modules, e.g. 4 for a MSCN supersequence. (Set this either in <span class="ms">ased</span>, or by typing <span class="ms">nbl</span> into the TopSpin command line.) If you&rsquo;re not sure what value to use, check the very top of the pulse programme.</li>
                             <li><b>TD1</b> (i.e. TD in the F1 dimension) must be its original value multiplied by NBL. For example, if you are running a supersequence with 4 modules and want to have 256 <i>t</i><sub>1</sub> increments in each module, TD1 must be set to 256 × 4 = 1024.</li>
                         </ul>
+                        <p>All pulsed field gradients can be set using the <span class="ms">gppp</span> command, and most shaped pulses can be created using the WaveMaker <span class="ms">wvm -a</span> command.</p>
                         <p>All other parameters are fully documented in the pulse programmes, and nearly all of these are the same as in the standard experiments. There are a few parameters which are NOAH-specific:</p>
                         <ul>
                             <li><b>cnst16</b>: factor to lengthen CTP gradients in <sup>15</sup>N spectra by. We recommend setting this such that cnst16*p16 is around 2–2.5 ms. In other words, if your &ldquo;standard&rdquo; gradient duration p16 is 1 ms, set cnst16 = 2–2.5. This helps to suppress artefacts in the spectra which arise from imperfect pulses.</li>
@@ -593,7 +594,7 @@
                     <div class="toggle-content-inner">
                         <p>No, it doesn&rsquo;t. It tries to optimise the receiver gain for the first module, instead of the entire supersequence as a whole. If the first module has low intrinsic sensitivity (which is typically the case), then <span class="ms">rga</span> will suggest unreasonably large values for the receiver gain, leading to ADC overflows for the more sensitive modules.</p>
                         <p>If you want to use <span class="ms">rga</span>, you will need to run it with a different pulse programme which corresponds to the most sensitive module. For example, for a MSCN supersequence, you should run <span class="ms">rga</span> with the pulse programme set to a COSY.</p>
-                        <p>Alternatively, instead of simply acquiring with <span class="ms">zg</span>, you can run <span class="ms">au_zgcosy</span>. This performs <span class="ms">rga</span> on a pulse-acquire sequence before acquiring the actual data.
+                        <p>Alternatively, instead of simply acquiring with <span class="ms">zg</span>, you can run <span class="ms">au_zgcosy</span>. This performs <span class="ms">rga</span> on a pulse–acquire sequence before acquiring the actual data.
                     </div>
                 </div> <!-- }}}2 --->
 
@@ -704,7 +705,7 @@
                     <div class="toggle-content-inner">
                         <p>Yes; you can navigate to version X.Y.Z of the website using the URL <span class="ms">https://nmr-genesis.co.uk/X/Y/Z</span>. For example, version 2.0.13 can be accessed <a href="https://nmr-genesis.co.uk/2/0/13">here</a>.</p>
                         <p>This is most likely to be useful for purposes of reproducibility. If you have an old pulse programme and want to find out which version of GENESIS created it, simply scroll to the bottom of the pulse programme: there will be a comment there with the version number.</p>
-                        <p>Note that versions prior to v2.0.6 are not accessible. This is because v2.0.6 marked a migration from JavaScript to TypeScript, which made the build process quite different. In any case, there should not be any reason to access versions prior to v2.0.10, since these were only ever used internally.</p>
+                        <p>Note that versions prior to v2.0.6 are not accessible. This is because v2.0.6 marked a migration from JavaScript to TypeScript, which made the build process quite different. In any case, there should not be any reason to access versions prior to v2.0.11, since these were only ever used internally.</p>
                     </div>
                 </div> <!-- }}}2 --->
 
