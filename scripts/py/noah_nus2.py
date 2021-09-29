@@ -5,11 +5,11 @@ Script to set up NUS for NOAH experiments. To turn on NUS, run `noah_nus2` from
 the TopSpin command line. To disable NUS on a dataset where it was previously
 enabled, run `noah_nus2 off`.
 
-v: 2.0.13
+v: 2.0.14
 Jonathan Yong & Tim Claridge, University of Oxford
 Eriks Kupce, Bruker UK
 modified from original Python script by Maksim Mayzel, Bruker BioSpin AG
-22 September 2021
+29 September 2021
 """
 
 from __future__ import division, with_statement
