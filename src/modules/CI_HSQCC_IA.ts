@@ -124,7 +124,7 @@ else
 
 const mod = new NOAHModule(
     "c13",
-    "Q S",
+    "Sc S",
     [Kupce2017ACIE],
     "noah_hsqc noah_TS",
     shortDescription,

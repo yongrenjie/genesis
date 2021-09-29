@@ -1,4 +1,4 @@
-; gns_noah5-BQSpjT-S
+; gns_noah5-BScSpjT-S
 
 ; 13C HMBC (double NS, half TD1)
 ; 13C TS HSQC-COSY + HSQC
@@ -635,4 +635,4 @@ ph30=0 2 2 0
 ; auprog: noah_hmbc noah_add:noah_hsqc noah_TS:noah_hsqc:noah_tocsy States
 ; module identifiers: C_HMBC_CF_K C_HSQCC_DIA C_SEHSQCJ H_TOCSY
 ; pulse programme created by genesis-v2.0.13, https://nmr-genesis.co.uk
-; Thu Sep 30 2021 00:23:42 GMT+0100 (British Summer Time)
+; Thu Sep 30 2021 00:28:30 GMT+0100 (British Summer Time)
