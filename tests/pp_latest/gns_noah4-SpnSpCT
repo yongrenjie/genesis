@@ -6,6 +6,8 @@
 ;     [use -DEDIT for multiplicity editing]
 ; 1H COSY + TOCSY (echo/antiecho F1)
 
+; set 'NBL' TopSpin parameter to 4
+
 ;$CLASS=HighRes
 ;$DIM=2D
 ;$TYPE=
@@ -536,4 +538,4 @@ ph31=0 2
 ; auprog: noah_nhsqc:noah_hsqc:noah_cosy:noah_tocsy
 ; module identifiers: N_SEHSQC C_SEHSQC H_COTO
 ; pulse programme created by genesis-v2.0.13, https://nmr-genesis.co.uk
-; Sun Sep 26 2021 19:11:30 GMT+0100 (British Summer Time)
+; Thu Sep 30 2021 00:23:42 GMT+0100 (British Summer Time)

@@ -76,16 +76,16 @@ describe("makePulprogText regression tests", function() {
     });
     describe("TS/interleaved experiments", function() {
         it("p-NOAH 5",
-            makeTest("./tests/pp_latest/gns_noah4-BkQdseiaSpjT",
+            makeTest("./tests/pp_latest/gns_noah5-BQSpjT-S",
                 ["C_HMBC_CF_K", "C_HSQCC_DIA", "C_SEHSQCJ", "H_TOCSY"]));
         it("p-NOAH 6",
-            makeTest("./tests/pp_latest/gns_noah4-BQdseiaSpiaT",
+            makeTest("./tests/pp_latest/gns_noah6-BQSipT-SSap",
                 ["C_HMBC_CF", "C_HSQCC_DIA", "C_SEHSQC_IA", "H_TOCSY"]));
         it("p-NOAH 8",
-            makeTest("./tests/pp_latest/gns_noah4-BbQdseiaSpiaTT",
+            makeTest("./tests/pp_latest/gns_noah8-BQSipT-BSSapT",
                 ["C_HMBC_CFDD", "C_HSQCC_DIA", "C_SEHSQC_IA", "H_TT_DM"]));
         it("p-NOAH 10",
-            makeTest("./tests/pp_latest/gns_noah5-BbQclipiaSpiaTcTr",
+            makeTest("./tests/pp_latest/gns_noah10-BQcSipTT-BSSapCR",
                 ["C_HMBC_CFDD", "C_HSQCC_CIA", "C_SEHSQC_IA", "H_TT_CR"]));
     });
 });

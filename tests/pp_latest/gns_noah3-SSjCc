@@ -7,6 +7,8 @@
 ;     [use -DEDIT for multiplicity editing]
 ; 1H CLIP-COSY (States)
 
+; set 'NBL' TopSpin parameter to 3
+
 ;$CLASS=HighRes
 ;$DIM=2D
 ;$TYPE=
@@ -419,4 +421,4 @@ ph30=0 2 2 0
 ; auprog: noah_hsqc:noah_hsqc:noah_clipcosy States
 ; module identifiers: CI_HSQC C_HSQCJ H_CLIP_COSY
 ; pulse programme created by genesis-v2.0.13, https://nmr-genesis.co.uk
-; Sun Sep 26 2021 19:11:30 GMT+0100 (British Summer Time)
+; Thu Sep 30 2021 00:23:42 GMT+0100 (British Summer Time)

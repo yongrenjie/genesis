@@ -1,12 +1,12 @@
-; gns_noah4-BbQdseiaSpiaTT
+; gns_noah8-BQSipT-BSSapT
 
-; 13C HMBC + HMBC (with different nJCH evolution delays)
-; 13C HSQC-COSY + HSQC
+; 13C interleaved 2x HMBC (with different nJCH evolution delays)
+; 13C TS HSQC-COSY + HSQC
 ; 13C sensitivity-enhanced HSQC, IPAP mode
 ;     [use -DEDIT for multiplicity editing]
-;     [set userPx to 'noah_hsqc noah_TS' to perform addition/subtraction of IP/AP multiplets]
-; 1H TOCSY (mixing time: d9)
-; 1H TOCSY (mixing time: d14)
+; 1H interleaved 2x TOCSY (two different mixing times)
+
+; set 'NBL' TopSpin parameter to 4
 
 ;$CLASS=HighRes
 ;$DIM=2D
@@ -33,10 +33,6 @@
 #include <Avance.incl>
 #include <Grad.incl>
 #include <Delay.incl>
-
-#ifdef NUS
-define list<loopcounter> t1list=<$VCLIST>
-#endif /* NUS */
 
 define delay DC_HMBC_CFDDa
 define delay DC_HMBC_CFDDb
@@ -589,9 +585,6 @@ else
 
   ; incrementation on every second pass
 if "l1 % 2 == 0" {
-#ifdef NUS
-  1m t1list.inc
-#endif /* NUS */
   1m ip19*2
   1m ip20
   1m igrad EA_TS
@@ -712,4 +705,4 @@ ph26=0 2
 ; auprog: noah_hmbc noah_hmbc:noah_hsqc noah_TS:noah_hsqc noah_split:noah_tocsy States noah_tocsy States
 ; module identifiers: C_HMBC_CFDD C_HSQCC_DIA C_SEHSQC_IA H_TT_DM
 ; pulse programme created by genesis-v2.0.13, https://nmr-genesis.co.uk
-; Sun Sep 26 2021 19:11:30 GMT+0100 (British Summer Time)
+; Thu Sep 30 2021 00:23:42 GMT+0100 (British Summer Time)

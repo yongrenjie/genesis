@@ -1,10 +1,12 @@
-; gns_noah4-BkQdseiaSpjT
+; gns_noah6-BQSipT-SSap
 
-; 13C HMBC (half resolution)
-; 13C HSQC-COSY + HSQC
-; 13C sensitivity-enhanced HSQC (F2 coupled)
+; 13C HMBC
+; 13C TS HSQC-COSY + HSQC
+; 13C sensitivity-enhanced HSQC, IPAP mode
 ;     [use -DEDIT for multiplicity editing]
 ; 1H phase-sensitive TOCSY
+
+; set 'NBL' TopSpin parameter to 4
 
 ;$CLASS=HighRes
 ;$DIM=2D
@@ -32,16 +34,12 @@
 #include <Grad.incl>
 #include <Delay.incl>
 
-#ifdef NUS
-define list<loopcounter> t1list=<$VCLIST>
-#endif /* NUS */
-
-define delay DC_HMBC_CF_Ka
-define delay DC_HMBC_CF_Kb
-define delay DC_HMBC_CF_Kc
-define delay DC_HMBC_CF_Kd
-define delay DC_HMBC_CF_Ke
-define delay DC_HMBC_CF_Kf
+define delay DC_HMBC_CFa
+define delay DC_HMBC_CFb
+define delay DC_HMBC_CFc
+define delay DC_HMBC_CFd
+define delay DC_HMBC_CFe
+define delay DC_HMBC_CFf
 define delay DC_HSQCC_DIAa
 define delay DC_HSQCC_DIAb
 define delay DC_HSQCC_DIAc
@@ -50,37 +48,40 @@ define delay DC_HSQCC_DIAe
 define delay DC_HSQCC_DIAf
 define delay DC_HSQCC_DIAg
 define delay DC_HSQCC_DIAh
-define delay DC_SEHSQCJa
-define delay DC_SEHSQCJb
-define delay DC_SEHSQCJc
-define delay DC_SEHSQCJd
-define delay DC_SEHSQCJe
-define delay DC_SEHSQCJf
-define delay DC_SEHSQCJg
-define delay DC_SEHSQCJh
-define delay DC_SEHSQCJi
-define delay DC_SEHSQCJj
-"cnst41        = 2*sfo2/sfo1"                 ; gradient ratio
-"d0            = 3u"                          ; 13C HSQC t1
-"d2            = 0.5s/cnst2"                  ; JCOMP
-"d3            = 3u"                          ; 13C t1
-"d4            = 0.25s/cnst2"                 ; 13C INEPT
-"d10           = 3u"                          ; TOCSY t1
-"d12           = 0.25s/cnst12"                ; COSY mixing (< 1/4J(HH))
-"in0           = inf1/2"                      ; 13C HSQC increment
-"in3           = inf1/2"                      ; 13C increment
-"in10          = 2*dw"                        ; TOCSY increment
-"l11           = (d9/(p6*115.112))/2"         ; half the number of TOCSY loops
-"l12           = l11*2"                       ; number of TOCSY loops
-"l17           = (d30/(p6*115.112))/2"        ; half the number of DIPSI-2 loops
-"l18           = l17*2"                       ; number of DIPSI-2 loops
-"p2            = p1*2"                        ; 1H hard 180
-"DC_HMBC_CF_Ka = d4-p14/2"
-"DC_HMBC_CF_Kb = d4+p14/2"
-"DC_HMBC_CF_Kc = 1s/(2*cnst6)-p16-d16"
-"DC_HMBC_CF_Kd = 1s/(2*cnst7)-p16-d16"
-"DC_HMBC_CF_Ke = (0.5s/cnst13)-p16-d16-4u"
-"DC_HMBC_CF_Kf = p16+d16+p2/2+d3-p3*2/PI+4u"
+define delay DC_SEHSQC_IAa
+define delay DC_SEHSQC_IAb
+define delay DC_SEHSQC_IAc
+define delay DC_SEHSQC_IAd
+define delay DC_SEHSQC_IAe
+define delay DC_SEHSQC_IAf
+define delay DC_SEHSQC_IAg
+define delay DC_SEHSQC_IAh
+define delay DC_SEHSQC_IAi
+define delay DC_SEHSQC_IAj
+define delay DC_SEHSQC_IAk
+define delay DC_SEHSQC_IAl
+define delay DC_SEHSQC_IAm
+"cnst41        = 2*sfo2/sfo1"                    ; gradient ratio
+"d0            = 3u"                             ; 13C t1
+"d2            = 0.5s/cnst2"                     ; JCOMP
+"d3            = 3u"                             ; 13C HSQC t1
+"d4            = 0.25s/cnst2"                    ; 13C INEPT
+"d10           = 3u"                             ; TOCSY t1
+"d12           = 0.25s/cnst12"                   ; COSY mixing (< 1/4J(HH))
+"in0           = inf1/2"                         ; 13C increment
+"in3           = inf1/2"                         ; 13C HSQC increment
+"in10          = 2*dw"                           ; TOCSY increment
+"l11           = (d9/(p6*115.112))/2"            ; half the number of TOCSY loops
+"l12           = l11*2"                          ; number of TOCSY loops
+"l17           = (d30/(p6*115.112))/2"           ; half the number of DIPSI-2 loops
+"l18           = l17*2"                          ; number of DIPSI-2 loops
+"p2            = p1*2"                           ; 1H hard 180
+"DC_HMBC_CFa   = d4-p14/2"
+"DC_HMBC_CFb   = d4+p14/2"
+"DC_HMBC_CFc   = 1s/(2*cnst6)-p16-d16"
+"DC_HMBC_CFd   = 1s/(2*cnst7)-p16-d16"
+"DC_HMBC_CFe   = (0.5s/cnst13)-p16-d16-4u"
+"DC_HMBC_CFf   = p16+d16+p2/2+d0-p3*2/PI+4u"
 "DC_HSQCC_DIAa = d4-p14/2"
 "DC_HSQCC_DIAb = d4+p14/2"
 "DC_HSQCC_DIAc = p16+d16+p2/2+d3-p3*2/PI+4u"
@@ -89,19 +90,22 @@ define delay DC_SEHSQCJj
 "DC_HSQCC_DIAf = d2-p31/2"
 "DC_HSQCC_DIAg = d2+p31/2"
 "DC_HSQCC_DIAh = d2+p31/2-p16-d16-p3-4u-de"
-"DC_SEHSQCJa   = d4-p14/2"                    ; zz-filter
-"DC_SEHSQCJb   = d4+p14/2"                    ; zz-filter
-"DC_SEHSQCJc   = d4-larger(p2,p14)/2"         ; INEPT
-"DC_SEHSQCJd   = p16+d16+p2+d0*2-4u-p3*2/PI"  ; 13C pre-t1 if editing
-"DC_SEHSQCJe   = d2-p16-d16+p3*2/PI"          ; 13C editing period
-"DC_SEHSQCJf   = d2-p2-p3*2/PI"               ; 13C editing period
-"DC_SEHSQCJg   = p16+d16+p2/2+d0-4u-p3*2/PI"  ; 13C pre-/post-t1 if no editing
-"DC_SEHSQCJh   = d6-cnst17*p24/2-p19-d16"     ; first spin echo after t1
-"DC_SEHSQCJi   = d4-larger(p2,p14)/2-p16-d16" ; second spin echo after t1
-"DC_SEHSQCJj   = p16+d16-p1*0.78+de+8u"       ; final spin echo for refocusing gradient
-define list<gradient> GC_HMBC_CF_K={cnst41}
+"DC_SEHSQC_IAa = d4-p14/2"                       ; zz-filter
+"DC_SEHSQC_IAb = d4+p14/2"                       ; zz-filter
+"DC_SEHSQC_IAc = d4-larger(p2,p14)/2"            ; INEPT
+"DC_SEHSQC_IAd = p16+d16+p2+d3*2-4u-p3*2/PI"     ; 13C pre-t1 if editing
+"DC_SEHSQC_IAe = d2-p16-d16+p3*2/PI"             ; 13C editing period
+"DC_SEHSQC_IAf = d2-p2-p3*2/PI"                  ; 13C editing period
+"DC_SEHSQC_IAg = p16+d16+p2/2+d3-4u-p3*2/PI"     ; 13C pre-/post-t1 if no editing
+"DC_SEHSQC_IAh = d6-cnst17*p24/2-p19-d16"        ; first spin echo after t1
+"DC_SEHSQC_IAi = d4-larger(p2,p14)/2-p16-d16"    ; second spin echo after t1
+"DC_SEHSQC_IAj = d4-p2/2"                        ; final spin echo for refocusing gradient
+"DC_SEHSQC_IAk = d4-p2/2-p16-d16-de"             ; final spin echo for refocusing gradient
+"DC_SEHSQC_IAl = d4-larger(p2,p14)/2"            ; final spin echo for refocusing gradient
+"DC_SEHSQC_IAm = d4-larger(p2,p14)/2-p16-d16-de" ; final spin echo for refocusing gradient
+define list<gradient> GC_HMBC_CF={cnst41}
 define list<gradient> GC_HSQCC_DIA={cnst41}
-define list<gradient> GC_SEHSQCJ={cnst41}
+define list<gradient> GC_SEHSQC_IA={cnst41}
 "l0      = td1/4"             ; TD1/NBL
 "l1      = 0"                 ; Running counter for delay / phase incrementation
 "l2      = 0"                 ; Running counter for NS
@@ -114,11 +118,6 @@ baseopt_echo
 2 30m
 3 5m
 4 50u UNBLKGRAD
-
-#ifdef NUS
-  "d0=(in0*t1list)+3u"
-  "d10=(in10*t1list)+3u"
-#endif /* NUS */
   1m iu2
 
   ; Cleanup
@@ -141,53 +140,53 @@ baseopt_echo
 
   ; zz-filter
   (p1 ph0):f1
-  DC_HMBC_CF_Ka
+  DC_HMBC_CFa
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_HMBC_CF_Kb
+  DC_HMBC_CFb
   (p1 ph0):f1
-  DC_HMBC_CF_Ka
+  DC_HMBC_CFa
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_HMBC_CF_Kb pl2:f2
+  DC_HMBC_CFb pl2:f2
 
   ; second-order low-pass J-filter
   (lalign (p1 ph0):f1 (p3 ph7):f2 )
-  DC_HMBC_CF_Kc
+  DC_HMBC_CFc
   p16:gp10*-3
   d16
   (p3 ph7):f2
-  DC_HMBC_CF_Kd
+  DC_HMBC_CFd
   p16:gp10*2
   d16
   (p3 ph7):f2
   4u
   p16:gp10
   d16
-  DC_HMBC_CF_Ke  ; nJ(CH) evolution
+  DC_HMBC_CFe  ; nJ(CH) evolution
 
   ; coherence transfer to 13C and t1
   (p3 ph7):f2
-  DC_HMBC_CF_Kf
+  DC_HMBC_CFf
   (p14:sp3 ph0):f2
   4u
   p16:gp1
   d16
-  d3
+  d0
   (p2 ph11):f1
-  d3
+  d0
   4u
   p16:gp1
   d16
   (p14:sp3 ph0):f2
-  DC_HMBC_CF_Kf pl2:f2
-  (p3 ph18):f2
+  DC_HMBC_CFf pl2:f2
+  (p3 ph5):f2
   (p2 ph0):f1
   4u
-  p16:gp1*EA_TS*GC_HMBC_CF_K
+  p16:gp1*EA*GC_HMBC_CF
   d16
   4u
-  goscnp ph24
+  goscnp ph30
 
   ; Cleanup
   4u pl1:f1
@@ -316,15 +315,15 @@ if "d30 > 1m"
 
   ; ZIP
   (p1 ph0):f1
-  DC_SEHSQCJa
+  DC_SEHSQC_IAa
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_SEHSQCJb
+  DC_SEHSQC_IAb
   (p1 ph0):f1
-  DC_SEHSQCJa
+  DC_SEHSQC_IAa
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_SEHSQCJb            ; 13C-1H: y,  12C-1H: z
+  DC_SEHSQC_IAb            ; 13C-1H: y,  12C-1H: z
 
   ; forward INEPT
 #ifdef EDIT
@@ -332,79 +331,89 @@ if "d30 > 1m"
 #else
   (p1 ph3):f1
 #endif /* EDIT */
-  DC_SEHSQCJc
+  DC_SEHSQC_IAc
   4u
   (center (p2 ph0):f1 (p14:sp3 ph0):f2 )
   4u
-  DC_SEHSQCJc pl2:f2
+  DC_SEHSQC_IAc pl2:f2
   4u
-  (p1 ph1):f1 (p3 ph5):f2
+  (p1 ph1):f1 (p3 ph18):f2
 
   ; t1 evolution with optional multiplicity editing
 #ifdef EDIT
   4u
-  DC_SEHSQCJd
+  DC_SEHSQC_IAd
   (p31:sp18 ph0):f2
   p16:gp4
   d16 pl2:f2
 
-  d0
+  d3
   (p2 ph7):f1
-  d0
+  d3
 
   p16:gp4
   d16
-  DC_SEHSQCJe
+  DC_SEHSQC_IAe
   (p31:sp18 ph0):f2
   (p2 ph0):f1
-  DC_SEHSQCJf pl2:f2
+  DC_SEHSQC_IAf pl2:f2
 #else
   4u
-  DC_SEHSQCJg 
+  DC_SEHSQC_IAg 
   (p24:sp7 ph0):f2
   p16:gp4
   d16 pl2:f2
 
-  d0
+  d3
   (p2 ph7):f1
-  d0
+  d3
 
   p16:gp4
   d16
   (p24:sp7 ph0):f2
   4u
-  DC_SEHSQCJg pl2:f2
+  DC_SEHSQC_IAg pl2:f2
 #endif /* EDIT */
 
   ; reverse INEPT for first component
   (center (p1 ph0):f1 (p3 ph7):f2 )
   p19:gp6
   d16
-  DC_SEHSQCJh
+  DC_SEHSQC_IAh
   (center (p2 ph0):f1 (p24:sp7 ph0):f2 )
-  DC_SEHSQCJh
+  DC_SEHSQC_IAh
   p19:gp6
   d16 pl2:f2
-  (center (p1 ph1):f1 (p3 ph9):f2 )  ; seHSQC pulse, incremented with EA
+  (center (p1 ph1):f1 (p3 ph19):f2 )
 
   ; reverse INEPT for second component
   p16:gp7
   d16
-  DC_SEHSQCJi
+  DC_SEHSQC_IAi
   (center (p2 ph0):f1 (p14:sp3 ph0):f2 )
-  DC_SEHSQCJi
+  DC_SEHSQC_IAi
   p16:gp7
   d16
   (p1 ph0):f1
 
-  ; spin echo for refocusing gradient
-  DC_SEHSQCJj
+  ; spin echo, IP/AP selection, and refocusing gradient
+if "l1 % 2 == 0" {
+  DC_SEHSQC_IAj
   (p2 ph0):f1
-  4u
-  p16:gp4*EA*GC_SEHSQCJ
+  DC_SEHSQC_IAk
+  p16:gp4*EA_TS*GC_SEHSQC_IA
   d16
-  4u
-  goscnp ph30
+  goscnp ph24
+}
+else {
+  DC_SEHSQC_IAl
+  (center (p2 ph0):f1 (p14:sp3 ph0):f2 )
+  DC_SEHSQC_IAm
+  p16:gp4*EA_TS*GC_SEHSQC_IA
+  d16 ip24
+  goscnp ph24       ; acquire 13C seHSQC
+  dp24
+}
 
   ; ASAP mixing
 if "d15 > 1m"
@@ -517,25 +526,16 @@ if "d15 > 1m"
   1m iu1
   1m igrad EA
   1m ip6
-  1m ip9*2
   30m wr #0 if #0 zd
 
   ; incrementation on every second pass
 if "l1 % 2 == 0" {
-#ifdef NUS
-  1m t1list.inc
-#endif /* NUS */
   1m ip5*2
   1m rp6
+  1m ip19*2
   1m ip30*2
-#ifdef NUS
-#else
   1m id0
-#endif /* NUS */
-#ifdef NUS
-#else
   1m id10
-#endif /* NUS */
   1m igrad EA_TS
 }
 
@@ -556,9 +556,9 @@ ph3=3
 ph5=0 2
 ph6=0 2
 ph7=0 0 2 2
-ph9=1 1 3 3
 ph11=0 0 0 0 2 2 2 2
 ph18=0 2
+ph19=1 1 3 3
 ph24=0 2 2 0
 ph26=0 2
 ph30=0 2 2 0
@@ -648,7 +648,7 @@ ph30=0 2 2 0
 ;NBL: number of blocks (NOAH modules)
 ;ns: 1 * n
 
-; auprog: noah_hmbc noah_add:noah_hsqc noah_TS:noah_hsqc:noah_tocsy States
-; module identifiers: C_HMBC_CF_K C_HSQCC_DIA C_SEHSQCJ H_TOCSY
+; auprog: noah_hmbc:noah_hsqc noah_TS:noah_hsqc noah_split:noah_tocsy States
+; module identifiers: C_HMBC_CF C_HSQCC_DIA C_SEHSQC_IA H_TOCSY
 ; pulse programme created by genesis-v2.0.13, https://nmr-genesis.co.uk
-; Sun Sep 26 2021 19:11:30 GMT+0100 (British Summer Time)
+; Thu Sep 30 2021 00:23:42 GMT+0100 (British Summer Time)

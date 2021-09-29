@@ -1,4 +1,4 @@
-import assert from "assert/strict";
+import assert from "assert";
 
 import allModules from "../build/allModules.js";
 
@@ -16,7 +16,7 @@ describe("check that shortcodes match number of FIDs", function() {
         const interleavedFactor = module.interleaved ? 2 : 1;
 
         it(moduleName, function() {
-            assert.strictEqual(module.nfid * interleavedFactor, nExpts);
+            assert.equal(module.nfid * interleavedFactor, nExpts);
         });
     }
 });
