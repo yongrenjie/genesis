@@ -1,8 +1,8 @@
 name: publish-website
 on:
   push:
-    branches:
-      - master
+    tags:
+      - '*'
 
 jobs:
   build:

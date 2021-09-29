@@ -1,0 +1,30 @@
+name: tests
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout develop branch
+      uses: actions/checkout@v2
+      with:
+        ref: develop
+
+    - name: Setup node.js v14
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Compile TypeScript code
+      run: |
+        npm install typescript
+        tsc
+
+    - name: Run tests with Mocha
+      run: |
+        npm install mocha
+        npm test
