@@ -109,6 +109,15 @@ li#li_h1_none>label {
     height: auto;
     width: 140px;
 }
+/* but we shrink some of them a bit for smaller viewports */
+@media (max-width: 1059px) {
+    div.hmbc > div.hmbc label, div.n15 > div.n15 label {
+        width: 95px;
+    }
+    div.ci13 > div.ci13 label {
+        width: 120px;
+    }
+}
 
 @supports (transition-property: background-color) {
     .chooser_modules label {
