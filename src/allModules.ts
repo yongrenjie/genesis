@@ -60,6 +60,7 @@ import H_PSYCHE_TSE from "./modules/H_PSYCHE_TSE.js";
 import H_TT_DM from "./modules/H_TT_DM.js";
 import H_TT_CN from "./modules/H_TT_CN.js";
 import H_TT_CR from "./modules/H_TT_CR.js";
+import H_ZG from "./modules/H_ZG.js";
 import N_HMQC from "./modules/N_HMQC.js";
 import N_HSQC from "./modules/N_HSQC.js";
 import N_SEHSQC from "./modules/N_SEHSQC.js";
@@ -128,6 +129,7 @@ const allModules: Map<string, NOAHModule> = new Map([
     ["H_TT_DM", H_TT_DM],
     ["H_TT_CN", H_TT_CN],
     ["H_TT_CR", H_TT_CR],
+    ["H_ZG", H_ZG],
     ["N_HMQC", N_HMQC],
     ["N_HSQC", N_HSQC],
     ["N_SEHSQC", N_SEHSQC],
