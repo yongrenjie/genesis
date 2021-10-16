@@ -56,11 +56,9 @@ function onRequest(req, res) {
 
     // If the file doesn't exist, return a standard 404 response
     stream.on("error", function(err) {
+        let stream_404 = fs.createReadStream("404.html");
         res.writeHead(404, {"content-type": "text/html"});
-        res.write(`<html><head><title>404: Not Found</title></head><body>
-            The URL '${pathname}' was not found. You can return to the 
-            <a href="/">index</a>.</body></html>`);
-        res.end();
+        stream_404.pipe(res);
         console.log(err);
         return;
     });
