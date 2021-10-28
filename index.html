@@ -647,8 +647,10 @@
                 <label for="faq_macos" class="toggle-label" tabindex="0">I&rsquo;m using macOS Catalina / Big Sur and the processing doesn&rsquo;t work.</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
-                        <p><b>On Catalina:</b> Please update TopSpin to version 4.1.0 or later. On older versions of TopSpin for macOS, there is a bug in TopSpin which causes certain parts of AU programmes to not work on Catalina.</p>
-                        <p><b>On Big Sur:</b> AU programmes are broken even on TopSpin 4.1.1. However, there is a fix available for 4.1.1, courtesy of Gareth Morris and Marshall Smith (University of Manchester).</p>
+                        <p>On older versions of TopSpin for macOS, there is a bug in TopSpin which causes certain parts of AU programmes to not work on Catalina. The solution depends on your OS version and TopSpin version.</p>
+                        <p><b>On Catalina (macOS 10.15):</b> Please update TopSpin to version 4.1.0 or later.
+                        <p><b>On Big Sur (macOS 11):</b> You will need to update TopSpin to version 4.1.3 or later, and also install the Xcode Command-Line Tools by running <span class="ms">xcode-select —install</span> in a terminal.</p>
+                        </p>For versions 4.1.1 and 4.1.2 of TopSpin on Big Sur, a more involved patch is necessary:</p>
                         <ol>
                             <li>Install the XCode Command Line Tools by running <span class="ms">xcode-select --install</span> in a terminal.</li>
                             <li>In the file <span class="ms">/opt/topspin4.1.1/exp/stan/nmr/au/makeau</span>: uncomment line 20 (by removing the <span class="ms">#</span>), and remove the text <span class="ms">-Wl,-lcrt1.o</span> from line 494.</li>
