@@ -36,7 +36,8 @@ if "l1 % 2 == 0"
   4u pl10:f1
   50u
   p16:gp0*1.7
-  2m st
+  d16
+  10u st
 
   |DIPSI|
 

@@ -31,7 +31,7 @@ let pulprog = `
   p16:gp5*EA
   d16
   goscnp ph31    ; acquire H-H COSY
-  2m st
+  10u st
 
   ; ROESY
   10u gron12

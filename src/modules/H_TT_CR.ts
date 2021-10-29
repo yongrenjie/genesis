@@ -37,7 +37,8 @@ if "l1 % 2 == 0"
   4u pl10:f1
   50u
   p16:gp0*1.7
-  2m st
+  d16
+  10u st
 
   |DIPSI|
 
@@ -56,7 +57,7 @@ else
   GOSCNP ph26  ; acquire H-H COSY
 
   ; ROESY
-  2m st
+  10u st
   10u gron12
   (p32:sp29 ph0):f1  ; ZQ suppression
   20u groff

@@ -19,7 +19,7 @@ let pulprog = `
   d10
   (p1 ph0):f1
   goscnp ph26  ; acquire H-H COSY
-  2m st
+  10u st
 
   ; ROESY
   10u gron12

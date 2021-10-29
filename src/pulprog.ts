@@ -648,7 +648,7 @@ export function makePulprogText(trueModuleNames: string[],
     mainpp.push(
         `#ifdef PRESAT`,
         `  4u pl9:f1`,
-        `  2m st0`,
+        `  10u st0`,
         `  d1 cw:f1 ph0`,
         `  4u do:f1`,
         `  4u pl1:f1`,
@@ -747,7 +747,8 @@ export function makePulprogText(trueModuleNames: string[],
             mainpp.push(
                 `  4u`,
                 `  p16:gp0*${gradGen.next().value}`,
-                `  2m st`,
+                `  d16`,
+                `  10u st`,
             );
         }
     }
