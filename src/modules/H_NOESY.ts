@@ -23,7 +23,7 @@ let pulprog = `
   d16 pl1:f1
   4u
   D[ID]a
-  (p1 ph0):f1
+  |SOLVSUPP|
 
   goscnp ph26
 `

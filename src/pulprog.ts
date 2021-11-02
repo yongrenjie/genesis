@@ -25,6 +25,7 @@ const allParams = {
     "p3": "f2 channel -  90 degree high power pulse",
     "p4": "f2 channel - 180 degree high power pulse",
     "p6": "f1 channel -  90 degree low power pulse",
+    "p12": "f1 channel - 180 degree shaped pulse (Squa100.1000)   [2 msec]",
     "p14": "f2 channel - 180 degree shaped pulse for inversion\n;     = 500usec for Crp60,0.5,20.1",
     "p15": "f1 channel - duration of ROESY spin lock",
     "p16": "gradient pulse   [1 ms]",
@@ -55,6 +56,8 @@ const allParams = {
     "pl27": "f1 channel - power level for pulsed ROESY-spinlock",
 
     // sp, spnam - Shaped pulses {{{3
+    "sp1": "f1 channel - shaped pulse 180 degree",
+    "spnam1": "Sinc1.1000",
     "sp3": "f2 channel - shaped pulse (180 degree inversion)",
     "spnam3": "Crp60,0.5,20.1 or WaveMaker",
     "sp7": "f2 channel - shaped pulse (180 degree refocusing)",
@@ -290,6 +293,8 @@ allGradients[16] = new Gradient({num: 16, val: 35, comment: "1H PSYCHE CTP gradi
 allGradients[17] = new Gradient({num: 17, val: 49, comment: "1H PSYCHE CTP gradient 2"});
 allGradients[18] = new Gradient({num: 18, val: 77, comment: "1H PSYCHE CTP gradient 3"});
 allGradients[19] = new Gradient({num: 19, val: 37, comment: "1H CTP"}); // stronger grad needed for e.g. DQF-COSY
+allGradients[20] = new Gradient({num: 20, val: 23, comment: "1H excitation sculpting"});
+allGradients[21] = new Gradient({num: 21, val: 16, comment: "1H excitation sculpting"});
 
 
 // WaveMaker definitions {{{2
@@ -303,7 +308,7 @@ allWavemakers[49] = ";sp49:wvm:wu180H1SL: wurstAM(p50, cnst49 ppm; B1max = 5.0 k
 allWavemakers[50] = ";sp50:wvm:wu180H1SL2: wurstAM(p50, cnst50 ppm; B1max = 5.0 kHz)";
 // }}}1
 
-// DIPSI and ASAP mixing {{{1
+// DIPSI mixing {{{1
 
 /** 
  * Dynamically generate the pulse programme and preamble needed for DIPSI-2 mixing.
@@ -407,8 +412,9 @@ function* makeDipsiGenerator(): Generator<string[], any, "c13" | "h1"> {
         }
     }
 }
+// }}}1
 
-// asapMixingPPText {{{2
+// Standardised ASAP mixing string {{{1
 const asapMixingPPText = [
     ``,
     `  ; ASAP mixing`,
@@ -444,7 +450,38 @@ const asapMixingPPText = [
     `  4u pl1:f1`,
     `}`,
 ]
-// }}}2
+// }}}1
+
+// Standardised solvent suppression for homonuclear modules {{{1
+// Only double spin echo excitation sculpting for now...
+const homonuclearSolvSuppText = [
+    `#ifdef ES`,
+    `  (p1 ph0):f1`,
+    `  p16:gp20`,
+    `  d16`,
+    `  (p12:sp1 ph0):f1`,
+    `  4u pl1:f1`,
+    `  (p2 ph2):f1`,
+    `  4u`,
+    `  p16:gp20`,
+    `  d16`,
+    `  DH_EXSCULPT`,
+    `  p16:gp21`,
+    `  d16`,
+    `  (p12:sp1 ph0):f1`,
+    `  4u pl1:f1`,
+    `  (p2 ph2):f1`,
+    `  4u`,
+    `  p16:gp21`,
+    `  d16`,
+    `#else`,
+    `  (p1 ph0):f1`,
+    `#endif`
+];
+const homonuclearSolvSuppPreamble = [
+    `define delay DH_EXSCULPT`,
+    `"DH_EXSCULPT = de+p1*2/3.1416"`
+];
 // }}}1
 
 // The Parameter class {{{1
@@ -694,6 +731,7 @@ export function makePulprogText(trueModuleNames: string[],
         mainpp.push(``, ``, `  ; MODULE ${i + 1}`);
         let trimNewlines = ((s: string) => s.replace(/^\n|\n$/g, ''));
         let ppLines = trimNewlines(mod.pulprog).split("\n");
+
         // Handle DIPSI-2 inside pp_lines.
         let ppDipsiLineNo = ppLines.findIndex(line => line.includes("|DIPSI|"));
         while (ppDipsiLineNo != -1) {  // means it was found
@@ -707,6 +745,17 @@ export function makePulprogText(trueModuleNames: string[],
             }
             ppDipsiLineNo = ppLines.findIndex(line => line.includes("|DIPSI|"));
         }
+
+        // Handle solvent suppression string in homonuclear modules
+        if (mod.category == "h1") {
+            let ppSolvSuppLineNo = ppLines.findIndex(line => line.includes("|SOLVSUPP|"));
+            if (ppSolvSuppLineNo != -1) {
+                ppLines.splice(ppSolvSuppLineNo, 1, ...homonuclearSolvSuppText);
+                preambles.push(...homonuclearSolvSuppPreamble);
+            }
+        }
+        
+        // Add the current module's pulse programme to the concatenated list
         mainpp.push(...ppLines
             .map(l => l.replace(/\[ID\]/g, trueModuleNames[i]))
         );
