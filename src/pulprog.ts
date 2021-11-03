@@ -1035,6 +1035,13 @@ export function makePulprogText(trueModuleNames: string[],
     // like C_SEHSQC_IPAP)
     mainpp = mainpp.map(line => line.replace("GOSCNP", "goscnp"));
 
+    // Remove st0 commands from sequences with NBL=1 (triggers warning in TS4)
+    // The only lines we have to deal with are 'd1 st0' and '10u st0', so this
+    // regex works for now (and possibly the conceivable future).
+    if (nbl == 1) {
+        mainpp = mainpp.map(line => line.replace(/ st0$/, ""));
+    }
+
     // Create postamble components {{{2
     // Phase definitions {{{3
     const phaseDefns = phases.map(p => `ph${p}=${allPhases[p].str}`);
