@@ -25,18 +25,18 @@ const allParams = {
     "p3": "f2 channel -  90 degree high power pulse",
     "p4": "f2 channel - 180 degree high power pulse",
     "p6": "f1 channel -  90 degree low power pulse",
-    "p12": "f1 channel - 180 degree shaped pulse (Squa100.1000)   [2 msec]",
-    "p14": "f2 channel - 180 degree shaped pulse for inversion\n;     = 500usec for Crp60,0.5,20.1",
+    "p12": "f1 channel - 180 degree shaped pulse [2 ms for Sinc1.1000]",
+    "p14": "f2 channel - 180 degree shaped pulse for inversion [500 us for Crp60,0.5,20.1]",
     "p15": "f1 channel - duration of ROESY spin lock",
     "p16": "gradient pulse   [1 ms]",
     "p17": "extended gradient pulse for 15N HSQC",
     "p19": "gradient pulse 2 [600 us]",
     "p21": "f3 channel -  90 degree high power pulse",
     "p22": "f3 channel - 180 degree high power pulse",
-    "p24": "f2 channel - 180 degree shaped pulse for refocusing\n;      = 2msec for Crp60comp.4",
+    "p24": "f2 channel - 180 degree shaped pulse for refocusing [2 ms for Crp60comp.4]",
     "p25": "f1 channel - 180 degree pulse at pl27 for ROESY spin lock",
     "p31": "f2 channel - 180 degree shaped pulse for inversion with J-compensation",
-    "p32": "f1 channel - 180 degree shaped pulse (adiabatic)      [20 msec]\n;     smoothed chirp (sweepwidth, 20% smoothing, 10000 points)",
+    "p32": "f1 channel - 180 degree shaped pulse (adiabatic) [20 msec for Crp60,20,20.10]",
     "p33": "f1 channel - 180(x) BURBOP [600 us]",
     "p34": "f2 channel - 180 pp BIBOP [600 us]",
     "p40": "f1 channel - PSYCHE double saltire pulse [30 ms]",
@@ -57,15 +57,15 @@ const allParams = {
 
     // sp, spnam - Shaped pulses {{{3
     "sp1": "f1 channel - shaped pulse 180 degree",
-    "spnam1": "Sinc1.1000",
+    "spnam1": "1H selective inversion - Sinc1.1000",
     "sp3": "f2 channel - shaped pulse (180 degree inversion)",
-    "spnam3": "Crp60,0.5,20.1 or WaveMaker",
+    "spnam3": "13C inversion - Crp60,0.5,20.1 or WaveMaker",
     "sp7": "f2 channel - shaped pulse (180 degree refocusing)",
-    "spnam7": "Crp60comp.4",
+    "spnam7": "13C refocusing - Crp60comp.4",
     "sp18": "f2 channel - shaped pulse (180 degree with J-compensation)",
-    "spnam18": "Crp60_xfilt.2 or WaveMaker",
+    "spnam18": "13C J-compensated inversion - Crp60_xfilt.2 or WaveMaker",
     "sp29": "f1 channel - shaped pulse (adiabatic)",
-    "spnam29": "Crp60,20,20.10",
+    "spnam29": "1H ZQS chirp - Crp60,20,20.10 or WaveMaker",
     "sp33": "f1 channel - 180(x) BURBOP",
     "spnam33": "BUBI_1H_600u_RF20kHz",
     "sp34": "f2 channel - 180 pp BIBOP",
@@ -299,8 +299,10 @@ allGradients[21] = new Gradient({num: 21, val: 16, comment: "1H excitation sculp
 
 // WaveMaker definitions {{{2
 const allWavemakers = new Array(64);
+allWavemakers[1] = ";sp1:wvm:wu180H1Sinc: sinc180(2 ms)";
 allWavemakers[3] = ";sp3:wvm:wu180C13: cawurst-20(60 kHz, 0.5 ms; L2H)";
 allWavemakers[18] = ";sp18:wvm:wu180Jcomp: cawurst-40(280 ppm; Jcomp, L2H)";
+allWavemakers[29] = ";sp29:wvm:wu180H1ZQS: sm_chirp(60 kHz, 20 ms; H2L, Q=5)";
 allWavemakers[41] = ";sp41:wvm:wuchirpLH: sm_chirp(10 kHz, 40 ms; L2H, Q=5) np=10000";
 allWavemakers[42] = ";sp42:wvm:wuchirpHL: sm_chirp(10 kHz, 40 ms; H2L, Q=5) np=10000";
 allWavemakers[45] = ";sp45:wvm:wuASAP: cawurst-2(30 ppm, 1.0 ms; Q=3)";
