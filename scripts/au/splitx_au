@@ -32,18 +32,14 @@ int parmode;
 FETCHPAR("PARMODE", &parmode)
 if (parmode != 1) STOPMSG("Program is only suitable for 2D")
 
-// Check if NBL > 1 (i.e. whether splitting is truly required)
-int nbl;
-FETCHPAR("NBL", &nbl)
-if (nbl < 2) STOPMSG("Program is only suitable for NBL > 1")
-
 // Read in more parameters
-int dtypa, byteorder, tds, td1, td1s;
+int dtypa, byteorder, tds, td1, td1s, nbl;
 FETCHPARS("DTYPA", &dtypa)
 FETCHPARS("BYTORDA", &byteorder)
 FETCHPARS("TD", &tds)
 FETCHPAR1("TD", &td1)
 FETCHPAR1S("TD", &td1s)
+FETCHPAR("NBL", &nbl)
 
 // Check whether NUS was used.
 int full_td1;   // 'full' value of TD1 post-reconstruction
