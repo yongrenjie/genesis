@@ -8,6 +8,7 @@
 ; 1H interleaved TOCSY (mixing time: d14) + ROESY
 
 ; set 'NBL' TopSpin parameter to 5
+;     [use -DPRESAT for presaturation during d1]
 
 ;$CLASS=HighRes
 ;$DIM=2D
@@ -142,7 +143,15 @@ baseopt_echo
   p16:gp0*1.37
   d16
   4u BLKGRAD
+#ifdef PRESAT
+  4u pl9:f1
+  10u st0
+  d1 cw:f1 ph0
+  4u do:f1
+  4u pl1:f1
+#else
   d1 st0
+#endif /* PRESAT */
   4u UNBLKGRAD
 
 
@@ -211,7 +220,8 @@ else {
   (p3 ph0):f2
   4u
   p16:gp0*1.77
-  2m st
+  d16
+  10u st
 
 
   ; MODULE 2
@@ -343,7 +353,8 @@ if "d30 > 1m"
   (p3 ph0):f2
   4u
   p16:gp0*2.32
-  2m st
+  d16
+  10u st
 
 
   ; MODULE 3
@@ -490,7 +501,8 @@ if "d15 > 1m"
   (p3 ph0):f2
   4u
   p16:gp0*-1.29
-  2m st
+  d16
+  10u st
 
 
   ; MODULE 4
@@ -555,7 +567,8 @@ if "l1 % 2 == 0"
   4u pl10:f1
   50u
   p16:gp0*1.7
-  2m st
+  d16
+  10u st
 
 						;begin DIPSI2
 10 p6*3.556 ph3
@@ -615,7 +628,7 @@ else
   goscnp ph26  ; acquire H-H COSY
 
   ; ROESY
-  2m st
+  10u st
   10u gron12
   (p32:sp29 ph0):f1  ; ZQ suppression
   20u groff
@@ -690,6 +703,7 @@ ph26=0 2
 ;WaveMaker shaped pulses (use 'wvm -a' to generate)
 ;sp3:wvm:wu180C13: cawurst-20(60 kHz, 0.5 ms; L2H)
 ;sp18:wvm:wu180Jcomp: cawurst-40(280 ppm; Jcomp, L2H)
+;sp29:wvm:wu180H1ZQS: sm_chirp(60 kHz, 20 ms; H2L, Q=5)
 ;sp45:wvm:wuASAP: cawurst-2(30 ppm, 1.0 ms; Q=3)
 ;sp49:wvm:wu180H1SL: wurstAM(p50, cnst49 ppm; B1max = 5.0 kHz)
 ;sp50:wvm:wu180H1SL2: wurstAM(p50, cnst50 ppm; B1max = 5.0 kHz)
@@ -733,20 +747,18 @@ ph26=0 2
 ;p2: f1 channel - 180 degree high power pulse
 ;p3: f2 channel -  90 degree high power pulse
 ;p6: f1 channel -  90 degree low power pulse
-;p14: f2 channel - 180 degree shaped pulse for inversion
-;     = 500usec for Crp60,0.5,20.1
+;p14: f2 channel - 180 degree shaped pulse for inversion [500 us for Crp60,0.5,20.1]
 ;p16: gradient pulse   [1 ms]
 ;p19: gradient pulse 2 [600 us]
-;p24: f2 channel - 180 degree shaped pulse for refocusing
-;      = 2msec for Crp60comp.4
+;p24: f2 channel - 180 degree shaped pulse for refocusing [2 ms for Crp60comp.4]
 ;p31: f2 channel - 180 degree shaped pulse for inversion with J-compensation
-;p32: f1 channel - 180 degree shaped pulse (adiabatic)      [20 msec]
-;     smoothed chirp (sweepwidth, 20% smoothing, 10000 points)
+;p32: f1 channel - 180 degree shaped pulse (adiabatic) [20 msec for Crp60,20,20.10]
 ;p45: f1 channel -  180 degree CAWURST-2 pulse
 ;p50: f1 channel -  Adiabatic pulse for ROESY (half of total mixing time)
 ;			 total mixing time = 2*p50
 ;pl1: f1 channel - power level for pulse (default)
 ;pl2: f2 channel - power level for pulse (default)
+;pl9: f1 channel - power level for presaturation
 ;pl10: f1 channel - power level for TOCSY-spinlock
 ;pl12: f2 channel - power level for CPD/BB decoupling
 ;sp3: f2 channel - shaped pulse (180 degree inversion)
@@ -756,10 +768,10 @@ ph26=0 2
 ;sp45: f1 channel - CAWURST-2 pulse (180 degree)
 ;sp49: f1 channel - first shaped pulse WURSTAM (adiabatic) for ROESY mixing (high shift)
 ;sp50: f1 channel - second shaped pulse WURSTAM (adiabatic) for ROESY mixing (low shift)
-;spnam3: Crp60,0.5,20.1 or WaveMaker
-;spnam7: Crp60comp.4
-;spnam18: Crp60_xfilt.2 or WaveMaker
-;spnam29: Crp60,20,20.10
+;spnam3: 13C inversion - Crp60,0.5,20.1 or WaveMaker
+;spnam7: 13C refocusing - Crp60comp.4
+;spnam18: 13C J-compensated inversion - Crp60_xfilt.2 or WaveMaker
+;spnam29: 1H ZQS chirp - Crp60,20,20.10 or WaveMaker
 ;spnam45: wuASAP (generate via WaveMaker)
 ;spnam49: wu180H1SL (generate via WaveMaker)
 ;spnam50: wu180H1SL2 (generate via WaveMaker)
@@ -771,5 +783,5 @@ ph26=0 2
 
 ; auprog: noah_hmbc noah_hmbc:noah_hsqc noah_TS:noah_hsqc noah_split:noah_tocsy States noah_cosy States:noah_tocsy States noah_roesy States
 ; module identifiers: C_HMBC_CFDD C_HSQCC_CIA C_SEHSQC_IA H_TT_CR
-; pulse programme created by genesis-v2.0.13, https://nmr-genesis.co.uk
-; Thu Sep 30 2021 00:28:30 GMT+0100 (British Summer Time)
+; pulse programme created by genesis-v2.0.15, https://nmr-genesis.co.uk
+; Thu Nov 04 2021 00:43:53 GMT+0000 (Greenwich Mean Time)

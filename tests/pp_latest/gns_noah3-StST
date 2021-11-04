@@ -6,8 +6,11 @@
 ; 13C HSQC
 ;     [use -DEDIT for multiplicity editing]
 ; 1H phase-sensitive TOCSY
+;     [use -DZQS for zero-quantum suppression]
+;     [use -DES for pre-acquisition excitation sculpting]
 
 ; set 'NBL' TopSpin parameter to 3
+;     [use -DPRESAT for presaturation during d1]
 
 ;$CLASS=HighRes
 ;$DIM=2D
@@ -45,32 +48,34 @@ define delay DC_HSQCc
 define delay DC_HSQCd
 define delay DC_HSQCe
 define delay DC_HSQCf
-"cnst41     = 2*sfo2/sfo1"                             ; gradient ratio
-"d0         = 3u"                                      ; 13C t1
-"d2         = 0.5s/cnst2"                              ; JCOMP
-"d4         = 0.25s/cnst2"                             ; 13C INEPT
-"d10        = 3u"                                      ; TOCSY t1
-"in0        = inf1/2"                                  ; 13C increment
-"in10       = 2*dw"                                    ; TOCSY increment
-"l11        = (d9/(p6*115.112))/2"                     ; half the number of TOCSY loops
-"l12        = l11*2"                                   ; number of TOCSY loops
-"l13        = (d19/(p6*115.112))/2"                    ; half the number of DIPSI-2 loops
-"l14        = l13*2"                                   ; number of DIPSI-2 loops
-"p2         = p1*2"                                    ; 1H hard 180
-"DCI_HSQCTa = (asin(cnst32)/(2*PI*cnst2))-p14/2000000"
-"DCI_HSQCTb = (asin(cnst32)/(2*PI*cnst2))+p14/2000000"
-"DCI_HSQCTc = p16+d16+p2/2+d0-p3*2/PI+4u"
-"DCI_HSQCTd = d4-p14/2"
-"DCI_HSQCTe = d4+p14/2-p16-d16"
-"DCI_HSQCTf = d2-p14/2-p16-d16-4u"
-"DCI_HSQCTg = d2+p14/2-p16-d16-de"
-"DCI_HSQCTh = de+4u"
-"DC_HSQCa   = d4-p14/2"
-"DC_HSQCb   = d4+p14/2"
-"DC_HSQCc   = p16+d16+p2/2+d0-p3*2/PI+4u"
-"DC_HSQCd   = d2+p3+p2/2"
-"DC_HSQCe   = DC_HSQCc+p3-p2/2"
-"DC_HSQCf   = DC_HSQCb-p16-d16-p3-de+p1*2/PI-8u"
+define delay DH_EXSCULPT
+"cnst41      = 2*sfo2/sfo1"                             ; gradient ratio
+"d0          = 3u"                                      ; 13C t1
+"d2          = 0.5s/cnst2"                              ; JCOMP
+"d4          = 0.25s/cnst2"                             ; 13C INEPT
+"d10         = 3u"                                      ; TOCSY t1
+"in0         = inf1/2"                                  ; 13C increment
+"in10        = 2*dw"                                    ; TOCSY increment
+"l11         = (d9/(p6*115.112))/2"                     ; half the number of TOCSY loops
+"l12         = l11*2"                                   ; number of TOCSY loops
+"l13         = (d19/(p6*115.112))/2"                    ; half the number of DIPSI-2 loops
+"l14         = l13*2"                                   ; number of DIPSI-2 loops
+"p2          = p1*2"                                    ; 1H hard 180
+"DCI_HSQCTa  = (asin(cnst32)/(2*PI*cnst2))-p14/2000000"
+"DCI_HSQCTb  = (asin(cnst32)/(2*PI*cnst2))+p14/2000000"
+"DCI_HSQCTc  = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DCI_HSQCTd  = d4-p14/2"
+"DCI_HSQCTe  = d4+p14/2-p16-d16"
+"DCI_HSQCTf  = d2-p14/2-p16-d16-4u"
+"DCI_HSQCTg  = d2+p14/2-p16-d16-de"
+"DCI_HSQCTh  = de+4u"
+"DC_HSQCa    = d4-p14/2"
+"DC_HSQCb    = d4+p14/2"
+"DC_HSQCc    = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DC_HSQCd    = d2+p3+p2/2"
+"DC_HSQCe    = DC_HSQCc+p3-p2/2"
+"DC_HSQCf    = DC_HSQCb-p16-d16-p3-de+p1*2/PI-8u"
+"DH_EXSCULPT = de+p1*2/3.1416"
 define list<gradient> GCI_HSQCT={cnst41}
 define list<gradient> GC_HSQC={cnst41}
 "l0      = td1/3"             ; TD1/NBL
@@ -101,7 +106,15 @@ baseopt_echo
   p16:gp0*1.37
   d16
   4u BLKGRAD
+#ifdef PRESAT
+  4u pl9:f1
+  10u st0
+  d1 cw:f1 ph0
+  4u do:f1
+  4u pl1:f1
+#else
   d1 st0
+#endif /* PRESAT */
   4u UNBLKGRAD
 
 
@@ -214,7 +227,8 @@ baseopt_echo
   (p3 ph0):f2
   4u
   p16:gp0*1.77
-  2m st
+  d16
+  10u st
 
 
   ; MODULE 2
@@ -279,7 +293,8 @@ baseopt_echo
   (p3 ph0):f2
   4u
   p16:gp0*2.32
-  2m st
+  d16
+  10u st
 
 
   ; MODULE 3
@@ -288,9 +303,13 @@ baseopt_echo
   (p1 ph6):f1
   d10
   (p1 ph0):f1
+#ifdef ZQS
   10u gron12
   (p32:sp29 ph0):f1
   20u groff
+#else
+  p16:gp11*0.65
+#endif  /* ZQS */
   d16 pl10:f1
 
 						;begin DIPSI2
@@ -337,13 +356,36 @@ baseopt_echo
 						;end DIPSI2
 
   p16:gp11
-  d16
+  d16 pl1:f1
+#ifdef ZQS
   10u gron12*1.333
   (p32*0.75:sp29 ph0):f1
   20u groff
   d16 pl1:f1
-  4u
+#else
+#endif  /* ZQS */
+#ifdef ES
   (p1 ph0):f1
+  p16:gp20
+  d16
+  (p12:sp1 ph0):f1
+  4u pl1:f1
+  (p2 ph2):f1
+  4u
+  p16:gp20
+  d16
+  DH_EXSCULPT
+  p16:gp21
+  d16
+  (p12:sp1 ph0):f1
+  4u pl1:f1
+  (p2 ph2):f1
+  4u
+  p16:gp21
+  d16
+#else
+  (p1 ph0):f1
+#endif
 
   go=2 ph26
 
@@ -391,16 +433,22 @@ ph30=0 2 2 0
 ;gpnam4: SMSQ10.100
 ;gpnam11: SMSQ10.100
 ;gpnam13: SMSQ10.100
+;gpnam20: SMSQ10.100
+;gpnam21: SMSQ10.100
 ;gpz0: 29% (for purging)
 ;gpz3: 75% (13C alternate module CTP)
 ;gpz4: 70% (13C CTP)
 ;gpz11: 43% (1H purge gradient)
 ;gpz12: 11% (1H ZQ filter)
 ;gpz13: 19% (13C DIPSI-2 purge gradients)
+;gpz20: 23% (1H excitation sculpting)
+;gpz21: 16% (1H excitation sculpting)
 
 ;WaveMaker shaped pulses (use 'wvm -a' to generate)
+;sp1:wvm:wu180H1Sinc: sinc180(2 ms)
 ;sp3:wvm:wu180C13: cawurst-20(60 kHz, 0.5 ms; L2H)
 ;sp18:wvm:wu180Jcomp: cawurst-40(280 ppm; Jcomp, L2H)
+;sp29:wvm:wu180H1ZQS: sm_chirp(60 kHz, 20 ms; H2L, Q=5)
 ;cpd2:wvm:wudec: cawurst_d-20(220 ppm, 1.4 ms; L2H)
 
 ;cnst2: = 1J(CH)
@@ -425,22 +473,24 @@ ph30=0 2 2 0
 ;p2: f1 channel - 180 degree high power pulse
 ;p3: f2 channel -  90 degree high power pulse
 ;p6: f1 channel -  90 degree low power pulse
-;p14: f2 channel - 180 degree shaped pulse for inversion
-;     = 500usec for Crp60,0.5,20.1
+;p12: f1 channel - 180 degree shaped pulse [2 ms for Sinc1.1000]
+;p14: f2 channel - 180 degree shaped pulse for inversion [500 us for Crp60,0.5,20.1]
 ;p16: gradient pulse   [1 ms]
 ;p31: f2 channel - 180 degree shaped pulse for inversion with J-compensation
-;p32: f1 channel - 180 degree shaped pulse (adiabatic)      [20 msec]
-;     smoothed chirp (sweepwidth, 20% smoothing, 10000 points)
+;p32: f1 channel - 180 degree shaped pulse (adiabatic) [20 msec for Crp60,20,20.10]
 ;pl1: f1 channel - power level for pulse (default)
 ;pl2: f2 channel - power level for pulse (default)
+;pl9: f1 channel - power level for presaturation
 ;pl10: f1 channel - power level for TOCSY-spinlock
 ;pl12: f2 channel - power level for CPD/BB decoupling
+;sp1: f1 channel - shaped pulse 180 degree
 ;sp3: f2 channel - shaped pulse (180 degree inversion)
 ;sp18: f2 channel - shaped pulse (180 degree with J-compensation)
 ;sp29: f1 channel - shaped pulse (adiabatic)
-;spnam3: Crp60,0.5,20.1 or WaveMaker
-;spnam18: Crp60_xfilt.2 or WaveMaker
-;spnam29: Crp60,20,20.10
+;spnam1: 1H selective inversion - Sinc1.1000
+;spnam3: 13C inversion - Crp60,0.5,20.1 or WaveMaker
+;spnam18: 13C J-compensated inversion - Crp60_xfilt.2 or WaveMaker
+;spnam29: 1H ZQS chirp - Crp60,20,20.10 or WaveMaker
 ;aq: acquisition time
 ;ds: >= 16
 ;FnMODE: echo-antiecho
@@ -449,5 +499,5 @@ ph30=0 2 2 0
 
 ; auprog: noah_hsqc:noah_hsqc:noah_tocsy States
 ; module identifiers: CI_HSQCT C_HSQC H_TOCSY
-; pulse programme created by genesis-v2.0.13, https://nmr-genesis.co.uk
-; Thu Sep 30 2021 00:28:30 GMT+0100 (British Summer Time)
+; pulse programme created by genesis-v2.0.15, https://nmr-genesis.co.uk
+; Thu Nov 04 2021 00:43:53 GMT+0000 (Greenwich Mean Time)
