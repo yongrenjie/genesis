@@ -1,7 +1,8 @@
 import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = "; 1H COSY and NOESY (echo/antiecho F1)";
+let shortDescription = `; 1H COSY and NOESY (echo/antiecho F1)
+;     [use -DPRESAT for presaturation during NOE mixing time (and d1)]`;
 
 let preamble = `
 "d10    = 3u"                         ; COSY/NOESY t1
@@ -10,7 +11,7 @@ define delay D[ID]a
 define delay D[ID]b
 define delay D[ID]c
 "D[ID]a = p16+d16+4u-d10"
-"D[ID]b = d8-4u-p16-d16-de-aq-4u-p16-d16-p32-30u"     ; NOE mixing time
+"D[ID]b = d8-p16-d16-de-aq-p16-d16-p32-60u"     ; NOE mixing time
 "D[ID]c = p16+d16"
 `
 
@@ -38,7 +39,16 @@ let pulprog = `
   20u groff
   p16:gp11
   d16 pl1:f1
-  D[ID]b st  ; NOE mixing time
+#ifdef PRESAT
+  4u pl9:f1
+  D[ID]b cw:f1  ; NOE mixing time with presat
+  4u do:f1
+  4u pl1:f1
+  10u st
+#else
+  D[ID]b        ; NOE mixing time
+  22u st
+#endif  /* PRESAT */
   (p1 ph7):f1
   D[ID]c
   de
