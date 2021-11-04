@@ -54,7 +54,7 @@ else
   d13
   (p1 ph0):f1
   4u
-  GOSCNP ph26  ; acquire H-H COSY
+  goscnp ph26  ; acquire H-H COSY
 
   ; ROESY
   10u st

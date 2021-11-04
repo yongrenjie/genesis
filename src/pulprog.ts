@@ -1033,10 +1033,6 @@ export function makePulprogText(trueModuleNames: string[],
     ].join("\n");
 
     // Postprocess mainpp {{{2
-    // Change any GOSCNP's to goscnp's (this is a hacky workaround for modules
-    // like C_SEHSQC_IPAP)
-    mainpp = mainpp.map(line => line.replace("GOSCNP", "goscnp"));
-
     // Remove st0 commands from sequences with NBL=1 (triggers warning in TS4)
     // The only lines we have to deal with are 'd1 st0' and '10u st0', so this
     // regex works for now (and possibly the conceivable future).
