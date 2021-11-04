@@ -2,7 +2,8 @@ import { Kupce2017ACIE, Thiele2009CEJ } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H ROESY with adiabatic spin lock
-;     [use "wvm -a" to generate spin lock pulses before running]`;
+;     [use "wvm -a" to generate spin lock pulses before running]
+;     [use -DES for pre-acquisition excitation sculpting]`;
 
 let preamble = `
 "d10    = 3u"                         ; ROESY t1
