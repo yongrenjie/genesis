@@ -2,7 +2,7 @@ import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H phase-sensitive TOCSY
-;     [use -DZQS for zero-quantum suppression]
+;     [use -DNOZQS to skip zero-quantum suppression]
 ;     [use -DES for pre-acquisition excitation sculpting]`;
 
 let preamble = `
@@ -18,26 +18,26 @@ let pulprog = `
   (p1 ph6):f1
   d10
   (p1 ph0):f1
-#ifdef ZQS
+#ifdef NOZQS
+  p16:gp11*0.65
+#else
   10u gron12
   (p32:sp29 ph0):f1
   20u groff
-#else
-  p16:gp11*0.65
-#endif  /* ZQS */
+#endif  /* NOZQS */
   d16 pl10:f1
 
   |DIPSI|
 
   p16:gp11
   d16 pl1:f1
-#ifdef ZQS
+#ifdef NOZQS
+#else
   10u gron12*1.333
   (p32*0.75:sp29 ph0):f1
   20u groff
   d16 pl1:f1
-#else
-#endif  /* ZQS */
+#endif  /* NOZQS */
   |SOLVSUPP|
 
   goscnp ph26

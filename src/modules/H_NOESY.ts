@@ -2,7 +2,7 @@ import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H phase-sensitive NOESY
-;     [use -DZQS for zero-quantum suppression]
+;     [use -DNOZQS to skip zero-quantum suppression]
 ;     [use -DPRESAT for presaturation during NOE mixing time (and d1)]
 ;     [use -DES for pre-acquisition excitation sculpting]`;
 
@@ -21,7 +21,19 @@ let pulprog = `
   (p1 ph6):f1
   d10
   (p1 ph0):f1
-#ifdef ZQS
+#ifdef NOZQS
+# ifdef PRESAT
+  p16:gp11
+  d16 pl9:f1
+  D[ID]b cw:f1
+  4u do:f1
+# else  /* PRESAT not defined */
+  p16:gp11
+  d16
+  D[ID]b
+  4u
+# endif  /* PRESAT */
+#else   /* NOZQS not defined, i.e. run ZQS */
   10u gron12
   (p32:sp29 ph0):f1
   20u groff
@@ -35,19 +47,7 @@ let pulprog = `
   D[ID]a
   4u
 # endif  /* PRESAT */
-#else   /* ZQS not defined */
-# ifdef PRESAT
-  p16:gp11
-  d16 pl9:f1
-  D[ID]b cw:f1
-  4u do:f1
-# else  /* PRESAT not defined */
-  p16:gp11
-  d16
-  D[ID]b
-  4u
-# endif  /* PRESAT */
-#endif  /* ZQS */
+#endif  /* NOZQS */
   4u pl1:f1
   |SOLVSUPP|
 
