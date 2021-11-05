@@ -751,9 +751,11 @@ export function makePulprogText(trueModuleNames: string[],
         // Handle solvent suppression string in homonuclear modules
         if (mod.category == "h1") {
             let ppSolvSuppLineNo = ppLines.findIndex(line => line.includes("|SOLVSUPP|"));
-            if (ppSolvSuppLineNo != -1) {
+            while (ppSolvSuppLineNo != -1) {   // means it was found
                 ppLines.splice(ppSolvSuppLineNo, 1, ...homonuclearSolvSuppText);
                 preambles.push(...homonuclearSolvSuppPreamble);
+                // Find next occurrence (if it exists)
+                ppSolvSuppLineNo = ppLines.findIndex(line => line.includes("|SOLVSUPP|"));
             }
         }
         
@@ -1007,15 +1009,18 @@ export function makePulprogText(trueModuleNames: string[],
     preambles = preambles.map(l => l.trim()).filter(Boolean);
     // There are three types of lines that we need to deal with:
     // 1) define delay XX, 2) define list<gradient>XX, 3) the rest
-    const defineDelayLines = preambles
+    let defineDelayLines = preambles
         .filter(l => l.startsWith("define delay"))
         .sort((la, lb) => Parameter.compare(new Parameter(la), new Parameter(lb)))
-    const defineGradLines = preambles
+    let defineGradLines = preambles
         .filter(l => l.startsWith("define list<gradient>"))
         .sort()
     let preambleParams = preambles
         .filter(l => !(l.startsWith("define")))
         .map(l => Parameter.fromPreamble(l));
+    // Remove duplicates inside defineDelayLines and defineGradLines
+    defineDelayLines = removeDuplicateByKey(defineDelayLines, (l => l));
+    defineGradLines = removeDuplicateByKey(defineGradLines, (l => l));
     // Sort parameter lines. Note that Parameter.compare() automatically
     // makes sure that 'custom' delays D_XXX occur below the standard delays
     // dXX, which is necessary for TopSpin to parse the pulse programme.

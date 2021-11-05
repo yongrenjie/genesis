@@ -1,7 +1,9 @@
 import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 1H COSY + TOCSY (States F1)`;
+let shortDescription = `; 1H COSY + TOCSY (States F1)
+;     [use -DNOZQS to skip zero-quantum suppression]
+;     [use -DES for pre-acquisition excitation sculpting]`;
 
 let preamble = `
 "d10  = 3u"                         ; COSY/TOCSY t1
@@ -14,27 +16,32 @@ let pulprog = `
   ; COSY
   (p1 ph6):f1
   d10
-  (p1 ph0):f1
-  4u
+  |SOLVSUPP|
   goscnp ph26  ; acquire H-H COSY
   10u st
 
   ; TOCSY
+#ifdef NOZQS
+  p16:gp11*0.65
+#else
   10u gron12
   (p32:sp29 ph0):f1
   20u groff
+#endif  /* NOZQS */
   d16 pl10:f1
 
   |DIPSI|
 
   p16:gp11
-  d16
+  d16 pl1:f1
+#ifdef NOZQS
+#else
   10u gron12*1.333
   (p32*0.75:sp29 ph0):f1
   20u groff
   d16 pl1:f1
-  4u
-  (p1 ph0):f1
+#endif  /* NOZQS */
+  |SOLVSUPP|
 
   goscnp ph26  ; acquire H-H TOCSY
 `
