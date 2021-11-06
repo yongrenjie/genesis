@@ -1,7 +1,7 @@
 import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 1H phase-sensitive COSY`;
+let shortDescription = `; 1H echo-antiecho COSY`;
 
 let preamble = `
 "d10  = 3u"                         ; COSY t1
@@ -9,7 +9,7 @@ let preamble = `
 `
 
 let pulprog = `
-  ; COSY
+  ; 1H-1H COSY (EA)
 
   (p1 ph5):f1
   4u
