@@ -3,6 +3,7 @@
 ; 13C HSQC
 ;     [use -DEDIT for multiplicity editing]
 ; 1H CLIP-COSY (States)
+;     [use -DES for pre-acquisition excitation sculpting]
 
 ; set 'NBL' TopSpin parameter to 2
 ;     [use -DPRESAT for presaturation during d1]
@@ -35,21 +36,23 @@ define delay DC_HSQCc
 define delay DC_HSQCd
 define delay DC_HSQCe
 define delay DC_HSQCf
-"cnst41   = 2*sfo2/sfo1"                       ; gradient ratio
-"d0       = 3u"                                ; 13C HSQC t1
-"d2       = 0.5s/cnst2"                        ; JCOMP
-"d4       = 0.25s/cnst2"                       ; 13C INEPT
-"d10      = 3u"                                ; CLIP-COSY t1
-"d12      = 0.25s/cnst12"                      ; CLIP-COSY mixing (< 1/4J(HH))
-"in0      = inf1/2"                            ; 13C HSQC increment
-"in10     = 2*dw"                              ; CLIP-COSY increment
-"p2       = p1*2"                              ; 1H hard 180
-"DC_HSQCa = d4-p14/2"
-"DC_HSQCb = d4+p14/2"
-"DC_HSQCc = p16+d16+p2/2+d0-p3*2/PI+4u"
-"DC_HSQCd = d2+p3+p2/2"
-"DC_HSQCe = DC_HSQCc+p3-p2/2"
-"DC_HSQCf = DC_HSQCb-p16-d16-p3-de+p1*2/PI-8u"
+define delay DH_EXSCULPT
+"cnst41      = 2*sfo2/sfo1"                       ; gradient ratio
+"d0          = 3u"                                ; 13C HSQC t1
+"d2          = 0.5s/cnst2"                        ; JCOMP
+"d4          = 0.25s/cnst2"                       ; 13C INEPT
+"d10         = 3u"                                ; CLIP-COSY t1
+"d12         = 0.25s/cnst12"                      ; CLIP-COSY mixing (< 1/4J(HH))
+"in0         = inf1/2"                            ; 13C HSQC increment
+"in10        = 2*dw"                              ; CLIP-COSY increment
+"p2          = p1*2"                              ; 1H hard 180
+"DC_HSQCa    = d4-p14/2"
+"DC_HSQCb    = d4+p14/2"
+"DC_HSQCc    = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DC_HSQCd    = d2+p3+p2/2"
+"DC_HSQCe    = DC_HSQCc+p3-p2/2"
+"DC_HSQCf    = DC_HSQCb-p16-d16-p3-de+p1*2/PI-8u"
+"DH_EXSCULPT = de+p1*2/3.1416"
 define list<gradient> GC_HSQC={cnst41}
 "l0      = td1/2"             ; TD1/NBL
 "l1      = 0"                 ; Running counter for delay / phase incrementation
@@ -82,7 +85,7 @@ baseopt_echo
 #ifdef PRESAT
   4u pl9:f1
   10u st0
-  d1 cw:f1 ph0
+  d1 cw:f1
   4u do:f1
   4u pl1:f1
 #else
@@ -186,6 +189,25 @@ baseopt_echo
   d16 pl1:f1 
   4u
   (p1 ph0):f1
+#ifdef ES
+  p16:gp20
+  d16
+  (p12:sp1 ph0):f1
+  4u pl1:f1
+  (p2 ph2):f1
+  4u
+  p16:gp20
+  d16
+  DH_EXSCULPT
+  p16:gp21
+  d16
+  (p12:sp1 ph0):f1
+  4u pl1:f1
+  (p2 ph2):f1
+  4u
+  p16:gp21
+  d16
+#endif  /* ES */
 
   go=2 ph26
 
@@ -231,12 +253,17 @@ ph30=0 2 2 0
 ;gpnam0: SMSQ10.100
 ;gpnam4: SMSQ10.100
 ;gpnam11: SMSQ10.100
+;gpnam20: SMSQ10.100
+;gpnam21: SMSQ10.100
 ;gpz0: 29% (for purging)
 ;gpz4: 70% (13C CTP)
 ;gpz11: 43% (1H purge gradient)
 ;gpz12: 11% (1H ZQ filter)
+;gpz20: 57% (1H excitation sculpting)
+;gpz21: 32% (1H excitation sculpting)
 
 ;WaveMaker shaped pulses (use 'wvm -a' to generate)
+;sp1:wvm:wu180H1Sinc: sinc180(p12)
 ;sp3:wvm:wu180C13: cawurst-20(60 kHz, 0.5 ms; L2H)
 ;sp18:wvm:wu180Jcomp: cawurst-40(280 ppm; Jcomp, L2H)
 ;sp29:wvm:wu180H1ZQS: sm_chirp(60 kHz, 20 ms; H2L, Q=5)
@@ -258,17 +285,20 @@ ph30=0 2 2 0
 ;p1: f1 channel -  90 degree high power pulse
 ;p2: f1 channel - 180 degree high power pulse
 ;p3: f2 channel -  90 degree high power pulse
-;p14: f2 channel - 180 degree shaped pulse for inversion [500 us for Crp60,0.5,20.1]
-;p16: gradient pulse   [1 ms]
-;p31: f2 channel - 180 degree shaped pulse for inversion with J-compensation
-;p32: f1 channel - 180 degree shaped pulse (adiabatic) [20 msec for Crp60,20,20.10]
+;p12: f1 channel - 180 degree inversion for excitation sculpting [2-8 ms]
+;p14: f2 channel - 180 degree inversion [500 us for Crp60,0.5,20.1]
+;p16: gradient pulse [1 ms]
+;p31: f2 channel - 180 degree inversion with J-compensation
+;p32: f1 channel - 180 degree adiabatic inversion [20 msec for Crp60,20,20.10]
 ;pl1: f1 channel - power level for pulse (default)
 ;pl2: f2 channel - power level for pulse (default)
 ;pl9: f1 channel - power level for presaturation
 ;pl12: f2 channel - power level for CPD/BB decoupling
+;sp1: f1 channel - shaped pulse 180 degree
 ;sp3: f2 channel - shaped pulse (180 degree inversion)
 ;sp18: f2 channel - shaped pulse (180 degree with J-compensation)
 ;sp29: f1 channel - shaped pulse (adiabatic)
+;spnam1: 1H selective inversion - Sinc1.1000 or WaveMaker
 ;spnam3: 13C inversion - Crp60,0.5,20.1 or WaveMaker
 ;spnam18: 13C J-compensated inversion - Crp60_xfilt.2 or WaveMaker
 ;spnam29: 1H ZQS chirp - Crp60,20,20.10 or WaveMaker
@@ -281,4 +311,4 @@ ph30=0 2 2 0
 ; auprog: noah_hsqc:noah_clipcosy States
 ; module identifiers: C_HSQC H_CLIP_COSY
 ; pulse programme created by genesis-v2.0.15, https://nmr-genesis.co.uk
-; Thu Nov 04 2021 00:43:53 GMT+0000 (Greenwich Mean Time)
+; Mon Nov 08 2021 00:27:41 GMT+0000 (Greenwich Mean Time)

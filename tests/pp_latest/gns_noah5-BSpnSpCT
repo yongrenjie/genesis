@@ -144,7 +144,7 @@ baseopt_echo
 #ifdef PRESAT
   4u pl9:f1
   10u st0
-  d1 cw:f1 ph0
+  d1 cw:f1
   4u do:f1
   4u pl1:f1
 #else
@@ -642,16 +642,16 @@ ph31=0 2
 ;p1: f1 channel -  90 degree high power pulse
 ;p2: f1 channel - 180 degree high power pulse
 ;p3: f2 channel -  90 degree high power pulse
-;p6: f1 channel -  90 degree low power pulse
-;p14: f2 channel - 180 degree shaped pulse for inversion [500 us for Crp60,0.5,20.1]
-;p16: gradient pulse   [1 ms]
+;p6: f1 channel -  90 degree low power pulse for TOCSY
+;p14: f2 channel - 180 degree inversion [500 us for Crp60,0.5,20.1]
+;p16: gradient pulse [1 ms]
 ;p17: extended gradient pulse for 15N HSQC
 ;p19: gradient pulse 2 [600 us]
 ;p21: f3 channel -  90 degree high power pulse
 ;p22: f3 channel - 180 degree high power pulse
-;p24: f2 channel - 180 degree shaped pulse for refocusing [2 ms for Crp60comp.4]
-;p31: f2 channel - 180 degree shaped pulse for inversion with J-compensation
-;p32: f1 channel - 180 degree shaped pulse (adiabatic) [20 msec for Crp60,20,20.10]
+;p24: f2 channel - 180 degree refocusing [2 ms for Crp60comp.4]
+;p31: f2 channel - 180 degree inversion with J-compensation
+;p32: f1 channel - 180 degree adiabatic inversion [20 msec for Crp60,20,20.10]
 ;p45: f1 channel -  180 degree CAWURST-2 pulse
 ;pl1: f1 channel - power level for pulse (default)
 ;pl2: f2 channel - power level for pulse (default)
@@ -679,4 +679,4 @@ ph31=0 2
 ; auprog: noah_hmbc:noah_nhsqc:noah_hsqc:noah_cosy:noah_tocsy
 ; module identifiers: C_HMBC_CNF N_SEHSQC C_SEHSQC H_COTO
 ; pulse programme created by genesis-v2.0.15, https://nmr-genesis.co.uk
-; Thu Nov 04 2021 00:43:53 GMT+0000 (Greenwich Mean Time)
+; Mon Nov 08 2021 00:27:41 GMT+0000 (Greenwich Mean Time)

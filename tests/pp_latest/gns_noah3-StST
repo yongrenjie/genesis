@@ -6,7 +6,7 @@
 ; 13C HSQC
 ;     [use -DEDIT for multiplicity editing]
 ; 1H phase-sensitive TOCSY
-;     [use -DZQS for zero-quantum suppression]
+;     [use -DNOZQS to skip zero-quantum suppression]
 ;     [use -DES for pre-acquisition excitation sculpting]
 
 ; set 'NBL' TopSpin parameter to 3
@@ -109,7 +109,7 @@ baseopt_echo
 #ifdef PRESAT
   4u pl9:f1
   10u st0
-  d1 cw:f1 ph0
+  d1 cw:f1
   4u do:f1
   4u pl1:f1
 #else
@@ -303,13 +303,13 @@ baseopt_echo
   (p1 ph6):f1
   d10
   (p1 ph0):f1
-#ifdef ZQS
+#ifdef NOZQS
+  p16:gp11*0.65
+#else
   10u gron12
   (p32:sp29 ph0):f1
   20u groff
-#else
-  p16:gp11*0.65
-#endif  /* ZQS */
+#endif  /* NOZQS */
   d16 pl10:f1
 
 						;begin DIPSI2
@@ -357,15 +357,15 @@ baseopt_echo
 
   p16:gp11
   d16 pl1:f1
-#ifdef ZQS
+#ifdef NOZQS
+#else
   10u gron12*1.333
   (p32*0.75:sp29 ph0):f1
   20u groff
   d16 pl1:f1
-#else
-#endif  /* ZQS */
-#ifdef ES
+#endif  /* NOZQS */
   (p1 ph0):f1
+#ifdef ES
   p16:gp20
   d16
   (p12:sp1 ph0):f1
@@ -383,9 +383,7 @@ baseopt_echo
   4u
   p16:gp21
   d16
-#else
-  (p1 ph0):f1
-#endif
+#endif  /* ES */
 
   go=2 ph26
 
@@ -441,11 +439,11 @@ ph30=0 2 2 0
 ;gpz11: 43% (1H purge gradient)
 ;gpz12: 11% (1H ZQ filter)
 ;gpz13: 19% (13C DIPSI-2 purge gradients)
-;gpz20: 23% (1H excitation sculpting)
-;gpz21: 16% (1H excitation sculpting)
+;gpz20: 57% (1H excitation sculpting)
+;gpz21: 32% (1H excitation sculpting)
 
 ;WaveMaker shaped pulses (use 'wvm -a' to generate)
-;sp1:wvm:wu180H1Sinc: sinc180(2 ms)
+;sp1:wvm:wu180H1Sinc: sinc180(p12)
 ;sp3:wvm:wu180C13: cawurst-20(60 kHz, 0.5 ms; L2H)
 ;sp18:wvm:wu180Jcomp: cawurst-40(280 ppm; Jcomp, L2H)
 ;sp29:wvm:wu180H1ZQS: sm_chirp(60 kHz, 20 ms; H2L, Q=5)
@@ -472,12 +470,12 @@ ph30=0 2 2 0
 ;p1: f1 channel -  90 degree high power pulse
 ;p2: f1 channel - 180 degree high power pulse
 ;p3: f2 channel -  90 degree high power pulse
-;p6: f1 channel -  90 degree low power pulse
-;p12: f1 channel - 180 degree shaped pulse [2 ms for Sinc1.1000]
-;p14: f2 channel - 180 degree shaped pulse for inversion [500 us for Crp60,0.5,20.1]
-;p16: gradient pulse   [1 ms]
-;p31: f2 channel - 180 degree shaped pulse for inversion with J-compensation
-;p32: f1 channel - 180 degree shaped pulse (adiabatic) [20 msec for Crp60,20,20.10]
+;p6: f1 channel -  90 degree low power pulse for TOCSY
+;p12: f1 channel - 180 degree inversion for excitation sculpting [2-8 ms]
+;p14: f2 channel - 180 degree inversion [500 us for Crp60,0.5,20.1]
+;p16: gradient pulse [1 ms]
+;p31: f2 channel - 180 degree inversion with J-compensation
+;p32: f1 channel - 180 degree adiabatic inversion [20 msec for Crp60,20,20.10]
 ;pl1: f1 channel - power level for pulse (default)
 ;pl2: f2 channel - power level for pulse (default)
 ;pl9: f1 channel - power level for presaturation
@@ -487,7 +485,7 @@ ph30=0 2 2 0
 ;sp3: f2 channel - shaped pulse (180 degree inversion)
 ;sp18: f2 channel - shaped pulse (180 degree with J-compensation)
 ;sp29: f1 channel - shaped pulse (adiabatic)
-;spnam1: 1H selective inversion - Sinc1.1000
+;spnam1: 1H selective inversion - Sinc1.1000 or WaveMaker
 ;spnam3: 13C inversion - Crp60,0.5,20.1 or WaveMaker
 ;spnam18: 13C J-compensated inversion - Crp60_xfilt.2 or WaveMaker
 ;spnam29: 1H ZQS chirp - Crp60,20,20.10 or WaveMaker
@@ -500,4 +498,4 @@ ph30=0 2 2 0
 ; auprog: noah_hsqc:noah_hsqc:noah_tocsy States
 ; module identifiers: CI_HSQCT C_HSQC H_TOCSY
 ; pulse programme created by genesis-v2.0.15, https://nmr-genesis.co.uk
-; Thu Nov 04 2021 00:43:53 GMT+0000 (Greenwich Mean Time)
+; Mon Nov 08 2021 00:27:41 GMT+0000 (Greenwich Mean Time)
