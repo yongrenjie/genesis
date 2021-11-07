@@ -20,7 +20,7 @@ let pulprog = `
   4u
   p16:gp5
   d16
-  4u
+  |SOLVSUPP|
   goscnp ph31
 `
 

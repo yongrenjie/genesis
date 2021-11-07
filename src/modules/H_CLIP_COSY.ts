@@ -38,6 +38,7 @@ let pulprog = `
   d16 pl1:f1 
   4u
   (p1 ph0):f1
+  |SOLVSUPP|
 
   goscnp ph26
 `
