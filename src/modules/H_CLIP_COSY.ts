@@ -1,7 +1,8 @@
 import { Kupce2017ACIE, Koos2016ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 1H CLIP-COSY (States)`;
+let shortDescription = `; 1H CLIP-COSY (States)
+;     [use -DES for pre-acquisition excitation sculpting]`;
 
 let preamble = `
 "d10  = 3u"                         ; CLIP-COSY t1

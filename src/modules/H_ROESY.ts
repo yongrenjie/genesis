@@ -1,7 +1,8 @@
 import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 1H ROESY with 180(x),180(-x) spin lock`;
+let shortDescription = `; 1H ROESY with 180(x),180(-x) spin lock
+;     [use -DES for pre-acquisition excitation sculpting]`;
 
 let preamble = `
 "d10  = 3u"                         ; ROESY t1
@@ -18,6 +19,7 @@ let pulprog = `
 7 (p25 ph7):f1
   (p25 ph8):f1
   lo to 7 times l7
+  |SOLVSUPP|
 
   goscnp ph26
 `
