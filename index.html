@@ -537,7 +537,7 @@
                     <div class="toggle-content-inner">
                         <p>Nearly all of the setup is the same as for a standard <sup>13</sup>C–<sup>1</sup>H 2D experiment. There are two parameters which require additional consideration:</p>
                         <ul>
-                            <li><b>NBL</b> should be set to the total number of modules, e.g. 4 for a MSCN supersequence. (Set this either in <span class="ms">ased</span>, or by typing <span class="ms">nbl</span> into the TopSpin command line.) If you&rsquo;re not sure what value to use, check the very top of the pulse programme.</li>
+                            <li><b>NBL</b> should be set to the total number of modules, e.g. 4 for a MSCN supersequence. (Set this either in <span class="ms">ased</span>, or by typing <span class="ms">nbl</span> into the TopSpin command line.) If you&rsquo;re not sure what value to use, check the comment near the top of the pulse programme.</li>
                             <li><b>TD1</b> (i.e. TD in the F1 dimension) must be its original value multiplied by NBL. For example, if you are running a supersequence with 4 modules and want to have 256 <i>t</i><sub>1</sub> increments in each module, TD1 must be set to 256 × 4 = 1024.</li>
                         </ul>
                         <p>All pulsed field gradients can be set using the <span class="ms">gppp</span> command, and most shaped pulses can be created using the WaveMaker <span class="ms">wvm -a</span> command.</p>
@@ -557,13 +557,15 @@
                 <label for="faq_zgoptns" class="toggle-label" tabindex="0">What are acquisition flags, and how do I use them?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
-                        <p>Acquisition flags are ways of conditionally running (technically, compiling) parts of a pulse programme. They are useful when we don&rsquo;t want to create two versions of what&rsquo;s essentially the same module with just small changes. In this case, you can enable acquisition flags to turn on/off optional features. The available acquisition flags are listed near the top of the pulse programme.</p>
+                        <p>Acquisition flags are ways of conditionally running (technically, compiling) parts of a pulse programme. They are useful when we don&rsquo;t want to create two versions of what&rsquo;s essentially the same module with just small changes. In this case, you can enable acquisition flags to turn on/off optional features.</p>
                         <p>To turn on an acquisition flag, such as <span class="ms">-DEDIT</span>, simply include it in the TopSpin acquisition parameter <b>zgoptns</b> (accessible via <span class="ms">ased</span>). To enable multiple acquisition flags, simply specify all of them together but separated by spaces.</p>
-                        <p>There are currently a handful of acquisition flags:</p>
+                        <p>Here is a complete list of acquisition flags. Note that not every flag will be relevant to every supersequence. The relevant ones will be mentioned in the comments at the very top of the pulse programme.</p>
                         <ul>
-                            <li><b>-DEDIT</b> and <b>-DEDIT1</b>: enables multiplicity editing in HSQC or HSQC-COSY spectra.</li>
-                            <li><b>-DTEDIT</b>: enables multiplicity editing in HSQC-TOCSY spectra.</li>
-                            <li><b>-DINVERT</b> and <b>-DINVERT1</b>: in HSQC-TOCSY spectra, causes &ldquo;direct&rdquo; (HSQC) and &ldquo;indirect&rdquo; (HSQC-TOCSY) responses to have opposite signs.
+                            <li><span class="ms">-DEDIT</span> and <span class="ms">-DEDIT1</span>: enables multiplicity editing in HSQC or HSQC-COSY spectra.</li>
+                            <li><span class="ms">-DTEDIT</span>: enables multiplicity editing in HSQC-TOCSY spectra.</li>
+                            <li><span class="ms">-DINVERT</span> and <span class="ms">-DINVERT1</span>: in HSQC-TOCSY spectra, causes &ldquo;direct&rdquo; (HSQC) and &ldquo;indirect&rdquo; (HSQC-TOCSY) responses to have opposite signs.
+                            <li><span class="ms">-DPRESAT</span>: enables presaturation during d1 and also during NOE mixing times (if a NOESY module is present).
+                            <li><span class="ms">-DES</span>: enables excitation sculpting in most (but not all) homonuclear modules.
                         </ul>
                         <p>To see whether you need the flags with &lsquo;1&rsquo; in them, please check the comments near the top of the pulse programme. Usually, the flags ending in &lsquo;1&rsquo; are applied to the first of two <sup>13</sup>C modules in a supersequence. If you only have one <sup>13</sup>C module, it&rsquo;s unlikely you will ever need the &lsquo;1&rsquo;-suffixed flags.</p>
                         <p>There is also the <span class="ms">-DNUS</span> flag, which (partially) turns on non-uniform sampling, but you should not set that manually unless you&rsquo;re absolutely certain what you&rsquo;re doing. Instead, please use the <span class="ms">noah_nus2.py</span> script. The next FAQ entry deals with the issue of NUS.
@@ -576,7 +578,7 @@
                     <div class="toggle-content-inner">
                         <p>NUS can be enabled in the pulse sequence, but <b>not</b> in the conventional way of setting FnTYPE to <span class="ms">non-uniform sampling</span>. For all pulse programmes downloaded from this website, please follow the steps below:</p>
                         <ol class="steps">
-                            <li><a href="scripts/py/noah_nus2.py" download>Download the newest version of <span class="ms">noah_nus2.py</span>.</a> Place it in the appropriate folder for TopSpin's Python scripts.</li>
+                            <li><a href="scripts/py/noah_nus2.py" download>Download the newest version of <span class="ms">noah_nus2.py</span>.</a> Place it in the appropriate folder for TopSpin&rsquo;s Python scripts.</li>
                             <li>Set up your experiment normally without NUS first, with the full value for TD1 (i.e. number of <i>t</i><sub>1</sub> increments times NBL). Don&rsquo;t change any other parameters, such as FnTYPE.</li>
                             <li>Specify the parameter NUSAmount (this refers to the sampling density as a percentage, i.e. set this to 50 for half the points) and then run <span class="ms">noah_nus2</span> in TopSpin.</li>
                         </ol>
@@ -590,6 +592,17 @@
                         </ul>
 
                         </p>
+                    </div>
+                </div> <!-- }}}2 --->
+
+                <input id="faq_solvsupp" class="toggle-button" type="checkbox"> <!-- {{{2 --->
+                <label for="faq_solvsupp" class="toggle-label" tabindex="0">What options are there for water suppression?</label>
+                <div class="toggle-content">
+                    <div class="toggle-content-inner">
+                        <p>First of all, it&rsquo;s worth mentioning that many of the HSQC- or HMQC-type modules typically have a good degree of intrinsic water suppression. This is because they only use magnetisation of <sup>1</sup>H spins directly coupled to heteronuclei; all other magnetisation (including that of water) is returned to the equilibrium +<i>z</i>-axis. So there is usually no need for extra water suppression.</p>
+                        <p>Other forms of solvent suppression in the sequences here are controlled by acquisition flags, instead of being entirely separate pulse programmes.</p>
+                        <p>You can use the <span class="ms">-DPRESAT</span> flag to turn on presaturation during d1 and NOE mixing times. Presaturation tends to work best for the first module, because water magnetisation recovers over the course of a supersequence. The suppression is definitely still noticeable in later modules; it just isn&rsquo;t as good as one might expect in a standalone experiment.</p>
+                        <p>For many of the homonuclear (<sup>1</sup>H) modules, the <span class="ms">-DES</span> flag can be used to enable excitation sculpting pre-acquisition (we use a combination of a shaped 180° pulse and hard 180° pulse for this). This is enabled (and has been tested) on all the homonuclear modules, <i>except</i> for the echo–antiecho COSY+X combinations (please use the States ones instead), the DQF-COSY (where it&rsquo;s not needed, because singlets including water are naturally suppressed), and the 2DJ experiments.</p>
                     </div>
                 </div> <!-- }}}2 --->
 
@@ -607,7 +620,7 @@
                 <label for="faq_weird" class="toggle-label" tabindex="0">During acquisition, is it normal that TopSpin shows weird numbers in the progress bar?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
-                        <p>Yes. Using the same example as before, if you are running a NOAH-4 experiment with 256 <i>t</i><sub>1</sub> increments (i.e. TD1 = 1024), then the progress line in the status bar will inch towards &ldquo;1024/256&rdquo;.</p>
+                        <p>Yes. If you are running a NOAH-4 experiment with 256 <i>t</i><sub>1</sub> increments (i.e. TD1 = 1024), then the progress line in the status bar will inch towards &ldquo;1024/256&rdquo;. It&rsquo;s a bit odd, but entirely harmless.</p>
                     </div>
                 </div> <!-- }}}2 --->
 
@@ -621,7 +634,7 @@
                 </div> <!-- }}}2 --->
 
                 <input id="faq_diffparams" class="toggle-button" type="checkbox"> <!-- {{{2 --->
-                <label for="faq_diffparams" class="toggle-label" tabindex="0">Is it possible to have different values of SW/TD2/RG/&lt;other parameter&gt; for different modules?</label>
+                <label for="faq_diffparams" class="toggle-label" tabindex="0">Is it possible to have different values of SW/TD2/RG/... for different modules?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
                         <p>In a way, yes, but as far as we are aware it has to be hardcoded in the pulse programme (and often in a nontrivial way). That would make the pulse programme overly specialised for a particular sample/spectrometer, and isn&rsquo;t something we want to do here.</p>
@@ -662,6 +675,20 @@
 
                 <div class="faq-headings">General NOAH questions</div>
 
+                <input id="faq_errors" class="toggle-button" type="checkbox"> <!-- {{{2 --->
+                <label for="faq_errors" class="toggle-label" tabindex="0">I got an error message when trying to use these.</label>
+                <div class="toggle-content">
+                    <div class="toggle-content-inner">
+                        <p>First of all, if the error arises during the processing stage, please try again with the <a class="scripts">newest scripts</a>.</p>
+
+                        <p>A few possible error messages are collated here. If yours isn&rsquo;t listed here, drop us an email.</p>
+                        <ul>
+                            <li><b>Warning: file size #0 resulting from pulse program is not consistent with parameters...</b><br />
+                                This usually results from a wrongly set <span class="ms">NBL</span> parameter. The correct value to use is always specified in a comment near the top of the pulse programme.</li>
+                        </ul>
+                    </div>
+                </div> <!-- }}}2 --->
+
                 <input id="faq_download" class="toggle-button" type="checkbox"> <!-- {{{2 --->
                 <label for="faq_download" class="toggle-label" tabindex="0">Download all NOAH scripts</label>
                 <div class="toggle-content">
@@ -674,7 +701,7 @@
                 <label for="faq_cite" class="toggle-label" tabindex="0">What papers should I cite / where can I find out more about NOAH experiments?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
-                        <p>Thanks for asking. Firstly, note that the pulse programmes provided above will already suggest references that are relevant. If you&rsquo;re interested in reading more, the original NOAH paper is:</p>
+                        <p>Thanks for asking! If you&rsquo;re just looking for a citation for the supersequence you used, the pulse programmes downloaded from this website will already suggest the relevant references. On the other hand, if you&rsquo;re interested in reading more, the original NOAH paper is:</p>
                         <ol class="citation-start">
                             <li>Kupče, Ē.; Claridge, T. D. W. NOAH: NMR Supersequences for Small Molecule Analysis and Structure Elucidation. <i>Angew. Chem. Int. Ed.</i> <b>2017,</b> <i>56</i> (39), 11779–11783. <a href="https://doi.org/10.1002/anie.201705506">DOI: 10.1002/anie.201705506</a>.</li>
                         </ol>
