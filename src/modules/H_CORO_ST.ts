@@ -1,7 +1,9 @@
 import { Kupce2017ACIE, Thiele2009CEJ } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = "; 1H COSY and ROESY (States F1)";
+let shortDescription = `; 1H COSY and ROESY (States F1)
+;     [use -DNOZQS to skip zero-quantum suppression]
+;     [use -DES for pre-acquisition excitation sculpting]`;
 
 let preamble = `
 "d10    = 3u"                         ; COSY/ROESY t1
@@ -18,21 +20,26 @@ let pulprog = `
   (p1 ph6):f1
   d10
   (p1 ph0):f1
+  |SOLVSUPP(0.6)|
   goscnp ph26  ; acquire H-H COSY
   10u st
 
   ; ROESY
+#ifdef NOZQS
+#else
   10u gron12
-  (p32:sp29 ph0):f1  ; ZQ suppression
+  (p32:sp29 ph0):f1
   20u groff
-
+  d16
+#endif  /* NOZQS */
   (p50:sp49 ph0):f1  ; ROESY mixing
   (p50:sp50 ph0):f1
-  10u 
+  4u
   p16:gp11
   d16 pl1:f1
 
   (p1 ph0):f1
+  |SOLVSUPP|
   goscnp ph26  ; acquire H-H ROESY
 `
 

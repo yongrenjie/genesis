@@ -25,7 +25,7 @@ const allParams = {
     "p3": "f2 channel -  90 degree high power pulse",
     "p4": "f2 channel - 180 degree high power pulse",
     "p6": "f1 channel -  90 degree low power pulse",
-    "p12": "f1 channel - 180 degree shaped pulse [2 ms for Sinc1.1000]",
+    "p12": "f1 channel - 180 degree shaped pulse for excitation sculpting inversion",
     "p14": "f2 channel - 180 degree shaped pulse for inversion [500 us for Crp60,0.5,20.1]",
     "p15": "f1 channel - duration of ROESY spin lock",
     "p16": "gradient pulse   [1 ms]",
@@ -57,7 +57,7 @@ const allParams = {
 
     // sp, spnam - Shaped pulses {{{3
     "sp1": "f1 channel - shaped pulse 180 degree",
-    "spnam1": "1H selective inversion - Sinc1.1000",
+    "spnam1": "1H selective inversion - Sinc1.1000 or WaveMaker",
     "sp3": "f2 channel - shaped pulse (180 degree inversion)",
     "spnam3": "13C inversion - Crp60,0.5,20.1 or WaveMaker",
     "sp7": "f2 channel - shaped pulse (180 degree refocusing)",
@@ -293,13 +293,13 @@ allGradients[16] = new Gradient({num: 16, val: 35, comment: "1H PSYCHE CTP gradi
 allGradients[17] = new Gradient({num: 17, val: 49, comment: "1H PSYCHE CTP gradient 2"});
 allGradients[18] = new Gradient({num: 18, val: 77, comment: "1H PSYCHE CTP gradient 3"});
 allGradients[19] = new Gradient({num: 19, val: 37, comment: "1H CTP"}); // stronger grad needed for e.g. DQF-COSY
-allGradients[20] = new Gradient({num: 20, val: 23, comment: "1H excitation sculpting"});
-allGradients[21] = new Gradient({num: 21, val: 16, comment: "1H excitation sculpting"});
+allGradients[20] = new Gradient({num: 20, val: 57, comment: "1H excitation sculpting"});
+allGradients[21] = new Gradient({num: 21, val: 32, comment: "1H excitation sculpting"});
 
 
 // WaveMaker definitions {{{2
 const allWavemakers = new Array(64);
-allWavemakers[1] = ";sp1:wvm:wu180H1Sinc: sinc180(2 ms)";
+allWavemakers[1] = ";sp1:wvm:wu180H1Sinc: sinc180(p12)";
 allWavemakers[3] = ";sp3:wvm:wu180C13: cawurst-20(60 kHz, 0.5 ms; L2H)";
 allWavemakers[18] = ";sp18:wvm:wu180Jcomp: cawurst-40(280 ppm; Jcomp, L2H)";
 allWavemakers[29] = ";sp29:wvm:wu180H1ZQS: sm_chirp(60 kHz, 20 ms; H2L, Q=5)";
@@ -456,34 +456,46 @@ const asapMixingPPText = [
 
 // Standardised solvent suppression for homonuclear modules {{{1
 // Only double spin echo excitation sculpting for now...
-const homonuclearSolvSuppText = [
-    `#ifdef ES`,
-    `  (p1 ph0):f1`,
-    `  p16:gp20`,
-    `  d16`,
-    `  (p12:sp1 ph0):f1`,
-    `  4u pl1:f1`,
-    `  (p2 ph2):f1`,
-    `  4u`,
-    `  p16:gp20`,
-    `  d16`,
-    `  DH_EXSCULPT`,
-    `  p16:gp21`,
-    `  d16`,
-    `  (p12:sp1 ph0):f1`,
-    `  4u pl1:f1`,
-    `  (p2 ph2):f1`,
-    `  4u`,
-    `  p16:gp21`,
-    `  d16`,
-    `#else`,
-    `  (p1 ph0):f1`,
-    `#endif`
-];
-const homonuclearSolvSuppPreamble = [
-    `define delay DH_EXSCULPT`,
-    `"DH_EXSCULPT = de+p1*2/3.1416"`
-];
+
+/** 
+ * Dynamically generate the pulse programme and preamble needed for excitation
+ * sculpting. 
+ *
+ * @param {number} grad_factor - The factor to multiply gradient amplitudes by.
+ * @returns {string[][]} [pulprog, preamble] - A two-member list containing the
+ *                                             pulse programme text and the
+ *                                             preamble text respectively, both
+ *                                             given as a list of lines.
+ */
+function homonuclearSolvSupp(grad_factor: number): string[][] {
+    const grad_multiply = grad_factor === 1 ? '' : `*${grad_factor}`;
+    const solvSuppText = [
+        `#ifdef ES`,
+        `  p16:gp20${grad_multiply}`,
+        `  d16`,
+        `  (p12:sp1 ph0):f1`,
+        `  4u pl1:f1`,
+        `  (p2 ph2):f1`,
+        `  4u`,
+        `  p16:gp20${grad_multiply}`,
+        `  d16`,
+        `  DH_EXSCULPT`,
+        `  p16:gp21${grad_multiply}`,
+        `  d16`,
+        `  (p12:sp1 ph0):f1`,
+        `  4u pl1:f1`,
+        `  (p2 ph2):f1`,
+        `  4u`,
+        `  p16:gp21${grad_multiply}`,
+        `  d16`,
+        `#endif  /* ES */`
+    ];
+    const solvSuppPreamble = [
+        `define delay DH_EXSCULPT`,
+        `"DH_EXSCULPT = de+p1*2/3.1416"`
+    ];
+    return [solvSuppText, solvSuppPreamble];
+}
 // }}}1
 
 // The Parameter class {{{1
@@ -750,12 +762,25 @@ export function makePulprogText(trueModuleNames: string[],
 
         // Handle solvent suppression string in homonuclear modules
         if (mod.category == "h1") {
-            let ppSolvSuppLineNo = ppLines.findIndex(line => line.includes("|SOLVSUPP|"));
+            let ppSolvSuppLineNo = ppLines.findIndex(line => line.includes("|SOLVSUPP"));
             while (ppSolvSuppLineNo != -1) {   // means it was found
-                ppLines.splice(ppSolvSuppLineNo, 1, ...homonuclearSolvSuppText);
-                preambles.push(...homonuclearSolvSuppPreamble);
+                let line = ppLines[ppSolvSuppLineNo];
+                let m = line.match(/\|SOLVSUPP(\((?<factor>\d+(\.\d+)?)\))?\|/);
+
+                // Determine gradient strength factor
+                let factor = 1;
+                if (m === null || m.groups == undefined) {
+                    throw new Error(`SOLVSUPP error in line: '${line}' in module: '${trueModuleNames[i]}'`)
+                }
+                if (m.groups.factor !== undefined) {
+                    factor = Number(m.groups.factor);
+                }
+
+                let [solvSuppText, solvSuppPreamble] = homonuclearSolvSupp(factor);
+                ppLines.splice(ppSolvSuppLineNo, 1, ...solvSuppText);
+                preambles.push(...solvSuppPreamble);
                 // Find next occurrence (if it exists)
-                ppSolvSuppLineNo = ppLines.findIndex(line => line.includes("|SOLVSUPP|"));
+                ppSolvSuppLineNo = ppLines.findIndex(line => line.includes("|SOLVSUPP"));
             }
         }
         

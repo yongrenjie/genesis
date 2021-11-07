@@ -16,13 +16,13 @@ let pulprog = `
   ; COSY
   (p1 ph6):f1
   d10
-  |SOLVSUPP|
+  (p1 ph0):f1
+  |SOLVSUPP(0.6)|
   goscnp ph26  ; acquire H-H COSY
   10u st
 
   ; TOCSY
 #ifdef NOZQS
-  p16:gp11*0.65
 #else
   10u gron12
   (p32:sp29 ph0):f1
@@ -41,6 +41,7 @@ let pulprog = `
   20u groff
   d16 pl1:f1
 #endif  /* NOZQS */
+  (p1 ph0):f1
   |SOLVSUPP|
 
   goscnp ph26  ; acquire H-H TOCSY

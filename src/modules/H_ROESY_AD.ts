@@ -25,6 +25,7 @@ let pulprog = `
   10u 
   p16:gp11
   d16 pl1:f1
+  (p1 ph0):f1
   |SOLVSUPP|
 
   goscnp ph26
