@@ -3,7 +3,7 @@ import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H COSY and ROESY (States F1)
 ;     [use -DNOZQS to skip zero-quantum suppression]
-;     [use -DES for pre-acquisition excitation sculpting]`;
+;     [use -DES for pre-acquisition excitation sculpting in ROESY]`;
 
 let preamble = `
 "d10    = 3u"                         ; COSY/ROESY t1
@@ -20,7 +20,6 @@ let pulprog = `
   (p1 ph6):f1
   d10
   (p1 ph0):f1
-  |SOLVSUPP(0.6)|
   goscnp ph26  ; acquire H-H COSY
   10u st
 

@@ -762,7 +762,7 @@ export function makePulprogText(trueModuleNames: string[],
 
         // Handle solvent suppression string in homonuclear modules
         if (mod.category == "h1") {
-            let ppSolvSuppLineNo = ppLines.findIndex(line => line.includes("|SOLVSUPP"));
+            let ppSolvSuppLineNo = ppLines.findIndex(line => /^\s*\|SOLVSUPP/.test(line));
             while (ppSolvSuppLineNo != -1) {   // means it was found
                 let line = ppLines[ppSolvSuppLineNo];
                 let m = line.match(/\|SOLVSUPP(\((?<factor>\d+(\.\d+)?)\))?\|/);
