@@ -102,6 +102,7 @@ li#li_h1_none>label {
 
 /* then style the labels. This applies to all labels. */
 .chooser_modules label {
+    font-size: 90%;
     display: inline-block;
     border: 1px solid black;
     padding: 1.5px;
