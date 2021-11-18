@@ -15,7 +15,7 @@ define delay D[ID]c
 "p40    = 30m"                                               ; PSYCHE saltire duration
 "cnst21 = (cnst20/360)*sqrt((2*10000)/(0.03/2))"             ; PSYCHE saltire RF amplitude
 "spw40  = plw1*(cnst21/(250000/p1))*(cnst21/(250000/p1))"    ; PSYCHE saltire power level
-"D[ID]a = in11/2-p16-d16-50u"      ; = tauA in original pulprog
+"D[ID]a = in11/2-p16-d16"          ; = tauA in original pulprog
 "D[ID]b = D[ID]a-p12-4u"           ; = tauA when excitation sculpting is on
 "D[ID]c = (dw*2*cnst22)+d16+50u"   ; = tauB in original pulprog
 `
@@ -28,23 +28,21 @@ let pulprog = `
 
 #ifdef ES
   D[ID]b
-#else
-  D[ID]a
-#endif /* ES */
-  50u
   p16:gp17
   d16
-#ifdef ES
   (p12:sp1 ph0):f1
   4u pl1:f1
-#endif /* ES */
   (p2 ph0):f1
-  50u
   p16:gp17
   d16
-#ifdef ES
   D[ID]b
 #else
+  D[ID]a
+  p16:gp17
+  d16
+  (p2 ph0):f1
+  p16:gp17
+  d16
   D[ID]a
 #endif /* ES */
 

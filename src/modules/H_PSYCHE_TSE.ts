@@ -24,28 +24,34 @@ let pulprog = `
   ; 1H 1D TSE-PSYCHE pure shift spectrum
 
   (p1 ph0):f1
+
   ; Spin echo with L2H chirp
 #ifdef ES
   D[ID]b
-#else
-  D[ID]a
-#endif  /* ES */
   50u
   p16:gp16
   d16
   10u
-#ifdef ES
   (p12:sp1 ph0):f1
-#endif  /* ES */
   d16
   ( center (p41:sp41 ph7):f1 (p41:gp15) )
   d16
   60u
   p16:gp16
   d16
-#ifdef ES
   D[ID]b
 #else
+  D[ID]a
+  50u
+  p16:gp16
+  d16
+  10u
+  d16
+  ( center (p41:sp41 ph7):f1 (p41:gp15) )
+  d16
+  60u
+  p16:gp16
+  d16
   D[ID]a
 #endif  /* ES */
 
