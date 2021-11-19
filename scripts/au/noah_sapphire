@@ -1,0 +1,230 @@
+/* noah_sapphire
+ * -------------
+ * Perform pure shift processing on NOAH PSYCHE module acquired with SAPPHIRE
+ * averaging. This does a similar job to combinekh plus noah_sapphire, but also
+ * takes care to copy the correct number of points from the first chunk as
+ * specified in the SAPPHIRE paper.
+ *
+ * v: 2.0.17
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 10 November 2021 */
+
+XCMD("fixF1h_psyche")
+XCMD("2 SI 65536")
+XCMD("1 FnMODE QF")
+XCMD("1s FnMODE QF")
+
+// Maximum size of TD that we can handle.
+#define MAX_TD 131072
+// Macro to round doubles or floats to integer.
+#define ROUND(x) ((x) < 0 ? (int) ((x) - 0.5) : (int) ((x) + 0.5))
+
+// New expno to store the processed data in.
+int new_expno = expno + 1;
+
+GETCURDATA
+/* The GRPDLY parameter tells us how much to circularly shift the FID by (i.e.
+ * take points from the start and move them to the end; and then apply a
+ * first-order phase correction). The formula is as such. The number of points
+ * to be cut is floor(GRPDLY), and the 1st order phase correction to be applied
+ * is (GRPDLY - floor(GRPDLY)) * 360. However, in practice, the phase correction
+ * is quite small and so can be left to apk to deal with.
+ * Here we cut a ton of code that was to do with not being able to read GRPDLY
+ * on older spectrometers (I don't know *how* old). It basically involves
+ * reading the parameters DECIM and DSPFVS, then performing a lookup in a list,
+ * which is provided at the bottom of the original pshift script. I don't know
+ * if it's worth (re-)implementing this.
+ */
+double grpdly;
+FETCHPARS("GRPDLY", &grpdly)
+int grpdly_points = 2 * ((int) (grpdly + 1));  // *2 because real + imaginary. I don't know why +1.
+
+/* Run 2D processing. Error out if not 2D. */
+int pmod;
+FETCHPAR("PARMODE", &pmod)
+if (pmod != 1) STOPMSG("noah_sapphire: only works on 2D data")
+
+// Read in key parameters
+int td1, td2;
+double sw1, sw2, sfo1, sfo2;
+FETCHPAR1S("TD", &td1)
+FETCHPAR("TD", &td2)
+FETCHPAR1S("SW", &sw1)
+FETCHPAR1S("SFO1", &sfo1)
+FETCHPARS("SW", &sw2)
+FETCHPARS("SFO1", &sfo2)  // this is not actually SFO2 but rather F2 SFO1
+sw1 = sw1 * sfo1; // convert both SW's to Hz
+sw2 = sw2 * sfo2;
+
+/* calculate sensitivity factor k */
+float cnst37;
+FETCHPARS("CNST 37", &cnst37)
+int rounded_cnst37;
+rounded_cnst37 = (int) (cnst37 + 0.5); /* round to nearest integer */
+if (rounded_cnst37 == 0) STOPMSG("noah_sapphire: dataset has already been processed")
+int k = td1 / rounded_cnst37;
+
+// Files to read from and write to.
+char infile[PATH_MAX], outfile[PATH_MAX];
+strcpy(infile, ACQUPATH("ser"));
+strcpy(outfile, NEWACQUPATH(new_expno, "fid"));
+// Create the new dataset in the next expno
+RSER(1, new_expno, 1)
+
+// Get the appropriate number of drop points.
+float cnst22;
+FETCHPAR("CNST 22", &cnst22)
+int drop_points = 2 * ROUND(cnst22);  // *2 because complex points
+
+// Get the number of complex points per chunk.
+// Note that if sw2/sw1 is not an exact integer, it gets rounded: this means that in effect
+int points_per_chunk = 2 * ROUND(sw2/sw1);
+
+FILE *fp_ser, *fp_fid;
+if ((fp_ser = fopen(infile, "r")) == NULL) STOPMSG("noah_sapphire: failed to open ser file for reading")
+if ((fp_fid = fopen(outfile, "w")) == NULL) STOPMSG("noah_sapphire: failed to open fid file for writing")
+
+int new_td = grpdly_points + (points_per_chunk * (rounded_cnst37 - 1));
+
+double *temp_s1;
+double *temp_s2;
+double *temp_f1;
+double *temp_f2;
+
+// Determine data type and process accordingly.
+int dtypa;
+FETCHPARS("DTYPA", &dtypa)
+if (dtypa == 0) {
+    STOPMSG("not implemented for ints yet")
+    // In principle, just need to copy over the double type code.
+}
+else if (dtypa == 2) {
+    int dsize = 8;
+    int n = 1024 / dsize;
+    td2 = (td2 + n - 1) / n * n;
+    double *ser_array;
+    ser_array = calloc(td2, dsize);
+    double *pser;
+
+    // We store the intermediate data into here before writing it to the file.
+    // In this case it's important to initialise it to zero first.
+    double *pfid, *fid_array;
+    fid_array = calloc(new_td, dsize);
+ 
+    int j;
+    for (j = 0; j < k; j++) {  // loop over J-evolution times
+
+        // How many points to drop from the end of the first chunk?
+        // (this must be rounded to an even number)
+        int trailing_drop;
+        trailing_drop = ((points_per_chunk * j) / k) / 2 * 2;
+
+        // Reset pfid to the beginning of the FID array
+        pfid = fid_array;
+
+        int m;
+        for (m = 0; m < rounded_cnst37; m++) {  // loop over chunks
+            // Set fp_ser to the beginning of the appropriate FID
+            fseek(fp_ser, (m * k + j) * td2 * dsize, SEEK_SET);
+            // Read in that FID into ser_array
+            if (fread(ser_array, dsize, td2, fp_ser) != td2) STOPMSG("read failed")
+            // Reset pser to the start of the array
+            pser = ser_array;
+
+            // First chunk...
+            if (m == 0) {
+                // Copy in the group delay
+                temp_s1 = pser;  // TODO TEMP
+                temp_f1 = pfid;  // TODO TEMP
+                int qqqq;  /* what the hell */
+                for (qqqq = 0; qqqq < grpdly_points; qqqq++) {
+                    *pfid += *pser;
+                    pfid++;
+                    pser++;
+                }
+                temp_s2 = pser - 1;  // TODO TEMP
+                temp_f2 = pfid - 1;  // TODO TEMP
+                /* Proc_err(DEF_ERR_OPT, "j = %d; m = %d\ncopied points %d-%d of ser row into %d-%d of fid", j, m, temp_s1 - ser_array, temp_s2 - ser_array, temp_f1 - fid_array, temp_f2 - fid_array);  // TODO TEMP */
+                // Skip over drop points in ser file (but not in FID)
+                pser += drop_points;
+                // Copy in as many points as needed from the first chunk
+                temp_s1 = pser;  // TODO TEMP
+                temp_f1 = pfid;  // TODO TEMP
+                for (qqqq = 0; qqqq < points_per_chunk - trailing_drop; qqqq++) {
+                    *pfid += *pser;
+                    pfid++;
+                    pser++;
+                }
+                temp_s2 = pser - 1;  // TODO TEMP
+                temp_f2 = pfid - 1;  // TODO TEMP
+                /* Proc_err(DEF_ERR_OPT, "j = %d; m = %d\ncopied points %d-%d of ser row into %d-%d of fid", j, m, temp_s1 - ser_array, temp_s2 - ser_array, temp_f1 - fid_array, temp_f2 - fid_array);  // TODO TEMP */
+                continue; /* not strictly necessary but clearer */
+            }
+            // In-between chunks...
+            else if (m < rounded_cnst37 - 1) {
+                // Skip over group delay and drop points
+                pser += (grpdly_points + drop_points);
+
+                // Copy over the entire chunk
+                int rrrr;
+                temp_s1 = pser;  // TODO TEMP
+                temp_f1 = pfid;  // TODO TEMP
+                for (rrrr = 0; rrrr < points_per_chunk; rrrr++) {
+                    *pfid += *pser;
+                    pfid++;
+                    pser++;
+                } 
+                temp_s2 = pser - 1;  // TODO TEMP
+                temp_f2 = pfid - 1;  // TODO TEMP
+                /* Proc_err(DEF_ERR_OPT, "j = %d; m = %d\ncopied points %d-%d of ser row into %d-%d of fid", j, m, temp_s1 - ser_array, temp_s2 - ser_array, temp_f1 - fid_array, temp_f2 - fid_array);  // TODO TEMP */
+                continue; /* not strictly necessary but clearer */
+            }
+            // Final chunk
+            else {
+                // Skip over group delay and drop points
+                pser += (grpdly_points + drop_points);
+
+                // Copy whatever wasn't used from the first chunk, to make up the
+                // full value of TD.
+                temp_s1 = pser;  // TODO TEMP
+                temp_f1 = pfid;  // TODO TEMP
+                int rrrr;
+                for (rrrr = 0; rrrr < trailing_drop; rrrr++) {
+                    *pfid += *pser;
+                    pfid++;
+                    pser++;
+                } 
+                temp_s2 = pser - 1;  // TODO TEMP
+                temp_f2 = pfid - 1;  // TODO TEMP
+                /* Proc_err(DEF_ERR_OPT, "j = %d; m = %d\ncopied points %d-%d of ser row into %d-%d of fid", j, m, temp_s1 - ser_array, temp_s2 - ser_array, temp_f1 - fid_array, temp_f2 - fid_array);  // TODO TEMP */
+                continue; /* not strictly necessary but clearer */
+            }
+        }
+    }
+
+    // Write the collated data to the file
+    if (fwrite(fid_array, dsize, new_td, fp_fid) != new_td) STOPMSG("write error")
+    free(fid_array);
+    free(ser_array);
+}
+
+// Close both file pointers.
+fclose(fp_ser);
+fclose(fp_fid);
+
+// Open new dataset.
+REXPNO(new_expno)
+SETCURDATA
+// Set true length of TD.
+STOREPARS("TD", new_td)
+STOREPAR("TD", new_td)
+// Turn off cnst37.
+STOREPARS("CNST 37", 0.0)
+// Perform final processing.
+XCMD("sendgui browse_update_tree")
+EFP
+APK
+XCMD("abs n")
+QUIT
+// vim: ft=c

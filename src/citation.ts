@@ -102,6 +102,11 @@ export const Foroozandeh2015CC = new Citation(
     ["M. Foroozandeh", "R. W. Adams", "P. Kiraly", "M. Nilsson", "G. A. Morris"],
     CC, 2015, 51, 84, "15410-15413", "10.1039/C5CC06293D"
 )
+export const Moutzouri2017CC = new Citation(
+    "Ultraclean pure shift NMR",
+    ["P. Moutzouri", "Y. Chen", "M. Foroozandeh", "P. Kiraly", "A. R. Phillips", "S. R. Coombes", "M. Nilsson", "G. A. Morris"],
+    CC, 2017, 53, 73, "10188-10191", "10.1039/c7cc04423b"
+)
 export const Cicero2001JMR = new Citation(
     "Sensitivity Enhancement of a Two-Dimensional Experiment for the Measurement of Heteronuclear Long-Range Coupling Constants, by a New Scheme of Coherence Selection by Gradients",
     ["D. O. Cicero", "G. Barbato", "R. Bazzo"],

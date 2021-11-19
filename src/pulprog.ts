@@ -148,8 +148,9 @@ const allParams = {
 
     // l - Loop counters {{{3
     "l0": "TD1 / NBL, i.e. 'true TD1'",
-    "l1": "running counter from 1 to TD1/NBL, for phase/delay incrementation",
-    "l2": "running counter for scan number",
+    "l1": "running counter for true TD1 (0 on first increment)",
+    "l2": "running counter for NS (1 on first scan)",
+    "l3": "running counter for TD1 for k-scaled 1H modules (0 on first increment)",
     "l6": "loop for ASAP mixing",
     "l7": "loop for ROESY spinlock = p15 / p25*2",
     "l11": "DIPSI-2 (1H module): half the number of DIPSI-2 cycles",
@@ -963,16 +964,17 @@ export function makePulprogText(trueModuleNames: string[],
     // incrementation every (l0 / cnst37) rounds: 1H QF k-scaled modules (QF JRES / [TSE-]PSYCHE) {{{3
     if (d11Present && cnst38Present) {
         mainpp.push(
-            `if "l1 % (l0 / cnst37) == 0"`,  // TODO: TEST cnst37 modules
+            `if "l1 % (l0 / cnst37) == 0"`,
             `{`,
             `  1m id11`,
+            `  1m iu3`,
             `}`,
         );
     }
     // incrementation every (2 * l0 / cnst37) rounds: 1H phase-sensitive k-scaled modules (PSYCHE JRES) {{{3
     if (d10Present && cnst38Present) {
         mainpp.push(
-            `if "l1 % (2 * l0 / cnst37) == 0"`,   /* TODO: Test cnst37 modules */
+            `if "l1 % (2 * l0 / cnst37) == 0"`,
             `{`,
             `  1m id10`,
             `}`,
@@ -1157,10 +1159,15 @@ export function makePulprogText(trueModuleNames: string[],
     }
     pp.push(
         preamblesText,
-        `"l0      = td1/${nbl}"             ; TD1/NBL`,
-        `"l1      = 0"                 ; Running counter for delay / phase incrementation`,
-        `"l2      = 0"                 ; Running counter for NS`,
+        `"l0      = td1/${nbl}"             ; TD1/NBL (i.e. TD1 for ordinary modules)`,
+        `"l1      = 0"                 ; Running counter for TD1 for ordinary modules (0 on first increment)`,
+        `"l2      = 0"                 ; Running counter for NS (1 on first scan)`,
     );
+    if (d11Present) {
+        pp.push(
+            `"l3      = 0"                 ; Running counter for TD1 for QF k-scaled 1H modules, e.g. PSYCHE (0 on first increment)`,
+        );
+    }
     if (hasInterleaved) {
         pp.push(`define list<gradient> EA_TS={1 -1}`);
     }

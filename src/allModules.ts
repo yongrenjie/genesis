@@ -50,13 +50,15 @@ import H_DQFCOSY_EA from "./modules/H_DQFCOSY_EA.js";
 import H_JRES from "./modules/H_JRES.js";
 import H_NOESY from "./modules/H_NOESY.js";
 import H_PSYCHE from "./modules/H_PSYCHE.js";
+import H_PSYCHE_SAP from "./modules/H_PSYCHE_SAP.js";
+import H_PSYCHE_TSE from "./modules/H_PSYCHE_TSE.js";
+import H_PSYCHE_TSAP from "./modules/H_PSYCHE_TSAP.js";
 import H_JRES_PS from "./modules/H_JRES_PS.js";
 import H_ROESY from "./modules/H_ROESY.js";
 import H_ROESY_AD from "./modules/H_ROESY_AD.js";
 import H_R_T from "./modules/H_R_T.js";
 import H_TOCSY from "./modules/H_TOCSY.js";
 import H_TOCSY_K from "./modules/H_TOCSY_K.js";
-import H_PSYCHE_TSE from "./modules/H_PSYCHE_TSE.js";
 import H_TT_DM from "./modules/H_TT_DM.js";
 import H_TT_CN from "./modules/H_TT_CN.js";
 import H_TT_CR from "./modules/H_TT_CR.js";
@@ -119,13 +121,15 @@ const allModules: Map<string, NOAHModule> = new Map([
     ["H_JRES", H_JRES],
     ["H_NOESY", H_NOESY],
     ["H_PSYCHE", H_PSYCHE],
+    ["H_PSYCHE_SAP", H_PSYCHE_SAP],
+    ["H_PSYCHE_TSE", H_PSYCHE_TSE],
+    ["H_PSYCHE_TSAP", H_PSYCHE_TSAP],
     ["H_JRES_PS", H_JRES_PS],
     ["H_ROESY", H_ROESY],
     ["H_ROESY_AD", H_ROESY_AD],
     ["H_R_T", H_R_T],
     ["H_TOCSY", H_TOCSY],
     ["H_TOCSY_K", H_TOCSY_K],
-    ["H_PSYCHE_TSE", H_PSYCHE_TSE],
     ["H_TT_DM", H_TT_DM],
     ["H_TT_CN", H_TT_CN],
     ["H_TT_CR", H_TT_CR],
