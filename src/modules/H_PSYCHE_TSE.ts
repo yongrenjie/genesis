@@ -11,7 +11,7 @@ define delay D[ID]b
 define delay D[ID]c
 "p2     = p1*2"
 "d11    = 3u"                         ; PSYCHE t1
-"in11   = trunc(1000000/(cnst38*dw*2))*dw/1000000"           ; PSYCHE increment
+"in11   = trunc(0.5+(1000000/(cnst38*dw*2)))*dw/1000000"     ; PSYCHE increment
 "p40    = 30m"                                               ; PSYCHE saltire duration
 "cnst21 = (cnst20/360)*sqrt((2*10000)/(0.03/2))"             ; PSYCHE saltire RF amplitude
 "spw40  = plw1*(cnst21/(250000/p1))*(cnst21/(250000/p1))"    ; PSYCHE saltire power level
