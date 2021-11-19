@@ -12,6 +12,12 @@
  * modified from `pshift` AU programme by Ralph Adams, University of Manchester
  * 10 November 2021 */
 
+// Error messages.
+#define MALLOC_ERROR "noah_pshift: cannot get enough memory"
+#define FREAD_ERROR "noah_pshift: failed to read data from disk"
+#define FWRITE_ERROR "noah_pshift: failed to write data to disk"
+#define FOPEN_ERROR "noah_pshift: failed to open file handle"
+#define TWOD_DATA_ONLY_ERROR "noah_sapphire: only works on 2D data"
 // Maximum size of TD that we can handle.
 #define MAX_TD 131072
 // Macro to round doubles or floats to integer.
@@ -40,7 +46,7 @@ int grpdly_points = 2 * ((int) (grpdly + 1));  // *2 because real + imaginary. I
 /* Run 2D processing. Error out if not 2D. */
 int pmod;
 FETCHPAR("PARMODE", &pmod)
-if (pmod != 1) STOPMSG("noah_pshift: only works on 2D data")
+if (pmod != 1) STOPMSG(TWOD_DATA_ONLY_ERROR)
 
 // Read in key parameters
 int td1, td2;
@@ -71,8 +77,8 @@ int drop_points = 2 * ROUND(cnst22);  // *2 because complex points
 int points_per_chunk = 2 * ROUND(sw2/sw1);
 
 FILE *fp_ser, *fp_fid;
-if ((fp_ser = fopen(infile, "r")) == NULL) STOPMSG("noah_pshift: failed to open ser file for reading")
-if ((fp_fid = fopen(outfile, "w")) == NULL) STOPMSG("noah_pshift: failed to open fid file for writing")
+if ((fp_ser = fopen(infile, "r")) == NULL) STOPMSG(FOPEN_ERROR)
+if ((fp_fid = fopen(outfile, "w")) == NULL) STOPMSG(FOPEN_ERROR)
 
 // Determine data type and process accordingly.
 int dtypa;
@@ -81,17 +87,21 @@ if (dtypa == 0) {
     int dsize = 4;
     int n = 1024 / dsize;
     td2 = (td2 + n - 1) / n * n;
-    int ser_array[MAX_TD];
+
+    // Allocate memory to read in data
+    int *ser_array;
+    if ((ser_array = calloc(td2, dsize)) == NULL) STOPMSG(MALLOC_ERROR)
+
     // Loop over chunks in the ser file, copying each to the FID as we go along.
     int j, k, *p;
     for (j = 0; j < td1; j++) {  // loop over chunks
         // Read in TD2 points. This includes the group delay plus drop points.
-        if (fread(ser_array, dsize, td2, fp_ser) != td2) STOPMSG("noah_pshift: error reading data from ser file")
+        if (fread(ser_array, dsize, td2, fp_ser) != td2) STOPMSG(FREAD_ERROR)
         // Reset the pointer to the start of ser_array.
         p = ser_array;
 // For the first chunk we want to copy over the group delay.
         if (j == 0) {
-            if (fwrite(p, dsize, grpdly_points, fp_fid) != grpdly_points) STOPMSG("noah_pshift: error writing to fid file")
+            if (fwrite(p, dsize, grpdly_points, fp_fid) != grpdly_points) STOPMSG(FWRITE_ERROR)
         }
         // Advance the pointer beyond the group delay. If j > 0 then this simply
         // skips over the group delay without copying it.
@@ -99,25 +109,31 @@ if (dtypa == 0) {
         // Skip over the drop points.
         p += drop_points;
         // Write points_per_chunk points to the FID file.
-        if (fwrite(p, dsize, points_per_chunk, fp_fid) != points_per_chunk) STOPMSG("noah_pshift: error writing to fid file")
+        if (fwrite(p, dsize, points_per_chunk, fp_fid) != points_per_chunk) STOPMSG(FWRITE_ERROR)
     }
+
+    free(ser_array);
 }
 else if (dtypa == 2) {
     int dsize = 8;
     int n = 1024 / dsize;
     td2 = (td2 + n - 1) / n * n;
-    double ser_array[MAX_TD];
+
+    // Allocate memory to read in
+    double *ser_array;
+    if ((ser_array = calloc(td2, dsize)) == NULL) STOPMSG(MALLOC_ERROR)
+
     // Loop over chunks in the ser file, copying each to the FID as we go along.
     int j;
     double *p;
     for (j = 0; j < td1; j++) {  // loop over chunks
         // Read in TD2 points. This includes the group delay plus drop points.
-        if (fread(ser_array, dsize, td2, fp_ser) != td2) STOPMSG("noah_pshift: error reading data from ser file")
+        if (fread(ser_array, dsize, td2, fp_ser) != td2) STOPMSG(FREAD_ERROR)
         // Reset the pointer to the start of ser_array.
         p = ser_array;
         // For the first chunk we want to copy over the group delay.
         if (j == 0) {
-            if (fwrite(p, dsize, grpdly_points, fp_fid) != grpdly_points) STOPMSG("noah_pshift: error writing to fid file")
+            if (fwrite(p, dsize, grpdly_points, fp_fid) != grpdly_points) STOPMSG(FWRITE_ERROR)
         }
         // Advance the pointer beyond the group delay. If j > 0 then this simply
         // skips over the group delay without copying it.
@@ -125,8 +141,9 @@ else if (dtypa == 2) {
         // Skip over the drop points.
         p += drop_points;
         // Write points_per_chunk points to the FID file.
-        if (fwrite(p, dsize, points_per_chunk, fp_fid) != points_per_chunk) STOPMSG("noah_pshift: error writing to fid file")
+        if (fwrite(p, dsize, points_per_chunk, fp_fid) != points_per_chunk) STOPMSG(FWRITE_ERROR)
     }
+    free(ser_array);
 }
 
 // Close both file pointers.
