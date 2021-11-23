@@ -118,9 +118,9 @@ define delay DC_SEHSQC_IAm
 define list<gradient> GC_HMBC_CFDD={cnst41}
 define list<gradient> GC_HSQCC_CIA={cnst43}
 define list<gradient> GC_SEHSQC_IA={cnst41}
-"l0      = td1/5"             ; TD1/NBL
-"l1      = 0"                 ; Running counter for delay / phase incrementation
-"l2      = 0"                 ; Running counter for NS
+"l0      = td1/5"             ; TD1/NBL (i.e. TD1 for ordinary modules)
+"l1      = 0"                 ; Running counter for TD1 for ordinary modules (0 on first increment)
+"l2      = 0"                 ; Running counter for NS (1 on first scan)
 define list<gradient> EA_TS={1 -1}
 "l6      = d15/(larger(p45,1u)*20)"  ; Number of ASAP loops
 "acqt0   = 0"
@@ -735,7 +735,7 @@ ph26=0 2
 ;d16: delay for homospoil/gradient recovery [200 us]
 ;d30: DIPSI-2 mixing time (between 13C modules)
 ;l0: TD1 / NBL, i.e. 'true TD1'
-;l1: running counter from 1 to TD1/NBL, for phase/delay incrementation
+;l1: running counter for true TD1 (0 on first increment)
 ;l6: loop for ASAP mixing
 ;l11: DIPSI-2 (1H module): half the number of DIPSI-2 cycles
 ;l12: DIPSI-2 (1H module): actual number of DIPSI-2 cycles
@@ -782,5 +782,5 @@ ph26=0 2
 
 ; auprog: noah_hmbc noah_hmbc:noah_hsqc noah_TS:noah_hsqc noah_split:noah_tocsy States noah_cosy States:noah_tocsy States noah_roesy States
 ; module identifiers: C_HMBC_CFDD C_HSQCC_CIA C_SEHSQC_IA H_TT_CR
-; pulse programme created by genesis-v2.0.15, https://nmr-genesis.co.uk
-; Mon Nov 08 2021 00:27:41 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.0.17, https://nmr-genesis.co.uk
+; Tue Nov 23 2021 20:22:57 GMT+0000 (Greenwich Mean Time)

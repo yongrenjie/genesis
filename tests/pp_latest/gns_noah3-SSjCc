@@ -78,9 +78,9 @@ define delay DH_EXSCULPT
 "DH_EXSCULPT = de+p1*2/3.1416"
 define list<gradient> GCI_HSQC={cnst41}
 define list<gradient> GC_HSQCJ={cnst41}
-"l0      = td1/3"             ; TD1/NBL
-"l1      = 0"                 ; Running counter for delay / phase incrementation
-"l2      = 0"                 ; Running counter for NS
+"l0      = td1/3"             ; TD1/NBL (i.e. TD1 for ordinary modules)
+"l1      = 0"                 ; Running counter for TD1 for ordinary modules (0 on first increment)
+"l2      = 0"                 ; Running counter for NS (1 on first scan)
 "acqt0   = 0"
 baseopt_echo
 
@@ -428,7 +428,7 @@ ph30=0 2 2 0
 ;d16: delay for homospoil/gradient recovery [200 us]
 ;d30: DIPSI-2 mixing time (between 13C modules)
 ;l0: TD1 / NBL, i.e. 'true TD1'
-;l1: running counter from 1 to TD1/NBL, for phase/delay incrementation
+;l1: running counter for true TD1 (0 on first increment)
 ;l17: DIPSI-2 (between 13C modules): half the number of DIPSI-2 cycles
 ;l18: DIPSI-2 (between 13C modules): actual number of DIPSI-2 cycles
 ;p1: f1 channel -  90 degree high power pulse
@@ -461,5 +461,5 @@ ph30=0 2 2 0
 
 ; auprog: noah_hsqc:noah_hsqc:noah_clipcosy States
 ; module identifiers: CI_HSQC C_HSQCJ H_CLIP_COSY
-; pulse programme created by genesis-v2.0.15, https://nmr-genesis.co.uk
-; Mon Nov 08 2021 00:27:41 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.0.17, https://nmr-genesis.co.uk
+; Tue Nov 23 2021 20:22:57 GMT+0000 (Greenwich Mean Time)

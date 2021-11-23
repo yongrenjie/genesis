@@ -54,9 +54,9 @@ define delay DH_EXSCULPT
 "DC_HSQCf    = DC_HSQCb-p16-d16-p3-de+p1*2/PI-8u"
 "DH_EXSCULPT = de+p1*2/3.1416"
 define list<gradient> GC_HSQC={cnst41}
-"l0      = td1/2"             ; TD1/NBL
-"l1      = 0"                 ; Running counter for delay / phase incrementation
-"l2      = 0"                 ; Running counter for NS
+"l0      = td1/2"             ; TD1/NBL (i.e. TD1 for ordinary modules)
+"l1      = 0"                 ; Running counter for TD1 for ordinary modules (0 on first increment)
+"l2      = 0"                 ; Running counter for NS (1 on first scan)
 "acqt0   = 0"
 baseopt_echo
 
@@ -281,7 +281,7 @@ ph30=0 2 2 0
 ;d12: <1/4J(HH) CLIP-COSY mixing time
 ;d16: delay for homospoil/gradient recovery [200 us]
 ;l0: TD1 / NBL, i.e. 'true TD1'
-;l1: running counter from 1 to TD1/NBL, for phase/delay incrementation
+;l1: running counter for true TD1 (0 on first increment)
 ;p1: f1 channel -  90 degree high power pulse
 ;p2: f1 channel - 180 degree high power pulse
 ;p3: f2 channel -  90 degree high power pulse
@@ -310,5 +310,5 @@ ph30=0 2 2 0
 
 ; auprog: noah_hsqc:noah_clipcosy States
 ; module identifiers: C_HSQC H_CLIP_COSY
-; pulse programme created by genesis-v2.0.15, https://nmr-genesis.co.uk
-; Mon Nov 08 2021 00:27:41 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.0.17, https://nmr-genesis.co.uk
+; Tue Nov 23 2021 20:22:57 GMT+0000 (Greenwich Mean Time)

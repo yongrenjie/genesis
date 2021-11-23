@@ -78,9 +78,9 @@ define delay DH_EXSCULPT
 "DH_EXSCULPT = de+p1*2/3.1416"
 define list<gradient> GCI_HSQCT={cnst41}
 define list<gradient> GC_HSQC={cnst41}
-"l0      = td1/3"             ; TD1/NBL
-"l1      = 0"                 ; Running counter for delay / phase incrementation
-"l2      = 0"                 ; Running counter for NS
+"l0      = td1/3"             ; TD1/NBL (i.e. TD1 for ordinary modules)
+"l1      = 0"                 ; Running counter for TD1 for ordinary modules (0 on first increment)
+"l2      = 0"                 ; Running counter for NS (1 on first scan)
 "acqt0   = 0"
 baseopt_echo
 
@@ -462,7 +462,7 @@ ph30=0 2 2 0
 ;d16: delay for homospoil/gradient recovery [200 us]
 ;d19: DIPSI-2 mixing time (1st 13C module)
 ;l0: TD1 / NBL, i.e. 'true TD1'
-;l1: running counter from 1 to TD1/NBL, for phase/delay incrementation
+;l1: running counter for true TD1 (0 on first increment)
 ;l11: DIPSI-2 (1H module): half the number of DIPSI-2 cycles
 ;l12: DIPSI-2 (1H module): actual number of DIPSI-2 cycles
 ;l13: DIPSI-2 (1st 13C module): half the number of DIPSI-2 cycles
@@ -497,5 +497,5 @@ ph30=0 2 2 0
 
 ; auprog: noah_hsqc:noah_hsqc:noah_tocsy States
 ; module identifiers: CI_HSQCT C_HSQC H_TOCSY
-; pulse programme created by genesis-v2.0.15, https://nmr-genesis.co.uk
-; Mon Nov 08 2021 00:27:41 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.0.17, https://nmr-genesis.co.uk
+; Tue Nov 23 2021 20:22:57 GMT+0000 (Greenwich Mean Time)
