@@ -157,8 +157,8 @@ function simpleModulesToTrue(simpleModules: SimpleModule[]): TrueModule[] {
                 "h1_cosy_tocsy_st": "H_COTO_ST",
                 "h1_jres": "H_JRES",
                 "h1_psyche_jres": "H_JRES_PS",
-                "h1_psyche": "H_PSYCHE",
-                "h1_tse_psyche": "H_PSYCHE_TSE",
+                "h1_psyche": "H_PSYCHE_SAP",
+                "h1_tse_psyche": "H_PSYCHE_TSAP",
             };
             trueModules.push(h1mapping[module]);
         }
@@ -260,8 +260,8 @@ function trueModulesToSimple(trueModules: TrueModule[]): SimpleModule[] {
                     "H_COTO_ST": "h1_cosy_tocsy_st",
                     "H_JRES": "h1_jres",
                     "H_JRES_PS": "h1_psyche_jres",
-                    "H_PSYCHE": "h1_psyche",
-                    "H_PSYCHE_TSE": "h1_tse_psyche",
+                    "H_PSYCHE_SAP": "h1_psyche",
+                    "H_PSYCHE_TSAP": "h1_tse_psyche",
                 };
                 if (nextTrueModule in h1Mapping) {
                     simpleModules.push(h1Mapping[nextTrueModule]);

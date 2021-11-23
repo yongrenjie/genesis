@@ -94,7 +94,7 @@ else
 
 const mod = new NOAHModule(
     "h1",
-    "Pts",
+    "Pt",
     [Kupce2017ACIE, Foroozandeh2015CC, Moutzouri2017CC],
     "noah_sapphire",
     shortDescription,
