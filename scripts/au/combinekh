@@ -14,15 +14,21 @@
 #define READ_ERROR "file read failed; aborting"
 #define WRITE_ERROR "file write failed; aborting"
 
-/* calculate sensitivity factor k */
+/* Calculate sensitivity factor k, using the 'full' value of TD1. */
 float cnst37;
 FETCHPARS("CNST 37", &cnst37)
 int rounded_cnst37;
 rounded_cnst37 = (int) (cnst37 + 0.5); /* round to nearest integer */
 if (rounded_cnst37 == 0) STOPMSG("combinekh has already been run on this dataset")
+int td1_full;
+FETCHPAR1("TD", &td1_full)
+int k = td1_full / rounded_cnst37;
+
+/* Adjust TD1 and cnst37 in case acquisition is not complete */
 int td1;
 FETCHPAR1S("TD", &td1)
-int k = td1 / rounded_cnst37;
+td1 = (td1 / k) * k;        // round down to nearest multiple of k
+rounded_cnst37 = td1 / k;   // number of t1 increments acquired so far
 
 // Check for various errors.
 if (k == 1) STOP  // Nothing to do.
@@ -45,11 +51,7 @@ if ((fq = fopen(newser, "wb")) == NULL) STOPMSG(WRITE_ERROR)
 int ns;
 FETCHPARS("NS", &ns)
 
-/* Round TD1 down to the nearest multiple of 2k.
- * This allows combinek to work even when acquisition is incomplete. */
-td1 = td1 - (td1 % (2 * k));
-
-/* number of points in FID */
+/* Number of points in FID */
 int td;
 FETCHPARS("TD", &td)
 
