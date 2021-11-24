@@ -2,8 +2,7 @@ import { Kupce2017ACIE, Foroozandeh2014ACIE, Moutzouri2017CC } from "../citation
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H 1D PSYCHE pure shift spectrum with SAPPHIRE averaging
-;     [set TD1 and SW(Hz) as cnst37 and cnst38 respectively]
-;     [use -DES for excitation sculpting]`;
+;     [set TD1 and SW(Hz) as cnst37 and cnst38 respectively]`;
 
 let preamble = `
 define delay D[ID]a
