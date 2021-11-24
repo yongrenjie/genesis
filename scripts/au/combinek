@@ -12,35 +12,35 @@
 #define READ_ERROR "file read failed; aborting"
 #define WRITE_ERROR "file write failed; aborting"
 
-/* read sensitivity factor k */
+/* Read sensitivity factor k */
 float cnst39;
 FETCHPARS("CNST 39", &cnst39)
 int k;
-k = (int) (cnst39 + 0.5); /* round to nearest integer - directly casting always rounds down */
+k = (int) (cnst39 + 0.5);
 
 /* Check for invalid values of k.
-   We don't spawn a message box if k == 1, because the user may have purposely chosen that */
+ * We don't spawn a message box if k == 1, because the user may have purposely chosen that */
 if (k == 0)      STOPMSG("combinek has already been run on this dataset")
 else if (k == 1) STOP
 else if (k < 0)  STOPMSG("error: cnst39 cannot be negative")
 
-/* open the ser file to read */
+/* Open the ser file to read */
 char ser[PATH_MAX + 64];
 strcpy(ser, ACQUPATH("ser"));
 FILE *fp;
 if ((fp = fopen(ser, "rb")) == NULL) STOPMSG(READ_ERROR)
 
-/* open the newser file to write */
+/* Open the newser file to write */
 char newser[PATH_MAX + 64];
 strcpy(newser, ACQUPATH("newser"));
 FILE *fq;
 if ((fq = fopen(newser, "wb")) == NULL) STOPMSG(WRITE_ERROR)
 
-/* number of scans */
+/* Number of scans */
 int ns;
 FETCHPARS("NS", &ns)
 
-/* number of t1 increments */
+/* Number of t1 increments */
 int td1;
 FETCHPAR1S("TD", &td1)
 /* Round TD1 down to the nearest multiple of 2k (factor of 2 because we
@@ -48,7 +48,7 @@ FETCHPAR1S("TD", &td1)
  * This allows combinek to work even when acquisition is incomplete. */
 td1 = td1 - (td1 % (2 * k));
 
-/* number of points in FID */
+/* Number of points in FID */
 int td;
 FETCHPARS("TD", &td)
 
@@ -56,13 +56,13 @@ FETCHPARS("TD", &td)
 /* 0 - undefined; 1 - QF; 2-6 - various phase-sensitive methods */
 int fnmode;
 FETCHPAR1S("FnMODE", &fnmode)
-/* if 2 <= fnmode <= 6, then we need to read two FIDs of data at once */
+/* If 2 <= fnmode <= 6, then we need to read two FIDs of data at once */
 /* e.g. for fnmode = 6 (EA), we need to read echo + antiecho data together */
 int nfid;
 if ((2 <= fnmode) && (fnmode <= 6)) nfid = 2;
 else nfid = 1;
 
-/* data type */
+/* Data type */
 /* 0 - (32-bit) int, 1 - float, 2 - (64-bit) double */
 int dtypa;
 FETCHPARS("DTYPA", &dtypa)
@@ -135,7 +135,7 @@ else if (dtypa == 2) {
 else STOPMSG("combinek only works with TopSpin 3 (integer) data...")
 
 
-/* backup old ser file */
+/* Backup old ser file */
 char serbak[PATH_MAX + 64];
 strcpy(serbak, ACQUPATH("ser.bak"));
 if ((fp = fopen(ser, "rb")) == NULL) STOPMSG(READ_ERROR)
@@ -146,7 +146,7 @@ while ((c = getc(fp)) != EOF) putc(c,fq);
 fclose(fp);
 fclose(fq);
 
-/* overwrite ser file with newser */
+/* Overwrite ser file with newser */
 if ((fp = fopen(newser, "rb")) == NULL) STOPMSG(READ_ERROR)
 if ((fq = fopen(ser, "wb")) == NULL) STOPMSG(WRITE_ERROR)
 while ((c = getc(fp)) != EOF) putc(c,fq);
@@ -154,12 +154,12 @@ fclose(fp);
 fclose(fq);
 remove(newser); /* if we got all the way here we don't need it anymore */
 
-/* overwrite previous parameters */
+/* Overwrite previous parameters */
 STOREPAR1S("TD", td1/k)
 STOREPAR1("TD", td1/k)
 STOREPARS("NS", ns*k)
 STOREPAR("NS", ns*k) 
-/* prevent user from running combinek twice on the same dataset */
+/* Prevent user from running combinek twice on the same dataset */
 STOREPARS("CNST 39", 0.0)
 
 QUIT

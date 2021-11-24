@@ -30,24 +30,24 @@ FETCHPAR1S("TD", &td1)
 td1 = (td1 / k) * k;        // round down to nearest multiple of k
 rounded_cnst37 = td1 / k;   // number of t1 increments acquired so far
 
-// Check for various errors.
+/* Check for various errors. */
 if (k == 1) STOP  // Nothing to do.
 else if (td1 % rounded_cnst37 != 0) STOPMSG("error: TD1/cnst37 is not an integer")
 else if (k < 0) STOPMSG("error: cnst37 cannot be negative")
 
-/* open the ser file to read */
+/* Open the ser file to read */
 char ser[PATH_MAX + 64];
 strcpy(ser, ACQUPATH("ser"));
 FILE *fp;
 if ((fp = fopen(ser, "rb")) == NULL) STOPMSG(READ_ERROR)
 
-/* open the newser file to write */
+/* Open the newser file to write */
 char newser[PATH_MAX + 64];
 strcpy(newser, ACQUPATH("newser"));
 FILE *fq;
 if ((fq = fopen(newser, "wb")) == NULL) STOPMSG(WRITE_ERROR)
 
-/* number of scans */
+/* Number of scans */
 int ns;
 FETCHPARS("NS", &ns)
 
@@ -59,13 +59,13 @@ FETCHPARS("TD", &td)
 /* 0 - undefined; 1 - QF; 2-6 - various phase-sensitive methods */
 int fnmode;
 FETCHPAR1S("FnMODE", &fnmode)
-/* if 2 <= fnmode <= 6, then we need to read two FIDs of data at once */
+/* If 2 <= fnmode <= 6, then we need to read two FIDs of data at once */
 /* e.g. for fnmode = 6 (EA), we need to read echo + antiecho data together */
 int nfid;
 if ((2 <= fnmode) && (fnmode <= 6)) nfid = 2;
 else nfid = 1;
 
-/* data type */
+/* Data type */
 /* 0 - (32-bit) int, 1 - float, 2 - (64-bit) double */
 int dtypa;
 FETCHPARS("DTYPA", &dtypa)
@@ -74,30 +74,30 @@ int dsize; /* sizeof (data type) */
 
 if (dtypa == 0) {
     dsize = sizeof (int);
-    /* round each block in FID to a multiple of 1024 bytes */
+    /* Round each block in FID to a multiple of 1024 bytes */
     int n = 1024 / dsize;
     td = (td % n) ? td - (td % n) + n : td;
-    /* allocate memory */
+    /* Allocate memory */
     int *sum;
     int *row;
     if ((sum = malloc(dsize * td * nfid)) == NULL) STOPMSG(MALLOC_ERROR)
     if ((row = malloc(dsize * td * nfid)) == NULL) STOPMSG(MALLOC_ERROR)
 
-    /* read in data and perform the summation */
+    /* Read in data and perform the summation */
     int m, i, j;
     for (m = 0; m < (td1 / (k * nfid)); m++) {
-        /* initialise sum to zero */
+        /* Initialise sum to zero */
         for (j = 0; j < td * nfid; j++) *(sum + j) = 0;
-        /* read in k rows and add each of them to sum */
+        /* Read in k rows and add each of them to sum */
         for (i = 0; i < k; i++) {
             if (fread(row, dsize, td * nfid, fp) != td * nfid) STOPMSG(READ_ERROR)
             for (j = 0; j < td * nfid; j++) *(sum + j) += *(row + j);
         }
-        /* write the sum to newser */
+        /* Write the sum to newser */
         if (fwrite(sum, dsize, td * nfid, fq) != td * nfid) STOPMSG(WRITE_ERROR)
     }
 
-    /* clean up */
+    /* Clean up */
     free(sum);
     free(row);
     fclose(fp);
@@ -105,30 +105,30 @@ if (dtypa == 0) {
 }
 else if (dtypa == 2) {
     dsize = sizeof (double);
-    /* round each block in FID to a multiple of 1024 bytes */
+    /* Round each block in FID to a multiple of 1024 bytes */
     int n = 1024 / dsize;
     td = (td % n) ? td - (td % n) + n : td;
-    /* allocate memory */
+    /* Allocate memory */
     double *sum;
     double *row;
     if ((sum = malloc(dsize * td * nfid)) == NULL) STOPMSG(MALLOC_ERROR)
     if ((row = malloc(dsize * td * nfid)) == NULL) STOPMSG(MALLOC_ERROR)
 
-    /* read in data and perform the summation */
+    /* Read in data and perform the summation */
     int m, i, j;
     for (m = 0; m < (td1 / (k * nfid)); m++) {
-        /* initialise sum to zero */
+        /* Initialise sum to zero */
         for (j = 0; j < td * nfid; j++) *(sum + j) = 0;
-        /* read in k rows and add each of them to sum */
+        /* Read in k rows and add each of them to sum */
         for (i = 0; i < k; i++) {
             if (fread(row, dsize, td * nfid, fp) != td * nfid) STOPMSG(READ_ERROR)
             for (j = 0; j < td * nfid; j++) *(sum + j) += *(row + j);
         }
-        /* write the sum to newser */
+        /* Write the sum to newser */
         if (fwrite(sum, dsize, td * nfid, fq) != td * nfid) STOPMSG(WRITE_ERROR)
     }
 
-    /* clean up */
+    /* Clean up */
     free(sum);
     free(row);
     fclose(fp);
@@ -136,7 +136,7 @@ else if (dtypa == 2) {
 }
 else STOPMSG("unknown data type; aborting")
 
-/* backup old ser file */
+/* Backup old ser file */
 char serbak[PATH_MAX + 64];
 strcpy(serbak, ACQUPATH("ser.bak"));
 if ((fp = fopen(ser, "rb")) == NULL) STOPMSG(READ_ERROR)
@@ -147,7 +147,7 @@ while ((c = getc(fp)) != EOF) putc(c,fq);
 fclose(fp);
 fclose(fq);
 
-/* overwrite ser file with newser */
+/* Overwrite ser file with newser */
 if ((fp = fopen(newser, "rb")) == NULL) STOPMSG(READ_ERROR)
 if ((fq = fopen(ser, "wb")) == NULL) STOPMSG(WRITE_ERROR)
 while ((c = getc(fp)) != EOF) putc(c,fq);
@@ -155,12 +155,12 @@ fclose(fp);
 fclose(fq);
 remove(newser); /* if we got all the way here we don't need it anymore */
 
-/* overwrite previous parameters */
+/* Overwrite previous parameters */
 STOREPAR1S("TD", td1/k)
 STOREPAR1("TD", td1/k)
 STOREPARS("NS", ns*k)
 STOREPAR("NS", ns*k) 
-/* prevent user from running combinekh twice on the same dataset */
+/* Prevent user from running combinekh twice on the same dataset */
 STOREPARS("CNST 37", 0.0)
 
 QUIT
