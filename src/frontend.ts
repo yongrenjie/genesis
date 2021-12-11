@@ -350,6 +350,7 @@ function toggleDevMode() {
         }
     }
     setModuleGridRows();
+    updatePulprogText();
 }
 // Add toggle behaviour to the devmode button
 document.getElementById("devmode_button")!.addEventListener("click", toggleDevMode);
