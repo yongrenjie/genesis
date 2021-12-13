@@ -656,7 +656,9 @@
                 <label for="faq_process" class="toggle-label" tabindex="0">Processing NOAH experiments: an overview</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
-                        <p>If you acquired this data under automation, it should have already been set up such that your data is automatically processed. If your NOAH dataset was acquired with experiment number (expno) <i>m</i>, then check whether you already have datasets in expnos (1000 × <i>m</i>) + 1 onwards. If those exist, then chances are these <i>are</i> the individual processed 2D spectra. If not, then read on...</p>
+                        <p>First, note the experiment number (expno) of your NOAH dataset: if the expno is <i>m</i>, then check whether you already have datasets in expnos (1000 × <i>m</i>) + 1 onwards. If those exist, then chances are these <i>are</i> the individual processed 2D spectra, and no further processing is required.</p>
+
+                        <p>If not, then follow these steps to generate those spectra:</p>
                         <ol class="steps">
                             <li>If you haven&rsquo;t already done so, <a class="scripts" download>download the newest versions of the NOAH scripts</a>. Unzip that and copy everything inside the <b>au</b> subdirectory to <b>&lt;TS&gt;/exp/stan/nmr/au/src/user</b>, where &lt;TS&gt; is your TopSpin installation location (<span class="ms">C:\Bruker\TopSpinX.Y.Z</span> for Windows, and <span class="ms">/opt/topspinx.y.z</span> for macOS/Linux).</li>
                             <li>Process the data by entering <span class="ms">splitx_au</span> into the TopSpin command line. This will create new datasets with expnos beginning from (1000 × <i>m</i>) + 1, where <i>m</i> is the expno of the original NOAH data.</li>
