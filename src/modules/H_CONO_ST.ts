@@ -90,7 +90,6 @@ let pulprog = `
   (p32:sp29 ph0):f1
   20u groff
   p16:gp11
-#  endif
   d16 pl1:f1
   D[ID]a
   18u st
