@@ -2,7 +2,7 @@ import { Kupce2017ACIE, Cicero2001JMR } from "../citation.js";
 import { AF_LP3 } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 13C HMBC (using hmbcetgpl3nd gradient scheme)`;
+let shortDescription = `; 13C HMBC (asymmetric gradients 2, 2 grads, 180 before grads)`;
 
 let preamble = `
 "p2     = p1*2"                       ; 1H hard 180
@@ -13,10 +13,10 @@ let preamble = `
 "D[ID]a = d4-p14/2"
 "D[ID]b = d4+p14/2"
 "D[ID]c = (0.5s/cnst13)-p16-d16-4u"
-"D[ID]d = p2+d0*2"
-"cnst47 = (1-sfo2/sfo1)/(1+sfo2/sfo1)"   ; gradient ratio
-define list<gradient> EA1 = { 1.000 -cnst47}
-define list<gradient> EA2 = { -cnst47 1.000}
+"D[ID]d = p2*2+d0*2"
+"cnst47 = (1-sfo2/sfo1)/(1+sfo2/sfo1)"
+define list<gradient> EA1 = { 1.000 -cnst47 }
+define list<gradient> EA2 = { -cnst47 1.000 }
 `
 
 let pulprog = `
@@ -52,14 +52,14 @@ let pulprog = `
   D[ID]d
   p16:gp1*EA2
   d16 pl2:f2
-  (p3 ph5):f2
+  (p3 ph0):f2
   4u
   goscnp ph31
 `
 
 const mod = new NOAHModule(
     "hmbc",
-    "Bg",
+    "Bgb",
     [Kupce2017ACIE, Cicero2001JMR],
     "noah_hmbc",
     shortDescription,

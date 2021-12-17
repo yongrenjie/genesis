@@ -107,6 +107,9 @@ export const allParams = {
     "cnst49": "left edge of spectral window (ppm) [ca. 9.5]",
     "cnst50": "right edge of spectral window (ppm) [ca. -0.5]",
     "cnst51": "RF amplitude of ROESY spin lock (Hz)",
+    "cnst52": "HMBC gradient free parameter (alpha)",
+    "cnst53": "HMBC gradient ratio",
+    "cnst54": "HMBC gradient ratio",
 
     // d, in - Delays and increments {{{1
     "d0": "13C t1",
