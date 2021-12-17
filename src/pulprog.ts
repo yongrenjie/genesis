@@ -1,7 +1,10 @@
 // Get the version number.
 import {version} from "./version.js";
 import NOAHModule from "./noahModule.js";
-import { makeDipsi, makeDipsiGenerator, asapMixingPPText, homonuclearSolvSupp } from "./elements.js";
+import { makeDipsi, makeDipsiGenerator,
+         asapMixingPPText,
+         homonuclearSolvSupp,
+         lpjfText, lpjfPreamble} from "./elements.js";
 import { allParams, allPhases, allGradients, allWavemakers, Parameter } from "./parameters.js";
 import { AF_PRESAT_D1 } from "./acquFlag.js";
 import { Citation } from "./citation.js";
@@ -197,6 +200,17 @@ export function makePulprogText(trueModuleNames: string[],
                 throw new Error("DIPSI-2 found inside wrong type of module")
             }
             ppDipsiLineNo = ppLines.findIndex(line => line.includes("|DIPSI|"));
+        }
+
+        // Handle low-pass J filters
+        if (mod.category == "hmbc") {
+            let ppLpjfLineNo = ppLines.findIndex(line => line.includes("|LPJF|"));
+            while (ppLpjfLineNo != -1) { // means it was found
+                ppLines.splice(ppLpjfLineNo, 1, ...lpjfText);
+                preambles.push(...lpjfPreamble);
+                // Find next occurrence (if it exists)
+                ppLpjfLineNo = ppLines.findIndex(line => line.includes("|LPJF|"));
+            }
         }
 
         // Handle solvent suppression string in homonuclear modules

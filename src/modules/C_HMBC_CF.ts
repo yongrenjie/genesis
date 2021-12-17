@@ -11,10 +11,8 @@ let preamble = `
 "in0    = inf1/2"                     ; 13C increment
 "D[ID]a = d4-p14/2"
 "D[ID]b = d4+p14/2"
-"D[ID]c = 1s/(2*cnst6)-p16-d16"
-"D[ID]d = 1s/(2*cnst7)-p16-d16"
-"D[ID]e = (0.5s/cnst13)-p16-d16-4u"
-"D[ID]f = p16+d16+p2/2+d0-p3*2/PI+4u"
+"D[ID]c = (0.5s/cnst13)-p16-d16-4u"
+"D[ID]d = p16+d16+p2/2+d0-p3*2/PI+4u"
 "cnst41 = 2*sfo2/sfo1"                ; gradient ratio
 define list<gradient> G[ID]={cnst41}
 `
@@ -34,24 +32,15 @@ let pulprog = `
   (p2 ph0):f1
   D[ID]b pl2:f2
 
-  ; second-order low-pass J-filter
+  ; excitation and low-pass J-filter
   (lalign (p1 ph0):f1 (p3 ph7):f2 )
-  D[ID]c
-  p16:gp10*-3
-  d16
-  (p3 ph7):f2
-  D[ID]d
-  p16:gp10*2
-  d16
-  (p3 ph7):f2
-  4u
-  p16:gp10
-  d16
-  D[ID]e  ; nJ(CH) evolution
+  |LPJF|
 
+  ; nJ(CH) evolution
+  D[ID]c
   ; coherence transfer to 13C and t1
   (p3 ph7):f2
-  D[ID]f
+  D[ID]d
   (p14:sp3 ph0):f2
   4u
   p16:gp1
@@ -63,7 +52,7 @@ let pulprog = `
   p16:gp1
   d16
   (p14:sp3 ph0):f2
-  D[ID]f pl2:f2
+  D[ID]d pl2:f2
   (p3 ph5):f2
   (p2 ph0):f1
   4u

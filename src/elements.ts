@@ -71,7 +71,7 @@ export function makeDipsi(label: string,
 }
 
 
-export function* makeDipsiGenerator(): Generator<string[], any, "c13" | "h1"> {
+export function* makeDipsiGenerator(): Generator<string[], string[], "c13" | "h1"> {
     let n_c13_modules = 0;  // Number of 13C modules seen so far.
     let n_h1_modules = 0;   // Number of 1H modules seen so far.
     // Seed the generator so that the next time we call it, we can
@@ -185,6 +185,28 @@ export function homonuclearSolvSupp(grad_factor: number): string[][] {
     ];
     return [solvSuppText, solvSuppPreamble];
 }
+// }}}1
+
+// Low-pass J-filters {{{1
+export const lpjfPreamble = [
+    `define delay DLP2a`,
+    `define delay DLP2b`,
+    `"DLP2a = 1s/(2*cnst6)-p16-d16"`,
+    `"DLP2b = 1s/(2*cnst7)-p16-d16"`
+];
+export const lpjfText = [
+    `  DLP2a`,
+    `  p16:gp10*-3`,
+    `  d16`,
+    `  (p3 ph7):f2`,
+    `  DLP2b`,
+    `  p16:gp10*2`,
+    `  d16`,
+    `  (p3 ph7):f2`,
+    `  4u`,
+    `  p16:gp10`,
+    `  d16`,
+];
 // }}}1
 
 // vim: foldmethod=marker
