@@ -5,7 +5,7 @@ import { makeDipsi, makeDipsiGenerator,
          asapMixingPPText,
          homonuclearSolvSupp,
          lpjfText, lpjfPreamble} from "./elements.js";
-import { allParams, allPhases, allGradients, allWavemakers, Parameter } from "./parameters.js";
+import { allPhases, allGradients, allWavemakers, Parameter } from "./parameters.js";
 import { AF_PRESAT_D1 } from "./acquFlag.js";
 import { Citation } from "./citation.js";
 
@@ -193,8 +193,8 @@ export function makePulprogText(trueModuleNames: string[],
         while (ppDipsiLineNo != -1) {  // means it was found
             if (mod.category == "c13" || mod.category == "h1") {
                 let [dipsiPP, dipsiPreamble] = dipsiGen.next(mod.category).value;
-                ppLines[ppDipsiLineNo] = dipsiPP;
-                preambles.push(...dipsiPreamble.split("\n"));
+                ppLines.splice(ppDipsiLineNo, 1, ...dipsiPP);
+                preambles.push(...dipsiPreamble);
             }
             else {
                 throw new Error("DIPSI-2 found inside wrong type of module")
@@ -249,7 +249,7 @@ export function makePulprogText(trueModuleNames: string[],
             && nextMod !== undefined && nextMod.category === "c13"
         ) {
             let [extraDipsiPP, extraDipsiPreamble] = makeDipsi("11", 18, 30);
-            preambles.push(...extraDipsiPreamble.split("\n"));
+            preambles.push(...extraDipsiPreamble);
             mainpp.push(
                 ``,
                 `if "d30 > 1m"`,
@@ -257,7 +257,7 @@ export function makePulprogText(trueModuleNames: string[],
                 `  50u`,
                 `  p16:gp13`,
                 `  d16 pl10:f1`,
-                extraDipsiPP,
+                ...extraDipsiPP,
                 `  p16:gp13*1.333`,
                 `  d16`,
                 `}`,

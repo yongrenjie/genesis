@@ -16,7 +16,7 @@
  */
 export function makeDipsi(label: string,
                           loopCounter: number,
-                          delay: number): string[] {
+                          delay: number): string[][] {
     let pulprog = [
         `\t\t\t\t\t\t;begin DIPSI2`,
         `${label} p6*3.556 ph3`,
@@ -60,23 +60,23 @@ export function makeDipsi(label: string,
         `  p6*4.111 ph3`,
         `  lo to ${label} times l${loopCounter}`,
         `\t\t\t\t\t\t;end DIPSI2`,
-    ].join("\n");
+    ];
 
     let preamble = [
         `"l${loopCounter - 1}     = (d${delay}/(p6*115.112))/2"       ; half the number of DIPSI-2 loops`,
         `"l${loopCounter}     = l${loopCounter - 1}*2"                      ; number of DIPSI-2 loops`
-    ].join("\n");
+    ];
 
     return [pulprog, preamble];
 }
 
 
-export function* makeDipsiGenerator(): Generator<string[], string[], "c13" | "h1"> {
+export function* makeDipsiGenerator(): Generator<string[][], string[][], "c13" | "h1"> {
     let n_c13_modules = 0;  // Number of 13C modules seen so far.
     let n_h1_modules = 0;   // Number of 1H modules seen so far.
     // Seed the generator so that the next time we call it, we can
     // pass in moduleType.
-    let moduleType = yield ["", ""];
+    let moduleType = yield [[], []];
 
     while (true) {
         if ((moduleType == "c13") && (n_c13_modules == 0)) {
