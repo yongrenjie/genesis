@@ -294,14 +294,14 @@ ph30=0 2 2 0
 ;pl2: f2 channel - power level for pulse (default)
 ;pl9: f1 channel - power level for presaturation
 ;pl12: f2 channel - power level for CPD/BB decoupling
-;sp1: f1 channel - shaped pulse 180 degree
-;sp3: f2 channel - shaped pulse (180 degree inversion)
-;sp18: f2 channel - shaped pulse (180 degree with J-compensation)
-;sp29: f1 channel - shaped pulse (adiabatic)
-;spnam1: 1H selective inversion - Sinc1.1000 or WaveMaker
-;spnam3: 13C inversion - Crp60,0.5,20.1 or WaveMaker
-;spnam18: 13C J-compensated inversion - Crp60_xfilt.2 or WaveMaker
-;spnam29: 1H ZQS chirp - Crp60,20,20.10 or WaveMaker
+;sp1: 1H selective inversion
+;sp3: 13C adiabatic inversion
+;sp18: 13C J-compensated refocusing
+;sp29: 1H ZQS chirp
+;spnam1: Sinc1.1000 or WaveMaker
+;spnam3: Crp60,0.5,20.1 or WaveMaker
+;spnam18: Crp60_xfilt.2 or WaveMaker
+;spnam29: Crp60,20,20.10 or WaveMaker
 ;aq: acquisition time
 ;ds: >= 16
 ;FnMODE: echo-antiecho
@@ -310,5 +310,5 @@ ph30=0 2 2 0
 
 ; auprog: noah_hsqc:noah_clipcosy States
 ; module identifiers: C_HSQC H_CLIP_COSY
-; pulse programme created by genesis-v2.0.17, https://nmr-genesis.co.uk
-; Tue Nov 23 2021 20:22:57 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.0.18, https://nmr-genesis.co.uk
+; Fri Dec 17 2021 12:28:44 GMT+0000 (Greenwich Mean Time)

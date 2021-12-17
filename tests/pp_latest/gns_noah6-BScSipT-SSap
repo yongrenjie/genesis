@@ -679,17 +679,17 @@ ph30=0 2 2 0
 ;pl9: f1 channel - power level for presaturation
 ;pl10: f1 channel - power level for TOCSY-spinlock
 ;pl12: f2 channel - power level for CPD/BB decoupling
-;sp1: f1 channel - shaped pulse 180 degree
-;sp3: f2 channel - shaped pulse (180 degree inversion)
-;sp7: f2 channel - shaped pulse (180 degree refocusing)
-;sp18: f2 channel - shaped pulse (180 degree with J-compensation)
-;sp29: f1 channel - shaped pulse (adiabatic)
-;sp45: f1 channel - CAWURST-2 pulse (180 degree)
-;spnam1: 1H selective inversion - Sinc1.1000 or WaveMaker
-;spnam3: 13C inversion - Crp60,0.5,20.1 or WaveMaker
-;spnam7: 13C refocusing - Crp60comp.4
-;spnam18: 13C J-compensated inversion - Crp60_xfilt.2 or WaveMaker
-;spnam29: 1H ZQS chirp - Crp60,20,20.10 or WaveMaker
+;sp1: 1H selective inversion
+;sp3: 13C adiabatic inversion
+;sp7: 13C composite adiabatic refocusing
+;sp18: 13C J-compensated refocusing
+;sp29: 1H ZQS chirp
+;sp45: 1H CAWURST-2 pulse (180 degree)
+;spnam1: Sinc1.1000 or WaveMaker
+;spnam3: Crp60,0.5,20.1 or WaveMaker
+;spnam7: Crp60comp.4
+;spnam18: Crp60_xfilt.2 or WaveMaker
+;spnam29: Crp60,20,20.10 or WaveMaker
 ;spnam45: wuASAP (generate via WaveMaker)
 ;aq: acquisition time
 ;ds: >= 16
@@ -699,5 +699,5 @@ ph30=0 2 2 0
 
 ; auprog: noah_hmbc:noah_hsqc noah_TS:noah_hsqc noah_split:noah_tocsy States
 ; module identifiers: C_HMBC_CF C_HSQCC_DIA C_SEHSQC_IA H_TOCSY
-; pulse programme created by genesis-v2.0.17, https://nmr-genesis.co.uk
-; Tue Nov 23 2021 20:22:57 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.0.18, https://nmr-genesis.co.uk
+; Fri Dec 17 2021 12:28:44 GMT+0000 (Greenwich Mean Time)
