@@ -7,8 +7,6 @@ let shortDescription = `; 1H phase-sensitive NOESY`
 let preamble = `
 "d10    = 3u"                         ; NOESY t1
 "in10   = 2*dw"                       ; NOESY increment
-define delay D[ID]a
-define delay D[ID]b
 "D[ID]a = d8-p32-p16-d16-38u"
 "D[ID]b = d8-p16-d16-8u"
 `

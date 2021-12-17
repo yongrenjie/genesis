@@ -6,7 +6,6 @@ let shortDescription = "; 1H DQF-COSY (States)";
 let preamble = `
 "d10    = 3u"                         ; DQF-COSY t1
 "in10   = 2*dw"                       ; DQF-COSY increment
-define delay D[ID]a
 "D[ID]a = p16+d16+4u"
 `
 

@@ -11,7 +11,6 @@ let preamble = `
 "l12    = l11*2"                      ; number of short TOCSY loops
 "l19    = (d14/(p6*115.112))/2"       ; half the number of long TOCSY loops
 "l20    = l19*2"                      ; number of long TOCSY loops
-define delay D[ID]a
 "D[ID]a = d8-4u-de-aq-4u-p16-d16-p32-30u"     ; NOE mixing time
 `
 

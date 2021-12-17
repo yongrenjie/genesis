@@ -7,9 +7,6 @@ let shortDescription = `; 1H COSY and NOESY (echo/antiecho F1)`
 let preamble = `
 "d10    = 3u"                         ; COSY/NOESY t1
 "in10   = 2*dw"                       ; COSY/NOESY increment
-define delay D[ID]a
-define delay D[ID]b
-define delay D[ID]c
 "D[ID]a = p16+d16+4u-d10"
 "D[ID]b = d8-p16-d16-de-aq-p16-d16-p32-60u"     ; NOE mixing time
 "D[ID]c = p16+d16"

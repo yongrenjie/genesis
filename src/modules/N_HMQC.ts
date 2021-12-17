@@ -11,8 +11,6 @@ let preamble = `
 "d24    = 0.25s/cnst4"                ; 15N INEPT
 "d20    = 3u"                         ; 15N HMQC t1/2
 "in20   = 1000000/(2*cnst40*sfo3)"    ; 15N HMQC increment: cnst40 = SW(15N)
-define delay D[ID]a
-define delay D[ID]b
 "D[ID]a = p17+d16+p2/2+d20+4u-p21*2/PI"
 "D[ID]b = d24-p17-d16-de-4u+p1*2/PI"
 "p17    = p16*cnst16"                 ; Longer gradients for 15N HMQC

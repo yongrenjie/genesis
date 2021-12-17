@@ -6,8 +6,6 @@ let shortDescription = `; 1H COSY + TOCSY (echo/antiecho F1)`;
 let preamble = `
 "d10    = 3u"                         ; COSY/TOCSY t1
 "in10   = 2*dw"                       ; COSY/TOCSY increment
-define delay D[ID]a
-define delay D[ID]b
 "D[ID]a = p16+d16+4u-d10"
 "D[ID]b = p16+d16"
 `

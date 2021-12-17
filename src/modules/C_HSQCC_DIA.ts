@@ -10,14 +10,6 @@ let preamble = `
 "d12     = 0.25s/cnst12"               ; COSY mixing (< 1/4J(HH))
 "d3      = 3u"                         ; 13C HSQC t1
 "in3     = inf1/2"                     ; 13C HSQC increment
-define delay D[ID]a
-define delay D[ID]b
-define delay D[ID]c
-define delay D[ID]d
-define delay D[ID]e
-define delay D[ID]f
-define delay D[ID]g
-define delay D[ID]h
 "D[ID]a  = d4-p14/2"
 "D[ID]b  = d4+p14/2"
 "D[ID]c  = p16+d16+p2/2+d3-p3*2/PI+4u"

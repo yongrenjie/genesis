@@ -8,10 +8,6 @@ let preamble = `
 "d2      = 0.5s/cnst2"                 ; JCOMP
 "d0      = 3u"                         ; 13C t1
 "in0     = inf1/2"                     ; 13C increment
-define delay D[ID]a
-define delay D[ID]b
-define delay D[ID]c
-define delay D[ID]d
 "D[ID]a = 1s/(2*cnst6)-p16-d16"
 "D[ID]b = 1s/(2*cnst7)-p16-d16"
 "D[ID]c = (0.5s/cnst13)-p16-d16-4u"

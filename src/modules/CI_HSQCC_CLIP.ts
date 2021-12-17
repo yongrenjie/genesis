@@ -12,14 +12,6 @@ let preamble = `
 "d12    = 0.25s/cnst12"               ; perfect echo mixing (< 1/4J(HH))
 "d0     = 3u"                         ; 13C HSQC-COSY t1
 "in0    = inf1/2"                     ; 13C HSQC-COSY increment
-define delay D[ID]a
-define delay D[ID]b
-define delay D[ID]c
-define delay D[ID]d
-define delay D[ID]e
-define delay D[ID]f
-define delay D[ID]g
-define delay D[ID]h
 "D[ID]a = (asin(cnst32)/(2*PI*cnst2))-larger(p2,p14)/2000000"
 "D[ID]b = d2-p16-d16-p2-d0*2-p3*2/PI"
 "D[ID]c = d2-p2+p3*2/PI"

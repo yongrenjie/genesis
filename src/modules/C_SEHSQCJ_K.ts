@@ -10,16 +10,6 @@ let preamble = `
 "d4      = 0.25s/cnst2"                ; 13C INEPT
 "d3      = 3u"                         ; 13C HSQC t1
 "in3     = inf1/2"                     ; 13C HSQC increment
-define delay D[ID]a
-define delay D[ID]b
-define delay D[ID]c
-define delay D[ID]d
-define delay D[ID]e
-define delay D[ID]f
-define delay D[ID]g
-define delay D[ID]h
-define delay D[ID]i
-define delay D[ID]j
 "D[ID]a = d4-p14/2"                     ; zz-filter
 "D[ID]b = d4+p14/2"                     ; zz-filter
 "D[ID]c = d4-larger(p2,p14)/2"          ; INEPT

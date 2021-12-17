@@ -10,13 +10,6 @@ let preamble = `
 "d4      = 0.25s/cnst2"                ; 13C INEPT
 "d0      = 3u"                         ; 13C HSQC t1
 "in0     = inf1/2"                     ; 13C HSQC increment
-define delay D[ID]a
-define delay D[ID]b
-define delay D[ID]c
-define delay D[ID]d
-define delay D[ID]e
-define delay D[ID]f
-define delay D[ID]g
 "D[ID]a = d4-larger(p2,p14)/2"          ; INEPT
 "D[ID]b = d2-p16-d16-p2-d0*2-p3*2/PI"   ; 13C editing period
 "D[ID]c = d2-p2+p3*2/PI"                ; 13C editing period

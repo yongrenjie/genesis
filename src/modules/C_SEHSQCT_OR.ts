@@ -10,14 +10,6 @@ let preamble = `
 "d4      = 0.25s/cnst2"                ; 13C INEPT
 "d0      = 3u"                         ; 13C t1
 "in0     = inf1/2"                     ; 13C increment
-define delay D[ID]a
-define delay D[ID]b
-define delay D[ID]c
-define delay D[ID]d
-define delay D[ID]e
-define delay D[ID]f
-define delay D[ID]g
-define delay D[ID]h
 "D[ID]a = d4-larger(p2,p14)/2"               ; INEPT
 "D[ID]b = d2-cnst17*p24/2-p16-d16-p2-d0*2"   ; multiplicity editing
 "D[ID]c = d2-cnst17*p24/2-4u"                ; multiplicity editing

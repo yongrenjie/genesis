@@ -11,13 +11,6 @@ let preamble = `
 "d20    = 3u"                         ; 15N HSQC t1/2
 "in20   = 1000000/(2*cnst40*sfo3)"    ; 15N HSQC increment: cnst40 = SW(15N)
 "p17    = p16*cnst16"                 ; Longer gradients for 15N seHSQC
-define delay D[ID]a
-define delay D[ID]b
-define delay D[ID]c
-define delay D[ID]d
-define delay D[ID]e
-define delay D[ID]f
-define delay D[ID]g
 "D[ID]a = d24-p22/2"
 "D[ID]b = d24+p22/2"
 "D[ID]c = p17+d16+p2/2+4u+d20-p21*2/PI"

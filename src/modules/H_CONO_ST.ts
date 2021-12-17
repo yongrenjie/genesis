@@ -9,11 +9,6 @@ let AF_ES_NOESYONLY = new AcquFlag("ES", "pre-acquisition excitation sculpting i
 let preamble = `
 "d10    = 3u"                         ; COSY/NOESY t1
 "in10   = 2*dw"                       ; COSY/NOESY increment
-define delay D[ID]a
-define delay D[ID]b
-define delay D[ID]c
-define delay D[ID]d
-define delay D[ID]e
 "D[ID]a = d8-de-aq-p32-p16-d16-52u"   ; NOE mixing time (with ZQS, without ES)
 "D[ID]b = d8-de-aq-p16-d16-22u"       ; NOE mixing time (without ZQS, without ES)
 `

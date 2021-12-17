@@ -6,9 +6,6 @@ let shortDescription = `; 1H 1D TSE-PSYCHE pure shift spectrum
 ;     [set TD1 and SW(Hz) as cnst37 and cnst38 respectively]`
 
 let preamble = `
-define delay D[ID]a
-define delay D[ID]b
-define delay D[ID]c
 "p2     = p1*2"
 "d11    = 3u"                         ; PSYCHE t1
 "in11   = trunc(0.5+(1000000/(cnst38*dw*2)))*dw/1000000"     ; PSYCHE increment

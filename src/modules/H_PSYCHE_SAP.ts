@@ -5,12 +5,6 @@ let shortDescription = `; 1H 1D PSYCHE pure shift spectrum with SAPPHIRE averagi
 ;     [set TD1 and SW(Hz) as cnst37 and cnst38 respectively]`;
 
 let preamble = `
-define delay D[ID]a
-define delay D[ID]b
-define delay D[ID]c
-define delay D[ID]d
-define delay D[ID]e
-define delay D[ID]f
 "p2     = p1*2"
 "d11    = 3u"                         ; PSYCHE t1
 "in11   = trunc(0.5+(1000000/(cnst38*dw*2*((td1/nbl)/cnst37))))*dw*((td1/nbl)/cnst37)/1000000"  ; PSYCHE increment

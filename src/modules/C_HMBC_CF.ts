@@ -9,12 +9,6 @@ let preamble = `
 "d4     = 0.25s/cnst2"                ; 13C INEPT
 "d0     = 3u"                         ; 13C t1
 "in0    = inf1/2"                     ; 13C increment
-define delay D[ID]a
-define delay D[ID]b
-define delay D[ID]c
-define delay D[ID]d
-define delay D[ID]e
-define delay D[ID]f
 "D[ID]a = d4-p14/2"
 "D[ID]b = d4+p14/2"
 "D[ID]c = 1s/(2*cnst6)-p16-d16"

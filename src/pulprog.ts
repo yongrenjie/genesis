@@ -166,6 +166,14 @@ export function makePulprogText(trueModuleNames: string[],
         for (const flag of mod.acquFlags) {
             shortDescriptions.push(flag.makeComment());
         }
+        const moduleDefineDelays = [...mod.preamble
+            .split("\n")
+            .map(l => l.match(/(?<=^")D\[ID\].(?=\s*=)/))
+            .filter(a => a !== null && a.length > 0)
+            .map(a => `define delay ${a![0]}`)
+            .map(l => l.replace(/\[ID\]/g, trueModuleNames[i]))
+        ];
+        preambles.push(...moduleDefineDelays);
         preambles.push(...mod.preamble
             .split("\n")
             .map(l => l.replace(/\[ID\]/g, trueModuleNames[i]))
