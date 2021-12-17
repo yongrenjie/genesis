@@ -1,11 +1,13 @@
-; gns_noah2-SCc
+; gns_noah4-BSCRst
 
+; 13C HMBC
 ; 13C HSQC
 ;     [use -DEDIT for multiplicity editing]
-; 1H CLIP-COSY (States)
-;     [use -DES for pre-acquisition excitation sculpting]
+; 1H COSY and ROESY (States F1)
+;     [use -DNOZQS to skip zero-quantum suppression]
+;     [use -DES for pre-acquisition excitation sculpting in ROESY]
 
-; set 'NBL' TopSpin parameter to 2
+; set 'NBL' TopSpin parameter to 4
 ;     [use -DPRESAT for presaturation during d1]
 
 ;$CLASS=HighRes
@@ -18,9 +20,13 @@
 ;Angew. Chem. Int. Ed. 2017, 56 (39), 11779-11783
 ;NOAH: NMR Supersequences for Small Molecule Analysis and Structure Elucidation
 
-;M. R. M. Koos, G. Kummerlowe, L. Kaltschnee, C. M. Thiele, B. Luy
-;Angew. Chem. Int. Ed. 2016, 55 (27), 7655-7659
-;Clean In-Phase Experiment for the Rapid Acquisition of COSY-type Correlations
+;E. Kupce, T. D. W. Claridge
+;Chem. Commun. 2018, 54 (52), 7139-7142
+;Molecular Structure from a Single NMR Supersequence
+
+;C. M. Thiele, K. Petzold, J. Schleucher
+;Chem. Eur. J. 2009, 15 (3), 585-588
+;EASY ROESY: Reliable Cross-Peak Integration in Adiabatic Symmetrized ROESY
 
 #include <Avance.incl>
 #include <Grad.incl>
@@ -30,6 +36,12 @@
 define list<loopcounter> t1list=<$VCLIST>
 #endif /* NUS */
 
+define delay DC_HMBC_CFa
+define delay DC_HMBC_CFb
+define delay DC_HMBC_CFc
+define delay DC_HMBC_CFd
+define delay DC_HMBC_CFe
+define delay DC_HMBC_CFf
 define delay DC_HSQCa
 define delay DC_HSQCb
 define delay DC_HSQCc
@@ -37,15 +49,23 @@ define delay DC_HSQCd
 define delay DC_HSQCe
 define delay DC_HSQCf
 define delay DH_EXSCULPT
-"cnst41      = 2*sfo2/sfo1"                       ; gradient ratio
-"d0          = 3u"                                ; 13C HSQC t1
-"d2          = 0.5s/cnst2"                        ; JCOMP
-"d4          = 0.25s/cnst2"                       ; 13C INEPT
-"d10         = 3u"                                ; CLIP-COSY t1
-"d12         = 0.25s/cnst12"                      ; CLIP-COSY mixing (< 1/4J(HH))
-"in0         = inf1/2"                            ; 13C HSQC increment
-"in10        = 2*dw"                              ; CLIP-COSY increment
-"p2          = p1*2"                              ; 1H hard 180
+"cnst41      = 2*sfo2/sfo1"                                      ; gradient ratio
+"cnst51      = abs(cnst49-cnst50)*sfo1*1.732/2"                  ; rf amplitude for spin lock
+"d0          = 3u"                                               ; 13C t1
+"d2          = 0.5s/cnst2"                                       ; JCOMP
+"d4          = 0.25s/cnst2"                                      ; 13C INEPT
+"d10         = 3u"                                               ; COSY/ROESY t1
+"in0         = inf1/2"                                           ; 13C increment
+"in10        = 2*dw"                                             ; COSY/ROESY increment
+"p2          = p1*2"                                             ; 1H hard 180
+"spw49       = plw1*(cnst51*4*p1/1000000)*(cnst51*4*p1/1000000)" ; power level for spin lock
+"spw50       = spw49"
+"DC_HMBC_CFa = d4-p14/2"
+"DC_HMBC_CFb = d4+p14/2"
+"DC_HMBC_CFc = 1s/(2*cnst6)-p16-d16"
+"DC_HMBC_CFd = 1s/(2*cnst7)-p16-d16"
+"DC_HMBC_CFe = (0.5s/cnst13)-p16-d16-4u"
+"DC_HMBC_CFf = p16+d16+p2/2+d0-p3*2/PI+4u"
 "DC_HSQCa    = d4-p14/2"
 "DC_HSQCb    = d4+p14/2"
 "DC_HSQCc    = p16+d16+p2/2+d0-p3*2/PI+4u"
@@ -53,10 +73,12 @@ define delay DH_EXSCULPT
 "DC_HSQCe    = DC_HSQCc+p3-p2/2"
 "DC_HSQCf    = DC_HSQCb-p16-d16-p3-de+p1*2/PI-8u"
 "DH_EXSCULPT = de+p1*2/3.1416"
+define list<gradient> GC_HMBC_CF={cnst41}
 define list<gradient> GC_HSQC={cnst41}
-"l0      = td1/2"             ; TD1/NBL (i.e. TD1 for ordinary modules)
+"l0      = td1/4"             ; TD1/NBL (i.e. TD1 for ordinary modules)
 "l1      = 0"                 ; Running counter for TD1 for ordinary modules (0 on first increment)
 "l2      = 0"                 ; Running counter for NS (1 on first scan)
+"l6      = d15/(larger(p45,1u)*20)"  ; Number of ASAP loops
 "acqt0   = 0"
 baseopt_echo
 
@@ -95,6 +117,69 @@ baseopt_echo
 
 
   ; MODULE 1
+  ; 13C-1H HMBC
+
+  ; zz-filter
+  (p1 ph0):f1
+  DC_HMBC_CFa
+  (p14:sp3 ph0):f2
+  (p2 ph0):f1
+  DC_HMBC_CFb
+  (p1 ph0):f1
+  DC_HMBC_CFa
+  (p14:sp3 ph0):f2
+  (p2 ph0):f1
+  DC_HMBC_CFb pl2:f2
+
+  ; second-order low-pass J-filter
+  (lalign (p1 ph0):f1 (p3 ph7):f2 )
+  DC_HMBC_CFc
+  p16:gp10*-3
+  d16
+  (p3 ph7):f2
+  DC_HMBC_CFd
+  p16:gp10*2
+  d16
+  (p3 ph7):f2
+  4u
+  p16:gp10
+  d16
+  DC_HMBC_CFe  ; nJ(CH) evolution
+
+  ; coherence transfer to 13C and t1
+  (p3 ph7):f2
+  DC_HMBC_CFf
+  (p14:sp3 ph0):f2
+  4u
+  p16:gp1
+  d16
+  d0
+  (p2 ph11):f1
+  d0
+  4u
+  p16:gp1
+  d16
+  (p14:sp3 ph0):f2
+  DC_HMBC_CFf pl2:f2
+  (p3 ph5):f2
+  (p2 ph0):f1
+  4u
+  p16:gp1*EA*GC_HMBC_CF
+  d16
+  4u
+  goscnp ph30
+
+  ; Cleanup
+  4u pl1:f1
+  4u pl2:f2
+  (p3 ph0):f2
+  4u
+  p16:gp0*1.77
+  d16
+  10u st
+
+
+  ; MODULE 2
   ; 13C-1H HSQC
 
   ; INEPT
@@ -150,44 +235,73 @@ baseopt_echo
   goscnp ph30 cpd2:f2
   50u do:f2
 
+  ; ASAP mixing
+if "d15 > 1m"
+{
+  50u
+  p16:gp0*0.4
+  d16
+  4u
+						;begin ASAP
+6 (p45:sp45 ph=0.0):f1
+  (p45:sp45 ph=150.0):f1
+  (p45:sp45 ph=60.0):f1
+  (p45:sp45 ph=150.0):f1
+  (p45:sp45 ph=0.0):f1
+  (p45:sp45 ph=0.0):f1
+  (p45:sp45 ph=150.0):f1
+  (p45:sp45 ph=60.0):f1
+  (p45:sp45 ph=150.0):f1
+  (p45:sp45 ph=0.0):f1
+  (p45:sp45 ph=180.0):f1
+  (p45:sp45 ph=330.0):f1
+  (p45:sp45 ph=240.0):f1
+  (p45:sp45 ph=330.0):f1
+  (p45:sp45 ph=180.0):f1
+  (p45:sp45 ph=180.0):f1
+  (p45:sp45 ph=330.0):f1
+  (p45:sp45 ph=240.0):f1
+  (p45:sp45 ph=330.0):f1
+  (p45:sp45 ph=180.0):f1
+  lo to 6 times l6
+						;end ASAP
+  4u pl1:f1
+}
+
   ; Cleanup
   4u pl1:f1
   4u pl2:f2
   (p3 ph0):f2
   4u
-  p16:gp0*1.77
+  p16:gp0*2.32
   d16
   10u st
 
 
-  ; MODULE 2
-  ; 1H-1H CLIP-COSY
+  ; MODULE 3
+  ; 1H-1H COSY + ROESY (States)
 
+  ; COSY
   (p1 ph6):f1
   d10
   (p1 ph0):f1
+  goscnp ph26  ; acquire H-H COSY
+  10u st
+
+  ; ROESY
+#ifdef NOZQS
+#else
   10u gron12
   (p32:sp29 ph0):f1
   20u groff
-  d16 pl1:f1
-  (p1 ph0):f1
-
-  ; in-phase transfer via perfect echo
-  d12
-  (p2 ph1):f1
-  d12
-  (p1 ph1):f1
-  d12
-  (p2 ph3):f1
-  d12
-
-  (p1 ph0):f1
-  10u gron12*1.333
-  (p32*0.75:sp29 ph2):f1
-  20u groff
-  p16:gp11
-  d16 pl1:f1 
+  d16
+#endif  /* NOZQS */
+  (p50:sp49 ph0):f1  ; ROESY mixing
+  (p50:sp50 ph0):f1
   4u
+  p16:gp11
+  d16 pl1:f1
+
   (p1 ph0):f1
 #ifdef ES
   p16:gp20
@@ -208,8 +322,7 @@ baseopt_echo
   p16:gp21
   d16
 #endif  /* ES */
-
-  go=2 ph26
+  go=2 ph26  ; acquire H-H ROESY
 
   ; incrementation on every pass
   1m iu1
@@ -242,7 +355,6 @@ exit
 ph0=0
 ph1=1
 ph2=2
-ph3=3
 ph5=0 2
 ph6=0 2
 ph7=0 0 2 2
@@ -251,12 +363,16 @@ ph26=0 2
 ph30=0 2 2 0
 
 ;gpnam0: SMSQ10.100
+;gpnam1: SMSQ10.100
 ;gpnam4: SMSQ10.100
+;gpnam10: SMSQ10.100
 ;gpnam11: SMSQ10.100
 ;gpnam20: SMSQ10.100
 ;gpnam21: SMSQ10.100
 ;gpz0: 29% (for purging)
+;gpz1: 80% (HMBC CTP)
 ;gpz4: 70% (13C CTP)
+;gpz10: 5% (HMBC J-filter)
 ;gpz11: 43% (1H purge gradient)
 ;gpz12: 11% (1H ZQ filter)
 ;gpz20: 57% (1H excitation sculpting)
@@ -267,21 +383,30 @@ ph30=0 2 2 0
 ;sp3:wvm:wu180C13: cawurst-20(60 kHz, 0.5 ms; L2H)
 ;sp18:wvm:wu180Jcomp: cawurst-40(280 ppm; Jcomp, L2H)
 ;sp29:wvm:wu180H1ZQS: sm_chirp(60 kHz, 20 ms; H2L, Q=5)
+;sp45:wvm:wuASAP: cawurst-2(30 ppm, 1.0 ms; Q=3)
+;sp49:wvm:wu180H1SL: wurstAM(p50, cnst49 ppm; B1max = 5.0 kHz)
+;sp50:wvm:wu180H1SL2: wurstAM(p50, cnst50 ppm; B1max = 5.0 kHz)
 ;cpd2:wvm:wudec: cawurst_d-20(220 ppm, 1.4 ms; L2H)
 
 ;cnst2: = 1J(CH)
-;cnst12: > J(HH), ca. 30 Hz for CLIP-COSY mixing
+;cnst6: = minimum 1J(CH)
+;cnst7: = maximum 1J(CH)
+;cnst13: = nJ(CH) long-range
 ;cnst41: gradient ratio (2*C/H)
+;cnst49: left edge of spectral window (ppm) [ca. 9.5]
+;cnst50: right edge of spectral window (ppm) [ca. -0.5]
+;cnst51: RF amplitude of ROESY spin lock (Hz)
 ;cpd2: 13C decoupling according to sequence defined by cpdprg2
 ;d0: 13C t1
 ;d1: relaxation delay
 ;d2: 1/2J(CH)
 ;d4: 1/4J(CH)
 ;d10: 1H t1
-;d12: <1/4J(HH) CLIP-COSY mixing time
+;d15: optional ASAP mixing time [40-60 ms] (use `wvm`)
 ;d16: delay for homospoil/gradient recovery [200 us]
 ;l0: TD1 / NBL, i.e. 'true TD1'
 ;l1: running counter for true TD1 (0 on first increment)
+;l6: loop for ASAP mixing
 ;p1: f1 channel -  90 degree high power pulse
 ;p2: f1 channel - 180 degree high power pulse
 ;p3: f2 channel -  90 degree high power pulse
@@ -290,6 +415,8 @@ ph30=0 2 2 0
 ;p16: gradient pulse [1 ms]
 ;p31: f2 channel - 180 degree inversion with J-compensation
 ;p32: f1 channel - 180 degree adiabatic inversion [20 msec for Crp60,20,20.10]
+;p45: f1 channel -  180 degree CAWURST-2 pulse
+;p50: f1 channel -  Adiabatic pulse for ROESY (half of total mixing time)
 ;pl1: f1 channel - power level for pulse (default)
 ;pl2: f2 channel - power level for pulse (default)
 ;pl9: f1 channel - power level for presaturation
@@ -298,17 +425,23 @@ ph30=0 2 2 0
 ;sp3: 13C adiabatic inversion
 ;sp18: 13C J-compensated refocusing
 ;sp29: 1H ZQS chirp
+;sp45: 1H CAWURST-2 pulse (180 degree)
+;sp49: 1H first WURSTAM (adiabatic) for ROESY mixing (high shift)
+;sp50: 1H second WURSTAM (adiabatic) for ROESY mixing (low shift)
 ;spnam1: Sinc1.1000 or WaveMaker
 ;spnam3: Crp60,0.5,20.1 or WaveMaker
 ;spnam18: Crp60_xfilt.2 or WaveMaker
 ;spnam29: Crp60,20,20.10 or WaveMaker
+;spnam45: wuASAP (generate via WaveMaker)
+;spnam49: wu180H1SL (generate via WaveMaker)
+;spnam50: wu180H1SL2 (generate via WaveMaker)
 ;aq: acquisition time
 ;ds: >= 16
 ;FnMODE: echo-antiecho
 ;NBL: number of blocks (NOAH modules)
 ;ns: 1 * n
 
-; auprog: noah_hsqc:noah_clipcosy States
-; module identifiers: C_HSQC H_CLIP_COSY
+; auprog: noah_hmbc:noah_hsqc:noah_cosy States:noah_roesy States
+; module identifiers: C_HMBC_CF C_HSQC H_CORO_ST
 ; pulse programme created by genesis-v2.0.18, https://nmr-genesis.co.uk
 ; Fri Dec 17 2021 13:48:49 GMT+0000 (Greenwich Mean Time)

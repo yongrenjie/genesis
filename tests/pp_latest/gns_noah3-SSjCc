@@ -462,4 +462,4 @@ ph30=0 2 2 0
 ; auprog: noah_hsqc:noah_hsqc:noah_clipcosy States
 ; module identifiers: CI_HSQC C_HSQCJ H_CLIP_COSY
 ; pulse programme created by genesis-v2.0.18, https://nmr-genesis.co.uk
-; Fri Dec 17 2021 12:28:44 GMT+0000 (Greenwich Mean Time)
+; Fri Dec 17 2021 13:48:49 GMT+0000 (Greenwich Mean Time)
