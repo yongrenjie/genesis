@@ -191,10 +191,33 @@ export function homonuclearSolvSupp(grad_factor: number): string[][] {
 export const lpjfPreamble = [
     `define delay DLP2a`,
     `define delay DLP2b`,
+    `define delay DLP3a`,
+    `define delay DLP3b`,
+    `define delay DLP3c`,
     `"DLP2a = 1s/(2*cnst6)-p16-d16"`,
-    `"DLP2b = 1s/(2*cnst7)-p16-d16"`
+    `"DLP2b = 1s/(2*cnst7)-p16-d16"`,
+    `"DLP3a = 1s/(2*(cnst6+0.07*(cnst7-cnst6)))-p16-d16"`,
+    `"DLP3b = 1s/(cnst7+cnst6)-p16-d16"`,
+    `"DLP3c = 1s/(2*(cnst7-0.07*(cnst7-cnst6)))-p16-d16"`,
 ];
 export const lpjfText = [
+    `#ifdef LP3`,
+    `  DLP3a`,
+    `  p16:gp10*2.8`,
+    `  d16`,
+    `  (p3 ph7):f2`,
+    `  DLP3b`,
+    `  p16:gp10*-1.6`,
+    `  d16`,
+    `  (p3 ph7):f2`,
+    `  DLP3c`,
+    `  p16:gp10*-0.8`,
+    `  d16`,
+    `  (p3 ph7):f2`,
+    `  4u`,
+    `  p16:gp10*-0.4`,
+    `  d16`,
+    `#else`,
     `  DLP2a`,
     `  p16:gp10*-3`,
     `  d16`,
@@ -206,6 +229,7 @@ export const lpjfText = [
     `  4u`,
     `  p16:gp10`,
     `  d16`,
+    `#endif`,
 ];
 // }}}1
 

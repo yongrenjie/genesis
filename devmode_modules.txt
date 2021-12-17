@@ -8,9 +8,6 @@ H-C HMBC
 C_HMBC_CF
     zz-HMBC, as described in doi:10.1039/C8CC03296C, with second-order low-pass
     J filter.
-C_HMBC_CFTO
-    Same as above but with a third-order low-pass J filter. Generally should
-    not be needed.
 C_HMBC_CFG
     An experimental version -- this does not work and is not likely to ever
     work! Use at your own risk!

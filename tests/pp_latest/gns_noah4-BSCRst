@@ -1,14 +1,17 @@
 ; gns_noah4-BSCRst
 
-; 13C HMBC
-; 13C HSQC
-;     [use -DEDIT for multiplicity editing]
-; 1H COSY and ROESY (States F1)
-;     [use -DNOZQS to skip zero-quantum suppression]
-;     [use -DES for pre-acquisition excitation sculpting in ROESY]
-
+; =========================================================================
 ; set 'NBL' TopSpin parameter to 4
-;     [use -DPRESAT for presaturation during d1]
+; 
+;     [zgoptns: use -DPRESAT for presaturation during d1]
+; 13C HMBC
+;     [zgoptns: use -DLP3 for 'upgrade' to third-order LPJF]
+; 13C HSQC
+;     [zgoptns: use -DEDIT for multiplicity editing]
+; 1H COSY and ROESY (States F1)
+;     [zgoptns: use -DNOZQS for no zero-quantum suppression]
+;     [zgoptns: use -DES for pre-acquisition excitation sculpting in ROESY]
+; =========================================================================
 
 ;$CLASS=HighRes
 ;$DIM=2D
@@ -40,8 +43,6 @@ define delay DC_HMBC_CFa
 define delay DC_HMBC_CFb
 define delay DC_HMBC_CFc
 define delay DC_HMBC_CFd
-define delay DC_HMBC_CFe
-define delay DC_HMBC_CFf
 define delay DC_HSQCa
 define delay DC_HSQCb
 define delay DC_HSQCc
@@ -49,6 +50,11 @@ define delay DC_HSQCd
 define delay DC_HSQCe
 define delay DC_HSQCf
 define delay DH_EXSCULPT
+define delay DLP2a
+define delay DLP2b
+define delay DLP3a
+define delay DLP3b
+define delay DLP3c
 "cnst41      = 2*sfo2/sfo1"                                      ; gradient ratio
 "cnst51      = abs(cnst49-cnst50)*sfo1*1.732/2"                  ; rf amplitude for spin lock
 "d0          = 3u"                                               ; 13C t1
@@ -62,10 +68,8 @@ define delay DH_EXSCULPT
 "spw50       = spw49"
 "DC_HMBC_CFa = d4-p14/2"
 "DC_HMBC_CFb = d4+p14/2"
-"DC_HMBC_CFc = 1s/(2*cnst6)-p16-d16"
-"DC_HMBC_CFd = 1s/(2*cnst7)-p16-d16"
-"DC_HMBC_CFe = (0.5s/cnst13)-p16-d16-4u"
-"DC_HMBC_CFf = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DC_HMBC_CFc = (0.5s/cnst13)-p16-d16-4u"
+"DC_HMBC_CFd = p16+d16+p2/2+d0-p3*2/PI+4u"
 "DC_HSQCa    = d4-p14/2"
 "DC_HSQCb    = d4+p14/2"
 "DC_HSQCc    = p16+d16+p2/2+d0-p3*2/PI+4u"
@@ -73,6 +77,11 @@ define delay DH_EXSCULPT
 "DC_HSQCe    = DC_HSQCc+p3-p2/2"
 "DC_HSQCf    = DC_HSQCb-p16-d16-p3-de+p1*2/PI-8u"
 "DH_EXSCULPT = de+p1*2/3.1416"
+"DLP2a       = 1s/(2*cnst6)-p16-d16"
+"DLP2b       = 1s/(2*cnst7)-p16-d16"
+"DLP3a       = 1s/(2*(cnst6+0.07*(cnst7-cnst6)))-p16-d16"
+"DLP3b       = 1s/(cnst7+cnst6)-p16-d16"
+"DLP3c       = 1s/(2*(cnst7-0.07*(cnst7-cnst6)))-p16-d16"
 define list<gradient> GC_HMBC_CF={cnst41}
 define list<gradient> GC_HSQC={cnst41}
 "l0      = td1/4"             ; TD1/NBL (i.e. TD1 for ordinary modules)
@@ -131,24 +140,43 @@ baseopt_echo
   (p2 ph0):f1
   DC_HMBC_CFb pl2:f2
 
-  ; second-order low-pass J-filter
+  ; excitation and low-pass J-filter
   (lalign (p1 ph0):f1 (p3 ph7):f2 )
-  DC_HMBC_CFc
+#ifdef LP3
+  DLP3a
+  p16:gp10*2.8
+  d16
+  (p3 ph7):f2
+  DLP3b
+  p16:gp10*-1.6
+  d16
+  (p3 ph7):f2
+  DLP3c
+  p16:gp10*-0.8
+  d16
+  (p3 ph7):f2
+  4u
+  p16:gp10*-0.4
+  d16
+#else
+  DLP2a
   p16:gp10*-3
   d16
   (p3 ph7):f2
-  DC_HMBC_CFd
+  DLP2b
   p16:gp10*2
   d16
   (p3 ph7):f2
   4u
   p16:gp10
   d16
-  DC_HMBC_CFe  ; nJ(CH) evolution
+#endif
 
+  ; nJ(CH) evolution
+  DC_HMBC_CFc
   ; coherence transfer to 13C and t1
   (p3 ph7):f2
-  DC_HMBC_CFf
+  DC_HMBC_CFd
   (p14:sp3 ph0):f2
   4u
   p16:gp1
@@ -160,7 +188,7 @@ baseopt_echo
   p16:gp1
   d16
   (p14:sp3 ph0):f2
-  DC_HMBC_CFf pl2:f2
+  DC_HMBC_CFd pl2:f2
   (p3 ph5):f2
   (p2 ph0):f1
   4u
@@ -443,5 +471,5 @@ ph30=0 2 2 0
 
 ; auprog: noah_hmbc:noah_hsqc:noah_cosy States:noah_roesy States
 ; module identifiers: C_HMBC_CF C_HSQC H_CORO_ST
-; pulse programme created by genesis-v2.0.18, https://nmr-genesis.co.uk
-; Fri Dec 17 2021 16:14:04 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.0.19, https://nmr-genesis.co.uk
+; Fri Dec 17 2021 16:21:56 GMT+0000 (Greenwich Mean Time)

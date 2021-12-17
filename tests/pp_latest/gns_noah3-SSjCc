@@ -1,15 +1,17 @@
 ; gns_noah3-SSjCc
 
+; =========================================================================
+; set 'NBL' TopSpin parameter to 3
+; 
+;     [zgoptns: use -DPRESAT for presaturation during d1]
 ; 13C HSQC with variable INEPT excitation
 ;     [specify fraction of 1J(CH) magnetisation to use with cnst32]
-;     [use -DEDIT1 for multiplicity editing]
+;     [zgoptns: use -DEDIT1 for multiplicity editing]
 ; 13C HSQC (F2-coupled)
-;     [use -DEDIT for multiplicity editing]
+;     [zgoptns: use -DEDIT for multiplicity editing]
 ; 1H CLIP-COSY (States)
-;     [use -DES for pre-acquisition excitation sculpting]
-
-; set 'NBL' TopSpin parameter to 3
-;     [use -DPRESAT for presaturation during d1]
+;     [zgoptns: use -DES for excitation sculpting]
+; =========================================================================
 
 ;$CLASS=HighRes
 ;$DIM=2D
@@ -24,6 +26,10 @@
 ;J. R. J. Yong, A. L. Hansen, E. Kupce, T. D. W. Claridge
 ;J. Magn. Reson. 2021, 327, 107027
 ;Increasing Sensitivity and Versatility in NMR Supersequences with New HSQC-based Modules
+
+;A. Enthart, J. C. Freudenberger, J. Furrer, H. Kessler, B. Luy
+;J. Magn. Reson. 2008, 192 (2), 314-322
+;The CLIP/CLAP-HSQC: Pure absorptive spectra for the measurement of one-bond couplings
 
 ;M. R. M. Koos, G. Kummerlowe, L. Kaltschnee, C. M. Thiele, B. Luy
 ;Angew. Chem. Int. Ed. 2016, 55 (27), 7655-7659
@@ -461,5 +467,5 @@ ph30=0 2 2 0
 
 ; auprog: noah_hsqc:noah_hsqc:noah_clipcosy States
 ; module identifiers: CI_HSQC C_HSQCJ H_CLIP_COSY
-; pulse programme created by genesis-v2.0.18, https://nmr-genesis.co.uk
-; Fri Dec 17 2021 16:14:03 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.0.19, https://nmr-genesis.co.uk
+; Fri Dec 17 2021 16:21:56 GMT+0000 (Greenwich Mean Time)

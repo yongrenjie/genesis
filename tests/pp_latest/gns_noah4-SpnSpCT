@@ -1,13 +1,15 @@
 ; gns_noah4-SpnSpCT
 
+; =========================================================================
+; set 'NBL' TopSpin parameter to 4
+; 
+;     [zgoptns: use -DPRESAT for presaturation during d1]
 ; 15N sensitivity-enhanced HSQC
 ;     [set SW(ppm) as cnst40; optional k-scaling with cnst39]
 ; 13C sensitivity-enhanced HSQC
-;     [use -DEDIT for multiplicity editing]
+;     [zgoptns: use -DEDIT for multiplicity editing]
 ; 1H COSY + TOCSY (echo/antiecho F1)
-
-; set 'NBL' TopSpin parameter to 4
-;     [use -DPRESAT for presaturation during d1]
+; =========================================================================
 
 ;$CLASS=HighRes
 ;$DIM=2D
@@ -547,5 +549,5 @@ ph31=0 2
 
 ; auprog: noah_nhsqc:noah_hsqc:noah_cosy:noah_tocsy
 ; module identifiers: N_SEHSQC C_SEHSQC H_COTO
-; pulse programme created by genesis-v2.0.18, https://nmr-genesis.co.uk
-; Fri Dec 17 2021 16:14:03 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.0.19, https://nmr-genesis.co.uk
+; Fri Dec 17 2021 16:21:56 GMT+0000 (Greenwich Mean Time)

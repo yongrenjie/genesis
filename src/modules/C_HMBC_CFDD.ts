@@ -1,4 +1,5 @@
 import { Kupce2017ACIE, Kupce2018CC } from "../citation.js";
+import { AF_LP3 } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 13C interleaved 2x HMBC (with different nJCH evolution delays)`;
@@ -74,7 +75,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE, Kupce2018CC],
     "noah_hmbc noah_hmbc",
     shortDescription,
-    [],
+    [AF_LP3],
     preamble,
     pulprog,
     1,

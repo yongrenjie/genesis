@@ -1,12 +1,14 @@
 ; gns_noah2-SCc
 
-; 13C HSQC
-;     [use -DEDIT for multiplicity editing]
-; 1H CLIP-COSY (States)
-;     [use -DES for pre-acquisition excitation sculpting]
-
+; =========================================================================
 ; set 'NBL' TopSpin parameter to 2
-;     [use -DPRESAT for presaturation during d1]
+; 
+;     [zgoptns: use -DPRESAT for presaturation during d1]
+; 13C HSQC
+;     [zgoptns: use -DEDIT for multiplicity editing]
+; 1H CLIP-COSY (States)
+;     [zgoptns: use -DES for excitation sculpting]
+; =========================================================================
 
 ;$CLASS=HighRes
 ;$DIM=2D
@@ -310,5 +312,5 @@ ph30=0 2 2 0
 
 ; auprog: noah_hsqc:noah_clipcosy States
 ; module identifiers: C_HSQC H_CLIP_COSY
-; pulse programme created by genesis-v2.0.18, https://nmr-genesis.co.uk
-; Fri Dec 17 2021 16:14:03 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.0.19, https://nmr-genesis.co.uk
+; Fri Dec 17 2021 16:21:56 GMT+0000 (Greenwich Mean Time)

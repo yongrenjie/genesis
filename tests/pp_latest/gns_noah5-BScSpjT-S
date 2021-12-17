@@ -1,15 +1,18 @@
 ; gns_noah5-BScSpjT-S
 
-; 13C HMBC (double NS, half TD1)
-; 13C TS HSQC-COSY + HSQC
-; 13C sensitivity-enhanced HSQC (F2 coupled)
-;     [use -DEDIT for multiplicity editing]
-; 1H phase-sensitive TOCSY
-;     [use -DNOZQS to skip zero-quantum suppression]
-;     [use -DES for pre-acquisition excitation sculpting]
-
+; =========================================================================
 ; set 'NBL' TopSpin parameter to 4
-;     [use -DPRESAT for presaturation during d1]
+; 
+;     [zgoptns: use -DPRESAT for presaturation during d1]
+; 13C HMBC (double NS, half TD1)
+;     [zgoptns: use -DLP3 for 'upgrade' to third-order LPJF]
+; 13C TS HSQC-COSY + HSQC
+; 13C sensitivity-enhanced F2 CLIP-HSQC
+;     [zgoptns: use -DEDIT for multiplicity editing]
+; 1H phase-sensitive TOCSY
+;     [zgoptns: use -DNOZQS for no zero-quantum suppression]
+;     [zgoptns: use -DES for excitation sculpting]
+; =========================================================================
 
 ;$CLASS=HighRes
 ;$DIM=2D
@@ -41,8 +44,6 @@ define delay DC_HMBC_CF_Ka
 define delay DC_HMBC_CF_Kb
 define delay DC_HMBC_CF_Kc
 define delay DC_HMBC_CF_Kd
-define delay DC_HMBC_CF_Ke
-define delay DC_HMBC_CF_Kf
 define delay DC_HSQCC_DIAa
 define delay DC_HSQCC_DIAb
 define delay DC_HSQCC_DIAc
@@ -62,27 +63,30 @@ define delay DC_SEHSQCJh
 define delay DC_SEHSQCJi
 define delay DC_SEHSQCJj
 define delay DH_EXSCULPT
-"cnst41        = 2*sfo2/sfo1"                 ; gradient ratio
-"d0            = 3u"                          ; 13C HSQC t1
-"d2            = 0.5s/cnst2"                  ; JCOMP
-"d3            = 3u"                          ; 13C t1
-"d4            = 0.25s/cnst2"                 ; 13C INEPT
-"d10           = 3u"                          ; TOCSY t1
-"d12           = 0.25s/cnst12"                ; COSY mixing (< 1/4J(HH))
-"in0           = inf1/2"                      ; 13C HSQC increment
-"in3           = inf1/2"                      ; 13C increment
-"in10          = 2*dw"                        ; TOCSY increment
-"l11           = (d9/(p6*115.112))/2"         ; half the number of TOCSY loops
-"l12           = l11*2"                       ; number of TOCSY loops
-"l17           = (d30/(p6*115.112))/2"        ; half the number of DIPSI-2 loops
-"l18           = l17*2"                       ; number of DIPSI-2 loops
-"p2            = p1*2"                        ; 1H hard 180
+define delay DLP2a
+define delay DLP2b
+define delay DLP3a
+define delay DLP3b
+define delay DLP3c
+"cnst41        = 2*sfo2/sfo1"                               ; gradient ratio
+"d0            = 3u"                                        ; 13C HSQC t1
+"d2            = 0.5s/cnst2"                                ; JCOMP
+"d3            = 3u"                                        ; 13C t1
+"d4            = 0.25s/cnst2"                               ; 13C INEPT
+"d10           = 3u"                                        ; TOCSY t1
+"d12           = 0.25s/cnst12"                              ; COSY mixing (< 1/4J(HH))
+"in0           = inf1/2"                                    ; 13C HSQC increment
+"in3           = inf1/2"                                    ; 13C increment
+"in10          = 2*dw"                                      ; TOCSY increment
+"l11           = (d9/(p6*115.112))/2"                       ; half the number of TOCSY loops
+"l12           = l11*2"                                     ; number of TOCSY loops
+"l17           = (d30/(p6*115.112))/2"                      ; half the number of DIPSI-2 loops
+"l18           = l17*2"                                     ; number of DIPSI-2 loops
+"p2            = p1*2"                                      ; 1H hard 180
 "DC_HMBC_CF_Ka = d4-p14/2"
 "DC_HMBC_CF_Kb = d4+p14/2"
-"DC_HMBC_CF_Kc = 1s/(2*cnst6)-p16-d16"
-"DC_HMBC_CF_Kd = 1s/(2*cnst7)-p16-d16"
-"DC_HMBC_CF_Ke = (0.5s/cnst13)-p16-d16-4u"
-"DC_HMBC_CF_Kf = p16+d16+p2/2+d3-p3*2/PI+4u"
+"DC_HMBC_CF_Kc = (0.5s/cnst13)-p16-d16-4u"
+"DC_HMBC_CF_Kd = p16+d16+p2/2+d3-p3*2/PI+4u"
 "DC_HSQCC_DIAa = d4-p14/2"
 "DC_HSQCC_DIAb = d4+p14/2"
 "DC_HSQCC_DIAc = p16+d16+p2/2+d3-p3*2/PI+4u"
@@ -91,17 +95,22 @@ define delay DH_EXSCULPT
 "DC_HSQCC_DIAf = d2-p31/2"
 "DC_HSQCC_DIAg = d2+p31/2"
 "DC_HSQCC_DIAh = d2+p31/2-p16-d16-p3-4u-de"
-"DC_SEHSQCJa   = d4-p14/2"                    ; zz-filter
-"DC_SEHSQCJb   = d4+p14/2"                    ; zz-filter
-"DC_SEHSQCJc   = d4-larger(p2,p14)/2"         ; INEPT
-"DC_SEHSQCJd   = p16+d16+p2+d0*2-4u-p3*2/PI"  ; 13C pre-t1 if editing
-"DC_SEHSQCJe   = d2-p16-d16+p3*2/PI"          ; 13C editing period
-"DC_SEHSQCJf   = d2-p2-p3*2/PI"               ; 13C editing period
-"DC_SEHSQCJg   = p16+d16+p2/2+d0-4u-p3*2/PI"  ; 13C pre-/post-t1 if no editing
-"DC_SEHSQCJh   = d6-cnst17*p24/2-p19-d16"     ; first spin echo after t1
-"DC_SEHSQCJi   = d4-larger(p2,p14)/2-p16-d16" ; second spin echo after t1
-"DC_SEHSQCJj   = p16+d16-p1*0.78+de+8u"       ; final spin echo for refocusing gradient
+"DC_SEHSQCJa   = d4-p14/2"                                  ; zz-filter
+"DC_SEHSQCJb   = d4+p14/2"                                  ; zz-filter
+"DC_SEHSQCJc   = d4-larger(p2,p14)/2"                       ; INEPT
+"DC_SEHSQCJd   = p16+d16+p2+d0*2-4u-p3*2/PI"                ; 13C pre-t1 if editing
+"DC_SEHSQCJe   = d2-p16-d16+p3*2/PI"                        ; 13C editing period
+"DC_SEHSQCJf   = d2-p2-p3*2/PI"                             ; 13C editing period
+"DC_SEHSQCJg   = p16+d16+p2/2+d0-4u-p3*2/PI"                ; 13C pre-/post-t1 if no editing
+"DC_SEHSQCJh   = d6-cnst17*p24/2-p19-d16"                   ; first spin echo after t1
+"DC_SEHSQCJi   = d4-larger(p2,p14)/2-p16-d16"               ; second spin echo after t1
+"DC_SEHSQCJj   = p16+d16-p1*0.78+de+8u"                     ; final spin echo for refocusing gradient
 "DH_EXSCULPT   = de+p1*2/3.1416"
+"DLP2a         = 1s/(2*cnst6)-p16-d16"
+"DLP2b         = 1s/(2*cnst7)-p16-d16"
+"DLP3a         = 1s/(2*(cnst6+0.07*(cnst7-cnst6)))-p16-d16"
+"DLP3b         = 1s/(cnst7+cnst6)-p16-d16"
+"DLP3c         = 1s/(2*(cnst7-0.07*(cnst7-cnst6)))-p16-d16"
 define list<gradient> GC_HMBC_CF_K={cnst41}
 define list<gradient> GC_HSQCC_DIA={cnst41}
 define list<gradient> GC_SEHSQCJ={cnst41}
@@ -157,24 +166,43 @@ baseopt_echo
   (p2 ph0):f1
   DC_HMBC_CF_Kb pl2:f2
 
-  ; second-order low-pass J-filter
+  ; excitation and low-pass J-filter
   (lalign (p1 ph0):f1 (p3 ph7):f2 )
-  DC_HMBC_CF_Kc
+#ifdef LP3
+  DLP3a
+  p16:gp10*2.8
+  d16
+  (p3 ph7):f2
+  DLP3b
+  p16:gp10*-1.6
+  d16
+  (p3 ph7):f2
+  DLP3c
+  p16:gp10*-0.8
+  d16
+  (p3 ph7):f2
+  4u
+  p16:gp10*-0.4
+  d16
+#else
+  DLP2a
   p16:gp10*-3
   d16
   (p3 ph7):f2
-  DC_HMBC_CF_Kd
+  DLP2b
   p16:gp10*2
   d16
   (p3 ph7):f2
   4u
   p16:gp10
   d16
-  DC_HMBC_CF_Ke  ; nJ(CH) evolution
+#endif
 
+  ; nJ(CH) evolution
+  DC_HMBC_CF_Kc
   ; coherence transfer to 13C and t1
   (p3 ph7):f2
-  DC_HMBC_CF_Kf
+  DC_HMBC_CF_Kd
   (p14:sp3 ph0):f2
   4u
   p16:gp1
@@ -186,7 +214,7 @@ baseopt_echo
   p16:gp1
   d16
   (p14:sp3 ph0):f2
-  DC_HMBC_CF_Kf pl2:f2
+  DC_HMBC_CF_Kd pl2:f2
   (p3 ph18):f2
   (p2 ph0):f1
   4u
@@ -683,5 +711,5 @@ ph30=0 2 2 0
 
 ; auprog: noah_hmbc noah_add:noah_hsqc noah_TS:noah_hsqc:noah_tocsy States
 ; module identifiers: C_HMBC_CF_K C_HSQCC_DIA C_SEHSQCJ H_TOCSY
-; pulse programme created by genesis-v2.0.18, https://nmr-genesis.co.uk
-; Fri Dec 17 2021 16:14:04 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.0.19, https://nmr-genesis.co.uk
+; Fri Dec 17 2021 16:21:56 GMT+0000 (Greenwich Mean Time)

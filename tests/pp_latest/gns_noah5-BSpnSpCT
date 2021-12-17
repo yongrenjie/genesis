@@ -1,14 +1,17 @@
 ; gns_noah5-BSpnSpCT
 
+; =========================================================================
+; set 'NBL' TopSpin parameter to 5
+; 
+;     [zgoptns: use -DPRESAT for presaturation during d1]
 ; 13C HMBC
+;     [zgoptns: use -DLP3 for 'upgrade' to third-order LPJF]
 ; 15N sensitivity-enhanced HSQC
 ;     [set SW(ppm) as cnst40; optional k-scaling with cnst39]
 ; 13C sensitivity-enhanced HSQC
-;     [use -DEDIT for multiplicity editing]
+;     [zgoptns: use -DEDIT for multiplicity editing]
 ; 1H COSY + TOCSY (echo/antiecho F1)
-
-; set 'NBL' TopSpin parameter to 5
-;     [use -DPRESAT for presaturation during d1]
+; =========================================================================
 
 ;$CLASS=HighRes
 ;$DIM=2D
@@ -44,8 +47,6 @@ define delay DC_HMBC_CNFa
 define delay DC_HMBC_CNFb
 define delay DC_HMBC_CNFc
 define delay DC_HMBC_CNFd
-define delay DC_HMBC_CNFe
-define delay DC_HMBC_CNFf
 define delay DC_SEHSQCa
 define delay DC_SEHSQCb
 define delay DC_SEHSQCc
@@ -58,6 +59,11 @@ define delay DC_SEHSQCi
 define delay DC_SEHSQCj
 define delay DH_COTOa
 define delay DH_COTOb
+define delay DLP2a
+define delay DLP2b
+define delay DLP3a
+define delay DLP3b
+define delay DLP3c
 define delay DN_SEHSQCa
 define delay DN_SEHSQCb
 define delay DN_SEHSQCc
@@ -65,47 +71,50 @@ define delay DN_SEHSQCd
 define delay DN_SEHSQCe
 define delay DN_SEHSQCf
 define delay DN_SEHSQCg
-"cnst41       = 2*sfo2/sfo1"                  ; gradient ratio
-"cnst44       = 2*sfo3/sfo1"                  ; gradient ratio
-"d0           = 3u"                           ; 13C t1
-"d2           = 0.5s/cnst2"                   ; JCOMP
-"d4           = 0.25s/cnst2"                  ; 13C INEPT
-"d10          = 3u"                           ; COSY/TOCSY t1
-"d20          = 3u"                           ; 15N HSQC t1/2
-"d24          = 0.25s/cnst4"                  ; 15N INEPT
-"in0          = inf1/2"                       ; 13C increment
-"in10         = 2*dw"                         ; COSY/TOCSY increment
-"in20         = 1000000/(2*cnst40*sfo3)"      ; 15N HSQC increment: cnst40 = SW(15N)
-"l11          = (d9/(p6*115.112))/2"          ; half the number of DIPSI-2 loops
-"l12          = l11*2"                        ; number of DIPSI-2 loops
-"p2           = p1*2"                         ; 1H hard 180
-"p17          = p16*cnst16"                   ; Longer gradients for 15N seHSQC v2
-"p22          = p21*2"                        ; 15N hard 180
+"cnst41       = 2*sfo2/sfo1"                               ; gradient ratio
+"cnst44       = 2*sfo3/sfo1"                               ; gradient ratio
+"d0           = 3u"                                        ; 13C t1
+"d2           = 0.5s/cnst2"                                ; JCOMP
+"d4           = 0.25s/cnst2"                               ; 13C INEPT
+"d10          = 3u"                                        ; COSY/TOCSY t1
+"d20          = 3u"                                        ; 15N HSQC t1/2
+"d24          = 0.25s/cnst4"                               ; 15N INEPT
+"in0          = inf1/2"                                    ; 13C increment
+"in10         = 2*dw"                                      ; COSY/TOCSY increment
+"in20         = 1000000/(2*cnst40*sfo3)"                   ; 15N HSQC increment: cnst40 = SW(15N)
+"l11          = (d9/(p6*115.112))/2"                       ; half the number of DIPSI-2 loops
+"l12          = l11*2"                                     ; number of DIPSI-2 loops
+"p2           = p1*2"                                      ; 1H hard 180
+"p17          = p16*cnst16"                                ; Longer gradients for 15N seHSQC v2
+"p22          = p21*2"                                     ; 15N hard 180
 "DC_HMBC_CNFa = d4-p31/2"
 "DC_HMBC_CNFb = d4+p31/2"
-"DC_HMBC_CNFc = 1s/(2*cnst6)-p16-d16"
-"DC_HMBC_CNFd = 1s/(2*cnst7)-p16-d16"
-"DC_HMBC_CNFe = (0.5s/cnst13)-p16-d16-4u"
-"DC_HMBC_CNFf = p16+d16+p2/2+d0-p3*2/PI+4u"
-"DC_SEHSQCa   = d4-p14/2"                     ; zz-filter
-"DC_SEHSQCb   = d4+p14/2"                     ; zz-filter
-"DC_SEHSQCc   = d4-larger(p2,p14)/2"          ; INEPT
-"DC_SEHSQCd   = p16+d16+p2+d0*2-4u-p3*2/PI"   ; 13C pre-t1 if editing
-"DC_SEHSQCe   = d2-p16-d16+p3*2/PI"           ; 13C editing period
-"DC_SEHSQCf   = d2-p2-p3*2/PI"                ; 13C editing period
-"DC_SEHSQCg   = p16+d16+p2/2+d0-4u-p3*2/PI"   ; 13C pre-/post-t1 if no editing
-"DC_SEHSQCh   = d6-cnst17*p24/2-p19-d16"      ; first spin echo after t1
-"DC_SEHSQCi   = d4-larger(p2,p14)/2-p16-d16"  ; second spin echo after t1
-"DC_SEHSQCj   = p16+d16-p1*0.78+de+8u"        ; final spin echo for refocusing gradient
+"DC_HMBC_CNFc = (0.5s/cnst13)-p16-d16-4u"
+"DC_HMBC_CNFd = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DC_SEHSQCa   = d4-p14/2"                                  ; zz-filter
+"DC_SEHSQCb   = d4+p14/2"                                  ; zz-filter
+"DC_SEHSQCc   = d4-larger(p2,p14)/2"                       ; INEPT
+"DC_SEHSQCd   = p16+d16+p2+d0*2-4u-p3*2/PI"                ; 13C pre-t1 if editing
+"DC_SEHSQCe   = d2-p16-d16+p3*2/PI"                        ; 13C editing period
+"DC_SEHSQCf   = d2-p2-p3*2/PI"                             ; 13C editing period
+"DC_SEHSQCg   = p16+d16+p2/2+d0-4u-p3*2/PI"                ; 13C pre-/post-t1 if no editing
+"DC_SEHSQCh   = d6-cnst17*p24/2-p19-d16"                   ; first spin echo after t1
+"DC_SEHSQCi   = d4-larger(p2,p14)/2-p16-d16"               ; second spin echo after t1
+"DC_SEHSQCj   = p16+d16-p1*0.78+de+8u"                     ; final spin echo for refocusing gradient
 "DH_COTOa     = p16+d16+4u-d10"
 "DH_COTOb     = p16+d16"
-"DN_SEHSQCa   = d24-p22/2"                    ; zz-filter
-"DN_SEHSQCb   = d24+p22/2"                    ; zz-filter
-"DN_SEHSQCc   = d24-larger(p2,p22)/2"         ; INEPT
-"DN_SEHSQCd   = p17+d16+p2/2+d20-4u"          ; 15N pre- and post-t1, if no editing
-"DN_SEHSQCe   = d26-larger(p2,p22)/2-p19-d16" ; first spin echo after t1
-"DN_SEHSQCf   = d24-larger(p2,p22)/2-p16-d16" ; second spin echo after t1
-"DN_SEHSQCg   = p17+d16-p1*0.78+de+8u"        ; final spin echo for refocusing gradient
+"DLP2a        = 1s/(2*cnst6)-p16-d16"
+"DLP2b        = 1s/(2*cnst7)-p16-d16"
+"DLP3a        = 1s/(2*(cnst6+0.07*(cnst7-cnst6)))-p16-d16"
+"DLP3b        = 1s/(cnst7+cnst6)-p16-d16"
+"DLP3c        = 1s/(2*(cnst7-0.07*(cnst7-cnst6)))-p16-d16"
+"DN_SEHSQCa   = d24-p22/2"                                 ; zz-filter
+"DN_SEHSQCb   = d24+p22/2"                                 ; zz-filter
+"DN_SEHSQCc   = d24-larger(p2,p22)/2"                      ; INEPT
+"DN_SEHSQCd   = p17+d16+p2/2+d20-4u"                       ; 15N pre- and post-t1, if no editing
+"DN_SEHSQCe   = d26-larger(p2,p22)/2-p19-d16"              ; first spin echo after t1
+"DN_SEHSQCf   = d24-larger(p2,p22)/2-p16-d16"              ; second spin echo after t1
+"DN_SEHSQCg   = p17+d16-p1*0.78+de+8u"                     ; final spin echo for refocusing gradient
 define list<gradient> GC_HMBC_CNF={cnst41}
 define list<gradient> GC_SEHSQC={cnst41}
 define list<gradient> GN_SEHSQC={cnst44}
@@ -168,24 +177,43 @@ baseopt_echo
   (center (p2 ph0):f1 (p22 ph0):f3)
   DC_HMBC_CNFb pl2:f2
 
-  ; second-order low-pass J-filter
+  ; excitation and low-pass J-filter
   (lalign (p1 ph0):f1 (p3 ph7):f2 )
-  DC_HMBC_CNFc
+#ifdef LP3
+  DLP3a
+  p16:gp10*2.8
+  d16
+  (p3 ph7):f2
+  DLP3b
+  p16:gp10*-1.6
+  d16
+  (p3 ph7):f2
+  DLP3c
+  p16:gp10*-0.8
+  d16
+  (p3 ph7):f2
+  4u
+  p16:gp10*-0.4
+  d16
+#else
+  DLP2a
   p16:gp10*-3
   d16
   (p3 ph7):f2
-  DC_HMBC_CNFd
+  DLP2b
   p16:gp10*2
   d16
   (p3 ph7):f2
   4u
   p16:gp10
   d16
-  DC_HMBC_CNFe  ; nJ(CH) evolution
+#endif
 
+  ; nJ(CH) evolution
+  DC_HMBC_CNFc
   ; coherence transfer to 13C and t1
   (p3 ph7):f2
-  DC_HMBC_CNFf
+  DC_HMBC_CNFd
   (p14:sp3 ph0):f2
   4u
   p16:gp1
@@ -197,7 +225,7 @@ baseopt_echo
   p16:gp1
   d16
   (p14:sp3 ph0):f2
-  DC_HMBC_CNFf pl2:f2
+  DC_HMBC_CNFd pl2:f2
   (p3 ph5):f2
   (p2 ph0):f1
   4u
@@ -678,5 +706,5 @@ ph31=0 2
 
 ; auprog: noah_hmbc:noah_nhsqc:noah_hsqc:noah_cosy:noah_tocsy
 ; module identifiers: C_HMBC_CNF N_SEHSQC C_SEHSQC H_COTO
-; pulse programme created by genesis-v2.0.18, https://nmr-genesis.co.uk
-; Fri Dec 17 2021 16:14:04 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.0.19, https://nmr-genesis.co.uk
+; Fri Dec 17 2021 16:21:56 GMT+0000 (Greenwich Mean Time)

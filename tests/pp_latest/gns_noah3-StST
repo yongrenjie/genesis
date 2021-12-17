@@ -1,16 +1,18 @@
 ; gns_noah3-StST
 
+; =========================================================================
+; set 'NBL' TopSpin parameter to 3
+; 
+;     [zgoptns: use -DPRESAT for presaturation during d1]
 ; 13C HSQC-TOCSY with variable INEPT excitation
 ;     [specify fraction of 1J(CH) magnetisation to use with cnst32]
-;     [use -DINVERT1 for inversion of TOCSY peaks]
+;     [zgoptns: use -DINVERT1 for editing of direct/indirect peaks]
 ; 13C HSQC
-;     [use -DEDIT for multiplicity editing]
+;     [zgoptns: use -DEDIT for multiplicity editing]
 ; 1H phase-sensitive TOCSY
-;     [use -DNOZQS to skip zero-quantum suppression]
-;     [use -DES for pre-acquisition excitation sculpting]
-
-; set 'NBL' TopSpin parameter to 3
-;     [use -DPRESAT for presaturation during d1]
+;     [zgoptns: use -DNOZQS for no zero-quantum suppression]
+;     [zgoptns: use -DES for excitation sculpting]
+; =========================================================================
 
 ;$CLASS=HighRes
 ;$DIM=2D
@@ -497,5 +499,5 @@ ph30=0 2 2 0
 
 ; auprog: noah_hsqc:noah_hsqc:noah_tocsy States
 ; module identifiers: CI_HSQCT C_HSQC H_TOCSY
-; pulse programme created by genesis-v2.0.18, https://nmr-genesis.co.uk
-; Fri Dec 17 2021 16:14:03 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.0.19, https://nmr-genesis.co.uk
+; Fri Dec 17 2021 16:21:56 GMT+0000 (Greenwich Mean Time)

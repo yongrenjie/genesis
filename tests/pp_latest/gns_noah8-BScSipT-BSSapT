@@ -1,13 +1,16 @@
 ; gns_noah8-BScSipT-BSSapT
 
+; =========================================================================
+; set 'NBL' TopSpin parameter to 4
+; 
+;     [zgoptns: use -DPRESAT for presaturation during d1]
 ; 13C interleaved 2x HMBC (with different nJCH evolution delays)
+;     [zgoptns: use -DLP3 for 'upgrade' to third-order LPJF]
 ; 13C TS HSQC-COSY + HSQC
 ; 13C sensitivity-enhanced HSQC, IPAP mode
-;     [use -DEDIT for multiplicity editing]
+;     [zgoptns: use -DEDIT for multiplicity editing]
 ; 1H interleaved 2x TOCSY (two different mixing times)
-
-; set 'NBL' TopSpin parameter to 4
-;     [use -DPRESAT for presaturation during d1]
+; =========================================================================
 
 ;$CLASS=HighRes
 ;$DIM=2D
@@ -40,8 +43,6 @@ define delay DC_HMBC_CFDDb
 define delay DC_HMBC_CFDDc
 define delay DC_HMBC_CFDDd
 define delay DC_HMBC_CFDDe
-define delay DC_HMBC_CFDDf
-define delay DC_HMBC_CFDDg
 define delay DC_HSQCC_DIAa
 define delay DC_HSQCC_DIAb
 define delay DC_HSQCC_DIAc
@@ -63,28 +64,31 @@ define delay DC_SEHSQC_IAj
 define delay DC_SEHSQC_IAk
 define delay DC_SEHSQC_IAl
 define delay DC_SEHSQC_IAm
-"cnst41        = 2*sfo2/sfo1"                    ; gradient ratio
-"d2            = 0.5s/cnst2"                     ; JCOMP
-"d3            = 3u"                             ; 13C interleaved t1
-"d4            = 0.25s/cnst2"                    ; 13C INEPT
-"d12           = 0.25s/cnst12"                   ; COSY mixing (< 1/4J(HH))
-"d13           = 3u"                             ; TOCSY t1
-"in3           = inf1/2"                         ; 13C interleaved increment
-"in13          = 2*dw"                           ; TOCSY increment
-"l11           = (d9/(p6*115.112))/2"            ; half the number of TOCSY loops
-"l12           = l11*2"                          ; number of TOCSY loops
-"l17           = (d30/(p6*115.112))/2"           ; half the number of DIPSI-2 loops
-"l18           = l17*2"                          ; number of DIPSI-2 loops
-"l19           = (d14/(p6*115.112))/2"           ; half the number of long TOCSY loops
-"l20           = l19*2"                          ; number of long TOCSY loops
-"p2            = p1*2"                           ; 1H hard 180
+define delay DLP2a
+define delay DLP2b
+define delay DLP3a
+define delay DLP3b
+define delay DLP3c
+"cnst41        = 2*sfo2/sfo1"                               ; gradient ratio
+"d2            = 0.5s/cnst2"                                ; JCOMP
+"d3            = 3u"                                        ; 13C interleaved t1
+"d4            = 0.25s/cnst2"                               ; 13C INEPT
+"d12           = 0.25s/cnst12"                              ; COSY mixing (< 1/4J(HH))
+"d13           = 3u"                                        ; TOCSY t1
+"in3           = inf1/2"                                    ; 13C interleaved increment
+"in13          = 2*dw"                                      ; TOCSY increment
+"l11           = (d9/(p6*115.112))/2"                       ; half the number of TOCSY loops
+"l12           = l11*2"                                     ; number of TOCSY loops
+"l17           = (d30/(p6*115.112))/2"                      ; half the number of DIPSI-2 loops
+"l18           = l17*2"                                     ; number of DIPSI-2 loops
+"l19           = (d14/(p6*115.112))/2"                      ; half the number of long TOCSY loops
+"l20           = l19*2"                                     ; number of long TOCSY loops
+"p2            = p1*2"                                      ; 1H hard 180
 "DC_HMBC_CFDDa = d4-p14/2"
 "DC_HMBC_CFDDb = d4+p14/2"
-"DC_HMBC_CFDDc = (0.5s/cnst6)-p16-d16"
-"DC_HMBC_CFDDd = (0.5s/cnst7)-p16-d16"
-"DC_HMBC_CFDDe = (0.5s/cnst13)-p16-d16-4u"
-"DC_HMBC_CFDDf = (0.5s/cnst14)-p16-d16-4u"
-"DC_HMBC_CFDDg = p16+d16+p2/2+d3-p3*2/PI+4u"
+"DC_HMBC_CFDDc = (0.5s/cnst13)-p16-d16-4u"
+"DC_HMBC_CFDDd = (0.5s/cnst14)-p16-d16-4u"
+"DC_HMBC_CFDDe = p16+d16+p2/2+d3-p3*2/PI+4u"
 "DC_HSQCC_DIAa = d4-p14/2"
 "DC_HSQCC_DIAb = d4+p14/2"
 "DC_HSQCC_DIAc = p16+d16+p2/2+d3-p3*2/PI+4u"
@@ -93,19 +97,24 @@ define delay DC_SEHSQC_IAm
 "DC_HSQCC_DIAf = d2-p31/2"
 "DC_HSQCC_DIAg = d2+p31/2"
 "DC_HSQCC_DIAh = d2+p31/2-p16-d16-p3-4u-de"
-"DC_SEHSQC_IAa = d4-p14/2"                       ; zz-filter
-"DC_SEHSQC_IAb = d4+p14/2"                       ; zz-filter
-"DC_SEHSQC_IAc = d4-larger(p2,p14)/2"            ; INEPT
-"DC_SEHSQC_IAd = p16+d16+p2+d3*2-4u-p3*2/PI"     ; 13C pre-t1 if editing
-"DC_SEHSQC_IAe = d2-p16-d16+p3*2/PI"             ; 13C editing period
-"DC_SEHSQC_IAf = d2-p2-p3*2/PI"                  ; 13C editing period
-"DC_SEHSQC_IAg = p16+d16+p2/2+d3-4u-p3*2/PI"     ; 13C pre-/post-t1 if no editing
-"DC_SEHSQC_IAh = d6-cnst17*p24/2-p19-d16"        ; first spin echo after t1
-"DC_SEHSQC_IAi = d4-larger(p2,p14)/2-p16-d16"    ; second spin echo after t1
-"DC_SEHSQC_IAj = d4-p2/2"                        ; final spin echo for refocusing gradient
-"DC_SEHSQC_IAk = d4-p2/2-p16-d16-de"             ; final spin echo for refocusing gradient
-"DC_SEHSQC_IAl = d4-larger(p2,p14)/2"            ; final spin echo for refocusing gradient
-"DC_SEHSQC_IAm = d4-larger(p2,p14)/2-p16-d16-de" ; final spin echo for refocusing gradient
+"DC_SEHSQC_IAa = d4-p14/2"                                  ; zz-filter
+"DC_SEHSQC_IAb = d4+p14/2"                                  ; zz-filter
+"DC_SEHSQC_IAc = d4-larger(p2,p14)/2"                       ; INEPT
+"DC_SEHSQC_IAd = p16+d16+p2+d3*2-4u-p3*2/PI"                ; 13C pre-t1 if editing
+"DC_SEHSQC_IAe = d2-p16-d16+p3*2/PI"                        ; 13C editing period
+"DC_SEHSQC_IAf = d2-p2-p3*2/PI"                             ; 13C editing period
+"DC_SEHSQC_IAg = p16+d16+p2/2+d3-4u-p3*2/PI"                ; 13C pre-/post-t1 if no editing
+"DC_SEHSQC_IAh = d6-cnst17*p24/2-p19-d16"                   ; first spin echo after t1
+"DC_SEHSQC_IAi = d4-larger(p2,p14)/2-p16-d16"               ; second spin echo after t1
+"DC_SEHSQC_IAj = d4-p2/2"                                   ; final spin echo for refocusing gradient
+"DC_SEHSQC_IAk = d4-p2/2-p16-d16-de"                        ; final spin echo for refocusing gradient
+"DC_SEHSQC_IAl = d4-larger(p2,p14)/2"                       ; final spin echo for refocusing gradient
+"DC_SEHSQC_IAm = d4-larger(p2,p14)/2-p16-d16-de"            ; final spin echo for refocusing gradient
+"DLP2a         = 1s/(2*cnst6)-p16-d16"
+"DLP2b         = 1s/(2*cnst7)-p16-d16"
+"DLP3a         = 1s/(2*(cnst6+0.07*(cnst7-cnst6)))-p16-d16"
+"DLP3b         = 1s/(cnst7+cnst6)-p16-d16"
+"DLP3c         = 1s/(2*(cnst7-0.07*(cnst7-cnst6)))-p16-d16"
 define list<gradient> GC_HMBC_CFDD={cnst41}
 define list<gradient> GC_HSQCC_DIA={cnst41}
 define list<gradient> GC_SEHSQC_IA={cnst41}
@@ -161,30 +170,48 @@ baseopt_echo
   (p2 ph0):f1
   DC_HMBC_CFDDb pl2:f2
 
-  ; second-order low-pass J-filter
+  ; excitation and low-pass J-filter
   (lalign (p1 ph0):f1 (p3 ph7):f2 )
-  DC_HMBC_CFDDc
+#ifdef LP3
+  DLP3a
+  p16:gp10*2.8
+  d16
+  (p3 ph7):f2
+  DLP3b
+  p16:gp10*-1.6
+  d16
+  (p3 ph7):f2
+  DLP3c
+  p16:gp10*-0.8
+  d16
+  (p3 ph7):f2
+  4u
+  p16:gp10*-0.4
+  d16
+#else
+  DLP2a
   p16:gp10*-3
   d16
   (p3 ph7):f2
-  DC_HMBC_CFDDd
+  DLP2b
   p16:gp10*2
   d16
   (p3 ph7):f2
   4u
   p16:gp10
   d16
+#endif
+
   ; nJCH evolution
 if "l1 % 2 == 0" {
-  DC_HMBC_CFDDe
+  DC_HMBC_CFDDc
 }
 else {
-  DC_HMBC_CFDDf
+  DC_HMBC_CFDDd
 }
-
   ; coherence transfer to 13C and t1
   (p3 ph7):f2
-  DC_HMBC_CFDDg
+  DC_HMBC_CFDDe
   (p14:sp3 ph0):f2
   4u
   p16:gp1
@@ -196,7 +223,7 @@ else {
   p16:gp1
   d16
   (p14:sp3 ph0):f2
-  DC_HMBC_CFDDg pl2:f2
+  DC_HMBC_CFDDe pl2:f2
   (p3 ph18):f2
   (p2 ph0):f1
   4u
@@ -715,5 +742,5 @@ ph26=0 2
 
 ; auprog: noah_hmbc noah_hmbc:noah_hsqc noah_TS:noah_hsqc noah_split:noah_tocsy States noah_tocsy States
 ; module identifiers: C_HMBC_CFDD C_HSQCC_DIA C_SEHSQC_IA H_TT_DM
-; pulse programme created by genesis-v2.0.18, https://nmr-genesis.co.uk
-; Fri Dec 17 2021 16:14:04 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.0.19, https://nmr-genesis.co.uk
+; Fri Dec 17 2021 16:21:56 GMT+0000 (Greenwich Mean Time)

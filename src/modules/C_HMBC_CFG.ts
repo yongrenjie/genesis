@@ -1,4 +1,5 @@
 import { Kupce2017ACIE, Cicero2001JMR } from "../citation.js";
+import { AF_LP3 } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 13C HMBC (using hmbcetgpl3nd gradient scheme)`;
@@ -62,7 +63,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE, Cicero2001JMR],
     "noah_hmbc",
     shortDescription,
-    [],
+    [AF_LP3],
     preamble,
     pulprog,
     1,
