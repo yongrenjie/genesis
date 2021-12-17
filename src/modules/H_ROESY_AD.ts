@@ -1,9 +1,9 @@
 import { Kupce2017ACIE, Thiele2009CEJ } from "../citation.js";
+import { AF_ES } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H ROESY with adiabatic spin lock
-;     [use "wvm -a" to generate spin lock pulses before running]
-;     [use -DES for pre-acquisition excitation sculpting]`;
+;     [use "wvm -a" to generate spin lock pulses before running]`
 
 let preamble = `
 "d10    = 3u"                         ; ROESY t1
@@ -37,6 +37,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE, Thiele2009CEJ],
     "noah_roesy States",
     shortDescription,
+    [AF_ES],
     preamble,
     pulprog,
     1,

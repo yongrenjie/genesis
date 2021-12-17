@@ -1,8 +1,8 @@
 import { Kupce2017ACIE } from "../citation.js";
+import { AF_ES } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 1H ROESY with 180(x),180(-x) spin lock
-;     [use -DES for pre-acquisition excitation sculpting]`;
+let shortDescription = `; 1H ROESY with 180(x),180(-x) spin lock`
 
 let preamble = `
 "d10  = 3u"                         ; ROESY t1
@@ -30,6 +30,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE],
     "noah_roesy States",
     shortDescription,
+    [AF_ES],
     preamble,
     pulprog,
     1,

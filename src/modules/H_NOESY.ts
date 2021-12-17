@@ -1,10 +1,8 @@
 import { Kupce2017ACIE } from "../citation.js";
+import { AF_PRESAT_NOE, AF_NOZQS, AF_ES } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 1H phase-sensitive NOESY
-;     [use -DNOZQS to skip zero-quantum suppression]
-;     [use -DPRESAT for presaturation during NOE mixing time (and d1)]
-;     [use -DES for pre-acquisition excitation sculpting]`;
+let shortDescription = `; 1H phase-sensitive NOESY`
 
 let preamble = `
 "d10    = 3u"                         ; NOESY t1
@@ -61,6 +59,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE],
     "noah_noesy States",
     shortDescription,
+    [AF_PRESAT_NOE, AF_NOZQS, AF_ES],
     preamble,
     pulprog,
     1,

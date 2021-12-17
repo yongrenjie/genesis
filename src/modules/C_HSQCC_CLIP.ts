@@ -1,8 +1,8 @@
 import { Kupce2017ACIE, Gyongyosi2021AC } from "../citation.js";
+import { AF_EDIT } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 13C HSQC-CLIP-COSY
-;     [use -DEDIT for multiplicity editing (not recommended)]`
+let shortDescription = `; 13C HSQC-CLIP-COSY`
 
 let preamble = `
 "p2      = p1*2"                       ; 1H hard 180
@@ -50,8 +50,6 @@ let pulprog = `
   d0
 
   ; optional multiplicity editing
-  ; edited part from hsqcedetgpsisp2.3
-  ; nonedited part from hsqcetgpsisp2.2
 #ifdef EDIT
   p16:gp4
   d16
@@ -116,6 +114,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE, Gyongyosi2021AC],
     "noah_hsqc",
     shortDescription,
+    [AF_EDIT],
     preamble,
     pulprog,
     1,

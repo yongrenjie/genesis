@@ -1,9 +1,9 @@
 import { Kupce2017ACIE, Foroozandeh2015CC } from "../citation.js";
+import { AF_ES } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H 1D TSE-PSYCHE pure shift spectrum
-;     [set TD1 and SW(Hz) as cnst37 and cnst38 respectively]
-;     [use -DES for excitation sculpting]`;
+;     [set TD1 and SW(Hz) as cnst37 and cnst38 respectively]`
 
 let preamble = `
 define delay D[ID]a
@@ -93,6 +93,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE, Foroozandeh2015CC],
     "noah_psyche",
     shortDescription,
+    [AF_ES],
     preamble,
     pulprog,
     1,

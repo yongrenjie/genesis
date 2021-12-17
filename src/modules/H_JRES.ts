@@ -26,6 +26,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE],
     "noah_jres QF",
     shortDescription,
+    [],
     preamble,
     pulprog,
     1,

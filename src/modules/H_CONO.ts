@@ -1,8 +1,8 @@
 import { Kupce2017ACIE } from "../citation.js";
+import { AF_PRESAT_NOE } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 1H COSY and NOESY (echo/antiecho F1)
-;     [use -DPRESAT for presaturation during NOE mixing time (and d1)]`;
+let shortDescription = `; 1H COSY and NOESY (echo/antiecho F1)`
 
 let preamble = `
 "d10    = 3u"                         ; COSY/NOESY t1
@@ -66,6 +66,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE],
     "noah_cosy:noah_noesy",
     shortDescription,
+    [AF_PRESAT_NOE],
     preamble,
     pulprog,
     2,

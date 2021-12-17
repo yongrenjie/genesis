@@ -108,6 +108,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE, Yong2021JMR],
     "noah_nhsqc",
     shortDescription,
+    [],
     preamble,
     pulprog,
     1,

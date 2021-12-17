@@ -1,4 +1,5 @@
 import { Citation } from "./citation.js";
+import { AcquFlag } from "./acquFlag.js";
 type ModuleCategory = "hmbc" | "n15" | "c13" | "h1";
 type Nucleus = "N" | "C" | "H";
 
@@ -8,6 +9,7 @@ class NOAHModule {
     citations: Citation[];
     auprog: string;
     shortDescription: string;
+    acquFlags: AcquFlag[];
     preamble: string;
     pulprog: string;
     nfid: number;
@@ -18,6 +20,7 @@ class NOAHModule {
                 citations: Citation[],
                 auprog: string,
                 shortDescription: string,
+                acquFlags: AcquFlag[],
                 preamble: string,
                 pulprog: string,
                 nfid: number,
@@ -27,6 +30,7 @@ class NOAHModule {
         this.citations = citations;
         this.auprog = auprog;
         this.shortDescription = shortDescription;
+        this.acquFlags = acquFlags;
         this.preamble = preamble;
         this.pulprog = pulprog;
         this.nfid = nfid;

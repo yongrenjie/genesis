@@ -85,6 +85,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE, Kupce2018CC],
     "noah_hmbc noah_add",
     shortDescription,
+    [],
     preamble,
     pulprog,
     1,

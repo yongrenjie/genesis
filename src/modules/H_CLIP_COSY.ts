@@ -1,8 +1,8 @@
 import { Kupce2017ACIE, Koos2016ACIE } from "../citation.js";
+import { AF_ES } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 1H CLIP-COSY (States)
-;     [use -DES for pre-acquisition excitation sculpting]`;
+let shortDescription = `; 1H CLIP-COSY (States)`
 
 let preamble = `
 "d10  = 3u"                         ; CLIP-COSY t1
@@ -50,6 +50,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE, Koos2016ACIE],
     "noah_clipcosy States",
     shortDescription,
+    [AF_ES],
     preamble,
     pulprog,
     1,

@@ -1,9 +1,10 @@
 import { Kupce2017ACIE, Thiele2009CEJ } from "../citation.js";
+import { AF_NOZQS, AcquFlag } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 1H COSY and ROESY (States F1)
-;     [use -DNOZQS to skip zero-quantum suppression]
-;     [use -DES for pre-acquisition excitation sculpting in ROESY]`;
+let shortDescription = `; 1H COSY and ROESY (States F1)`
+
+let AF_ES_ROESYONLY = new AcquFlag("ES", "pre-acquisition excitation sculpting in ROESY");
 
 let preamble = `
 "d10    = 3u"                         ; COSY/ROESY t1
@@ -48,6 +49,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE, Thiele2009CEJ],
     "noah_cosy States:noah_roesy States",
     shortDescription,
+    [AF_NOZQS, AF_ES_ROESYONLY],
     preamble,
     pulprog,
     2,

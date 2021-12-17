@@ -93,6 +93,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE, Foroozandeh2014ACIE, Moutzouri2017CC],
     "noah_sapphire",
     shortDescription,
+    [],
     preamble,
     pulprog,
     1,

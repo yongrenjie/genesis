@@ -1,9 +1,9 @@
 import { Kupce2017ACIE, Gyongyosi2021AC } from "../citation.js";
+import { AF_EDIT1 } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 13C HSQC-CLIP-COSY
-;     [DOES NOT PRESERVE UNUSED 1JCH MAGNETISATION - ONLY FOR INTERNAL USE]
-;     [use -DEDIT1 for multiplicity editing (not recommended)]`
+;     [DOES NOT PRESERVE UNUSED 1JCH MAGNETISATION - ONLY FOR INTERNAL USE]`
 
 let preamble = `
 "p2     = p1*2"                       ; 1H hard 180
@@ -117,6 +117,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE, Gyongyosi2021AC],
     "noah_hsqc",
     shortDescription,
+    [AF_EDIT1],
     preamble,
     pulprog,
     1,

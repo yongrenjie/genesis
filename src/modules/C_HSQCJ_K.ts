@@ -1,8 +1,8 @@
-import { Kupce2017ACIE } from "../citation.js";
+import { Kupce2017ACIE, Enthart2008JMR } from "../citation.js";
+import { AF_EDIT } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 13C HSQC (F2-coupled, double NS, half TD1)
-;     [use -DEDIT for multiplicity editing]`
+let shortDescription = `; 13C HSQC (F2-coupled, double NS, half TD1)`
 
 let preamble = `
 "p2      = p1*2"                       ; 1H hard 180
@@ -86,9 +86,10 @@ let pulprog = `
 const mod = new NOAHModule(
     "c13",
     "Sjk",
-    [Kupce2017ACIE],
+    [Kupce2017ACIE, Enthart2008JMR],
     "noah_hsqc noah_add",
     shortDescription,
+    [AF_EDIT],
     preamble,
     pulprog,
     1,

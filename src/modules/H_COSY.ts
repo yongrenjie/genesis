@@ -1,8 +1,8 @@
 import { Kupce2017ACIE } from "../citation.js";
+import { AF_ES } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 1H echo-antiecho COSY
-;     [use -DES for pre-acquisition excitation sculpting]`;
+let shortDescription = `; 1H echo-antiecho COSY`
 
 let preamble = `
 "d10  = 3u"                         ; COSY t1
@@ -31,6 +31,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE],
     "noah_cosy",
     shortDescription,
+    [AF_ES],
     preamble,
     pulprog,
     1,

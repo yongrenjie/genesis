@@ -64,6 +64,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE],
     "noah_cosy:noah_tocsy",
     shortDescription,
+    [],
     preamble,
     pulprog,
     2,

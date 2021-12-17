@@ -1,9 +1,8 @@
 import { Kupce2017ACIE } from "../citation.js";
+import { AF_NOZQS, AF_ES } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 1H phase-sensitive TOCSY
-;     [use -DNOZQS to skip zero-quantum suppression]
-;     [use -DES for pre-acquisition excitation sculpting]`;
+let shortDescription = `; 1H phase-sensitive TOCSY`
 
 let preamble = `
 "l11  = (d9/(p6*115.112))/2"        ; half the number of TOCSY loops
@@ -50,6 +49,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE],
     "noah_tocsy States",
     shortDescription,
+    [AF_NOZQS, AF_ES],
     preamble,
     pulprog,
     1,

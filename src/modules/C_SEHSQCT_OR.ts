@@ -1,9 +1,8 @@
 import { Kupce2017ACIE } from "../citation.js";
+import { AF_EDIT, AF_INVERT } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 13C sensitivity-enhanced HSQC-TOCSY
-;     [use -DEDIT for multiplicity editing (not recommended)]
-;     [use -DINVERT for inversion of TOCSY peaks]`
+let shortDescription = `; 13C sensitivity-enhanced HSQC-TOCSY`
 
 let preamble = `
 "p2      = p1*2"                       ; 1H hard 180
@@ -105,6 +104,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE],
     "noah_hsqc",
     shortDescription,
+    [AF_EDIT, AF_INVERT],
     preamble,
     pulprog,
     1,

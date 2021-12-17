@@ -122,3 +122,8 @@ export const Yong2021JMR = new Citation(
     [Jon, "A. L. Hansen", Eriks, Tim],
     JMR, 2021, 327, "", "107027", "10.1016/j.jmr.2021.107027"
 )
+export const Enthart2008JMR = new Citation(
+    "The CLIP/CLAP-HSQC: Pure absorptive spectra for the measurement of one-bond couplings",
+    ["A. Enthart", "J. C. Freudenberger", "J. Furrer", "H. Kessler", "B. Luy"],
+    JMR, 2008, 192, 2, "314-322", "10.1016/j.jmr.2008.03.009"
+)

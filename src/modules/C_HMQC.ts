@@ -66,6 +66,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE],
     "noah_hsqc",
     shortDescription,
+    [],
     preamble,
     pulprog,
     1,

@@ -1,8 +1,8 @@
 import { Kupce2017ACIE, Hansen2021AC, Yong2021JMR } from "../citation.js";
+import { AF_EDIT } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 13C sensitivity-enhanced HSQC, IPAP mode
-;     [use -DEDIT for multiplicity editing]`
+let shortDescription = `; 13C sensitivity-enhanced HSQC, IPAP mode`
 
 let preamble = `
 "p2      = p1*2"                       ; 1H hard 180
@@ -153,6 +153,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE, Hansen2021AC, Yong2021JMR],
     "noah_hsqc noah_split",
     shortDescription,
+    [AF_EDIT],
     preamble,
     pulprog,
     1,

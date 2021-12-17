@@ -61,6 +61,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE, Thiele2009CEJ],
     "noah_cosy:noah_roesy",
     shortDescription,
+    [],
     preamble,
     pulprog,
     2,

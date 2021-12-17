@@ -1,6 +1,7 @@
 // Get the version number.
 import {version} from "./version.js";
 import NOAHModule from "./noahModule.js";
+import { AF_PRESAT_D1 } from "./acquFlag.js";
 import { Citation } from "./citation.js";
 
 // Standardised parameter definitions {{{1
@@ -736,6 +737,9 @@ export function makePulprogText(trueModuleNames: string[],
             shortCodes.push(mod.shortCode);
         }
         shortDescriptions.push(...mod.shortDescription.split("\n"));
+        for (const flag of mod.acquFlags) {
+            shortDescriptions.push(flag.makeComment());
+        }
         preambles.push(...mod.preamble
             .split("\n")
             .map(l => l.replace(/\[ID\]/g, trueModuleNames[i]))
@@ -1131,10 +1135,12 @@ export function makePulprogText(trueModuleNames: string[],
     pp.push(
         `; ${ppShortCodeName}`,
         ``,
-        ...shortDescriptions,
-        ``,
+        `; =========================================================================`,
         `; set 'NBL' TopSpin parameter to ${nbl}`,
-        `;     [use -DPRESAT for presaturation during d1]`,
+        `; `,
+        AF_PRESAT_D1.makeComment(),
+        ...shortDescriptions,
+        `; =========================================================================`,
         ``,
         `;$CLASS=HighRes`,
         `;$DIM=2D`,

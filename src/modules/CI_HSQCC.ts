@@ -1,9 +1,9 @@
 import { Kupce2017ACIE } from "../citation.js";
+import { AF_EDIT1 } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 13C HSQC-COSY with variable INEPT excitation
-;     [specify fraction of 1J(CH) magnetisation to use with cnst32]
-;     [use -DEDIT1 for multiplicity editing (not recommended)]`
+;     [specify fraction of 1J(CH) magnetisation to use with cnst32]`
 
 let preamble = `
 "p2     = p1*2"                       ; 1H hard 180
@@ -150,6 +150,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE],
     "noah_hsqc",
     shortDescription,
+    [AF_EDIT1],
     preamble,
     pulprog,
     1,

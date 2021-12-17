@@ -39,6 +39,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE],
     "noah_clipcosy States",
     shortDescription,
+    [],
     preamble,
     pulprog,
     1,
