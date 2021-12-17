@@ -1,16 +1,16 @@
 export class AcquFlag {
-    flag: string;
+    name: string;
     description: string;
     
-    constructor(flag: string,
+    constructor(name: string,
                 description: string) {
-        this.flag = flag;
+        this.name = name;
         this.description = description;
     }
 
     // generate a comment for the pulse programme containing the citation
     makeComment(): string {
-        return `;     [zgoptns: use -D${this.flag} for ${this.description}]`;
+        return `;     [zgoptns: use -D${this.name} for ${this.description}]`;
     }
 }
 
