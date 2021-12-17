@@ -15,14 +15,12 @@ define delay D[ID]c
 define delay D[ID]d
 define delay D[ID]e
 define delay D[ID]f
-define delay D[ID]g
 "D[ID]a = d4-p14/2"
 "D[ID]b = d4+p14/2"
-"D[ID]c = 1s/(2*(cnst6+0.07*(cnst7-cnst6)))-p16-d16"
-"D[ID]d = 1s/(cnst7+cnst6)-p16-d16"
-"D[ID]e = 1s/(2*(cnst7-0.07*(cnst7-cnst6)))-p16-d16"
-"D[ID]f = (0.5s/cnst13)-p16-d16-4u"
-"D[ID]g = p2+d0*2"
+"D[ID]c = 1s/(2*cnst6)-p16-d16"
+"D[ID]d = 1s/(2*cnst7)-p16-d16"
+"D[ID]e = (0.5s/cnst13)-p16-d16-4u"
+"D[ID]f = p2+d0*2"
 "cnst47 = (1-sfo2/sfo1)/(1+sfo2/sfo1)"   ; gradient ratio
 define list<gradient> EA1 = { 1.000 -cnst47}
 define list<gradient> EA2 = { -cnst47 1.000}
@@ -43,34 +41,31 @@ let pulprog = `
   (p2 ph0):f1
   D[ID]b pl2:f2
 
-  ; third-order low-pass J-filter
+  ; second-order low-pass J-filter
   (lalign (p1 ph0):f1 (p3 ph7):f2 )
   D[ID]c
-  p16:gp10*2.8
+  p16:gp10*-3
   d16
   (p3 ph7):f2
   D[ID]d
-  p16:gp10*-1.6
-  d16
-  (p3 ph7):f2
-  D[ID]e
-  p16:gp10*-0.8
+  p16:gp10*2
   d16
   (p3 ph7):f2
   4u
-  p16:gp10*-0.4
+  p16:gp10
   d16
-  D[ID]f
+  D[ID]e  ; nJ(CH) evolution
 
   ; coherence transfer to 13C and t1
   (p3 ph7):f2
   d0
   (p2 ph11):f1
   d0
+  (p2 ph0):f1
   p16:gp1*EA1
   d16
   (p24:sp7 ph0):f2
-  D[ID]g
+  D[ID]f
   p16:gp1*EA2
   d16 pl2:f2
   (p3 ph5):f2
