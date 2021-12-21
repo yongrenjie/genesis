@@ -1,5 +1,42 @@
 // This file contains reusable pulse sequence elements.
 
+export function replacePSElement(ppLines: string[],
+                                 preambleLines: string[], 
+                                 abbreviation: string
+): string[][] {
+    // First determine the text to be replaced with / added
+    let psElementText: string[];
+    let psElementPreamble: string[];
+    if (abbreviation === "|LPJF|") {
+        psElementText = lpjfText;
+        psElementPreamble = lpjfPreamble;
+    }
+    else if (abbreviation === "|ZZF|") {
+        psElementText = zzfText;
+        psElementPreamble = zzfPreamble;
+    }
+    else if (abbreviation === "|SOLVSUPP|") {
+        psElementText = solvsuppText(1);
+        psElementPreamble = solvsuppPreamble;
+    }
+    else {
+        console.error(`replacePSElement() called with unrecognised abbreviation ${abbreviation}`);
+        return [ppLines, preambleLines];
+    }
+
+    // Search for occurrence of abbreviation
+    let ppLineNo = ppLines.findIndex(line => line.includes(abbreviation));
+    while (ppLineNo != -1) { // means it was found
+        ppLines.splice(ppLineNo, 1, ...psElementText);
+        preambleLines.push(...psElementPreamble);
+        // Find next occurrence (if it exists)
+        ppLineNo = ppLines.findIndex(line => line.includes(abbreviation));
+    }
+
+    return [ppLines, preambleLines];
+}
+
+
 // DIPSI mixing {{{1
 
 /** 
@@ -156,9 +193,9 @@ export const asapMixingPPText = [
  *                                             preamble text respectively, both
  *                                             given as a list of lines.
  */
-export function homonuclearSolvSupp(grad_factor: number): string[][] {
+function solvsuppText(grad_factor: number): string[] {
     const grad_multiply = grad_factor === 1 ? '' : `*${grad_factor}`;
-    const solvSuppText = [
+    const text = [
         `#ifdef ES`,
         `  p16:gp20${grad_multiply}`,
         `  d16`,
@@ -179,16 +216,16 @@ export function homonuclearSolvSupp(grad_factor: number): string[][] {
         `  d16`,
         `#endif  /* ES */`
     ];
-    const solvSuppPreamble = [
-        `define delay DH_EXSCULPT`,
-        `"DH_EXSCULPT = de+p1*2/3.1416"`
-    ];
-    return [solvSuppText, solvSuppPreamble];
+    return text;
 }
+const solvsuppPreamble = [
+    `define delay DH_EXSCULPT`,
+    `"DH_EXSCULPT = de+p1*2/3.1416"`
+];
 // }}}1
 
 // Low-pass J-filters {{{1
-export const lpjfPreamble = [
+const lpjfPreamble = [
     `define delay DLP2a`,
     `define delay DLP2b`,
     `define delay DLP3a`,
@@ -200,7 +237,7 @@ export const lpjfPreamble = [
     `"DLP3b = 1s/(cnst7+cnst6)-p16-d16"`,
     `"DLP3c = 1s/(2*(cnst7-0.07*(cnst7-cnst6)))-p16-d16"`,
 ];
-export const lpjfText = [
+const lpjfText = [
     `#ifdef LP3`,
     `  DLP3a`,
     `  p16:gp10*2.8`,
@@ -229,6 +266,35 @@ export const lpjfText = [
     `  4u`,
     `  p16:gp10`,
     `  d16`,
+    `#endif`,
+];
+// }}}1
+
+// HMBC zz-filter {{{1
+const zzfPreamble = [
+    `define delay DC_ZZFa`,
+    `define delay DC_ZZFb`,
+    `"DC_ZZFa = d4-p14/2"`,
+    `"DC_ZZFb = d4+p14/2"`,
+];
+const zzfText = [
+    `#ifdef NOZZF`,
+    `  ; enable -DNOZZF acquisition flag to remove zz-filter`,
+    `  ; only do this if you are sure about what you are doing!`,
+    `  (p1 ph0):f1`,
+    `#else`,
+    `  ; zz-filter`,
+    `  (p1 ph0):f1`,
+    `  DC_ZZFa`,
+    `  (p14:sp3 ph0):f2`,
+    `  (p2 ph0):f1`,
+    `  DC_ZZFb`,
+    `  (p1 ph0):f1`,
+    `  DC_ZZFa`,
+    `  (p14:sp3 ph0):f2`,
+    `  (p2 ph0):f1`,
+    `  DC_ZZFb pl2:f2`,
+    `  (lalign (p1 ph0):f1 (p3 ph7):f2 )`,
     `#endif`,
 ];
 // }}}1

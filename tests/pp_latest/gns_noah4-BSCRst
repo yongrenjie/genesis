@@ -41,14 +41,14 @@ define list<loopcounter> t1list=<$VCLIST>
 
 define delay DC_HMBC_CFa
 define delay DC_HMBC_CFb
-define delay DC_HMBC_CFc
-define delay DC_HMBC_CFd
 define delay DC_HSQCa
 define delay DC_HSQCb
 define delay DC_HSQCc
 define delay DC_HSQCd
 define delay DC_HSQCe
 define delay DC_HSQCf
+define delay DC_ZZFa
+define delay DC_ZZFb
 define delay DH_EXSCULPT
 define delay DLP2a
 define delay DLP2b
@@ -66,16 +66,16 @@ define delay DLP3c
 "p2          = p1*2"                                             ; 1H hard 180
 "spw49       = plw1*(cnst51*4*p1/1000000)*(cnst51*4*p1/1000000)" ; power level for spin lock
 "spw50       = spw49"
-"DC_HMBC_CFa = d4-p14/2"
-"DC_HMBC_CFb = d4+p14/2"
-"DC_HMBC_CFc = (0.5s/cnst13)-p16-d16-4u"
-"DC_HMBC_CFd = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DC_HMBC_CFa = (0.5s/cnst13)-p16-d16-4u"
+"DC_HMBC_CFb = p16+d16+p2/2+d0-p3*2/PI+4u"
 "DC_HSQCa    = d4-p14/2"
 "DC_HSQCb    = d4+p14/2"
 "DC_HSQCc    = p16+d16+p2/2+d0-p3*2/PI+4u"
 "DC_HSQCd    = d2+p3+p2/2"
 "DC_HSQCe    = DC_HSQCc+p3-p2/2"
 "DC_HSQCf    = DC_HSQCb-p16-d16-p3-de+p1*2/PI-8u"
+"DC_ZZFa     = d4-p14/2"
+"DC_ZZFb     = d4+p14/2"
 "DH_EXSCULPT = de+p1*2/3.1416"
 "DLP2a       = 1s/(2*cnst6)-p16-d16"
 "DLP2b       = 1s/(2*cnst7)-p16-d16"
@@ -129,19 +129,26 @@ baseopt_echo
   ; 13C-1H HMBC
 
   ; zz-filter
+#ifdef NOZZF
+  ; enable -DNOZZF acquisition flag to remove zz-filter
+  ; only do this if you are sure about what you are doing!
   (p1 ph0):f1
-  DC_HMBC_CFa
+#else
+  ; zz-filter
+  (p1 ph0):f1
+  DC_ZZFa
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_HMBC_CFb
+  DC_ZZFb
   (p1 ph0):f1
-  DC_HMBC_CFa
+  DC_ZZFa
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_HMBC_CFb pl2:f2
-
-  ; excitation and low-pass J-filter
+  DC_ZZFb pl2:f2
   (lalign (p1 ph0):f1 (p3 ph7):f2 )
+#endif
+
+  ; low-pass J-filter
 #ifdef LP3
   DLP3a
   p16:gp10*2.8
@@ -173,10 +180,10 @@ baseopt_echo
 #endif
 
   ; nJ(CH) evolution
-  DC_HMBC_CFc
+  DC_HMBC_CFa
   ; coherence transfer to 13C and t1
   (p3 ph7):f2
-  DC_HMBC_CFd
+  DC_HMBC_CFb
   (p14:sp3 ph0):f2
   4u
   p16:gp1
@@ -188,7 +195,7 @@ baseopt_echo
   p16:gp1
   d16
   (p14:sp3 ph0):f2
-  DC_HMBC_CFd pl2:f2
+  DC_HMBC_CFb pl2:f2
   (p3 ph5):f2
   (p2 ph0):f1
   4u
@@ -472,4 +479,4 @@ ph30=0 2 2 0
 ; auprog: noah_hmbc:noah_hsqc:noah_cosy States:noah_roesy States
 ; module identifiers: C_HMBC_CF C_HSQC H_CORO_ST
 ; pulse programme created by genesis-v2.0.19, https://nmr-genesis.co.uk
-; Fri Dec 17 2021 16:21:56 GMT+0000 (Greenwich Mean Time)
+; Tue Dec 21 2021 18:59:31 GMT+0000 (Greenwich Mean Time)

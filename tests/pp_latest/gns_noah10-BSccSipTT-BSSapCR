@@ -46,8 +46,6 @@
 define delay DC_HMBC_CFDDa
 define delay DC_HMBC_CFDDb
 define delay DC_HMBC_CFDDc
-define delay DC_HMBC_CFDDd
-define delay DC_HMBC_CFDDe
 define delay DC_HSQCC_CIAa
 define delay DC_HSQCC_CIAb
 define delay DC_HSQCC_CIAc
@@ -69,6 +67,8 @@ define delay DC_SEHSQC_IAj
 define delay DC_SEHSQC_IAk
 define delay DC_SEHSQC_IAl
 define delay DC_SEHSQC_IAm
+define delay DC_ZZFa
+define delay DC_ZZFb
 define delay DLP2a
 define delay DLP2b
 define delay DLP3a
@@ -93,11 +93,9 @@ define delay DLP3c
 "p2            = p1*2"                                             ; 1H hard 180
 "spw49         = plw1*(cnst51*4*p1/1000000)*(cnst51*4*p1/1000000)" ; power level for spin lock
 "spw50         = spw49"
-"DC_HMBC_CFDDa = d4-p14/2"
-"DC_HMBC_CFDDb = d4+p14/2"
-"DC_HMBC_CFDDc = (0.5s/cnst13)-p16-d16-4u"
-"DC_HMBC_CFDDd = (0.5s/cnst14)-p16-d16-4u"
-"DC_HMBC_CFDDe = p16+d16+p2/2+d3-p3*2/PI+4u"
+"DC_HMBC_CFDDa = (0.5s/cnst13)-p16-d16-4u"
+"DC_HMBC_CFDDb = (0.5s/cnst14)-p16-d16-4u"
+"DC_HMBC_CFDDc = p16+d16+p2/2+d3-p3*2/PI+4u"
 "DC_HSQCC_CIAa = d4-larger(p2,p14)/2"
 "DC_HSQCC_CIAb = p16+d16+p2+d3*2-4u"
 "DC_HSQCC_CIAc = d12-d4-p14/2"
@@ -119,6 +117,8 @@ define delay DLP3c
 "DC_SEHSQC_IAk = d4-p2/2-p16-d16-de"                               ; final spin echo for refocusing gradient
 "DC_SEHSQC_IAl = d4-larger(p2,p14)/2"                              ; final spin echo for refocusing gradient
 "DC_SEHSQC_IAm = d4-larger(p2,p14)/2-p16-d16-de"                   ; final spin echo for refocusing gradient
+"DC_ZZFa       = d4-p14/2"
+"DC_ZZFb       = d4+p14/2"
 "DLP2a         = 1s/(2*cnst6)-p16-d16"
 "DLP2b         = 1s/(2*cnst7)-p16-d16"
 "DLP3a         = 1s/(2*(cnst6+0.07*(cnst7-cnst6)))-p16-d16"
@@ -168,19 +168,26 @@ baseopt_echo
   ; 13C-1H HMBC
 
   ; zz-filter
+#ifdef NOZZF
+  ; enable -DNOZZF acquisition flag to remove zz-filter
+  ; only do this if you are sure about what you are doing!
   (p1 ph0):f1
-  DC_HMBC_CFDDa
+#else
+  ; zz-filter
+  (p1 ph0):f1
+  DC_ZZFa
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_HMBC_CFDDb
+  DC_ZZFb
   (p1 ph0):f1
-  DC_HMBC_CFDDa
+  DC_ZZFa
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_HMBC_CFDDb pl2:f2
-
-  ; excitation and low-pass J-filter
+  DC_ZZFb pl2:f2
   (lalign (p1 ph0):f1 (p3 ph7):f2 )
+#endif
+
+  ; low-pass J-filter
 #ifdef LP3
   DLP3a
   p16:gp10*2.8
@@ -213,14 +220,14 @@ baseopt_echo
 
   ; nJCH evolution
 if "l1 % 2 == 0" {
-  DC_HMBC_CFDDc
+  DC_HMBC_CFDDa
 }
 else {
-  DC_HMBC_CFDDd
+  DC_HMBC_CFDDb
 }
   ; coherence transfer to 13C and t1
   (p3 ph7):f2
-  DC_HMBC_CFDDe
+  DC_HMBC_CFDDc
   (p14:sp3 ph0):f2
   4u
   p16:gp1
@@ -232,7 +239,7 @@ else {
   p16:gp1
   d16
   (p14:sp3 ph0):f2
-  DC_HMBC_CFDDe pl2:f2
+  DC_HMBC_CFDDc pl2:f2
   (p3 ph18):f2
   (p2 ph0):f1
   4u
@@ -810,4 +817,4 @@ ph26=0 2
 ; auprog: noah_hmbc noah_hmbc:noah_hsqc noah_TS:noah_hsqc noah_split:noah_tocsy States noah_cosy States:noah_tocsy States noah_roesy States
 ; module identifiers: C_HMBC_CFDD C_HSQCC_CIA C_SEHSQC_IA H_TT_CR
 ; pulse programme created by genesis-v2.0.19, https://nmr-genesis.co.uk
-; Fri Dec 17 2021 16:21:56 GMT+0000 (Greenwich Mean Time)
+; Tue Dec 21 2021 18:59:31 GMT+0000 (Greenwich Mean Time)

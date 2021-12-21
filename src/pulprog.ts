@@ -1,10 +1,9 @@
 // Get the version number.
 import {version} from "./version.js";
 import NOAHModule from "./noahModule.js";
-import { makeDipsi, makeDipsiGenerator,
-         asapMixingPPText,
-         homonuclearSolvSupp,
-         lpjfText, lpjfPreamble} from "./elements.js";
+import { replacePSElement,
+         makeDipsi, makeDipsiGenerator,
+         asapMixingPPText } from "./elements.js";
 import { allPhases, allGradients, allWavemakers, Parameter } from "./parameters.js";
 import { AF_PRESAT_D1 } from "./acquFlag.js";
 import { Citation } from "./citation.js";
@@ -202,39 +201,15 @@ export function makePulprogText(trueModuleNames: string[],
             ppDipsiLineNo = ppLines.findIndex(line => line.includes("|DIPSI|"));
         }
 
-        // Handle low-pass J filters
+        // Handle zz-filter and low-pass J filters in HMBC modules
         if (mod.category == "hmbc") {
-            let ppLpjfLineNo = ppLines.findIndex(line => line.includes("|LPJF|"));
-            while (ppLpjfLineNo != -1) { // means it was found
-                ppLines.splice(ppLpjfLineNo, 1, ...lpjfText);
-                preambles.push(...lpjfPreamble);
-                // Find next occurrence (if it exists)
-                ppLpjfLineNo = ppLines.findIndex(line => line.includes("|LPJF|"));
-            }
+            [ppLines, preambles] = replacePSElement(ppLines, preambles, "|LPJF|");
+            [ppLines, preambles] = replacePSElement(ppLines, preambles, "|ZZF|");
         }
 
         // Handle solvent suppression string in homonuclear modules
         if (mod.category == "h1") {
-            let ppSolvSuppLineNo = ppLines.findIndex(line => /^\s*\|SOLVSUPP/.test(line));
-            while (ppSolvSuppLineNo != -1) {   // means it was found
-                let line = ppLines[ppSolvSuppLineNo];
-                let m = line.match(/\|SOLVSUPP(\((?<factor>\d+(\.\d+)?)\))?\|/);
-
-                // Determine gradient strength factor
-                let factor = 1;
-                if (m === null || m.groups == undefined) {
-                    throw new Error(`SOLVSUPP error in line: '${line}' in module: '${trueModuleNames[i]}'`)
-                }
-                if (m.groups.factor !== undefined) {
-                    factor = Number(m.groups.factor);
-                }
-
-                let [solvSuppText, solvSuppPreamble] = homonuclearSolvSupp(factor);
-                ppLines.splice(ppSolvSuppLineNo, 1, ...solvSuppText);
-                preambles.push(...solvSuppPreamble);
-                // Find next occurrence (if it exists)
-                ppSolvSuppLineNo = ppLines.findIndex(line => line.includes("|SOLVSUPP"));
-            }
+            [ppLines, preambles] = replacePSElement(ppLines, preambles, "|SOLVSUPP|");
         }
         
         // Add the current module's pulse programme to the concatenated list
