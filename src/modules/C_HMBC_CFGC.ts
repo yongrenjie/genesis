@@ -10,6 +10,10 @@ let preamble = `
 "d4     = 0.25s/cnst2"                ; 13C INEPT
 "d0     = 3u"                         ; 13C t1
 "in0    = inf1/2"                     ; 13C increment
+define delay DC_ZZFa
+define delay DC_ZZFb
+"DC_ZZFa = d4-p14/2"
+"DC_ZZFb = d4+p14/2"
 "D[ID]a = (0.5s/cnst13)-p16-d16-4u"
 "D[ID]b = p2+d0*2"
 "cnst47 = (1-sfo2/sfo1)/(1+sfo2/sfo1)"
@@ -17,11 +21,29 @@ define list<gradient> EA1 = { 1.000 -cnst47 }
 define list<gradient> EA2 = { -cnst47 1.000 }
 `
 
+// DO NOT USE |ZZF| here
 let pulprog = `
   ; 13C-1H HMBC
 
   ; zz-filter
-  |ZZF|
+#ifdef NOZZF
+  ; enable -DNOZZF acquisition flag to remove zz-filter
+  ; only do this if you are sure about what you are doing!
+  (p1 ph0):f1
+#else
+  ; zz-filter
+  (p1 ph0):f1
+  DC_ZZFa
+  (p14:sp3 ph0):f2
+  (p2 ph0):f1
+  DC_ZZFb
+  (p1 ph0):f1
+  DC_ZZFa
+  (p14:sp3 ph0):f2
+  (p2 ph0):f1
+  DC_ZZFb pl2:f2
+  (lalign (p1 ph2):f1 (p3 ph7):f2 )
+#endif
 
   ; low-pass J-filter
   |LPJF|
