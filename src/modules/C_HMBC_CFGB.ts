@@ -40,7 +40,7 @@ let pulprog = `
   D[ID]b
   p16:gp1*EA2
   d16 pl2:f2
-  (p3 ph0):f2
+  (p3 ph5):f2
   4u
   goscnp ph31
 `
