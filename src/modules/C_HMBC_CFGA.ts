@@ -31,7 +31,7 @@ let pulprog = `
   ; nJ(CH) evolution
   D[ID]a
   ; coherence transfer to 13C and t1
-  (p3 ph7):f2
+  (p3 ph5):f2
   d0
   (p2 ph11):f1
   d0
@@ -41,7 +41,7 @@ let pulprog = `
   D[ID]b
   p16:gp1*EA2
   d16 pl2:f2
-  (p3 ph5):f2
+  (p3 ph0):f2
   (p2 ph0):f1
   p16:gp1*cnst54
   d16
