@@ -12,7 +12,6 @@ let preamble = `
 "in0    = inf1/2"                     ; 13C increment
 "D[ID]a = (0.5s/cnst13)-p16-d16-4u"
 "D[ID]b = p2+d0*2"
-"cnst52 = (sfo1+sfo2)/(sfo1-sfo2)"    ; HMBC gradient alpha
 "cnst53 = -cnst52*(sfo1-sfo2)/(sfo1+sfo2)"
 "cnst54 = (1-cnst52)*(sfo1-sfo2)/sfo1"
 define list<gradient> EA1 = { cnst53 1.000 }
@@ -21,6 +20,8 @@ define list<gradient> EA2 = { 1.000 cnst53 }
 
 let pulprog = `
   ; 13C-1H HMBC
+  "cnst53=cnst53" ; display in ased
+  "cnst54=cnst54" ; display in ased
 
   ; zz-filter
   |ZZF|
