@@ -2,10 +2,10 @@
  * ---------
  * Process magnitude-mode NOAH 2DJ module.
  *
- * v: 2.0.19
+ * v: 2.0.20
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 17 December 2021 */
+ * 23 December 2021 */
 
 if ((i_argc > 2) && (strlen(i_argv[2]) > 1)) {
     if (strcmp(i_argv[2], "undefined") == 0
