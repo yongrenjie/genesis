@@ -62,6 +62,7 @@ else
 `
 
 const mod = new NOAHModule(
+    "H_CC_T",
     "h1",
     "Cc T",
     [Kupce2017ACIE, Koos2016ACIE],

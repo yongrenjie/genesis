@@ -4,6 +4,7 @@ type ModuleCategory = "hmbc" | "n15" | "c13" | "h1";
 type Nucleus = "N" | "C" | "H";
 
 class NOAHModule {
+    name: string;
     category: ModuleCategory;
     shortCode: string;
     citations: Citation[];
@@ -15,7 +16,8 @@ class NOAHModule {
     nfid: number;
     interleaved: boolean;
 
-    constructor(category: ModuleCategory,
+    constructor(name: string,
+                category: ModuleCategory,
                 shortCode: string,
                 citations: Citation[],
                 auprog: string,
@@ -25,6 +27,7 @@ class NOAHModule {
                 pulprog: string,
                 nfid: number,
                 interleaved: boolean) {
+        this.name = name;
         this.category = category;
         this.shortCode = shortCode;
         this.citations = citations;

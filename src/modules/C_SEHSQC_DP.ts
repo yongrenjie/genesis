@@ -104,6 +104,7 @@ let pulprog = `
 `
 
 const mod = new NOAHModule(
+    "C_SEHSQC_DP",
     "c13",
     "Spv1",
     [Kupce2017ACIE, Yong2021JMR],

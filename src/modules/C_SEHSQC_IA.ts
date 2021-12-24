@@ -135,6 +135,7 @@ else {
 `
 
 const mod = new NOAHModule(
+    "C_SEHSQC_IA",
     "c13",
     "Sip Sap",
     [Kupce2017ACIE, Hansen2021AC, Yong2021JMR],

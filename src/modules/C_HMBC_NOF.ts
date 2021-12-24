@@ -49,6 +49,7 @@ let pulprog = `
 `
 
 const mod = new NOAHModule(
+    "C_HMBC_NOF",
     "hmbc",
     "B",
     [Kupce2017ACIE],

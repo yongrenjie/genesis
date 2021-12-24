@@ -58,6 +58,7 @@ else {
 `
 
 const mod = new NOAHModule(
+    "C_HMBC_CFDD",
     "hmbc",
     "B B",
     [Kupce2017ACIE, Kupce2018CC],

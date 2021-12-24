@@ -85,6 +85,7 @@ else
 `
 
 const mod = new NOAHModule(
+    "H_JRES_PS",
     "h1",
     "J",
     [Kupce2017ACIE, Foroozandeh2015CC],

@@ -62,6 +62,7 @@ let pulprog = `
 `
 
 const mod = new NOAHModule(
+    "H_PSYCHE",
     "h1",
     "P",
     [Kupce2017ACIE, Foroozandeh2014ACIE],

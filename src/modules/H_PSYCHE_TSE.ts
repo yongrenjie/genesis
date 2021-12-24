@@ -85,6 +85,7 @@ let pulprog = `
 `
 
 const mod = new NOAHModule(
+    "H_PSYCHE_TSE",
     "h1",
     "Pt",
     [Kupce2017ACIE, Foroozandeh2015CC],

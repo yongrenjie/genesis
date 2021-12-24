@@ -9,6 +9,9 @@ describe("check that allModules really has every module TS file", function() {
         .filter(fname => fname.endsWith(".ts"))
         .map(fname => fname.replace(".ts", ""))
 
+    it("check that every module's name is written correctly", function() {
+    });
+
     // If this fails, then there is some module in allModules that doesn't have
     // a corresponding module.ts file.
     it("all module names in allModules exist", function() {
@@ -25,4 +28,12 @@ describe("check that allModules really has every module TS file", function() {
             `the file ${file}.ts was found, but was not added to allModules`)
         );
     });
+});
+
+describe("check that module names are not too long", function() {
+    const moduleNames = [...allModules.keys()];
+    
+    moduleNames.forEach(name => it(name, function () {
+        assert(name.length <= 13, `module name ${name} is too long (> 13 characters)`);
+    }));
 });

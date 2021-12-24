@@ -78,6 +78,7 @@ let pulprog = `
 `
 
 const mod = new NOAHModule(
+    "C_HSQCJ",
     "c13",
     "Sj",
     [Kupce2017ACIE, Enthart2008JMR],

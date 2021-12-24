@@ -36,6 +36,7 @@ let pulprog = `
 `
 
 const mod = new NOAHModule(
+    "H_TOCSY_K",
     "h1",
     "Tk",
     [Kupce2017ACIE],

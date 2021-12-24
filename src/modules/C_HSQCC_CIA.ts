@@ -96,6 +96,7 @@ else
 `
 
 const mod = new NOAHModule(
+    "C_HSQCC_CIA",
     "c13",
     "Scc S",
     [Kupce2017ACIE, Gyongyosi2021AC],

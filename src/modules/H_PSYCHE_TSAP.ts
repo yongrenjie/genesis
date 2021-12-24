@@ -86,6 +86,7 @@ else
 `
 
 const mod = new NOAHModule(
+    "H_PSYCHE_TSAP",
     "h1",
     "Pt",
     [Kupce2017ACIE, Foroozandeh2015CC, Moutzouri2017CC],

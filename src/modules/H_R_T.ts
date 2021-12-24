@@ -50,6 +50,7 @@ else
 `
 
 const mod = new NOAHModule(
+    "H_R_T",
     "h1",
     "R T",
     [Kupce2017ACIE, Thiele2009CEJ],

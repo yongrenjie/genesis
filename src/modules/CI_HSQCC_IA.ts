@@ -110,6 +110,7 @@ else
 `
 
 const mod = new NOAHModule(
+    "CI_HSQCC_IA",
     "c13",
     "Sc S",
     [Kupce2017ACIE],

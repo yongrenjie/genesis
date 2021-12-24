@@ -44,6 +44,7 @@ let pulprog = `
 `
 
 const mod = new NOAHModule(
+    "H_CORO_ST",
     "h1",
     "CRst",
     [Kupce2017ACIE, Thiele2009CEJ],

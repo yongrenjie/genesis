@@ -122,6 +122,7 @@ let pulprog = `
 `
 
 const mod = new NOAHModule(
+    "C_SEHSQCJ",
     "c13",
     "Spj",
     [Kupce2017ACIE, Hansen2021AC, Yong2021JMR],

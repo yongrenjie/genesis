@@ -26,6 +26,7 @@ let pulprog = `
 `
 
 const mod = new NOAHModule(
+    "H_COSY",
     "h1",
     "C",
     [Kupce2017ACIE],

@@ -32,6 +32,7 @@ let pulprog = `
 `
 
 const mod = new NOAHModule(
+    "H_ROESY_AD",
     "h1",
     "Rad",
     [Kupce2017ACIE, Thiele2009CEJ],
