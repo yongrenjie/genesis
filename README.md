@@ -42,7 +42,7 @@ To access a specific version of the website (say version X.Y.Z), navigate to the
 
 GENEration of Supersequences In Silico.
 
-## What are NOAH experiments?
+## What are NMR supersequences?
 
 Check out the original paper:
 
