@@ -447,8 +447,7 @@ let faqLabels = [...document.querySelectorAll("label.toggle-label"),
                  ...document.querySelectorAll("label.devmode-label")] as HTMLLabelElement[];
 faqLabels.forEach(label => {
     label.addEventListener('keydown', e => {
-    // 32 === spacebar; 13 === enter
-        if (e.which === 32 || e.which === 13) {
+        if (e.key === " " || e.key === "Enter") {
             e.preventDefault();
             label.click();
         };
