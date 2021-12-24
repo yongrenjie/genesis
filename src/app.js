@@ -6,6 +6,7 @@ import url from "url";
 import querystring from "querystring";
 
 import { makePulprogText } from "./pulprog.js";
+import allModules from "./allModules.js";
 
 const port = process.env.PORT || 5555;
 
