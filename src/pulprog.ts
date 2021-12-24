@@ -1,6 +1,7 @@
 // Get the version number.
 import {version} from "./version.js";
 import NOAHModule from "./noahModule.js";
+import allModules from "./allModules.js";
 import { replacePSElement,
          makeDipsi, makeDipsiGenerator,
          asapMixingPPText } from "./elements.js";
@@ -32,7 +33,6 @@ function removeDuplicateByKey<In, Out>(lines: In[],
  * @param {string[]} trueModuleNames - Array of strings indicating the backend
  *                                     modules to be used in pulse programme
  *                                     construction.
- * @param {Map<string, NOAHModule>} allModules - Imported from allModules.js.
  * @param {boolean} allowLoneModule - If set to False, then return the empty
  *                                    string when NBL < 2.
  * @param {boolean} allowHmbcHom - If set to False, then return the empty
@@ -40,7 +40,6 @@ function removeDuplicateByKey<In, Out>(lines: In[],
  *                                 homonuclear module.
  */
 export function makePulprogText(trueModuleNames: string[],
-                                allModules: Map<string, NOAHModule>,
                                 allowLoneModule: boolean,
                                 allowHmbcHom: boolean) {
     // Initialisation {{{1

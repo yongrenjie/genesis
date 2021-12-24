@@ -6,7 +6,7 @@ import url from "url";
 import querystring from "querystring";
 
 import { makePulprogText } from "./pulprog.js";
-import allModules from "./allModules.js";
+
 const port = process.env.PORT || 5555;
 
 const errorText = `Error: modules not correctly specified
@@ -34,7 +34,7 @@ function onRequest(req, res) {
         try {
             let backendModules = querystring.parse(url.parse(req.url).query)["modules"].split(' ');
             res.writeHead(200, {"content-type": "text/plain"});
-            pptext = makePulprogText(backendModules, allModules, true);
+            pptext = makePulprogText(backendModules, true, true);
             if (pptext.length > 0) {
                 console.log("download was requested for: " + backendModules.join(", "));
             }

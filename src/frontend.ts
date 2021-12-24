@@ -1,4 +1,3 @@
-import allModules from "./allModules.js";
 import { makePulprogText } from "./pulprog.js";
 import { version } from "./version.js";
 
@@ -393,7 +392,7 @@ function updatePulprogText() {
     }
     let ppText: string;
     try {
-        ppText = makePulprogText(moduleNames, allModules,
+        ppText = makePulprogText(moduleNames,
             devModeButton.checked,
             devModeButton.checked
         ); 
