@@ -298,7 +298,7 @@ export function makePulprogText(trueModuleNames: string[],
         nusRedefinitions.push(`#endif /* NUS */`);
         mainpp.splice(4, 0, ...nusRedefinitions);
     }
-    // incrementation on every round of l1 {{{2
+    // (type A) incrementation on every round of l1 {{{2
     mainpp.push(
         ``,
         `  ; incrementation on every pass`,
@@ -309,43 +309,43 @@ export function makePulprogText(trueModuleNames: string[],
     if (ea1Present) mainpp.push(`  1m igrad EA1`);
     if (ea2Present) mainpp.push(`  1m igrad EA2`);
     // Phases and delays (e.g. seHSQC) {{{3
-    const eaPhaseInstructions = phases.map(p => allPhases[p].makeInstruction("ea")).filter(Boolean);
-    const eaDelayInstructions = delays.map(d => allDelays[d].makeInstruction("ea")).filter(Boolean);
-    eaPhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
-    eaDelayInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
+    const phaseInstructionsA = phases.map(p => allPhases[p].makeInstruction("incrA")).filter(Boolean);
+    const delayInstructionsA = delays.map(d => allDelays[d].makeInstruction("incrA")).filter(Boolean);
+    phaseInstructionsA.forEach(inst => mainpp.push(`  1m ${inst}`));
+    delayInstructionsA.forEach(inst => mainpp.push(`  1m ${inst}`));
     // Write data to disk {{{3
     mainpp.push(
         `  30m wr #0 if #0 zd`,
     );
 
-    // incrementation every 2 rounds of l1 (13C t1 and 1H t1 for non-scaled modules) {{{2
-    const ct1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("ct1")).filter(Boolean);
-    const ct1DelayInstructions = delays.map(d => allDelays[d].makeInstruction("ct1")).filter(Boolean);
+    // (type B) incrementation every 2 rounds of l1 (13C t1 and 1H t1 for non-scaled modules) {{{2
+    const phaseInstructionsB = phases.map(p => allPhases[p].makeInstruction("incrB")).filter(Boolean);
+    const delayInstructionsB = delays.map(d => allDelays[d].makeInstruction("incrB")).filter(Boolean);
     mainpp.push(
         ``,
         `  ; incrementation on every second pass`,
         `if "l1 % 2 == 0" {`,
     );
-    ct1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
+    phaseInstructionsB.forEach(inst => mainpp.push(`  1m ${inst}`));
     if (useNusFlag) {
         mainpp.push(
             `#ifdef NUS`,
             `  1m t1list.inc`,
             `#else`,
         );
-        ct1DelayInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
+        delayInstructionsB.forEach(inst => mainpp.push(`  1m ${inst}`));
         mainpp.push(
             `#endif /* NUS */`,
         );
     }
     else {
-        ct1DelayInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
+        delayInstructionsB.forEach(inst => mainpp.push(`  1m ${inst}`));
     }
     // 15N phases (but only if NUS is enabled, which disables cnst39) {{{3
     if (hasNModule && useNusFlag) {
-        const nt1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("nt1")).filter(Boolean);
+        const phaseInstructionsD = phases.map(p => allPhases[p].makeInstruction("incrD")).filter(Boolean);
         mainpp.push(`#ifdef NUS`);
-        nt1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
+        phaseInstructionsD.forEach(inst => mainpp.push(`  1m ${inst}`));
         mainpp.push(`#endif /* NUS */`);
     }
     // EA for interleaved modules {{{3
@@ -355,21 +355,21 @@ export function makePulprogText(trueModuleNames: string[],
     // }}}3
     mainpp.push('}');
 
-    // incrementation every 4 rounds of l1 {{{2
+    // (type C) incrementation every 4 rounds of l1 {{{2
     if (hasInterleaved) {
         mainpp.push(
             ``,
             `  ; incrementation on every fourth pass`,
             `if "l1 % 4 == 0" {`,
         );
-        const ht1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("ht1")).filter(Boolean);
-        const ht1DelayInstructions = delays.map(d => allDelays[d].makeInstruction("ht1")).filter(Boolean);
-        ht1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
-        ht1DelayInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
+        const phaseInstructionsC = phases.map(p => allPhases[p].makeInstruction("incrC")).filter(Boolean);
+        const delayInstructionsC = delays.map(d => allDelays[d].makeInstruction("incrC")).filter(Boolean);
+        phaseInstructionsC.forEach(inst => mainpp.push(`  1m ${inst}`));
+        delayInstructionsC.forEach(inst => mainpp.push(`  1m ${inst}`));
         mainpp.push('}');
     }
 
-    // incrementation every (l0 / cnst37) rounds: 1H QF k-scaled modules (QF JRES / [TSE-]PSYCHE) {{{2
+    // (manual) incrementation every (l0 / cnst37) rounds: 1H QF k-scaled modules (QF JRES / [TSE-]PSYCHE) {{{2
     if (delays.includes(17) && cnst38Present) {
         mainpp.push(
             `if "l1 % (l0 / cnst37) == 0"`,
@@ -379,7 +379,7 @@ export function makePulprogText(trueModuleNames: string[],
             `}`,
         );
     }
-    // incrementation every (2 * l0 / cnst37) rounds: 1H phase-sensitive k-scaled modules (PSYCHE JRES) {{{2
+    // (manual) incrementation every (2 * l0 / cnst37) rounds: 1H phase-sensitive k-scaled modules (PSYCHE JRES) {{{2
     if (delays.includes(18) && cnst38Present) {
         mainpp.push(
             `if "l1 % (2 * l0 / cnst37) == 0"`,
@@ -389,10 +389,10 @@ export function makePulprogText(trueModuleNames: string[],
         );
     }
 
-    // incrementation every (2 * cnst39) rounds: 15N modules without NUS {{{2
+    // (type D) incrementation every (2 * cnst39) rounds: 15N modules without NUS {{{2
     if (hasNModule) {
-        const nt1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("nt1")).filter(Boolean);
-        const nt1DelayInstructions = delays.map(d => allDelays[d].makeInstruction("nt1")).filter(Boolean);
+        const delayInstructionsD = delays.map(d => allDelays[d].makeInstruction("incrD")).filter(Boolean);
+        const phaseInstructionsD = phases.map(p => allPhases[p].makeInstruction("incrD")).filter(Boolean);
         if (useNusFlag) {
             mainpp.push(
                 `#ifdef NUS`,
@@ -400,8 +400,8 @@ export function makePulprogText(trueModuleNames: string[],
                 `if "l1 % (2 * cnst39) == 0"`,
                 `{`,
             );
-            nt1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
-            nt1DelayInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
+            phaseInstructionsD.forEach(inst => mainpp.push(`  1m ${inst}`));
+            delayInstructionsD.forEach(inst => mainpp.push(`  1m ${inst}`));
             mainpp.push(
                 `}`,
                 `#endif /* NUS */`
@@ -412,8 +412,8 @@ export function makePulprogText(trueModuleNames: string[],
                 `if "l1 % (2 * cnst39) == 0"`,
                 `{`,
             );
-            nt1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
-            nt1DelayInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
+            phaseInstructionsD.forEach(inst => mainpp.push(`  1m ${inst}`));
+            delayInstructionsD.forEach(inst => mainpp.push(`  1m ${inst}`));
             mainpp.push(
                 `}`,
             );

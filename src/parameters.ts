@@ -153,27 +153,41 @@ export const allParams = {
     // }}}1
 }
 
+// Incrementation of phases and delays is controlled by checking the counter l1,
+// which is 1 on the first loop and counts up to TD1/NBL. If l1 % X is equal to
+// zero, then the phase / delay will be incremented accordingly. This is a table
+// of what X is for the various increment options, and some examples of what is
+// incremented at each of these points:
+//  A - Every loop    (EA, 1H QF t1, 1H States excitation pulse, seHSQC 13C 90)
+//  B - Every 2 loops (13C t1, 1H phase-sensitive t1, 13C EA-TPPI pulse & receiver)
+//                    (also those in A, but for interleaved modules)
+//  C - Every 4 loops (those in B, but for interleaved modules)
+//  D - Every (2 * cnst39) loops (15N t1, 15N EA-TPPI pulse & receiver)
+//
+// There are also other incrementation patterns, which are (currently) handled manually:
+//    - Every (l0 / cnst37) loops (1H t1 for QF k-scaled modules, e.g. PSYCHE)
+//    - Every (2 * l0 / cnst37) loops (1H t1 for phase-sensitive k-scaled modules, namely PSYCHE JRES)
+
+
 // Delay class {{{1
 class Delay {
-    num: number;
-    str: string;
-    ea:  string;
-    nt1: string;
-    ct1: string;
-    ht1: string;
-    incr: string | null;
+    num  : number;
+    str  : string;
+    incrA: string;
+    incrB: string;
+    incrC: string;
+    incrD: string;
 
-    constructor({num, str, ea = "", nt1 = "", ct1 = "", ht1 = "", incr = ""}) {
-        this.num  = num;  // the number XX in dXX
-        this.str  = str;  // string describing the delay, to be placed in footer comments 
-        this.ea   = ea;   // actions to take when EA is incremented.
-        this.nt1  = nt1;
-        this.ct1  = ct1;
-        this.ht1  = ht1;
-        this.incr = incr; // value of inXX
+    constructor({num, str, incrA = "", incrB = "", incrC = "", incrD = ""}) {
+        this.num   = num;   // the number XX in dXX
+        this.str   = str;   // string describing the delay, to be placed in footer comments 
+        this.incrA = incrA; // action to take at point A (see above)
+        this.incrB = incrB;
+        this.incrC = incrC;
+        this.incrD = incrD;
     }
 
-    makeInstruction(occasion: "ea" | "nt1" | "ct1" | "ht1"): string {
+    makeInstruction(occasion: "incrA" | "incrB" | "incrC" | "incrD"): string {
         const shortInst = this[occasion];
         if (shortInst === "") {
             return ``;
@@ -182,40 +196,31 @@ class Delay {
             return `${shortInst}d${this.num}`;
         }
     }
-
-    makeIncrementPreamble(): string {
-        if (this.incr === null) {
-            return ``;
-        }
-        else {
-            return `"in${this.num} = ${this.incr}"`;
-        }
-    }
 }
 // }}}1
 // Delay definitions {{{1
 export const allDelays: Delay[] = new Array(32);
-allDelays[0]  = new Delay({num: 0,  str: "13C t1", ct1: "i"});
+allDelays[0]  = new Delay({num: 0,  str: "13C t1", incrB: "i"});
 allDelays[1]  = new Delay({num: 1,  str: "relaxation delay"});
 allDelays[2]  = new Delay({num: 2,  str: "1/2J(CH)"});
-allDelays[3]  = new Delay({num: 3,  str: "13C t1 for interleaved/time-shared modules", ht1: "i"});
+allDelays[3]  = new Delay({num: 3,  str: "13C t1 for interleaved/time-shared modules", incrC: "i"});
 allDelays[4]  = new Delay({num: 4,  str: "1/4J(CH)"});
 // 5 is free
 allDelays[6]  = new Delay({num: 6,  str: "1/8J(CH) for all multiplicities, 1/4J(CH) for CH only"});
 // 7 is free
 allDelays[8]  = new Delay({num: 8,  str: "delay for NOE buildup"});
 allDelays[9]  = new Delay({num: 9,  str: "DIPSI-2 mixing time (TOCSY)"});
-allDelays[10] = new Delay({num: 10, str: "1H t1", ct1: "i"});
-allDelays[11] = new Delay({num: 11, str: "1H t1 (magnitude-mode)", ea: "i"});
+allDelays[10] = new Delay({num: 10, str: "1H t1", incrB: "i"});
+allDelays[11] = new Delay({num: 11, str: "1H t1 (magnitude-mode)", incrA: "i"});
 allDelays[12] = new Delay({num: 12, str: "<1/4J(HH) CLIP-COSY mixing time"});
-allDelays[13] = new Delay({num: 13, str: "1H t1 for interleaved/time-shared modules", ht1: "i"});
+allDelays[13] = new Delay({num: 13, str: "1H t1 for interleaved/time-shared modules", incrC: "i"});
 allDelays[14] = new Delay({num: 14, str: "DIPSI-2 mixing time (TOCSY 2)"});
 allDelays[15] = new Delay({num: 15, str: "optional ASAP mixing time [40-60 ms] (use `wvm`)"});
 allDelays[16] = new Delay({num: 16, str: "delay for homospoil/gradient recovery [200 us]"});
 allDelays[17] = new Delay({num: 17, str: "1H t1 (QF scaled modules)"});
 allDelays[18] = new Delay({num: 18, str: "1H t1 (phase-sensitive scaled modules)"});
 allDelays[19] = new Delay({num: 19, str: "DIPSI-2 mixing time (1st 13C module)"});
-allDelays[20] = new Delay({num: 20, str: "15N t1", nt1: "i"});
+allDelays[20] = new Delay({num: 20, str: "15N t1", incrD: "i"});
 // 21 is free
 // 22 is free
 // 23 is free (in theory, should be reserved for 15N version of d3)
@@ -223,32 +228,30 @@ allDelays[24] = new Delay({num: 24, str: "1/4J(NH)"});
 // 25 is free
 allDelays[26] = new Delay({num: 26, str: "1/8J(NH) for all multiplicities, 1/4J(NH) for NH only"});
 allDelays[27] = new Delay({num: 27, str: "1/4J(CC)"});
-allDelays[28] = new Delay({num: 28, str: "decremented delay for 1,1-ADEQUATE", ct1: "d"});
+allDelays[28] = new Delay({num: 28, str: "decremented delay for 1,1-ADEQUATE", incrB: "d"});
 allDelays[29] = new Delay({num: 29, str: "DIPSI-2 mixing time (2nd 13C module)"});
 allDelays[30] = new Delay({num: 30, str: "DIPSI-2 mixing time (between 13C modules)"});
 // }}}1
 
 // Phase class {{{1
 class Phase {
-    num: number;
-    str: string;
-    // we can really have a stricter type system for these
-    // which would rule out invalid inputs
-    ea:  string;
-    nt1: string;
-    ct1: string;
-    ht1: string;
+    num  : number;
+    str  : string;
+    incrA: string;
+    incrB: string;
+    incrC: string;
+    incrD: string;
 
-    constructor({num, str, ea = "", nt1 = "", ct1 = "", ht1 = ""}) {
-        this.num = num;  // phXX
-        this.str = str;  // string describing the phases e.g. "0 0 0 0 2 2 2 2"
-        this.ea = ea;    // actions to take when EA / 15N t1 etc. is incremented.
-        this.nt1 = nt1;  //    these are stored as strings.
-        this.ct1 = ct1;  //    syntax: 'i' for increment (by 90deg), 'i2' for increment by 180
-        this.ht1 = ht1;  //            'r' for reset
+    constructor({num, str, incrA = "", incrB = "", incrC = "", incrD = ""}) {
+        this.num = num;     // phXX
+        this.str = str;     // string describing the phases e.g. "0 0 0 0 2 2 2 2"
+        this.incrA = incrA; // when to increment pulses (see comment above)
+        this.incrB = incrB;
+        this.incrC = incrC;
+        this.incrD = incrD;
     }
 
-    makeInstruction(occasion: "ea" | "nt1" | "ct1" | "ht1"): string {
+    makeInstruction(occasion: "incrA" | "incrB" | "incrC" | "incrD"): string {
         const shortInst = this[occasion];
         if (shortInst.length === 0) {
             return ``;
@@ -271,34 +274,34 @@ allPhases[0] = new Phase({num: 0, str: "0"});
 allPhases[1] = new Phase({num: 1, str: "1"});
 allPhases[2] = new Phase({num: 2, str: "2"});
 allPhases[3] = new Phase({num: 3, str: "3"});
-allPhases[4] = new Phase({num: 4, str: "0 2", nt1: "i2"});
-allPhases[5] = new Phase({num: 5, str: "0 2", ct1: "i2"});
-allPhases[6] = new Phase({num: 6, str: "0 2", ea: "i", ct1: "r"});
+allPhases[4] = new Phase({num: 4, str: "0 2", incrD: "i2"});
+allPhases[5] = new Phase({num: 5, str: "0 2", incrB: "i2"});
+allPhases[6] = new Phase({num: 6, str: "0 2", incrA: "i", incrB: "r"});
 allPhases[7] = new Phase({num: 7, str: "0 0 2 2"});
 allPhases[8] = new Phase({num: 8, str: "2 2 0 0"});
-allPhases[9] = new Phase({num: 9, str: "1 1 3 3", ea: "i2"});    // seHSQC
-allPhases[10] = new Phase({num: 10, str: "3 3 1 1", ea: "i2"});  // seHSQC
+allPhases[9] = new Phase({num: 9, str: "1 1 3 3", incrA: "i2"});    // seHSQC
+allPhases[10] = new Phase({num: 10, str: "3 3 1 1", incrA: "i2"});  // seHSQC
 allPhases[11] = new Phase({num: 11, str: "0 0 0 0 2 2 2 2"});
 allPhases[12] = new Phase({num: 12, str: "0 2"});
 allPhases[13] = new Phase({num: 13, str: "0 0 0 0 0 0 0 0 2 2 2 2 2 2 2 2"}); // ADEQUATE
 allPhases[14] = new Phase({num: 14, str: "0 1 2 3"});
 allPhases[15] = new Phase({num: 15, str: "0 1"});
-allPhases[16] = new Phase({num: 16, str: "1 3", ea: "i", ct1: "r"});  // DQF-COSY ph
+allPhases[16] = new Phase({num: 16, str: "1 3", incrA: "i", incrB: "r"});  // DQF-COSY ph
 allPhases[17] = new Phase({num: 17, str: "1 1 3 3"});
-allPhases[18] = new Phase({num: 18, str: "0 2", ht1: "i2"});  // time-shared 13C coherence transfer (replaces ph5)
-allPhases[19] = new Phase({num: 19, str: "1 1 3 3", ct1: "i2"});  // time-shared 13C seHSQC (replaces ph9)
-allPhases[20] = new Phase({num: 20, str: "0 2", ct1: "i", ht1: "r"});  // time-shared 1H States (replaces ph6)
+allPhases[18] = new Phase({num: 18, str: "0 2", incrC: "i2"});  // time-shared 13C coherence transfer (replaces ph5)
+allPhases[19] = new Phase({num: 19, str: "1 1 3 3", incrB: "i2"});  // time-shared 13C seHSQC (replaces ph9)
+allPhases[20] = new Phase({num: 20, str: "0 2", incrB: "i", incrC: "r"});  // time-shared 1H States (replaces ph6)
 // below are for receivers
-allPhases[22] = new Phase({num: 22, str: "0 2 2 0 2 0 0 2 2 2 0 0 2 0 2 2 0", ct1: "i2"});      // ADEQUATE
-allPhases[23] = new Phase({num: 23, str: "0 0 2 2", ht1: "i2"});      // HSQC-COSY interleaved (replaces ph25)
-allPhases[24] = new Phase({num: 24, str: "0 2 2 0", ht1: "i2"});      // 13C EA for interleaved (replaces ph30)
-allPhases[25] = new Phase({num: 25, str: "0 0 2 2", ct1: "i2"});      // HSQC-COSY
+allPhases[22] = new Phase({num: 22, str: "0 2 2 0 2 0 0 2 2 2 0 0 2 0 2 2 0", incrB: "i2"});      // ADEQUATE
+allPhases[23] = new Phase({num: 23, str: "0 0 2 2", incrC: "i2"});      // HSQC-COSY interleaved (replaces ph25)
+allPhases[24] = new Phase({num: 24, str: "0 2 2 0", incrC: "i2"});      // 13C EA for interleaved (replaces ph30)
+allPhases[25] = new Phase({num: 25, str: "0 0 2 2", incrB: "i2"});      // HSQC-COSY
 allPhases[26] = new Phase({num: 26, str: "0 2"});
-allPhases[27] = new Phase({num: 27, str: "1 3 3 1", nt1: "i2"});
-allPhases[28] = new Phase({num: 28, str: "1 3 3 1", ct1: "i2"});
-allPhases[29] = new Phase({num: 29, str: "0 2 2 0", nt1: "i2"});
-allPhases[30] = new Phase({num: 30, str: "0 2 2 0", ct1: "i2"});
-allPhases[31] = new Phase({num: 31, str: "0 2", ct1: "i2"});
+allPhases[27] = new Phase({num: 27, str: "1 3 3 1", incrD: "i2"});
+allPhases[28] = new Phase({num: 28, str: "1 3 3 1", incrB: "i2"});
+allPhases[29] = new Phase({num: 29, str: "0 2 2 0", incrD: "i2"});
+allPhases[30] = new Phase({num: 30, str: "0 2 2 0", incrB: "i2"});
+allPhases[31] = new Phase({num: 31, str: "0 2", incrB: "i2"});
 // }}}1
 
 // Gradient class {{{1
