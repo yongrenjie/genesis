@@ -6,17 +6,17 @@ let shortDescription = `; 1H magnitude-mode 2D J spectrum
 
 let preamble = `
 "p2   = p1*2"
-"d11  = 3u"                         ; JRES t1
-"in11 = (1/cnst38)/2"               ; JRES increment
+"d17  = 3u"                         ; JRES t1
+"in17 = (1/cnst38)/2"               ; JRES increment
 `
 
 let pulprog = `
   ; 2D J spectrum, magnitude mode
 
   (p1 ph0):f1
-  d11
+  d17
   (p2 ph14):f1
-  d11
+  d17
   goscnp ph26
 `
 

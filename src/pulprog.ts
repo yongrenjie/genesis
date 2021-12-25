@@ -5,7 +5,11 @@ import allModules from "./allModules.js";
 import { replacePSElement,
          makeDipsi, makeDipsiGenerator,
          asapMixingPPText } from "./elements.js";
-import { allPhases, allGradients, allWavemakers, Parameter } from "./parameters.js";
+import { allDelays,
+         allPhases,
+         allGradients,
+         allWavemakers,
+         Parameter } from "./parameters.js";
 import { AF_PRESAT_D1 } from "./acquFlag.js";
 import { Citation } from "./citation.js";
 
@@ -265,6 +269,11 @@ export function makePulprogText(trueModuleNames: string[],
     let phases = Array.from(phasesSet)
         .map(phx => Number(phx.slice(2)))  // extract the number
         .sort((a, b) => a - b);
+    // and (builtin) delays
+    let delaysSet = new Set(mainpp.join("\n").match(/d\d{1,2}/g));
+    let delays = Array.from(delaysSet)
+        .map(dx => Number(dx.slice(1)))  // extract the number
+        .sort((a, b) => a - b);
 
     // Change the last goscnp to go=2
     for (let l = mainpp.length - 1; l >= 0; l--) {
@@ -273,26 +282,19 @@ export function makePulprogText(trueModuleNames: string[],
             break;
         }
     }
-    // Check for d0, d10, d11, d20, EA1, EA2
+    // Check for EA1, EA2
     const mainppTemp = mainpp.join("\n");
-    const d0Present = (mainppTemp.search(/\bd0\b/) != -1);
-    const d3Present = (mainppTemp.search(/\bd3\b/) != -1);
-    const d10Present = (mainppTemp.search(/\bd10\b/) != -1);
-    const d11Present = (mainppTemp.search(/\bd11\b/) != -1);
-    const d13Present = (mainppTemp.search(/\bd13\b/) != -1);
-    const d20Present = (mainppTemp.search(/\bd20\b/) != -1);
     const ea1Present = (mainppTemp.search(/\bEA1\b/) != -1);
     const ea2Present = (mainppTemp.search(/\bEA2\b/) != -1);
-    // For cnst38 it is a bit more tricky. We have not yet added the preambles so we can't simply
-    // search in mainppTemp. We have to check the preamble of the module itself.
-    const cnst38Present = lastModule.preamble.includes("cnst38");
+    // For cnst38 we need to check preambles, not mainpp.
+    const cnst38Present = preambles.some(l => l.includes("cnst38"));
     // Add in NUS redefinitions of t1 delays (to be used with -DNUS zgoptn flag)
-    if (useNusFlag && (d0Present || d10Present || d11Present || d20Present)) {
+    if (useNusFlag && [0, 10, 11, 20].some(d => delays.includes(d))) {
         let nusRedefinitions = [``, `#ifdef NUS`];
-        if (d0Present) nusRedefinitions.push(`  "d0=(in0*t1list)+3u"`);
-        if (d10Present) nusRedefinitions.push(`  "d10=(in10*t1list)+3u"`);
-        if (d11Present) nusRedefinitions.push(`  "d11=(in11*t1list)+3u"`);
-        if (d20Present) nusRedefinitions.push(`  "d20=(in20*t1list)+3u"`);
+        if (delays.includes(0)) nusRedefinitions.push(`  "d0=(in0*t1list)+3u"`);
+        if (delays.includes(10)) nusRedefinitions.push(`  "d10=(in10*t1list)+3u"`);
+        if (delays.includes(11)) nusRedefinitions.push(`  "d11=(in11*t1list)+3u"`);
+        if (delays.includes(20)) nusRedefinitions.push(`  "d20=(in20*t1list)+3u"`);
         nusRedefinitions.push(`#endif /* NUS */`);
         mainpp.splice(4, 0, ...nusRedefinitions);
     }
@@ -306,58 +308,38 @@ export function makePulprogText(trueModuleNames: string[],
     mainpp.push(`  1m igrad EA`);
     if (ea1Present) mainpp.push(`  1m igrad EA1`);
     if (ea2Present) mainpp.push(`  1m igrad EA2`);
-    // 1H t1 for QF modules (d11) which aren't k-scaled {{{3
-    if (d11Present && !cnst38Present) {
-        mainpp.push(`  1m id11`);
-    }
-    // Some pulse phases (e.g. seHSQC) {{{3
+    // Phases and delays (e.g. seHSQC) {{{3
     const eaPhaseInstructions = phases.map(p => allPhases[p].makeInstruction("ea")).filter(Boolean);
+    const eaDelayInstructions = delays.map(d => allDelays[d].makeInstruction("ea")).filter(Boolean);
     eaPhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
+    eaDelayInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
     // Write data to disk {{{3
     mainpp.push(
         `  30m wr #0 if #0 zd`,
     );
 
-    // incrementation every 2 rounds of l1 {{{2
+    // incrementation every 2 rounds of l1 (13C t1 and 1H t1 for non-scaled modules) {{{2
+    const ct1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("ct1")).filter(Boolean);
+    const ct1DelayInstructions = delays.map(d => allDelays[d].makeInstruction("ct1")).filter(Boolean);
     mainpp.push(
         ``,
         `  ; incrementation on every second pass`,
         `if "l1 % 2 == 0" {`,
     );
-    // NUS list {{{3
+    ct1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
     if (useNusFlag) {
         mainpp.push(
             `#ifdef NUS`,
             `  1m t1list.inc`,
+            `#else`,
+        );
+        ct1DelayInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
+        mainpp.push(
             `#endif /* NUS */`,
         );
     }
-    // 13C phases (a slightly misleading name; this includes 1H phases) {{{3
-    const ct1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("ct1")).filter(Boolean);
-    ct1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
-    // 13C t1 {{{3
-    if (d0Present) {
-        if (useNusFlag) {
-            mainpp.push(
-                `#ifdef NUS`,
-                `#else`,
-                `  1m id0`,
-                `#endif /* NUS */`,
-            );
-        }
-        else mainpp.push(`  1m id0`);
-    }
-    // 1H t1 {{{3
-    if (d10Present && !cnst38Present) {
-        if (useNusFlag) {
-            mainpp.push(
-                `#ifdef NUS`,
-                `#else`,
-                `  1m id10`,
-                `#endif /* NUS */`,
-            );
-        }
-        else mainpp.push(`  1m id10`);
+    else {
+        ct1DelayInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
     }
     // 15N phases (but only if NUS is enabled, which disables cnst39) {{{3
     if (hasNModule && useNusFlag) {
@@ -381,28 +363,28 @@ export function makePulprogText(trueModuleNames: string[],
             `if "l1 % 4 == 0" {`,
         );
         const ht1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("ht1")).filter(Boolean);
+        const ht1DelayInstructions = delays.map(d => allDelays[d].makeInstruction("ht1")).filter(Boolean);
         ht1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
-        if (d3Present)  mainpp.push('  1m id3');
-        if (d13Present) mainpp.push('  1m id13');
+        ht1DelayInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
         mainpp.push('}');
     }
 
     // incrementation every (l0 / cnst37) rounds: 1H QF k-scaled modules (QF JRES / [TSE-]PSYCHE) {{{2
-    if (d11Present && cnst38Present) {
+    if (delays.includes(17) && cnst38Present) {
         mainpp.push(
             `if "l1 % (l0 / cnst37) == 0"`,
             `{`,
-            `  1m id11`,
+            `  1m id17`,
             `  1m iu3`,
             `}`,
         );
     }
     // incrementation every (2 * l0 / cnst37) rounds: 1H phase-sensitive k-scaled modules (PSYCHE JRES) {{{2
-    if (d10Present && cnst38Present) {
+    if (delays.includes(18) && cnst38Present) {
         mainpp.push(
             `if "l1 % (2 * l0 / cnst37) == 0"`,
             `{`,
-            `  1m id10`,
+            `  1m id18`,
             `}`,
         );
     }
@@ -410,15 +392,16 @@ export function makePulprogText(trueModuleNames: string[],
     // incrementation every (2 * cnst39) rounds: 15N modules without NUS {{{2
     if (hasNModule) {
         const nt1PhaseInstructions = phases.map(p => allPhases[p].makeInstruction("nt1")).filter(Boolean);
+        const nt1DelayInstructions = delays.map(d => allDelays[d].makeInstruction("nt1")).filter(Boolean);
         if (useNusFlag) {
             mainpp.push(
                 `#ifdef NUS`,
                 `#else`,
                 `if "l1 % (2 * cnst39) == 0"`,
                 `{`,
-                `  1m id20`,
             );
             nt1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
+            nt1DelayInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
             mainpp.push(
                 `}`,
                 `#endif /* NUS */`
@@ -428,9 +411,9 @@ export function makePulprogText(trueModuleNames: string[],
             mainpp.push(
                 `if "l1 % (2 * cnst39) == 0"`,
                 `{`,
-                `  1m id20`,
             );
             nt1PhaseInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
+            nt1DelayInstructions.forEach(inst => mainpp.push(`  1m ${inst}`));
             mainpp.push(
                 `}`,
             );
@@ -596,7 +579,7 @@ export function makePulprogText(trueModuleNames: string[],
         `"l1      = 0"                 ; Running counter for TD1 for ordinary modules (0 on first increment)`,
         `"l2      = 0"                 ; Running counter for NS (1 on first scan)`,
     );
-    if (d11Present) {
+    if (delays.includes(11)) {
         pp.push(
             `"l3      = 0"                 ; Running counter for TD1 for QF k-scaled 1H modules, e.g. PSYCHE (0 on first increment)`,
         );

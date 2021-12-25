@@ -7,12 +7,12 @@ let shortDescription = `; 1H 1D TSE-PSYCHE pure shift spectrum
 
 let preamble = `
 "p2     = p1*2"
-"d11    = 3u"                         ; PSYCHE t1
-"in11   = trunc(0.5+(1000000/(cnst38*dw*2)))*dw/1000000"     ; PSYCHE increment
+"d17    = 3u"                         ; PSYCHE t1
+"in17   = trunc(0.5+(1000000/(cnst38*dw*2)))*dw/1000000"     ; PSYCHE increment
 "p40    = 30m"                                               ; PSYCHE saltire duration
 "cnst21 = (cnst20/360)*sqrt((2*10000)/(0.03/2))"             ; PSYCHE saltire RF amplitude
 "spw40  = plw1*(cnst21/(250000/p1))*(cnst21/(250000/p1))"    ; PSYCHE saltire power level
-"D[ID]a = in11/2"       ; tauA from original pulse programme
+"D[ID]a = in17/2"       ; tauA from original pulse programme
 "D[ID]b = D[ID]a-p12"   ; tauA with excitation sculpting
 "D[ID]c = dw*2*cnst22"  ; tauB from original pulse programme
 `
@@ -52,7 +52,7 @@ let pulprog = `
   D[ID]a
 #endif  /* ES */
 
-  d11
+  d17
   ; Spin echo with JRE
   p16:gp17
   d16
@@ -79,7 +79,7 @@ let pulprog = `
   p16:gp18
   d16
 
-  d11
+  d17
   50u
   goscnp ph26
 `

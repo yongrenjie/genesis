@@ -112,32 +112,7 @@ export const allParams = {
     "cnst53": "HMBC gradient ratio",
     "cnst54": "HMBC gradient ratio",
 
-    // d, in - Delays and increments {{{1
-    "d0": "13C t1",
-    "d1": "relaxation delay",
-    "d2": "1/2J(CH)",
-    "d3": "13C t1 for interleaved/time-shared modules",
-    "d4": "1/4J(CH)",
-    "d6": "1/8J(CH) for all multiplicities, 1/4J(CH) for CH only",
-    "d8": "delay for NOE buildup",
-    "d9": "DIPSI-2 mixing time (TOCSY)",
-    "d10": "1H t1",
-    "d11": "1H t1 (magnitude-mode)",
-    "d12": "<1/4J(HH) CLIP-COSY mixing time",
-    "d13": "1H t1 for interleaved/time-shared modules",
-    "d14": "DIPSI-2 mixing time (TOCSY 2)",
-    "d15": "optional ASAP mixing time [40-60 ms] (use `wvm`)",
-    "d16": "delay for homospoil/gradient recovery [200 us]",
-    "d19": "DIPSI-2 mixing time (1st 13C module)",
-    "d20": "15N t1",
-    "d23": "15N t1 for interleaved/time-shared modules",
-    "d24": "1/4J(NH)",
-    "d26": "1/8J(NH) for all multiplicities, 1/4J(NH) for NH only",
-    "d27": "1/4J(CC)",
-    "d28": "decremented delay for 1,1-ADEQUATE",
-    "d29": "DIPSI-2 mixing time (2nd 13C module)",
-    "d30": "DIPSI-2 mixing time (between 13C modules)",
-
+    // in - Delay increments {{{1
     "inf1": "1/SW(C) = 2 * DW(C)",
     "in0": "1/(2 * SW(C)) = DW(C)",
     "in3": "1/(2 * SW(C)) = DW(C)",
@@ -178,6 +153,81 @@ export const allParams = {
     // }}}1
 }
 
+// Delay class {{{1
+class Delay {
+    num: number;
+    str: string;
+    ea:  string;
+    nt1: string;
+    ct1: string;
+    ht1: string;
+    incr: string | null;
+
+    constructor({num, str, ea = "", nt1 = "", ct1 = "", ht1 = "", incr = ""}) {
+        this.num  = num;  // the number XX in dXX
+        this.str  = str;  // string describing the delay, to be placed in footer comments 
+        this.ea   = ea;   // actions to take when EA is incremented.
+        this.nt1  = nt1;
+        this.ct1  = ct1;
+        this.ht1  = ht1;
+        this.incr = incr; // value of inXX
+    }
+
+    makeInstruction(occasion: "ea" | "nt1" | "ct1" | "ht1"): string {
+        const shortInst = this[occasion];
+        if (shortInst === "") {
+            return ``;
+        }
+        else {
+            return `${shortInst}d${this.num}`;
+        }
+    }
+
+    makeIncrementPreamble(): string {
+        if (this.incr === null) {
+            return ``;
+        }
+        else {
+            return `"in${this.num} = ${this.incr}"`;
+        }
+    }
+}
+// }}}1
+// Delay definitions {{{1
+export const allDelays: Delay[] = new Array(32);
+allDelays[0]  = new Delay({num: 0,  str: "13C t1", ct1: "i"});
+allDelays[1]  = new Delay({num: 1,  str: "relaxation delay"});
+allDelays[2]  = new Delay({num: 2,  str: "1/2J(CH)"});
+allDelays[3]  = new Delay({num: 3,  str: "13C t1 for interleaved/time-shared modules", ht1: "i"});
+allDelays[4]  = new Delay({num: 4,  str: "1/4J(CH)"});
+// 5 is free
+allDelays[6]  = new Delay({num: 6,  str: "1/8J(CH) for all multiplicities, 1/4J(CH) for CH only"});
+// 7 is free
+allDelays[8]  = new Delay({num: 8,  str: "delay for NOE buildup"});
+allDelays[9]  = new Delay({num: 9,  str: "DIPSI-2 mixing time (TOCSY)"});
+allDelays[10] = new Delay({num: 10, str: "1H t1", ct1: "i"});
+allDelays[11] = new Delay({num: 11, str: "1H t1 (magnitude-mode)", ea: "i"});
+allDelays[12] = new Delay({num: 12, str: "<1/4J(HH) CLIP-COSY mixing time"});
+allDelays[13] = new Delay({num: 13, str: "1H t1 for interleaved/time-shared modules", ht1: "i"});
+allDelays[14] = new Delay({num: 14, str: "DIPSI-2 mixing time (TOCSY 2)"});
+allDelays[15] = new Delay({num: 15, str: "optional ASAP mixing time [40-60 ms] (use `wvm`)"});
+allDelays[16] = new Delay({num: 16, str: "delay for homospoil/gradient recovery [200 us]"});
+allDelays[17] = new Delay({num: 17, str: "1H t1 (QF scaled modules)"});
+allDelays[18] = new Delay({num: 18, str: "1H t1 (phase-sensitive scaled modules)"});
+allDelays[19] = new Delay({num: 19, str: "DIPSI-2 mixing time (1st 13C module)"});
+allDelays[20] = new Delay({num: 20, str: "15N t1", nt1: "i"});
+// 21 is free
+// 22 is free
+// 23 is free (in theory, should be reserved for 15N version of d3)
+allDelays[24] = new Delay({num: 24, str: "1/4J(NH)"});
+// 25 is free
+allDelays[26] = new Delay({num: 26, str: "1/8J(NH) for all multiplicities, 1/4J(NH) for NH only"});
+allDelays[27] = new Delay({num: 27, str: "1/4J(CC)"});
+allDelays[28] = new Delay({num: 28, str: "decremented delay for 1,1-ADEQUATE", ct1: "d"});
+allDelays[29] = new Delay({num: 29, str: "DIPSI-2 mixing time (2nd 13C module)"});
+allDelays[30] = new Delay({num: 30, str: "DIPSI-2 mixing time (between 13C modules)"});
+// }}}1
+
 // Phase class {{{1
 class Phase {
     num: number;
@@ -210,7 +260,7 @@ class Phase {
             return `${shortInst[0]}p${this.num}*${shortInst[1]}`;  // 'ip30*2'
         }
         else {
-            throw new Error("invalid occasion");
+            throw new Error(`invalid instruction for phase ph${this.num}`);
         }
     }
 }

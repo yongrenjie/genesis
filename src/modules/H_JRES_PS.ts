@@ -6,8 +6,8 @@ let shortDescription = `; 1H phase-sensitive PSYCHE 2D J spectrum
 
 let preamble = `
 "p2     = p1*2"
-"d10    = 3u"                         ; PSYCHE-JRES t1
-"in10   = (1/cnst38)/2"               ; PSYCHE-JRES increment
+"d18    = 3u"                         ; PSYCHE-JRES t1
+"in18   = (1/cnst38)/2"               ; PSYCHE-JRES increment
 "p40    = 30m"                                               ; PSYCHE saltire duration
 "cnst21 = (cnst20/360)*sqrt((2*10000)/(0.03/2))"             ; PSYCHE saltire RF amplitude
 "spw40  = plw1*(cnst21/(250000/p1))*(cnst21/(250000/p1))"    ; PSYCHE saltire power level
@@ -36,7 +36,7 @@ if "l1 % 2 == 0"
   p16:gp17
   d16
   50u
-  d10
+  d18
   50u
   p16:gp18
   d16
@@ -46,12 +46,12 @@ if "l1 % 2 == 0"
   p16:gp18
   d16
   50u
-  d10 pl1:f1
+  d18 pl1:f1
 }
 else
 {
   (p1 ph0):f1
-  d10
+  d18
   50u
   p16:gp18
   d16
@@ -61,7 +61,7 @@ else
   p16:gp18
   d16
   50u
-  d10
+  d18
   50u
   p16:gp17
   d16

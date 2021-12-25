@@ -33,6 +33,9 @@ if "(2 * d27) < (l0 * 2 * in0)"
 }
 
   ; ZIP element
+#ifdef NOZZFADEQ
+  (p1 ph0):f1
+#else
   (p1 ph0):f1
   D[ID]a
   (p14:sp3 ph0):f2 
@@ -44,6 +47,7 @@ if "(2 * d27) < (l0 * 2 * in0)"
   (p2 ph0):f1 
   D[ID]b pl2:f2 
   (p1 ph1):f1
+#endif
 
   D[ID]a
   (center (p2 ph0):f1 (p14:sp3 ph0):f2 )
