@@ -1,7 +1,7 @@
 import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
-let shortDescription = `; 13C 1,1-ADEQUATE`
+let shortDescription = `; 13C 1,1-ADEQUATE with ZIP element`
 
 let preamble = `
 "p2      = p1*2"                       ; 1H hard 180
@@ -43,7 +43,7 @@ if "(2 * d27) < (l0 * 2 * in0)"
   (p14:sp3 ph0):f2 
   (p2 ph0):f1 
   D[ID]b pl2:f2 
-  (p1 ph3):f1
+  (p1 ph1):f1
 
   D[ID]a
   (center (p2 ph0):f1 (p14:sp3 ph0):f2 )
