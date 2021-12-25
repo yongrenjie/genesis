@@ -53,9 +53,9 @@ define delay DH_PSYCHE_TSAPf
 "d0              = 3u"                                                                                  ; 13C HSQC t1
 "d2              = 0.5s/cnst2"                                                                          ; JCOMP
 "d4              = 0.25s/cnst2"                                                                         ; 13C INEPT
-"d11             = 3u"                                                                                  ; PSYCHE t1
+"d17             = 3u"                                                                                  ; PSYCHE t1
 "in0             = inf1/2"                                                                              ; 13C HSQC increment
-"in11            = trunc(0.5+(1000000/(cnst38*dw*2*((td1/nbl)/cnst37))))*dw*((td1/nbl)/cnst37)/1000000" ; PSYCHE increment
+"in17            = trunc(0.5+(1000000/(cnst38*dw*2*((td1/nbl)/cnst37))))*dw*((td1/nbl)/cnst37)/1000000" ; PSYCHE increment
 "p2              = p1*2"                                                                                ; 1H hard 180
 "p40             = 30m"                                                                                 ; PSYCHE saltire duration
 "spw40           = plw1*(cnst21/(250000/p1))*(cnst21/(250000/p1))"                                      ; PSYCHE saltire power level
@@ -70,12 +70,11 @@ define delay DH_PSYCHE_TSAPf
 "DH_PSYCHE_TSAPc = 0"                                                                                   ; tau_2 in original paper, set at runtime
 "DH_PSYCHE_TSAPd = 0"                                                                                   ; tau_3 in original paper, set at runtime
 "DH_PSYCHE_TSAPe = (dw*2*cnst22)"                                                                       ; delay for drop points
-"DH_PSYCHE_TSAPf = d11"                                                                                 ; half of t1, set at runtime
+"DH_PSYCHE_TSAPf = d17"                                                                                 ; half of t1, set at runtime
 define list<gradient> GC_HSQCJ={cnst41}
 "l0      = td1/2"             ; TD1/NBL (i.e. TD1 for ordinary modules)
 "l1      = 0"                 ; Running counter for TD1 for ordinary modules (0 on first increment)
 "l2      = 0"                 ; Running counter for NS (1 on first scan)
-"l3      = 0"                 ; Running counter for TD1 for QF k-scaled 1H modules, e.g. PSYCHE (0 on first increment)
 "acqt0   = 0"
 baseopt_echo
 
@@ -179,21 +178,21 @@ baseopt_echo
   ; with SAPPHIRE averaging
 
   ; Recalculate delays before running experiment
-  "DH_PSYCHE_TSAPa = 2 * in11 * (l1 % (l0/cnst37)) / (l0/cnst37)"
+  "DH_PSYCHE_TSAPa = 2 * in17 * (l1 % (l0/cnst37)) / (l0/cnst37)"
 if "l3 == 0"
 {
   ; first chunk
-  "DH_PSYCHE_TSAPb = max(0, (in11/2)-(DH_PSYCHE_TSAPa/2))"  ; tau_1
-  "DH_PSYCHE_TSAPd = max(0, (DH_PSYCHE_TSAPa/2)-(in11/2))"  ; tau_3
-  "DH_PSYCHE_TSAPc = (in11/2)-abs(DH_PSYCHE_TSAPb-DH_PSYCHE_TSAPd)"  ; tau_2
-  "DH_PSYCHE_TSAPf = d11"                          ; t1/2
+  "DH_PSYCHE_TSAPb = max(0, (in17/2)-(DH_PSYCHE_TSAPa/2))"  ; tau_1
+  "DH_PSYCHE_TSAPd = max(0, (DH_PSYCHE_TSAPa/2)-(in17/2))"  ; tau_3
+  "DH_PSYCHE_TSAPc = (in17/2)-abs(DH_PSYCHE_TSAPb-DH_PSYCHE_TSAPd)"  ; tau_2
+  "DH_PSYCHE_TSAPf = d17"                          ; t1/2
 }
 else
 {
   ; other chunks
-  "DH_PSYCHE_TSAPb = in11/2"            ; tau_1
+  "DH_PSYCHE_TSAPb = in17/2"            ; tau_1
   "DH_PSYCHE_TSAPd = 0"                 ; tau_3
-  "DH_PSYCHE_TSAPf = d11-(DH_PSYCHE_TSAPa/2)"    ; tau_2
+  "DH_PSYCHE_TSAPf = d17-(DH_PSYCHE_TSAPa/2)"    ; tau_2
   "DH_PSYCHE_TSAPc = DH_PSYCHE_TSAPa/2"          ; t1/2
 }
 
@@ -252,11 +251,12 @@ if "l1 % 2 == 0" {
 }
 if "l1 % (l0 / cnst37) == 0"
 {
-  1m id11
+  1m id17
   1m iu3
 }
   lo to 4 times l0
 
+end, 4u
 50u BLKGRAD
 exit
 
@@ -297,12 +297,12 @@ ph30=0 2 2 0
 ;cnst37: TD1 for 1H JRES or PSYCHE [32]
 ;cnst38: SW (Hz) for 1H JRES or PSYCHE
 ;cnst41: gradient ratio (2*C/H)
-;d0: 13C t1
-;d1: relaxation delay
-;d2: 1/2J(CH)
-;d4: 1/4J(CH)
-;d11: 1H t1 (magnitude-mode)
-;d16: delay for homospoil/gradient recovery [200 us]
+;d0: undefined
+;d1: undefined
+;d2: undefined
+;d4: undefined
+;d16: undefined
+;d17: undefined
 ;l0: TD1 / NBL, i.e. 'true TD1'
 ;l1: running counter for true TD1 (0 on first increment)
 ;l3: running counter for TD1 for k-scaled 1H modules (0 on first increment)
@@ -335,5 +335,5 @@ ph30=0 2 2 0
 
 ; auprog: noah_hsqc:noah_sapphire
 ; module identifiers: C_HSQCJ H_PSYCHE_TSAP
-; pulse programme created by genesis-v2.0.19, https://nmr-genesis.co.uk
-; Tue Dec 21 2021 18:59:31 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.0.20, https://nmr-genesis.co.uk
+; Sat Dec 25 2021 18:22:34 GMT+0000 (Greenwich Mean Time)

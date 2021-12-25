@@ -561,18 +561,13 @@ if "d15 > 1m"
 
   ; incrementation on every second pass
 if "l1 % 2 == 0" {
-#ifdef NUS
-  1m t1list.inc
-#endif /* NUS */
   1m ip5*2
   1m ip30*2
   1m ip31*2
 #ifdef NUS
+  1m t1list.inc
 #else
   1m id0
-#endif /* NUS */
-#ifdef NUS
-#else
   1m id10
 #endif /* NUS */
 #ifdef NUS
@@ -584,13 +579,14 @@ if "l1 % 2 == 0" {
 #else
 if "l1 % (2 * cnst39) == 0"
 {
-  1m id20
   1m ip4*2
   1m ip29*2
+  1m id20
 }
 #endif /* NUS */
   lo to 4 times l0
 
+end, 4u
 50u BLKGRAD
 exit
 
@@ -650,18 +646,18 @@ ph31=0 2
 ;cnst44: gradient ratio (2*N/H)
 ;cpd2: 13C decoupling according to sequence defined by cpdprg2
 ;cpd3: 15N decoupling according to sequence defined by cpdprg3
-;d0: 13C t1
-;d1: relaxation delay
-;d2: 1/2J(CH)
-;d4: 1/4J(CH)
-;d6: 1/8J(CH) for all multiplicities, 1/4J(CH) for CH only
-;d9: DIPSI-2 mixing time (TOCSY)
-;d10: 1H t1
-;d15: optional ASAP mixing time [40-60 ms] (use `wvm`)
-;d16: delay for homospoil/gradient recovery [200 us]
-;d20: 15N t1
-;d24: 1/4J(NH)
-;d26: 1/8J(NH) for all multiplicities, 1/4J(NH) for NH only
+;d0: undefined
+;d1: undefined
+;d2: undefined
+;d4: undefined
+;d6: undefined
+;d9: undefined
+;d10: undefined
+;d15: undefined
+;d16: undefined
+;d20: undefined
+;d24: undefined
+;d26: undefined
 ;l0: TD1 / NBL, i.e. 'true TD1'
 ;l1: running counter for true TD1 (0 on first increment)
 ;l6: loop for ASAP mixing
@@ -706,5 +702,5 @@ ph31=0 2
 
 ; auprog: noah_hmbc:noah_nhsqc:noah_hsqc:noah_cosy:noah_tocsy
 ; module identifiers: C_HMBC_CNF N_SEHSQC C_SEHSQC H_COTO
-; pulse programme created by genesis-v2.0.19, https://nmr-genesis.co.uk
-; Tue Dec 21 2021 18:59:31 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.0.20, https://nmr-genesis.co.uk
+; Sat Dec 25 2021 18:22:34 GMT+0000 (Greenwich Mean Time)

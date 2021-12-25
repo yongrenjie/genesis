@@ -699,6 +699,7 @@ if "l1 % 4 == 0" {
 }
   lo to 4 times l0
 
+end, 4u
 50u BLKGRAD
 exit
 
@@ -756,18 +757,18 @@ ph26=0 2
 ;cnst50: right edge of spectral window (ppm) [ca. -0.5]
 ;cnst51: RF amplitude of ROESY spin lock (Hz)
 ;cpd2: 13C decoupling according to sequence defined by cpdprg2
-;d1: relaxation delay
-;d2: 1/2J(CH)
-;d3: 13C t1 for interleaved/time-shared modules
-;d4: 1/4J(CH)
-;d6: 1/8J(CH) for all multiplicities, 1/4J(CH) for CH only
-;d9: DIPSI-2 mixing time (TOCSY)
-;d12: <1/4J(HH) CLIP-COSY mixing time
-;d13: 1H t1 for interleaved/time-shared modules
-;d14: DIPSI-2 mixing time (TOCSY 2)
-;d15: optional ASAP mixing time [40-60 ms] (use `wvm`)
-;d16: delay for homospoil/gradient recovery [200 us]
-;d30: DIPSI-2 mixing time (between 13C modules)
+;d1: undefined
+;d2: undefined
+;d3: undefined
+;d4: undefined
+;d6: undefined
+;d9: undefined
+;d12: undefined
+;d13: undefined
+;d14: undefined
+;d15: undefined
+;d16: undefined
+;d30: undefined
 ;l0: TD1 / NBL, i.e. 'true TD1'
 ;l1: running counter for true TD1 (0 on first increment)
 ;l6: loop for ASAP mixing
@@ -816,5 +817,5 @@ ph26=0 2
 
 ; auprog: noah_hmbc noah_hmbc:noah_hsqc noah_TS:noah_hsqc noah_split:noah_tocsy States noah_cosy States:noah_tocsy States noah_roesy States
 ; module identifiers: C_HMBC_CFDD C_HSQCC_CIA C_SEHSQC_IA H_TT_CR
-; pulse programme created by genesis-v2.0.19, https://nmr-genesis.co.uk
-; Tue Dec 21 2021 18:59:31 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.0.20, https://nmr-genesis.co.uk
+; Sat Dec 25 2021 18:22:34 GMT+0000 (Greenwich Mean Time)

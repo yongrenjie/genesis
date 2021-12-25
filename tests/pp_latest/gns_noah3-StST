@@ -397,23 +397,19 @@ baseopt_echo
 
   ; incrementation on every second pass
 if "l1 % 2 == 0" {
-#ifdef NUS
-  1m t1list.inc
-#endif /* NUS */
   1m ip5*2
   1m rp6
   1m ip30*2
 #ifdef NUS
+  1m t1list.inc
 #else
   1m id0
-#endif /* NUS */
-#ifdef NUS
-#else
   1m id10
 #endif /* NUS */
 }
   lo to 4 times l0
 
+end, 4u
 50u BLKGRAD
 exit
 
@@ -455,14 +451,14 @@ ph30=0 2 2 0
 ;cnst32: fraction of C-H magn used for HSQC-TOCSY [0.5 to 1]
 ;cnst41: gradient ratio (2*C/H)
 ;cpd2: 13C decoupling according to sequence defined by cpdprg2
-;d0: 13C t1
-;d1: relaxation delay
-;d2: 1/2J(CH)
-;d4: 1/4J(CH)
-;d9: DIPSI-2 mixing time (TOCSY)
-;d10: 1H t1
-;d16: delay for homospoil/gradient recovery [200 us]
-;d19: DIPSI-2 mixing time (1st 13C module)
+;d0: undefined
+;d1: undefined
+;d2: undefined
+;d4: undefined
+;d9: undefined
+;d10: undefined
+;d16: undefined
+;d19: undefined
 ;l0: TD1 / NBL, i.e. 'true TD1'
 ;l1: running counter for true TD1 (0 on first increment)
 ;l11: DIPSI-2 (1H module): half the number of DIPSI-2 cycles
@@ -499,5 +495,5 @@ ph30=0 2 2 0
 
 ; auprog: noah_hsqc:noah_hsqc:noah_tocsy States
 ; module identifiers: CI_HSQCT C_HSQC H_TOCSY
-; pulse programme created by genesis-v2.0.19, https://nmr-genesis.co.uk
-; Tue Dec 21 2021 18:59:31 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.0.20, https://nmr-genesis.co.uk
+; Sat Dec 25 2021 18:22:34 GMT+0000 (Greenwich Mean Time)
