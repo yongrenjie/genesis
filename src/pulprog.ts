@@ -439,8 +439,13 @@ export function makePulprogText(trueModuleNames: string[],
 
     // Final loop and exit {{{2
     mainpp.push(`  lo to 4 times l0`);     // loop TD1/NBL times
-    // BLKGRAD and exit.
-    mainpp.push(``, `50u BLKGRAD`, `exit`);
+    // BLKGRAD, label to quick exit, and exit.
+    mainpp.push(
+        ``,
+        `end, 4u`,
+        `50u BLKGRAD`,
+        `exit`
+    );
     const mainppText = mainpp.join("\n");  // convenience string for future use
     // Postprocess preambles {{{1
     //

@@ -79,6 +79,7 @@ export const allParams = {
 
     // cnst - Constants {{{1
     "cnst2": "= 1J(CH)",
+    "cnst3": "= 1J(CC)",
     "cnst4": "= 1J(NH)",
     "cnst6": "= minimum 1J(CH)",
     "cnst7": "= maximum 1J(CH)",
@@ -132,6 +133,8 @@ export const allParams = {
     "d23": "15N t1 for interleaved/time-shared modules",
     "d24": "1/4J(NH)",
     "d26": "1/8J(NH) for all multiplicities, 1/4J(NH) for NH only",
+    "d27": "1/4J(CC)",
+    "d28": "decremented delay for 1,1-ADEQUATE",
     "d29": "DIPSI-2 mixing time (2nd 13C module)",
     "d30": "DIPSI-2 mixing time (between 13C modules)",
 
@@ -227,6 +230,7 @@ allPhases[9] = new Phase({num: 9, str: "1 1 3 3", ea: "i2"});    // seHSQC
 allPhases[10] = new Phase({num: 10, str: "3 3 1 1", ea: "i2"});  // seHSQC
 allPhases[11] = new Phase({num: 11, str: "0 0 0 0 2 2 2 2"});
 allPhases[12] = new Phase({num: 12, str: "0 2"});
+allPhases[13] = new Phase({num: 13, str: "0 0 0 0 0 0 0 0 2 2 2 2 2 2 2 2"}); // ADEQUATE
 allPhases[14] = new Phase({num: 14, str: "0 1 2 3"});
 allPhases[15] = new Phase({num: 15, str: "0 1"});
 allPhases[16] = new Phase({num: 16, str: "1 3", ea: "i", ct1: "r"});  // DQF-COSY ph
@@ -235,6 +239,7 @@ allPhases[18] = new Phase({num: 18, str: "0 2", ht1: "i2"});  // time-shared 13C
 allPhases[19] = new Phase({num: 19, str: "1 1 3 3", ct1: "i2"});  // time-shared 13C seHSQC (replaces ph9)
 allPhases[20] = new Phase({num: 20, str: "0 2", ct1: "i", ht1: "r"});  // time-shared 1H States (replaces ph6)
 // below are for receivers
+allPhases[22] = new Phase({num: 22, str: "0 2 2 0 2 0 0 2 2 2 0 0 2 0 2 2 0", ct1: "i2"});      // ADEQUATE
 allPhases[23] = new Phase({num: 23, str: "0 0 2 2", ht1: "i2"});      // HSQC-COSY interleaved (replaces ph25)
 allPhases[24] = new Phase({num: 24, str: "0 2 2 0", ht1: "i2"});      // 13C EA for interleaved (replaces ph30)
 allPhases[25] = new Phase({num: 25, str: "0 0 2 2", ct1: "i2"});      // HSQC-COSY
@@ -296,6 +301,9 @@ allGradients[18] = new Gradient({num: 18, val: 77, comment: "1H PSYCHE CTP gradi
 allGradients[19] = new Gradient({num: 19, val: 37, comment: "1H CTP"}); // stronger grad needed for e.g. DQF-COSY
 allGradients[20] = new Gradient({num: 20, val: 57, comment: "1H excitation sculpting"});
 allGradients[21] = new Gradient({num: 21, val: 32, comment: "1H excitation sculpting"});
+allGradients[22] = new Gradient({num: 22, val: 78.5, comment: "13C ADEQUATE CTP"});
+allGradients[23] = new Gradient({num: 23, val: 77.6, comment: "13C ADEQUATE CTP"});
+allGradients[24] = new Gradient({num: 24, val: -59, comment: "13C ADEQUATE CTP"});
 // }}}1
 
 // WaveMaker definitions {{{1

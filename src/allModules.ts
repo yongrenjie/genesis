@@ -7,6 +7,7 @@ import CI_HSQCC_DSE from "./modules/CI_HSQCC_DSE.js";
 import CI_HSQCC_IA from "./modules/CI_HSQCC_IA.js";
 import CI_HSQCJ from "./modules/CI_HSQCJ.js";
 import CI_HSQCT from "./modules/CI_HSQCT.js";
+import C_ADEQ from "./modules/C_ADEQ.js";
 import C_HMBC_CF from "./modules/C_HMBC_CF.js";
 import C_HMBC_CFDD from "./modules/C_HMBC_CFDD.js";
 import C_HMBC_CF_K from "./modules/C_HMBC_CF_K.js";
@@ -79,6 +80,7 @@ const allModules: Map<string, NOAHModule> = new Map([
     [CI_HSQCC_IA.name, CI_HSQCC_IA],
     [CI_HSQCJ.name, CI_HSQCJ],
     [CI_HSQCT.name, CI_HSQCT],
+    [C_ADEQ.name, C_ADEQ],
     [C_HMBC_CF.name, C_HMBC_CF],
     [C_HMBC_CF_K.name, C_HMBC_CF_K],
     [C_HMBC_CFDD.name, C_HMBC_CFDD],
