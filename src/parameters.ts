@@ -19,6 +19,7 @@ export const allParams = {
     "p3": "f2 channel -  90 degree high power pulse",
     "p4": "f2 channel - 180 degree high power pulse",
     "p6": "f1 channel -  90 degree low power pulse for TOCSY",
+    "p8": "f2 channel - 120 degree high power pulse (1,1-ADEQUATE)",
     "p12": "f1 channel - 180 degree inversion for excitation sculpting [2-8 ms]",
     "p14": "f2 channel - 180 degree inversion [500 us for Crp60,0.5,20.1]",
     "p15": "f1 channel - duration of ROESY spin lock",

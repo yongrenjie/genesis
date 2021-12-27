@@ -8,7 +8,7 @@ let preamble = `
 "d4      = 0.25s/cnst2"                ; 13C INEPT
 "d0      = 3u"                         ; 13C HSQC t1
 "in0     = inf1/2"                     ; 13C HSQC increment
-"p0      = p3*1.333"                   ; 13C 120 deg pulse
+"p8      = p3*1.333"                   ; 13C 120 deg pulse
 "d27     = 0.25s/cnst3"                ; 1J(CC) evolution
 "in28    = in0"
 "d28     = d27-4u"
@@ -65,7 +65,7 @@ if "(2 * d27) < (l0 * 2 * in0)"
   4u
   p16:gp22
   d16 pl2:f2
-  (p0 ph13):f2
+  (p8 ph13):f2
   4u
   d28
   (p24:sp7 ph0):f2
