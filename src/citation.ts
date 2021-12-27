@@ -127,3 +127,8 @@ export const Enthart2008JMR = new Citation(
     ["A. Enthart", "J. C. Freudenberger", "J. Furrer", "H. Kessler", "B. Luy"],
     JMR, 2008, 192, 2, "314-322", "10.1016/j.jmr.2008.03.009"
 )
+export const Reif1996JMR = new Citation(
+    "ADEQUATE, a New Set of Experiments to Determine the Constitution of Small Molecules at Natural Abundance",
+    ["B. Reif", "M. Köck", "R. Kerssebaum", "H. Kang", "W. Fenical", "C.  Griesinger"],
+    JMR, 1996, 118, 2, "282-285", "10.1006/jmra.1996.0038"
+)
