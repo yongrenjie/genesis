@@ -520,7 +520,6 @@ export function makePulprogText(trueModuleNames: string[],
     const preamblePlusMainpp = preamblesText + "\n" + mainppText;
     let allPpParamNames = [...new Set([
         preamblePlusMainpp.match(/\bp\d{1,2}\b/g),     // pulses
-        preamblePlusMainpp.match(/\bd\d{1,2}\b/g),     // delays
         preamblePlusMainpp.match(/\bl\d{1,2}\b/g),     // loop counters
         preamblePlusMainpp.match(/\bsp\d{1,2}\b/g),    // shaped pulses
         preamblePlusMainpp.match(/\bpl\d{1,2}\b/g),    // power levels
@@ -530,12 +529,23 @@ export function makePulprogText(trueModuleNames: string[],
     // Add in the spnams.
     const spParams1 = allPpParamNames.filter(p => p.startsWith("sp")).map(p => p.replace("sp", "spnam"));
     allPpParamNames.push(...spParams1);
+    // Separately get the delays. Note that this is different from the 'delays'
+    // array, which only counts stuff in the main section.
+    const allPpDelays = [...new Set(preamblePlusMainpp.match(/d\d{1,2}/g))];
     // Sort them and throw them all into a list of Parameters, with a few bonus ones.
     const bonusParams = ["aq", "ds", "FnMODE", "NBL", "ns"];
     const paramDefns = [
-        ...allPpParamNames.map(n => new Parameter(n)).sort(Parameter.compare),
-        ...bonusParams.map(n => new Parameter(n)),
-    ].map(p => p.toPostamble());
+        ...allPpDelays
+            .map(dx => Number(dx.slice(1)))
+            .map(n => allDelays[n].toFooter()),
+        ...allPpParamNames
+            .map(n => new Parameter(n))
+            .sort(Parameter.compare)
+            .map(p => p.toPostamble()),
+        ...bonusParams
+            .map(n => new Parameter(n))
+            .map(p => p.toPostamble()),
+    ];
 
     // AU programme list {{{2
     const auProgs = modules.map(m => m.auprog);

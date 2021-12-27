@@ -196,6 +196,10 @@ class Delay {
             return `${shortInst}d${this.num}`;
         }
     }
+
+    toFooter(): string {
+        return `;d${this.num}: ${this.str}`
+    }
 }
 // }}}1
 // Delay definitions {{{1
