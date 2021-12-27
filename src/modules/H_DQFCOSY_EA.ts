@@ -4,6 +4,7 @@ import NOAHModule from "../noahModule.js";
 let shortDescription = "; 1H DQF-COSY (echo-antiecho)";
 
 let preamble = `
+"p2     = p1*2"                       ; 1H hard 180
 "d10    = 3u"                         ; DQF-COSY t1
 "in10   = 2*dw"                       ; DQF-COSY increment
 "D[ID]a = p16+d16+d10"

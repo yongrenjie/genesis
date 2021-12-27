@@ -4,6 +4,7 @@ import NOAHModule from "../noahModule.js";
 let shortDescription = "; 1H COSY and ROESY (echo/antiecho F1)";
 
 let preamble = `
+"p2     = p1*2"                       ; 1H hard 180
 "d10    = 3u"                         ; COSY/ROESY t1
 "in10   = 2*dw"                       ; COSY/ROESY increment
 "cnst51 = abs(cnst49-cnst50)*sfo1*1.732/2"                   ; rf amplitude for spin lock

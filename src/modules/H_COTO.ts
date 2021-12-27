@@ -4,6 +4,7 @@ import NOAHModule from "../noahModule.js";
 let shortDescription = `; 1H COSY + TOCSY (echo/antiecho F1)`;
 
 let preamble = `
+"p2     = p1*2"                       ; 1H hard 180
 "d10    = 3u"                         ; COSY/TOCSY t1
 "in10   = 2*dw"                       ; COSY/TOCSY increment
 "D[ID]a = p16+d16+4u-d10"

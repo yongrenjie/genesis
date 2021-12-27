@@ -5,6 +5,7 @@ let shortDescription = `; 1H interleaved TOCSY (mixing time: d9) + COSY
 ; 1H interleaved TOCSY (mixing time: d14) + NOESY`;
 
 let preamble = `
+"p2     = p1*2"                       ; 1H hard 180
 "d13    = 3u"                         ; COSY/NOESY t1
 "in13   = 2*dw"                       ; COSY/NOESY increment
 "l11    = (d9/(p6*115.112))/2"        ; half the number of short TOCSY loops

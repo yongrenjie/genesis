@@ -4,6 +4,7 @@ import NOAHModule from "../noahModule.js";
 let shortDescription = `; 1H interleaved CLIP-COSY + TOCSY`;
 
 let preamble = `
+"p2   = p1*2"                       ; 1H hard 180
 "d13  = 3u"                         ; 1H t1
 "d12  = 0.25s/cnst12"               ; CLIP-COSY mixing (< 1/4J(HH))
 "in13 = 2*dw"                       ; 1H t1 increment
