@@ -11,7 +11,7 @@ export function replacePSElement(ppLines: string[],
         psElementText = lpjfText;
         psElementPreamble = lpjfPreamble;
     }
-    if (abbreviation === "|NLPJF|") {
+    else if (abbreviation === "|NLPJF|") {
         psElementText = nlpjfText;
         psElementPreamble = nlpjfPreamble;
     }

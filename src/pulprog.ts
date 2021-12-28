@@ -266,12 +266,12 @@ export function makePulprogText(trueModuleNames: string[],
     // Construct the end of mainpp (EA/t1 incrementation) {{{1
     // Initialisation {{{2
     // Use a regex to find all phases in the pulse programme text
-    let phasesSet = new Set(mainpp.join("\n").match(/ph\d{1,2}/g));
+    let phasesSet = new Set(mainpp.join("\n").match(/\bph\d{1,2}/g));
     let phases = Array.from(phasesSet)
         .map(phx => Number(phx.slice(2)))  // extract the number
         .sort((a, b) => a - b);
     // and (builtin) delays
-    let delaysSet = new Set(mainpp.join("\n").match(/d\d{1,2}/g));
+    let delaysSet = new Set(mainpp.join("\n").match(/\bd\d{1,2}/g));
     let delays = Array.from(delaysSet)
         .map(dx => Number(dx.slice(1)))  // extract the number
         .sort((a, b) => a - b);
@@ -360,6 +360,7 @@ export function makePulprogText(trueModuleNames: string[],
     const phaseInstructionsC = phases.map(p => allPhases[p].makeInstruction("incrC")).filter(Boolean);
     const delayInstructionsC = delays.map(d => allDelays[d].makeInstruction("incrC")).filter(Boolean);
     if (phaseInstructionsC.length > 0 || delayInstructionsC.length > 0) {
+        console.log('hi');
         mainpp.push(
             ``,
             `  ; incrementation on every fourth pass`,
