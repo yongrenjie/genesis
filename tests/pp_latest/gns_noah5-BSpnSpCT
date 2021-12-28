@@ -47,6 +47,11 @@ define delay DC_HMBC_CNFa
 define delay DC_HMBC_CNFb
 define delay DC_HMBC_CNFc
 define delay DC_HMBC_CNFd
+define delay DC_LP2a
+define delay DC_LP2b
+define delay DC_LP3a
+define delay DC_LP3b
+define delay DC_LP3c
 define delay DC_SEHSQCa
 define delay DC_SEHSQCb
 define delay DC_SEHSQCc
@@ -59,11 +64,6 @@ define delay DC_SEHSQCi
 define delay DC_SEHSQCj
 define delay DH_COTOa
 define delay DH_COTOb
-define delay DLP2a
-define delay DLP2b
-define delay DLP3a
-define delay DLP3b
-define delay DLP3c
 define delay DN_SEHSQCa
 define delay DN_SEHSQCb
 define delay DN_SEHSQCc
@@ -91,6 +91,11 @@ define delay DN_SEHSQCg
 "DC_HMBC_CNFb = d4+p31/2"
 "DC_HMBC_CNFc = (0.5s/cnst13)-p16-d16-4u"
 "DC_HMBC_CNFd = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DC_LP2a      = 1s/(2*cnst6)-p16-d16"
+"DC_LP2b      = 1s/(2*cnst7)-p16-d16"
+"DC_LP3a      = 1s/(2*(cnst6+0.07*(cnst7-cnst6)))-p16-d16"
+"DC_LP3b      = 1s/(cnst7+cnst6)-p16-d16"
+"DC_LP3c      = 1s/(2*(cnst7-0.07*(cnst7-cnst6)))-p16-d16"
 "DC_SEHSQCa   = d4-p14/2"                                  ; zz-filter
 "DC_SEHSQCb   = d4+p14/2"                                  ; zz-filter
 "DC_SEHSQCc   = d4-larger(p2,p14)/2"                       ; INEPT
@@ -103,11 +108,6 @@ define delay DN_SEHSQCg
 "DC_SEHSQCj   = p16+d16-p1*0.78+de+8u"                     ; final spin echo for refocusing gradient
 "DH_COTOa     = p16+d16+4u-d10"
 "DH_COTOb     = p16+d16"
-"DLP2a        = 1s/(2*cnst6)-p16-d16"
-"DLP2b        = 1s/(2*cnst7)-p16-d16"
-"DLP3a        = 1s/(2*(cnst6+0.07*(cnst7-cnst6)))-p16-d16"
-"DLP3b        = 1s/(cnst7+cnst6)-p16-d16"
-"DLP3c        = 1s/(2*(cnst7-0.07*(cnst7-cnst6)))-p16-d16"
 "DN_SEHSQCa   = d24-p22/2"                                 ; zz-filter
 "DN_SEHSQCb   = d24+p22/2"                                 ; zz-filter
 "DN_SEHSQCc   = d24-larger(p2,p22)/2"                      ; INEPT
@@ -180,15 +180,15 @@ baseopt_echo
   ; excitation and low-pass J-filter
   (lalign (p1 ph0):f1 (p3 ph7):f2 )
 #ifdef LP3
-  DLP3a
+  DC_LP3a
   p16:gp10*2.8
   d16
   (p3 ph7):f2
-  DLP3b
+  DC_LP3b
   p16:gp10*-1.6
   d16
   (p3 ph7):f2
-  DLP3c
+  DC_LP3c
   p16:gp10*-0.8
   d16
   (p3 ph7):f2
@@ -196,11 +196,11 @@ baseopt_echo
   p16:gp10*-0.4
   d16
 #else
-  DLP2a
+  DC_LP2a
   p16:gp10*-3
   d16
   (p3 ph7):f2
-  DLP2b
+  DC_LP2b
   p16:gp10*2
   d16
   (p3 ph7):f2
@@ -633,6 +633,19 @@ ph31=0 2
 ;sp45:wvm:wuASAP: cawurst-2(30 ppm, 1.0 ms; Q=3)
 ;cpd2:wvm:wudec: cawurst_d-20(220 ppm, 1.4 ms; L2H)
 
+;d0: 13C t1
+;d2: 1/2J(CH)
+;d4: 1/4J(CH)
+;d10: 1H t1
+;d20: 15N t1
+;d24: 1/4J(NH)
+;d9: DIPSI-2 mixing time (TOCSY)
+;d16: delay for homospoil/gradient recovery [200 us]
+;d6: 1/8J(CH) for all multiplicities, 1/4J(CH) for CH only
+;d26: 1/8J(NH) for all multiplicities, 1/4J(NH) for NH only
+;d1: relaxation delay
+;d3: 13C t1 for interleaved/time-shared modules
+;d15: optional ASAP mixing time [40-60 ms] (use `wvm`)
 ;cnst2: = 1J(CH)
 ;cnst4: = 1J(NH)
 ;cnst6: = minimum 1J(CH)
@@ -646,18 +659,6 @@ ph31=0 2
 ;cnst44: gradient ratio (2*N/H)
 ;cpd2: 13C decoupling according to sequence defined by cpdprg2
 ;cpd3: 15N decoupling according to sequence defined by cpdprg3
-;d0: undefined
-;d1: undefined
-;d2: undefined
-;d4: undefined
-;d6: undefined
-;d9: undefined
-;d10: undefined
-;d15: undefined
-;d16: undefined
-;d20: undefined
-;d24: undefined
-;d26: undefined
 ;l0: TD1 / NBL, i.e. 'true TD1'
 ;l1: running counter for true TD1 (0 on first increment)
 ;l6: loop for ASAP mixing
@@ -703,4 +704,4 @@ ph31=0 2
 ; auprog: noah_hmbc:noah_nhsqc:noah_hsqc:noah_cosy:noah_tocsy
 ; module identifiers: C_HMBC_CNF N_SEHSQC C_SEHSQC H_COTO
 ; pulse programme created by genesis-v2.0.20, https://nmr-genesis.co.uk
-; Sat Dec 25 2021 18:22:34 GMT+0000 (Greenwich Mean Time)
+; Tue Dec 28 2021 13:24:46 GMT+0000 (Greenwich Mean Time)

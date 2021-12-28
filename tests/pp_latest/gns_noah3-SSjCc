@@ -416,19 +416,19 @@ ph30=0 2 2 0
 ;sp29:wvm:wu180H1ZQS: sm_chirp(60 kHz, 20 ms; H2L, Q=5)
 ;cpd2:wvm:wudec: cawurst_d-20(220 ppm, 1.4 ms; L2H)
 
+;d0: 13C t1
+;d2: 1/2J(CH)
+;d4: 1/4J(CH)
+;d10: 1H t1
+;d12: <1/4J(HH) CLIP-COSY mixing time
+;d30: DIPSI-2 mixing time (between 13C modules)
+;d16: delay for homospoil/gradient recovery [200 us]
+;d1: relaxation delay
 ;cnst2: = 1J(CH)
 ;cnst12: > J(HH), ca. 30 Hz for CLIP-COSY mixing
 ;cnst32: fraction of C-H magn used for HSQC-TOCSY [0.5 to 1]
 ;cnst41: gradient ratio (2*C/H)
 ;cpd2: 13C decoupling according to sequence defined by cpdprg2
-;d0: undefined
-;d1: undefined
-;d2: undefined
-;d4: undefined
-;d10: undefined
-;d12: undefined
-;d16: undefined
-;d30: undefined
 ;l0: TD1 / NBL, i.e. 'true TD1'
 ;l1: running counter for true TD1 (0 on first increment)
 ;l17: DIPSI-2 (between 13C modules): half the number of DIPSI-2 cycles
@@ -464,4 +464,4 @@ ph30=0 2 2 0
 ; auprog: noah_hsqc:noah_hsqc:noah_clipcosy States
 ; module identifiers: CI_HSQC C_HSQCJ H_CLIP_COSY
 ; pulse programme created by genesis-v2.0.20, https://nmr-genesis.co.uk
-; Sat Dec 25 2021 18:22:34 GMT+0000 (Greenwich Mean Time)
+; Tue Dec 28 2021 13:24:46 GMT+0000 (Greenwich Mean Time)

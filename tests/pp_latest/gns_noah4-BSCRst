@@ -47,14 +47,14 @@ define delay DC_HSQCc
 define delay DC_HSQCd
 define delay DC_HSQCe
 define delay DC_HSQCf
+define delay DC_LP2a
+define delay DC_LP2b
+define delay DC_LP3a
+define delay DC_LP3b
+define delay DC_LP3c
 define delay DC_ZZFa
 define delay DC_ZZFb
 define delay DH_EXSCULPT
-define delay DLP2a
-define delay DLP2b
-define delay DLP3a
-define delay DLP3b
-define delay DLP3c
 "cnst41      = 2*sfo2/sfo1"                                      ; gradient ratio
 "cnst51      = abs(cnst49-cnst50)*sfo1*1.732/2"                  ; rf amplitude for spin lock
 "d0          = 3u"                                               ; 13C t1
@@ -74,14 +74,14 @@ define delay DLP3c
 "DC_HSQCd    = d2+p3+p2/2"
 "DC_HSQCe    = DC_HSQCc+p3-p2/2"
 "DC_HSQCf    = DC_HSQCb-p16-d16-p3-de+p1*2/PI-8u"
+"DC_LP2a     = 1s/(2*cnst6)-p16-d16"
+"DC_LP2b     = 1s/(2*cnst7)-p16-d16"
+"DC_LP3a     = 1s/(2*(cnst6+0.07*(cnst7-cnst6)))-p16-d16"
+"DC_LP3b     = 1s/(cnst7+cnst6)-p16-d16"
+"DC_LP3c     = 1s/(2*(cnst7-0.07*(cnst7-cnst6)))-p16-d16"
 "DC_ZZFa     = d4-p14/2"
 "DC_ZZFb     = d4+p14/2"
 "DH_EXSCULPT = de+p1*2/3.1416"
-"DLP2a       = 1s/(2*cnst6)-p16-d16"
-"DLP2b       = 1s/(2*cnst7)-p16-d16"
-"DLP3a       = 1s/(2*(cnst6+0.07*(cnst7-cnst6)))-p16-d16"
-"DLP3b       = 1s/(cnst7+cnst6)-p16-d16"
-"DLP3c       = 1s/(2*(cnst7-0.07*(cnst7-cnst6)))-p16-d16"
 define list<gradient> GC_HMBC_CF={cnst41}
 define list<gradient> GC_HSQC={cnst41}
 "l0      = td1/4"             ; TD1/NBL (i.e. TD1 for ordinary modules)
@@ -150,15 +150,15 @@ baseopt_echo
 
   ; low-pass J-filter
 #ifdef LP3
-  DLP3a
+  DC_LP3a
   p16:gp10*2.8
   d16
   (p3 ph7):f2
-  DLP3b
+  DC_LP3b
   p16:gp10*-1.6
   d16
   (p3 ph7):f2
-  DLP3c
+  DC_LP3c
   p16:gp10*-0.8
   d16
   (p3 ph7):f2
@@ -166,11 +166,11 @@ baseopt_echo
   p16:gp10*-0.4
   d16
 #else
-  DLP2a
+  DC_LP2a
   p16:gp10*-3
   d16
   (p3 ph7):f2
-  DLP2b
+  DC_LP2b
   p16:gp10*2
   d16
   (p3 ph7):f2
@@ -419,6 +419,13 @@ ph30=0 2 2 0
 ;sp50:wvm:wu180H1SL2: wurstAM(p50, cnst50 ppm; B1max = 5.0 kHz)
 ;cpd2:wvm:wudec: cawurst_d-20(220 ppm, 1.4 ms; L2H)
 
+;d0: 13C t1
+;d2: 1/2J(CH)
+;d4: 1/4J(CH)
+;d10: 1H t1
+;d16: delay for homospoil/gradient recovery [200 us]
+;d1: relaxation delay
+;d15: optional ASAP mixing time [40-60 ms] (use `wvm`)
 ;cnst2: = 1J(CH)
 ;cnst6: = minimum 1J(CH)
 ;cnst7: = maximum 1J(CH)
@@ -428,13 +435,6 @@ ph30=0 2 2 0
 ;cnst50: right edge of spectral window (ppm) [ca. -0.5]
 ;cnst51: RF amplitude of ROESY spin lock (Hz)
 ;cpd2: 13C decoupling according to sequence defined by cpdprg2
-;d0: undefined
-;d1: undefined
-;d2: undefined
-;d4: undefined
-;d10: undefined
-;d15: undefined
-;d16: undefined
 ;l0: TD1 / NBL, i.e. 'true TD1'
 ;l1: running counter for true TD1 (0 on first increment)
 ;l6: loop for ASAP mixing
@@ -475,4 +475,4 @@ ph30=0 2 2 0
 ; auprog: noah_hmbc:noah_hsqc:noah_cosy States:noah_roesy States
 ; module identifiers: C_HMBC_CF C_HSQC H_CORO_ST
 ; pulse programme created by genesis-v2.0.20, https://nmr-genesis.co.uk
-; Sat Dec 25 2021 18:22:34 GMT+0000 (Greenwich Mean Time)
+; Tue Dec 28 2021 13:24:46 GMT+0000 (Greenwich Mean Time)

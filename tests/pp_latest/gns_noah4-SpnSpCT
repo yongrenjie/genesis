@@ -484,6 +484,18 @@ ph31=0 2
 ;sp29:wvm:wu180H1ZQS: sm_chirp(60 kHz, 20 ms; H2L, Q=5)
 ;cpd2:wvm:wudec: cawurst_d-20(220 ppm, 1.4 ms; L2H)
 
+;d0: 13C t1
+;d2: 1/2J(CH)
+;d4: 1/4J(CH)
+;d10: 1H t1
+;d20: 15N t1
+;d24: 1/4J(NH)
+;d9: DIPSI-2 mixing time (TOCSY)
+;d16: delay for homospoil/gradient recovery [200 us]
+;d6: 1/8J(CH) for all multiplicities, 1/4J(CH) for CH only
+;d26: 1/8J(NH) for all multiplicities, 1/4J(NH) for NH only
+;d1: relaxation delay
+;d3: 13C t1 for interleaved/time-shared modules
 ;cnst2: = 1J(CH)
 ;cnst4: = 1J(NH)
 ;cnst16: 15N CTP gradient lengthening factor
@@ -494,17 +506,6 @@ ph31=0 2
 ;cnst44: gradient ratio (2*N/H)
 ;cpd2: 13C decoupling according to sequence defined by cpdprg2
 ;cpd3: 15N decoupling according to sequence defined by cpdprg3
-;d0: undefined
-;d1: undefined
-;d2: undefined
-;d4: undefined
-;d6: undefined
-;d9: undefined
-;d10: undefined
-;d16: undefined
-;d20: undefined
-;d24: undefined
-;d26: undefined
 ;l0: TD1 / NBL, i.e. 'true TD1'
 ;l1: running counter for true TD1 (0 on first increment)
 ;l11: DIPSI-2 (1H module): half the number of DIPSI-2 cycles
@@ -546,4 +547,4 @@ ph31=0 2
 ; auprog: noah_nhsqc:noah_hsqc:noah_cosy:noah_tocsy
 ; module identifiers: N_SEHSQC C_SEHSQC H_COTO
 ; pulse programme created by genesis-v2.0.20, https://nmr-genesis.co.uk
-; Sat Dec 25 2021 18:22:34 GMT+0000 (Greenwich Mean Time)
+; Tue Dec 28 2021 13:24:46 GMT+0000 (Greenwich Mean Time)
