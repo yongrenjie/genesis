@@ -24,3 +24,4 @@ export const AF_PRESAT_D1 = new AcquFlag("PRESAT", "presaturation during d1");
 export const AF_PRESAT_NOE = new AcquFlag("PRESAT", "presaturation during NOE mixing time (and d1)");
 export const AF_NOZQS = new AcquFlag("NOZQS", "no zero-quantum suppression");
 export const AF_LP3 = new AcquFlag("LP3", "'upgrade' to third-order LPJF");
+export const AF_NLP3 = new AcquFlag("NLP3", "'upgrade' to third-order LPJF");

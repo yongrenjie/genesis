@@ -207,6 +207,7 @@ export function makePulprogText(trueModuleNames: string[],
         // Handle zz-filter and low-pass J filters in HMBC modules
         if (mod.category == "hmbc") {
             [ppLines, preambles] = replacePSElement(ppLines, preambles, "|LPJF|");
+            [ppLines, preambles] = replacePSElement(ppLines, preambles, "|NLPJF|");
             [ppLines, preambles] = replacePSElement(ppLines, preambles, "|ZZF|");
         }
 

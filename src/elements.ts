@@ -11,6 +11,10 @@ export function replacePSElement(ppLines: string[],
         psElementText = lpjfText;
         psElementPreamble = lpjfPreamble;
     }
+    if (abbreviation === "|NLPJF|") {
+        psElementText = nlpjfText;
+        psElementPreamble = nlpjfPreamble;
+    }
     else if (abbreviation === "|ZZF|") {
         psElementText = zzfText;
         psElementPreamble = zzfPreamble;
@@ -224,30 +228,30 @@ const solvsuppPreamble = [
 ];
 // }}}1
 
-// Low-pass J-filters {{{1
+// 13C low-pass J-filters {{{1
 const lpjfPreamble = [
-    `define delay DLP2a`,
-    `define delay DLP2b`,
-    `define delay DLP3a`,
-    `define delay DLP3b`,
-    `define delay DLP3c`,
-    `"DLP2a = 1s/(2*cnst6)-p16-d16"`,
-    `"DLP2b = 1s/(2*cnst7)-p16-d16"`,
-    `"DLP3a = 1s/(2*(cnst6+0.07*(cnst7-cnst6)))-p16-d16"`,
-    `"DLP3b = 1s/(cnst7+cnst6)-p16-d16"`,
-    `"DLP3c = 1s/(2*(cnst7-0.07*(cnst7-cnst6)))-p16-d16"`,
+    `define delay DC_LP2a`,
+    `define delay DC_LP2b`,
+    `define delay DC_LP3a`,
+    `define delay DC_LP3b`,
+    `define delay DC_LP3c`,
+    `"DC_LP2a = 1s/(2*cnst6)-p16-d16"`,
+    `"DC_LP2b = 1s/(2*cnst7)-p16-d16"`,
+    `"DC_LP3a = 1s/(2*(cnst6+0.07*(cnst7-cnst6)))-p16-d16"`,
+    `"DC_LP3b = 1s/(cnst7+cnst6)-p16-d16"`,
+    `"DC_LP3c = 1s/(2*(cnst7-0.07*(cnst7-cnst6)))-p16-d16"`,
 ];
 const lpjfText = [
     `#ifdef LP3`,
-    `  DLP3a`,
+    `  DC_LP3a`,
     `  p16:gp10*2.8`,
     `  d16`,
     `  (p3 ph7):f2`,
-    `  DLP3b`,
+    `  DC_LP3b`,
     `  p16:gp10*-1.6`,
     `  d16`,
     `  (p3 ph7):f2`,
-    `  DLP3c`,
+    `  DC_LP3c`,
     `  p16:gp10*-0.8`,
     `  d16`,
     `  (p3 ph7):f2`,
@@ -255,14 +259,60 @@ const lpjfText = [
     `  p16:gp10*-0.4`,
     `  d16`,
     `#else`,
-    `  DLP2a`,
+    `  DC_LP2a`,
     `  p16:gp10*-3`,
     `  d16`,
     `  (p3 ph7):f2`,
-    `  DLP2b`,
+    `  DC_LP2b`,
     `  p16:gp10*2`,
     `  d16`,
     `  (p3 ph7):f2`,
+    `  4u`,
+    `  p16:gp10`,
+    `  d16`,
+    `#endif`,
+];
+// }}}1
+
+// 15N low-pass J-filters {{{1
+const nlpjfPreamble = [
+    `define delay DN_LP2a`,
+    `define delay DN_LP2b`,
+    `define delay DN_LP3a`,
+    `define delay DN_LP3b`,
+    `define delay DN_LP3c`,
+    `"DN_LP2a = 1s/(2*cnst26)-p16-d16"`,
+    `"DN_LP2b = 1s/(2*cnst27)-p16-d16"`,
+    `"DN_LP3a = 1s/(2*(cnst26+0.07*(cnst27-cnst26)))-p16-d16"`,
+    `"DN_LP3b = 1s/(cnst27+cnst26)-p16-d16"`,
+    `"DN_LP3c = 1s/(2*(cnst27-0.07*(cnst27-cnst26)))-p16-d16"`,
+];
+const nlpjfText = [
+    `#ifdef NLP3`,
+    `  DN_LP3a`,
+    `  p16:gp10*2.8`,
+    `  d16`,
+    `  (p21 ph7):f3`,
+    `  DN_LP3b`,
+    `  p16:gp10*-1.6`,
+    `  d16`,
+    `  (p21 ph7):f3`,
+    `  DN_LP3c`,
+    `  p16:gp10*-0.8`,
+    `  d16`,
+    `  (p21 ph7):f3`,
+    `  4u`,
+    `  p16:gp10*-0.4`,
+    `  d16`,
+    `#else`,
+    `  DN_LP2a`,
+    `  p16:gp10*-3`,
+    `  d16`,
+    `  (p21 ph7):f3`,
+    `  DN_LP2b`,
+    `  p16:gp10*2`,
+    `  d16`,
+    `  (p21 ph7):f3`,
     `  4u`,
     `  p16:gp10`,
     `  d16`,
