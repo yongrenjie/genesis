@@ -6,7 +6,6 @@ let shortDescription = `; 13C HMBC (asymmetric gradients 1, 3 grads, 180 before 
 
 let preamble = `
 "p2     = p1*2"                       ; 1H hard 180
-"d2     = 0.5s/cnst2"                 ; JCOMP
 "d4     = 0.25s/cnst2"                ; 13C INEPT
 "d0     = 3u"                         ; 13C t1
 "in0    = inf1/2"                     ; 13C increment

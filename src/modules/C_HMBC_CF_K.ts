@@ -6,7 +6,6 @@ let shortDescription = `; 13C HMBC (double NS, half TD1)`;
 
 let preamble = `
 "p2     = p1*2"                       ; 1H hard 180
-"d2     = 0.5s/cnst2"                 ; JCOMP
 "d4     = 0.25s/cnst2"                ; 13C INEPT
 "d3     = 3u"                         ; 13C t1
 "in3    = inf1/2"                     ; 13C increment

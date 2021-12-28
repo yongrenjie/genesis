@@ -6,7 +6,6 @@ let shortDescription = `; 13C HMBC`;
 
 let preamble = `
 "p2      = p1*2"                       ; 1H hard 180
-"d2      = 0.5s/cnst2"                 ; JCOMP
 "d0      = 3u"                         ; 13C t1
 "in0     = inf1/2"                     ; 13C increment
 "D[ID]a = (0.5s/cnst13)-p16-d16-4u"

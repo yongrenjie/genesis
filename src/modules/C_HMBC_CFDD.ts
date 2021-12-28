@@ -6,7 +6,6 @@ let shortDescription = `; 13C interleaved 2x HMBC (with different nJCH evolution
 
 let preamble = `
 "p2     = p1*2"                       ; 1H hard 180
-"d2     = 0.5s/cnst2"                 ; JCOMP
 "d3     = 3u"                         ; 13C interleaved t1
 "d4     = 0.25s/cnst2"                ; 13C INEPT
 "in3    = inf1/2"                     ; 13C interleaved increment
