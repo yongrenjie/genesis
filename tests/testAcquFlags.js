@@ -23,6 +23,10 @@ describe("ensure that acquisition flags match pulse programme", function() {
                         assert(re.test(module.pulprog) || module.pulprog.includes("|LPJF|"),
                             "LP3 not found");
                     }
+                    else if (flag.name === "NLP3") {
+                        assert(re.test(module.pulprog) || module.pulprog.includes("|NLPJF|"),
+                            "NLP3 not found");
+                    }
                     else {
                         assert(re.test(module.pulprog), `${flag.name} not found`);
                     }

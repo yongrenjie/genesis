@@ -34,9 +34,9 @@ let pulprog = `
   4u
   p16:gp1
   d16
-  d0
+  d20
   (p2 ph11):f1
-  d0
+  d20
   4u
   p16:gp1
   d16

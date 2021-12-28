@@ -343,8 +343,8 @@ export function makePulprogText(trueModuleNames: string[],
         delayInstructionsB.forEach(inst => mainpp.push(`  1m ${inst}`));
     }
     // 15N phases (but only if NUS is enabled, which disables cnst39) {{{3
-    if (hasNModule && useNusFlag) {
-        const phaseInstructionsD = phases.map(p => allPhases[p].makeInstruction("incrD")).filter(Boolean);
+    const phaseInstructionsD = phases.map(p => allPhases[p].makeInstruction("incrD")).filter(Boolean);
+    if (phaseInstructionsD.length > 0 && useNusFlag) {
         mainpp.push(`#ifdef NUS`);
         phaseInstructionsD.forEach(inst => mainpp.push(`  1m ${inst}`));
         mainpp.push(`#endif /* NUS */`);
@@ -357,14 +357,14 @@ export function makePulprogText(trueModuleNames: string[],
     mainpp.push('}');
 
     // (type C) incrementation every 4 rounds of l1 {{{2
-    if (hasInterleaved) {
+    const phaseInstructionsC = phases.map(p => allPhases[p].makeInstruction("incrC")).filter(Boolean);
+    const delayInstructionsC = delays.map(d => allDelays[d].makeInstruction("incrC")).filter(Boolean);
+    if (phaseInstructionsC.length > 0 || delayInstructionsC.length > 0) {
         mainpp.push(
             ``,
             `  ; incrementation on every fourth pass`,
             `if "l1 % 4 == 0" {`,
         );
-        const phaseInstructionsC = phases.map(p => allPhases[p].makeInstruction("incrC")).filter(Boolean);
-        const delayInstructionsC = delays.map(d => allDelays[d].makeInstruction("incrC")).filter(Boolean);
         phaseInstructionsC.forEach(inst => mainpp.push(`  1m ${inst}`));
         delayInstructionsC.forEach(inst => mainpp.push(`  1m ${inst}`));
         mainpp.push('}');
@@ -391,9 +391,8 @@ export function makePulprogText(trueModuleNames: string[],
     }
 
     // (type D) incrementation every (2 * cnst39) rounds: 15N modules without NUS {{{2
-    if (hasNModule) {
-        const delayInstructionsD = delays.map(d => allDelays[d].makeInstruction("incrD")).filter(Boolean);
-        const phaseInstructionsD = phases.map(p => allPhases[p].makeInstruction("incrD")).filter(Boolean);
+    const delayInstructionsD = delays.map(d => allDelays[d].makeInstruction("incrD")).filter(Boolean);
+    if (phaseInstructionsD.length > 0 || delayInstructionsD.length > 0) {
         if (useNusFlag) {
             mainpp.push(
                 `#ifdef NUS`,
