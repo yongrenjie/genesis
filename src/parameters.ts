@@ -95,6 +95,8 @@ export const allParams = {
     "cnst23": "= nJ(NH) long-range",
     "cnst26": "= minimum 1J(NH)",
     "cnst27": "= maximum 1J(NH)",
+    "cnst28": "= minimum nJ(NH) (accordion excitation)",
+    "cnst29": "= maximum nJ(NH) (accordion excitation)",
     "cnst32": "fraction of C-H magn used for HSQC-TOCSY [0.5 to 1]",
     "cnst33": "= rf amplitude 20000 Hz for BUBI_1H_600u_RF20kHz",
     "cnst34": "= rf amplitude 10000 Hz for BUBI_13C_600u_RF10kHz",
@@ -229,8 +231,8 @@ allDelays[17] = new Delay({num: 17, str: "1H t1 (QF scaled modules)"});
 allDelays[18] = new Delay({num: 18, str: "1H t1 (phase-sensitive scaled modules)"});
 allDelays[19] = new Delay({num: 19, str: "DIPSI-2 mixing time (1st 13C module)"});
 allDelays[20] = new Delay({num: 20, str: "15N t1", incrD: "i"});
-// 21 is free
-// 22 is free
+allDelays[21] = new Delay({num: 21, str: "15N IMPEACH-MBC decremented nJ(CH) evolution", incrD: "d"});
+allDelays[22] = new Delay({num: 22, str: "15N IMPEACH-MBC incremented time", incrD: "i"});
 // 23 is free (in theory, should be reserved for 15N version of d3)
 allDelays[24] = new Delay({num: 24, str: "1/4J(NH)"});
 // 25 is free
