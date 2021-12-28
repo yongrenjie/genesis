@@ -2,6 +2,7 @@ import { Citation } from "./citation.js";
 import { AcquFlag } from "./acquFlag.js";
 type ModuleCategory = "hmbc" | "n15" | "c13" | "h1";
 type Nucleus = "N" | "C" | "H";
+import { replaceAllPSElements } from "./elements.js";
 
 class NOAHModule {
     name: string;
@@ -43,10 +44,15 @@ class NOAHModule {
     // Parse the pulse programme to figure out which nuclei the pulse programme
     // uses. It's pretty basic, but should work.
     nuclei(): Nucleus[] {
+        // First replace the pulse sequence elements.
+        const [pulprogTemp, preambleTemp] = replaceAllPSElements(
+            this.pulprog.split('\n'),
+            this.preamble.split('\n')
+        );
         // It seems reasonable to assume that every module has some pulse on H.
         let ns: Nucleus[] = ["H"];
-        if (this.pulprog.includes(":f2")) ns.push("C");
-        if (this.pulprog.includes(":f3")) ns.push("N");
+        if (pulprogTemp.some(l => l.includes(":f2"))) ns.push("C");
+        if (pulprogTemp.some(l => l.includes(":f3"))) ns.push("N");
         return ns;
     }
 

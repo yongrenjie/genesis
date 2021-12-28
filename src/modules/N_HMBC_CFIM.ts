@@ -25,7 +25,7 @@ let pulprog = `
   ; 15N-1H IMPEACH-MBC
 
   ; zz-filter
-  |ZZF|
+  |CZZF|
 
   ; low-pass J-filter
   |NLPJF|

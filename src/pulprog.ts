@@ -2,7 +2,7 @@
 import {version} from "./version.js";
 import NOAHModule from "./noahModule.js";
 import allModules from "./allModules.js";
-import { replacePSElement,
+import { replaceAllPSElements,
          makeDipsi, makeDipsiGenerator,
          asapMixingPPText } from "./elements.js";
 import { allDelays,
@@ -204,18 +204,9 @@ export function makePulprogText(trueModuleNames: string[],
             ppDipsiLineNo = ppLines.findIndex(line => line.includes("|DIPSI|"));
         }
 
-        // Handle zz-filter and low-pass J filters in HMBC modules
-        if (mod.category == "hmbc") {
-            [ppLines, preambles] = replacePSElement(ppLines, preambles, "|LPJF|");
-            [ppLines, preambles] = replacePSElement(ppLines, preambles, "|NLPJF|");
-            [ppLines, preambles] = replacePSElement(ppLines, preambles, "|ZZF|");
-        }
+        // Handle pulse sequence abbreviations
+        [ppLines, preambles] = replaceAllPSElements(ppLines, preambles);
 
-        // Handle solvent suppression string in homonuclear modules
-        if (mod.category == "h1") {
-            [ppLines, preambles] = replacePSElement(ppLines, preambles, "|SOLVSUPP|");
-        }
-        
         // Add the current module's pulse programme to the concatenated list
         mainpp.push(...ppLines
             .map(l => l.replace(/\[ID\]/g, trueModuleNames[i]))

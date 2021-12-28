@@ -1,45 +1,19 @@
 // This file contains reusable pulse sequence elements.
+// Note that DIPSI and ASAP are manually handled -- they are special cases!!
 
-export function replacePSElement(ppLines: string[],
-                                 preambleLines: string[], 
-                                 abbreviation: string
-): string[][] {
-    // First determine the text to be replaced with / added
-    let psElementText: string[];
-    let psElementPreamble: string[];
-    if (abbreviation === "|LPJF|") {
-        psElementText = lpjfText;
-        psElementPreamble = lpjfPreamble;
-    }
-    else if (abbreviation === "|NLPJF|") {
-        psElementText = nlpjfText;
-        psElementPreamble = nlpjfPreamble;
-    }
-    else if (abbreviation === "|ZZF|") {
-        psElementText = zzfText;
-        psElementPreamble = zzfPreamble;
-    }
-    else if (abbreviation === "|SOLVSUPP|") {
-        psElementText = solvsuppText(1);
-        psElementPreamble = solvsuppPreamble;
-    }
-    else {
-        console.error(`replacePSElement() called with unrecognised abbreviation ${abbreviation}`);
-        return [ppLines, preambleLines];
-    }
+// PSElement class {{{1
+class PSElement {
+    abbreviation: string;
+    text: string[];
+    preamble: string[];
 
-    // Search for occurrence of abbreviation
-    let ppLineNo = ppLines.findIndex(line => line.includes(abbreviation));
-    while (ppLineNo != -1) { // means it was found
-        ppLines.splice(ppLineNo, 1, ...psElementText);
-        preambleLines.push(...psElementPreamble);
-        // Find next occurrence (if it exists)
-        ppLineNo = ppLines.findIndex(line => line.includes(abbreviation));
+    constructor(abbreviation: string, text: string[], preamble: string[]) {
+        this.abbreviation = abbreviation;
+        this.text = text;
+        this.preamble = preamble;
     }
-
-    return [ppLines, preambleLines];
 }
-
+// }}}1
 
 // DIPSI mixing {{{1
 
@@ -227,6 +201,7 @@ const solvsuppPreamble = [
     `"DH_EXSCULPT = de+p1*2/3.1416"`
 ];
 // }}}1
+const SOLVSUPP = new PSElement("SOLVSUPP", solvsuppText(1), solvsuppPreamble);
 
 // 13C low-pass J-filters {{{1
 const lpjfPreamble = [
@@ -273,6 +248,7 @@ const lpjfText = [
     `#endif`,
 ];
 // }}}1
+const CLPJF = new PSElement("LPJF", lpjfText, lpjfPreamble);
 
 // 15N low-pass J-filters {{{1
 const nlpjfPreamble = [
@@ -319,15 +295,16 @@ const nlpjfText = [
     `#endif`,
 ];
 // }}}1
+const NLPJF = new PSElement("NLPJF", nlpjfText, nlpjfPreamble);
 
-// HMBC zz-filter {{{1
-const zzfPreamble = [
+// HMBC 13C zz-filter {{{1
+const cZzfPreamble = [
     `define delay DC_ZZFa`,
     `define delay DC_ZZFb`,
     `"DC_ZZFa = d4-p14/2"`,
     `"DC_ZZFb = d4+p14/2"`,
 ];
-const zzfText = [
+const cZzfText = [
     `#ifdef NOZZF`,
     `  ; enable -DNOZZF acquisition flag to remove zz-filter`,
     `  ; only do this if you are sure about what you are doing!`,
@@ -348,5 +325,82 @@ const zzfText = [
     `#endif`,
 ];
 // }}}1
+const CZZF = new PSElement("CZZF", cZzfText, cZzfPreamble);
+
+// HMBC 13C/15N combined zz-filter {{{1
+const cnZzfPreamble = [
+    `define delay DCN_ZZFa`,
+    `define delay DCN_ZZFb`,
+    `"DCN_ZZFa = d4-p31/2"`,
+    `"DCN_ZZFb = d4+p31/2"`,
+];
+const cnZzfText = [
+    `#ifdef NOZZF`,
+    `  ; enable -DNOZZF acquisition flag to remove zz-filter`,
+    `  ; only do this if you are sure about what you are doing!`,
+    `  (p1 ph0):f1`,
+    `#else`,
+    `  ; 13C/15N zz-filter`,
+    `  (p1 ph0):f1`,
+    `  DCN_ZZFa`,
+    `  (p31:sp18 ph11):f2` ,
+    `  (center (p2 ph0):f1 (p22 ph0):f3)`,
+    `  DCN_ZZFb`,
+    `  (p1 ph0):f1`,
+    `  DCN_ZZFa`,
+    `  (p31:sp18 ph11):f2` ,
+    `  (center (p2 ph0):f1 (p22 ph0):f3)`,
+    `  DCN_ZZFb pl2:f2`,
+    `  (lalign (p1 ph0):f1 (p3 ph7):f2 )`,
+    `#endif`,
+];
+// }}}1
+const CNZZF = new PSElement("CNZZF", cnZzfText, cnZzfPreamble);
+
+// All known elements.
+const allElements = new Map([
+    [SOLVSUPP.abbreviation, SOLVSUPP],
+    [CLPJF.abbreviation, CLPJF],
+    [NLPJF.abbreviation, NLPJF],
+    [CZZF.abbreviation, CZZF],
+    [CNZZF.abbreviation, CNZZF],
+]);
+
+
+// Replace a single element in the pulse programme.
+function replacePSElement(ppLines: string[],
+                                 preambleLines: string[], 
+                                 abbreviation: string
+): string[][] {
+    // Search for the element
+    const elem = allElements.get(abbreviation);
+
+    if (elem === undefined) {
+        console.error(`replacePSElement() called with unrecognised abbreviation ${abbreviation}`);
+        return [ppLines, preambleLines];
+    }
+    else {
+        // Search for occurrence of abbreviation
+        let ppLineNo = ppLines.findIndex(line => line.includes(`|${abbreviation}|`));
+        while (ppLineNo != -1) { // means it was found
+            ppLines.splice(ppLineNo, 1, ...elem.text);
+            preambleLines.push(...elem.preamble);
+            // Find next occurrence (if it exists)
+            ppLineNo = ppLines.findIndex(line => line.includes(`|${abbreviation}|`));
+        }
+        return [ppLines, preambleLines];
+    }
+}
+
+
+// Replace all known elements in the given text.
+export function replaceAllPSElements(ppLines: string[],
+                                     preambleLines: string[]
+): string[][] {
+    for (let abbrev of allElements.keys()) {
+        [ppLines, preambleLines] = replacePSElement(ppLines, preambleLines, abbrev);
+    }
+    return [ppLines, preambleLines];
+}
 
 // vim: foldmethod=marker

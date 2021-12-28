@@ -20,7 +20,7 @@ let pulprog = `
   ; 13C-1H HMBC
 
   ; zz-filter
-  |ZZF|
+  |CZZF|
 
   ; low-pass J-filter
   |LPJF|

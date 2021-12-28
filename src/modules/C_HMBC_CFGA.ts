@@ -23,7 +23,7 @@ let pulprog = `
   "cnst54=cnst54" ; display in ased
 
   ; zz-filter
-  |ZZF|
+  |CZZF|
 
   ; low-pass J-filter
   |LPJF|
