@@ -64,6 +64,9 @@ describe("makePulprogText regression tests", function() {
         it("NOAH-2 SjPt: F2 CLIP-HSQC + TSE-PSYCHE",
             makeTest("./tests/pp_latest/gns_noah2-SjPt",
                 ["C_HSQCJ", "H_PSYCHE_TSAP"]));
+        it("NOAH-2 ABn: 1,1-ADEQUATE + 15N HMBC",
+            makeTest("./tests/pp_latest/gns_noah2-ABn",
+                ["C_ADEQ", "N_HMBC_CF"]));
         it("NOAH-3 SSjCc: HSQC + coupled HSQC + CLIP-COSY",
             makeTest("./tests/pp_latest/gns_noah3-SSjCc",
                 ["CI_HSQC", "C_HSQCJ", "H_CLIP_COSY"]));
@@ -76,6 +79,9 @@ describe("makePulprogText regression tests", function() {
         it("NOAH-4 BSCRst: HMBC + HSQC + States COSY + States ROESY",
             makeTest("./tests/pp_latest/gns_noah4-BSCRst",
                 ["C_HMBC_CF", "C_HSQC", "H_CORO_ST"]));
+        it("NOAH-4 BnSnScPt: 15N HMBC + 15N HSQC + 13C HSQC-COSY + SAPPHIRE-TSE-PSYCHE",
+            makeTest("./tests/pp_latest/gns_noah4-BnSnScPt",
+                ["N_HMBC_CNF", "N_HSQC", "C_HSQCC", "H_PSYCHE_TSAP"]));
         it("NOAH-5 BSpnSpCT: 13C HMBC + 15N seHSQC + 13C seHSQC + COSY + TOCSY",
             makeTest("./tests/pp_latest/gns_noah5-BSpnSpCT",
                 ["C_HMBC_CNF", "N_SEHSQC", "C_SEHSQC", "H_COTO"]));

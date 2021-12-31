@@ -1,10 +1,14 @@
-; gns_noah2-SjPt
+; gns_noah4-BnSnScPt
 
 ; =========================================================================
-; set 'NBL' TopSpin parameter to 2
+; set 'NBL' TopSpin parameter to 4
 ; 
 ;     [zgoptns: use -DPRESAT for presaturation during d1]
-; 13C HSQC (F2-coupled)
+; 15N HMBC
+;     [zgoptns: use -DNLP3 for 'upgrade' to third-order LPJF]
+; 15N HSQC
+;     [set SW(ppm) as cnst40; optional k-scaling with cnst39]
+; 13C HSQC-COSY (TSE version)
 ;     [zgoptns: use -DEDIT for multiplicity editing]
 ; 1H 1D TSE-PSYCHE pure shift spectrum with SAPPHIRE averaging
 ;     [set TD1 and SW(Hz) as cnst37 and cnst38 respectively]
@@ -20,10 +24,6 @@
 ;Angew. Chem. Int. Ed. 2017, 56 (39), 11779-11783
 ;NOAH: NMR Supersequences for Small Molecule Analysis and Structure Elucidation
 
-;A. Enthart, J. C. Freudenberger, J. Furrer, H. Kessler, B. Luy
-;J. Magn. Reson. 2008, 192 (2), 314-322
-;The CLIP/CLAP-HSQC: Pure absorptive spectra for the measurement of one-bond couplings
-
 ;M. Foroozandeh, R. W. Adams, P. Kiraly, M. Nilsson, G. A. Morris
 ;Chem. Commun. 2015, 51 (84), 15410-15413
 ;Measuring Couplings in Crowded NMR Spectra: Pure Shift NMR with Multiplet Analysis
@@ -36,45 +36,89 @@
 #include <Grad.incl>
 #include <Delay.incl>
 
-define delay DC_HSQCJa
-define delay DC_HSQCJb
-define delay DC_HSQCJc
-define delay DC_HSQCJd
-define delay DC_HSQCJe
-define delay DC_HSQCJf
+define delay DCN_ZZFa
+define delay DCN_ZZFb
+define delay DC_HSQCCa
+define delay DC_HSQCCb
+define delay DC_HSQCCc
+define delay DC_HSQCCd
+define delay DC_HSQCCe
+define delay DC_HSQCCf
+define delay DC_HSQCCg
+define delay DC_HSQCCh
+define delay DC_HSQCCi
+define delay DC_HSQCCj
 define delay DH_PSYCHE_TSAPa
 define delay DH_PSYCHE_TSAPb
 define delay DH_PSYCHE_TSAPc
 define delay DH_PSYCHE_TSAPd
 define delay DH_PSYCHE_TSAPe
 define delay DH_PSYCHE_TSAPf
+define delay DN_HMBC_CNFa
+define delay DN_HMBC_CNFb
+define delay DN_HSQCa
+define delay DN_HSQCb
+define delay DN_HSQCc
+define delay DN_HSQCd
+define delay DN_LP2a
+define delay DN_LP2b
+define delay DN_LP3a
+define delay DN_LP3b
+define delay DN_LP3c
 "cnst21          = (cnst20/360)*sqrt((2*10000)/(0.03/2))"                                               ; PSYCHE saltire RF amplitude
 "cnst41          = 2*sfo2/sfo1"                                                                         ; gradient ratio
-"d0              = 3u"                                                                                  ; 13C HSQC t1
+"cnst44          = 2*sfo3/sfo1"                                                                         ; gradient ratio
+"d0              = 3u"                                                                                  ; 13C HSQC-COSY t1
 "d2              = 0.5s/cnst2"                                                                          ; JCOMP
 "d4              = 0.25s/cnst2"                                                                         ; 13C INEPT
+"d12             = 0.25s/cnst12"                                                                        ; COSY mixing (< 1/4J(HH))
 "d17             = 3u"                                                                                  ; PSYCHE t1
-"in0             = inf1/2"                                                                              ; 13C HSQC increment
+"d20             = 3u"                                                                                  ; 15N HSQC t1/2
+"d24             = 0.25s/cnst4"                                                                         ; 15N INEPT
+"in0             = inf1/2"                                                                              ; 13C HSQC-COSY increment
 "in17            = trunc(0.5+(1000000/(cnst38*dw*2*((td1/nbl)/cnst37))))*dw*((td1/nbl)/cnst37)/1000000" ; PSYCHE increment
+"in20            = 1000000/(2*cnst40*sfo3)"                                                             ; 15N HSQC increment: cnst40 = SW(15N)
 "p2              = p1*2"                                                                                ; 1H hard 180
+"p17             = p16*cnst16"                                                                          ; Longer gradients for 15N module
+"p22             = p21*2"                                                                               ; 15N hard 180
 "p40             = 30m"                                                                                 ; PSYCHE saltire duration
 "spw40           = plw1*(cnst21/(250000/p1))*(cnst21/(250000/p1))"                                      ; PSYCHE saltire power level
-"DC_HSQCJa       = d4-p14/2"
-"DC_HSQCJb       = d4+p14/2"
-"DC_HSQCJc       = p16+d16+p2/2+d0-p3*2/PI+4u"
-"DC_HSQCJd       = d2+p3+p2/2"
-"DC_HSQCJe       = DC_HSQCJc+p3-p2/2"
-"DC_HSQCJf       = DC_HSQCJb-p16-d16-p3-de+p1*2/PI-8u"
+"DCN_ZZFa        = d4-p31/2"
+"DCN_ZZFb        = d4+p31/2"
+"DC_HSQCCa       = d4-p14/2"
+"DC_HSQCCb       = d4+p14/2"
+"DC_HSQCCc       = p16+d16+p2/2+d0-p3*2/PI+4u"
+"DC_HSQCCd       = d2+p3+p2/2"
+"DC_HSQCCe       = DC_HSQCCc+p3-p2/2"
+"DC_HSQCCf       = d4-p14/2"
+"DC_HSQCCg       = d4+p14/2"
+"DC_HSQCCh       = d12-d2-p14/2"
+"DC_HSQCCi       = d2-p14/2"
+"DC_HSQCCj       = d2+p14/2-p16-d16-de"
 "DH_PSYCHE_TSAPa = 0"                                                                                   ; Delta tau_J in original paper, set at runtime
 "DH_PSYCHE_TSAPb = 0"                                                                                   ; tau_1 in original paper, set at runtime
 "DH_PSYCHE_TSAPc = 0"                                                                                   ; tau_2 in original paper, set at runtime
 "DH_PSYCHE_TSAPd = 0"                                                                                   ; tau_3 in original paper, set at runtime
 "DH_PSYCHE_TSAPe = (dw*2*cnst22)"                                                                       ; delay for drop points
 "DH_PSYCHE_TSAPf = d17"                                                                                 ; half of t1, set at runtime
-define list<gradient> GC_HSQCJ={cnst41}
-"l0      = td1/2"             ; TD1/NBL (i.e. TD1 for ordinary modules)
+"DN_HMBC_CNFa    = (0.5s/cnst23)-p16-d16-4u"
+"DN_HMBC_CNFb    = p16+d16+p2/2+d20-p21*2/PI+4u"
+"DN_HSQCa        = d24-p22/2"
+"DN_HSQCb        = d24+p22/2"
+"DN_HSQCc        = p17+d16+p2/2+d20-p21*2/PI+4u"
+"DN_HSQCd        = DN_HSQCb-p17-d16-p21-de+p1*2/PI-8u"
+"DN_LP2a         = 1s/(2*cnst26)-p16-d16"
+"DN_LP2b         = 1s/(2*cnst27)-p16-d16"
+"DN_LP3a         = 1s/(2*(cnst26+0.07*(cnst27-cnst26)))-p16-d16"
+"DN_LP3b         = 1s/(cnst27+cnst26)-p16-d16"
+"DN_LP3c         = 1s/(2*(cnst27-0.07*(cnst27-cnst26)))-p16-d16"
+define list<gradient> GC_HSQCC={cnst41}
+define list<gradient> GN_HMBC_CNF={cnst44}
+define list<gradient> GN_HSQC={cnst44}
+"l0      = td1/4"             ; TD1/NBL (i.e. TD1 for ordinary modules)
 "l1      = 0"                 ; Running counter for TD1 for ordinary modules (0 on first increment)
 "l2      = 0"                 ; Running counter for NS (1 on first scan)
+"l6      = d15/(larger(p45,1u)*20)"  ; Number of ASAP loops
 "acqt0   = 0"
 baseopt_echo
 
@@ -87,6 +131,8 @@ baseopt_echo
   ; Cleanup
   4u pl2:f2
   (p3 ph0):f2
+  4u pl3:f3
+  (p21 ph0):f3
   4u pl1:f1
   p16:gp0
   d16
@@ -108,17 +154,160 @@ baseopt_echo
 
 
   ; MODULE 1
-  ; 13C-1H HSQC (F2-coupled)
+  ; 15N-1H HMBC
+
+  ; zz-filter
+#ifdef NOZZF
+  ; enable -DNOZZF acquisition flag to remove zz-filter
+  ; only do this if you are sure about what you are doing!
+  (p1 ph0):f1
+#else
+  ; 13C/15N zz-filter
+  (p1 ph0):f1
+  DCN_ZZFa
+  (p31:sp18 ph11):f2
+  (center (p2 ph0):f1 (p22 ph0):f3)
+  DCN_ZZFb
+  (p1 ph0):f1
+  DCN_ZZFa
+  (p31:sp18 ph11):f2
+  (center (p2 ph0):f1 (p22 ph0):f3)
+  DCN_ZZFb pl2:f2
+  (lalign (p1 ph0):f1 (p3 ph7):f2 )
+#endif
+
+  ; low-pass J-filter
+#ifdef NLP3
+  DN_LP3a
+  p16:gp10*2.8
+  d16
+  (p21 ph7):f3
+  DN_LP3b
+  p16:gp10*-1.6
+  d16
+  (p21 ph7):f3
+  DN_LP3c
+  p16:gp10*-0.8
+  d16
+  (p21 ph7):f3
+  4u
+  p16:gp10*-0.4
+  d16
+#else
+  DN_LP2a
+  p16:gp10*-3
+  d16
+  (p21 ph7):f3
+  DN_LP2b
+  p16:gp10*2
+  d16
+  (p21 ph7):f3
+  4u
+  p16:gp10
+  d16
+#endif
+
+  ; nJ(CH) evolution
+  DN_HMBC_CNFa
+  ; coherence transfer to 13C and t1
+  (p21 ph7):f3
+  DN_HMBC_CNFb
+  (p22 ph0):f3
+  4u
+  p17:gp1
+  d16
+  d20
+  (p2 ph11):f1
+  d20
+  4u
+  p17:gp1
+  d16
+  (p22 ph0):f3
+  DN_HMBC_CNFb
+  (p21 ph4):f3
+  (p2 ph0):f1
+  4u
+  p17:gp1*EA*GN_HMBC_CNF
+  d16
+  4u
+  goscnp ph29
+
+  ; Cleanup
+  4u pl1:f1
+  4u pl2:f2
+  (p3 ph0):f2
+  4u pl3:f3
+  (p21 ph0):f3
+  4u
+  p16:gp0*1.77
+  d16
+  10u st
+
+
+  ; MODULE 2
+  ; 15N-1H HSQC
 
   ; INEPT
   (p1 ph0):f1
-  DC_HSQCJa
+  DN_HSQCa
+  (p22 ph0):f3
+  (p2 ph0):f1
+  DN_HSQCb
+  (p1 ph1):f1
+  (p21 ph4):f3
+
+  ; t1 period
+  DN_HSQCc
+  (p22 ph0):f3
+  4u
+  p17:gp2
+  d16
+  d20
+  (p2 ph11):f1
+  d20
+  4u
+  p17:gp2
+  d16
+  (p22 ph0):f3
+  DN_HSQCc
+
+  ; reverse INEPT
+  (p21 ph7):f3
+  (p1 ph0):f1
+  DN_HSQCa
+  (p22 ph0):f3
+  (p2 ph1):f1
+  4u
+  p17:gp2*EA*GN_HSQC
+  d16
+  DN_HSQCd
+  (p21 ph0):f3
+  4u pl16:f3
+  goscnp ph29 cpd3:f3
+  50u do:f3
+
+  ; Cleanup
+  4u pl1:f1
+  4u pl3:f3
+  (p21 ph0):f3
+  4u
+  p16:gp0*2.32
+  d16
+  10u st
+
+
+  ; MODULE 3
+  ; 13C-1H HSQC
+
+  ; INEPT
+  (p1 ph0):f1
+  DC_HSQCCa
   (p14:sp3 ph0):f2
   (p2 ph0):f1
-  DC_HSQCJb pl2:f2
+  DC_HSQCCb pl2:f2
   (p1 ph1):f1
   (p3 ph5):f2
-  DC_HSQCJc
+  DC_HSQCCc
 
   ; t1 period
 #ifdef EDIT
@@ -136,44 +325,96 @@ baseopt_echo
   p16:gp4
   d16
 
-  ; multiplicity editing
+  ; multiplicity editing (not recommended)
 #ifdef EDIT
-  DC_HSQCJd
+  DC_HSQCCd
   (p31:sp18 ph0):f2
-  DC_HSQCJe
+  DC_HSQCCe
   (p2 ph1):f1
   d2 pl2:f2
 #else
   (p14:sp3 ph0):f2
-  DC_HSQCJc pl2:f2
+  DC_HSQCCc pl2:f2
 #endif /* EDIT */
 
   ; reverse INEPT
   (p3 ph7):f2
   (p1 ph0):f1
-  DC_HSQCJa
+  DC_HSQCCf
   (p14:sp3 ph0):f2
-  (p2 ph1):f1
-  4u
-  p16:gp4*EA*GC_HSQCJ
-  d16 pl2:f2
-  DC_HSQCJf
-  (p3 ph0):f2
-  4u
-  goscnp ph30
+  (p2 ph0):f1
+  DC_HSQCCg pl2:f2
+
+  ; coherence transfer
+  (p1 ph0):f1
+if "l2 % 2 == 1"   ; relayed COSY peak suppression
+{
+  d12
+}
+else
+{
+  DC_HSQCCh  ; d12-d2-p14/2
+  (p14:sp3 ph0):f2
+  DC_HSQCCi  ; d2-p14/2
+}
+  (p2 ph0):f1
+  d12
+  (p1 ph2):f1
+
+  ; spin echo for HSQC vs COSY peak editing
+  DC_HSQCCi  ; d2-p14/2
+  (p14:sp3 ph0):f2
+  (p2 ph0):f1
+  DC_HSQCCj  ; d2+p14/2-p16-d16-de
+  p16:gp4*GC_HSQCC*EA
+  d16 pl12:f2
+  goscnp ph25 cpd2:f2
+  50u do:f2
+
+  ; ASAP mixing
+if "d15 > 1m"
+{
   50u
+  p16:gp0*0.4
+  d16
+  4u
+						;begin ASAP
+6 (p45:sp45 ph=0.0):f1
+  (p45:sp45 ph=150.0):f1
+  (p45:sp45 ph=60.0):f1
+  (p45:sp45 ph=150.0):f1
+  (p45:sp45 ph=0.0):f1
+  (p45:sp45 ph=0.0):f1
+  (p45:sp45 ph=150.0):f1
+  (p45:sp45 ph=60.0):f1
+  (p45:sp45 ph=150.0):f1
+  (p45:sp45 ph=0.0):f1
+  (p45:sp45 ph=180.0):f1
+  (p45:sp45 ph=330.0):f1
+  (p45:sp45 ph=240.0):f1
+  (p45:sp45 ph=330.0):f1
+  (p45:sp45 ph=180.0):f1
+  (p45:sp45 ph=180.0):f1
+  (p45:sp45 ph=330.0):f1
+  (p45:sp45 ph=240.0):f1
+  (p45:sp45 ph=330.0):f1
+  (p45:sp45 ph=180.0):f1
+  lo to 6 times l6
+						;end ASAP
+  4u pl1:f1
+}
 
   ; Cleanup
   4u pl1:f1
   4u pl2:f2
   (p3 ph0):f2
   4u
-  p16:gp0*1.77
+  p16:gp0*-1.29
   d16
   10u st
 
 
-  ; MODULE 2
+  ; MODULE 4
   ; 1H 1D TSE-PSYCHE pure shift spectrum
   ; with SAPPHIRE averaging
 
@@ -246,13 +487,19 @@ else
   ; incrementation on every second pass
 if "l1 % 2 == 0" {
   1m ip5*2
-  1m ip30*2
+  1m ip25*2
   1m id0
 }
 if "l1 % (l0 / cnst37) == 0"
 {
   1m id17
   1m iu3
+}
+if "l1 % (2 * cnst39) == 0"
+{
+  1m ip4*2
+  1m ip29*2
+  1m id20
 }
   lo to 4 times l0
 
@@ -262,22 +509,31 @@ exit
 
 ph0=0
 ph1=1
+ph2=2
+ph4=0 2
 ph5=0 2
 ph7=0 0 2 2
 ph11=0 0 0 0 2 2 2 2
 ph15=0 1
+ph25=0 0 2 2
 ph26=0 2
-ph30=0 2 2 0
+ph29=0 2 2 0
 
 ;gpnam0: SMSQ10.100
+;gpnam1: SMSQ10.100
+;gpnam2: SMSQ10.100
 ;gpnam4: SMSQ10.100
+;gpnam10: SMSQ10.100
 ;gpnam14: RECT.1
 ;gpnam15: RECT.1
 ;gpnam16: SMSQ10.100
 ;gpnam17: SMSQ10.100
 ;gpnam18: SMSQ10.100
 ;gpz0: 29% (for purging)
+;gpz1: 80% (HMBC CTP)
+;gpz2: 80% (15N CTP)
 ;gpz4: 70% (13C CTP)
+;gpz10: 5% (HMBC J-filter)
 ;gpz14: 1% (1H PSYCHE weak gradient)
 ;gpz15: 1% (1H PSYCHE ZQS weak gradient)
 ;gpz16: 35% (1H PSYCHE CTP gradient 1)
@@ -289,51 +545,80 @@ ph30=0 2 2 0
 ;sp18:wvm:wu180Jcomp: cawurst-40(280 ppm; Jcomp, L2H)
 ;sp41:wvm:wuchirpLH: sm_chirp(10 kHz, 40 ms; L2H, Q=5) np=10000
 ;sp42:wvm:wuchirpHL: sm_chirp(10 kHz, 40 ms; H2L, Q=5) np=10000
+;sp45:wvm:wuASAP: cawurst-2(30 ppm, 1.0 ms; Q=3)
+;cpd2:wvm:wudec: cawurst_d-20(220 ppm, 1.4 ms; L2H)
 
 ;d0: 13C t1
 ;d2: 1/2J(CH)
 ;d4: 1/4J(CH)
+;d12: <1/4J(HH) CLIP-COSY mixing time
 ;d17: 1H t1 (QF scaled modules)
+;d20: 15N t1
+;d24: 1/4J(NH)
 ;d1: relaxation delay
 ;d16: delay for homospoil/gradient recovery [200 us]
+;d3: 13C t1 for interleaved/time-shared modules
+;d15: optional ASAP mixing time [40-60 ms] (use `wvm`)
 ;cnst2: = 1J(CH)
+;cnst4: = 1J(NH)
+;cnst12: > J(HH), ca. 30 Hz for CLIP-COSY mixing
+;cnst16: 15N CTP gradient lengthening factor
 ;cnst20: PSYCHE saltire flip angle (degrees)
 ;cnst21: PSYCHE saltire RF amplitude (Hz)
 ;cnst22: PSYCHE drop points [ca. 4]
+;cnst23: = nJ(NH) long-range
+;cnst26: = minimum 1J(NH)
+;cnst27: = maximum 1J(NH)
 ;cnst37: TD1 for 1H JRES or PSYCHE [32]
 ;cnst38: SW (Hz) for 1H JRES or PSYCHE
+;cnst39: 15N HSQC sensitivity factor [1-4]
+;cnst40: 15N SW (ppm)
 ;cnst41: gradient ratio (2*C/H)
+;cnst44: gradient ratio (2*N/H)
+;cpd2: 13C decoupling according to sequence defined by cpdprg2
+;cpd3: 15N decoupling according to sequence defined by cpdprg3
 ;l0: TD1 / NBL, i.e. 'true TD1'
 ;l1: running counter for true TD1 (0 on first increment)
+;l2: running counter for NS (1 on first scan)
 ;l3: running counter for TD1 for k-scaled 1H modules (0 on first increment)
+;l6: loop for ASAP mixing
 ;p1: f1 channel -  90 degree high power pulse
 ;p2: f1 channel - 180 degree high power pulse
 ;p3: f2 channel -  90 degree high power pulse
 ;p14: f2 channel - 180 degree inversion [500 us for Crp60,0.5,20.1]
 ;p16: gradient pulse [1 ms]
+;p17: extended gradient pulse for 15N HSQC
+;p21: f3 channel -  90 degree high power pulse
+;p22: f3 channel - 180 degree high power pulse
 ;p31: f2 channel - 180 degree inversion with J-compensation
 ;p40: f1 channel - PSYCHE double saltire pulse [30 ms]
 ;p41: f1 channel - PSYCHE ZQS chirp pulses [40 ms]
+;p45: f1 channel -  180 degree CAWURST-2 pulse
 ;pl1: f1 channel - power level for pulse (default)
 ;pl2: f2 channel - power level for pulse (default)
+;pl3: f3 channel - power level for pulse (default)
 ;pl9: f1 channel - power level for presaturation
+;pl12: f2 channel - power level for CPD/BB decoupling
+;pl16: f3 channel - power level for CPD/BB decoupling
 ;sp3: 13C adiabatic inversion
 ;sp18: 13C J-compensated refocusing
 ;sp40: 1H PSYCHE saltire
 ;sp41: 1H TSE-PSYCHE low-to-high chirp
 ;sp42: 1H TSE-PSYCHE high-to-low chirp
+;sp45: 1H CAWURST-2 pulse (180 degree)
 ;spnam3: Crp60,0.5,20.1 or WaveMaker
 ;spnam18: Crp60_xfilt.2 or WaveMaker
 ;spnam40: Crp_psyche.20
 ;spnam41: wuchirpLH - generate via WaveMaker
 ;spnam42: wuchirpHL - generate via WaveMaker
+;spnam45: wuASAP (generate via WaveMaker)
 ;aq: acquisition time
 ;ds: >= 16
 ;FnMODE: echo-antiecho
 ;NBL: number of blocks (NOAH modules)
 ;ns: 1 * n
 
-; auprog: noah_hsqc:noah_sapphire
-; module identifiers: C_HSQCJ H_PSYCHE_TSAP
+; auprog: noah_nhmbc:noah_nhsqc:noah_hsqc:noah_sapphire
+; module identifiers: N_HMBC_CNF N_HSQC C_HSQCC H_PSYCHE_TSAP
 ; pulse programme created by genesis-v2.0.20, https://nmr-genesis.co.uk
-; Fri Dec 31 2021 01:38:22 GMT+0000 (Greenwich Mean Time)
+; Fri Dec 31 2021 01:40:42 GMT+0000 (Greenwich Mean Time)
