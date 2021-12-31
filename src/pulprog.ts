@@ -116,8 +116,8 @@ export function makePulprogText(trueModuleNames: string[],
         `  ; Cleanup`,
     );
     // Context-dependent cleanup before d1.
-    if (hasCModule) mainpp.push(`  4u pl2:f2`, `  (p3 ph0):f2`);
-    if (hasNModule) mainpp.push(`  4u pl3:f3`, `  (p21 ph0):f3`);
+    if (modules.some(m => m.nuclei().includes("C"))) mainpp.push(`  4u pl2:f2`, `  (p3 ph0):f2`);
+    if (modules.some(m => m.nuclei().includes("N"))) mainpp.push(`  4u pl3:f3`, `  (p21 ph0):f3`);
     mainpp.push(
         `  4u pl1:f1`,
         `  p16:gp0`,
