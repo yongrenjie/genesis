@@ -581,7 +581,7 @@ export function makePulprogText(trueModuleNames: string[],
         `"l1      = 0"                 ; Running counter for TD1 for ordinary modules (0 on first increment)`,
         `"l2      = 0"                 ; Running counter for NS (1 on first scan)`,
     );
-    if (delays.includes(11)) {
+    if (delays.includes(17)) {
         pp.push(
             `"l3      = 0"                 ; Running counter for TD1 for QF k-scaled 1H modules, e.g. PSYCHE (0 on first increment)`,
         );
