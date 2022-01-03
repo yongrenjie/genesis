@@ -1,4 +1,5 @@
 import { Kupce2017ACIE } from "../citation.js";
+import { AF_NOZQS } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H COSY + TOCSY (echo/antiecho F1)`;
@@ -30,9 +31,13 @@ let pulprog = `
   10u st
 
   ; TOCSY
+  4u
+#ifdef NOZQS
+#else
   10u gron12
   (p32:sp29 ph0):f1  ; ZQ suppression
   20u groff
+#else
   d16 pl10:f1
 
   |DIPSI|
@@ -64,7 +69,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE],
     "noah_cosy:noah_tocsy",
     shortDescription,
-    [],
+    [AF_NOZQS],
     preamble,
     pulprog,
     2,

@@ -1,5 +1,5 @@
 import { Kupce2017ACIE } from "../citation.js";
-import { AF_PRESAT_NOE } from "../acquFlag.js";
+import { AF_PRESAT_NOE, AF_NOZQS } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H COSY and NOESY (echo/antiecho F1)`
@@ -9,8 +9,9 @@ let preamble = `
 "d10    = 3u"                         ; COSY/NOESY t1
 "in10   = 2*dw"                       ; COSY/NOESY increment
 "D[ID]a = p16+d16+4u-d10"
-"D[ID]b = d8-p16-d16-de-aq-p16-d16-p32-60u"     ; NOE mixing time
-"D[ID]c = p16+d16"
+"D[ID]b = d8-p16-d16-de-aq-p16-d16-30u"        ; NOE mixing time (without ZQS)
+"D[ID]c = d8-p16-d16-de-aq-p16-d16-p32-60u"    ; NOE mixing time
+"D[ID]d = p16+d16"
 `
 
 let pulprog = `
@@ -32,23 +33,34 @@ let pulprog = `
 
   ; NOESY
   4u
+#ifdef NOZQS
+#else
   10u gron12
   (p32:sp29 ph0):f1  ; ZQ suppression
   20u groff
+#endif
   p16:gp11
   d16 pl1:f1
 #ifdef PRESAT
   4u pl9:f1
-  D[ID]b cw:f1  ; NOE mixing time with presat
+# ifdef NOZQS
+  D[ID]b cw:f1  ; presat, no ZQS
+# else
+  D[ID]c cw:f1  ; presat, ZQS
+# endif
   4u do:f1
   4u pl1:f1
   10u st
 #else
-  D[ID]b        ; NOE mixing time
+# ifdef NOZQS
+  D[ID]b        ; no presat, no ZQS
+# else
+  D[ID]c        ; presat, ZQS
+# endif
   22u st
 #endif  /* PRESAT */
   (p1 ph7):f1
-  D[ID]c
+  D[ID]d
   de
   4u
   (p2 ph7):f1
@@ -65,7 +77,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE],
     "noah_cosy:noah_noesy",
     shortDescription,
-    [AF_PRESAT_NOE],
+    [AF_PRESAT_NOE, AF_NOZQS],
     preamble,
     pulprog,
     2,
