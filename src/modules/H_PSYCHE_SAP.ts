@@ -1,4 +1,5 @@
 import { Kupce2017ACIE, Foroozandeh2014ACIE, Moutzouri2017CC } from "../citation.js";
+import { AF_ES } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H 1D PSYCHE pure shift spectrum with SAPPHIRE averaging
@@ -17,6 +18,7 @@ let preamble = `
 "D[ID]d = 0"              ; tau_3 in original paper, set at runtime
 "D[ID]e = (dw*2*cnst22)"  ; delay for drop points
 "D[ID]f = d17"            ; half of t1, set at runtime
+"D[ID]g = p12+4u"         ; delay to balance J-evolution during ES pulses
 `
 
 let pulprog = `
@@ -48,6 +50,10 @@ else
   D[ID]b
   p16:gp16
   d16
+#ifdef ES
+  (p12:sp1 ph0):f1
+  4u pl1:f1
+#endif /* ES */
   (p2 ph0):f1
   p16:gp16
   d16
@@ -60,6 +66,10 @@ else
   p16:gp17
   d16
   d16  ; to balance delays on either side
+#ifdef ES
+  (p12:sp1 ph0):f1
+  4u pl1:f1
+#endif /* ES */
   ( center (p40:sp40 ph14):f1 (p40:gp14) )
   d16 pl1:f1
   p16:gp17
@@ -70,11 +80,17 @@ else
 
   ; third spin echo
   D[ID]d
+#ifdef ES
+  D[ID]g
+#endif /* ES */
   p16:gp18
   d16
   (p2 ph0):f1
   p16:gp18
   d16
+#ifdef ES
+  D[ID]g
+#endif /* ES */
   D[ID]d
 
   D[ID]f     ; t1/2
@@ -88,7 +104,7 @@ const mod = new NOAHModule(
     [Kupce2017ACIE, Foroozandeh2014ACIE, Moutzouri2017CC],
     "noah_sapphire",
     shortDescription,
-    [],
+    [AF_ES],
     preamble,
     pulprog,
     1,
