@@ -8,6 +8,7 @@
 
 ---------
 
+
 ## Online usage
 
 Simply go to https://nmr-genesis.co.uk, select the modules you want to use, and download the resulting pulse programme.
@@ -16,6 +17,7 @@ These are ready to use directly on spectrometers.
 If you require instructions on how to set up, run, and process NOAH experiments, the website contains a very extensive FAQ.
 
 To access a specific version of the website (say version X.Y.Z), navigate to the URL https://nmr-genesis.co.uk/X/Y/Z.
+
 
 ## Offline usage
 
@@ -38,12 +40,19 @@ To access a specific version of the website (say version X.Y.Z), navigate to the
 
    and then perform steps 3 and 4 again. You can see the full list of versions using the command `git tag`.
 
+
 ## What does GENESIS stand for?
 
 GENEration of Supersequences In Silico.
+
 
 ## What are NMR supersequences?
 
 Check out the original paper:
 
 Kupče, Ē.; Claridge, T. D. W. NOAH: NMR Supersequences for Small Molecule Analysis and Structure Elucidation. *Angew. Chem. Int. Ed.* **2017,** *56* (39), 11779–11783. DOI: [10.1002/anie.201705506](https://doi.org/10.1002/anie.201705506).
+
+
+## Figures and raw data for the accompanying paper
+
+I've uploaded these at https://github.com/yongrenjie/genesis-paper. There are more detailed instructions there.
