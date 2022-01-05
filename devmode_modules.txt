@@ -8,9 +8,19 @@ H-C HMBC
 C_HMBC_CF
     zz-HMBC, as described in doi:10.1039/C8CC03296C, with second-order low-pass
     J filter.
-C_HMBC_CFG
-    An experimental version -- this does not work and is not likely to ever
-    work! Use at your own risk!
+C_HMBC_CFGA
+    zz-HMBC, with a different gradient scheme. No real benefit over C_HMBC_CF.
+C_HMBC_CFGB
+    zz-HMBC, with yet another different gradient scheme. No real benefit over
+    C_HMBC_CF.
+C_HMBC_CFGC
+    zz-HMBC, with yet another another different gradient scheme. This is
+    essentially the same as hmbcetgpl2nd but instead of adding a proton 180 at
+    the end we modify the phase of the final 90 pulse in the zz-filter. This
+    technically preserves 13C-1H magnetisation, and works better in the HMBC
+    because there are fewer pulses, but the 13C-1H magnetisation is placed
+    along -z during the HMBC nJ(CH) evolution delay which causes losses in any
+    subsequent HSQC due to relaxation.
 C_HMBC_CNF
     Semi-adiabatic double filter which preserves CH and NH magnetisation, as
     described in doi:10.1016/j.jmr.2019.106568.
@@ -18,6 +28,20 @@ C_HMBC_NOF
     HMBC without the zz-filter. Note that this is not the same as the Bruker
     `hmbcetgp..` experiments: the gradient scheme here is symmetric, whereas
     the Bruker experiments have an asymmetric gradient scheme.
+
+
+
+H-N HMBC
+--------
+
+N_HMBC_CF
+    Same as C_HMBC_CF, just that it's 15N in the indirect dimension.
+N_HMBC_CNF
+    Same as C_HMBC_CNF, just that it's 15N in the indirect dimension.
+N_HMBC_CFIM
+    IMPEACH-MBC experiment (doi:10.1006/jmre.1999.1840), but it doesn't work
+    very well (yet?).
+
 
 
 H-N experiments
@@ -39,6 +63,7 @@ N_SEHSQC_DP
     modules.
 N_SEHSQC_OR
     Cavanagh-Rance seHSQC, essentially the same as `hsqcetf3gpsi`.
+
 
 
 H-C HSQCs
@@ -76,9 +101,15 @@ CI_HSQCJ
     Same as C_HSQCJ, but is `cnst32`-compatible.
 
 
+
 Other H-C experiments
 ---------------------
 
+C_ADEQ
+    1,1-ADEQUATE experiment with ZIP element in front to preserve bulk
+    magnetisation. Works, but is terribly insensitive as would be expected.
+C_HMQC
+    Standard HMQC.
 C_HSQCC
     'Triple spin echo' version of HSQC-COSY experiment.  Lineshapes are not so
     good and raw sensitivity is not as high as in the other alternatives, but
@@ -143,6 +174,9 @@ H_COTO
     doi:10.1002/mrc.4835.
 H_COTO_ST
     States COSY + TOCSY.
+H_COTO_STDS
+    Same as H_COTO_ST but using the -DES flag turns on excitation sculpting
+    after both COSY and TOCSY. Not generally recommended for use.
 H_DQFCOSY
     States DQF-COSY.
 H_DQFCOSY_EA
@@ -159,6 +193,10 @@ H_PSYCHE
 H_PSYCHE_TSE
     1D TSE-PSYCHE as reported in doi:10.1039/c5cc06293d. This provides much
     better artefact suppression compared to the original PSYCHE method.
+H_PSYCHE_SAP
+    1D PSYCHE with SAPPHIRE averaging as described in doi:10.1039/c7cc04423b.
+H_PSYCHE_TSAP
+    1D TSE-PSYCHE with SAPPHIRE averaging.
 H_ROESY
     ROESY with 180/-180 spin-lock as the mixing element; similar to Bruker
     `roesyetgp.2`.
@@ -166,6 +204,10 @@ H_ROESY_AD
     ROESY with adiabatic spin-lock, as reported in doi:10.1002/chem.200802027.
 H_TOCSY
     Standard States TOCSY, similar to `dipsi2gpphzs`.
+H_ZG
+    Standard pulse-acquire experiment with no t1 period. Useful for debugging /
+    monitoring how much bulk magnetisation is being preserved.
+
 
 
 Modules specific to time-shared / interleaved work
