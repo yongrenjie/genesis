@@ -475,4 +475,4 @@ ph30=0 2 2 0
 ; auprog: noah_hmbc:noah_hsqc:noah_cosy States:noah_roesy States
 ; module identifiers: C_HMBC_CF C_HSQC H_CORO_ST
 ; pulse programme created by genesis-v2.0.20, https://nmr-genesis.co.uk
-; Fri Dec 31 2021 01:38:22 GMT+0000 (Greenwich Mean Time)
+; Wed Jan 05 2022 17:53:21 GMT+0000 (Greenwich Mean Time)

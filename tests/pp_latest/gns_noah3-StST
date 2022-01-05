@@ -496,4 +496,4 @@ ph30=0 2 2 0
 ; auprog: noah_hsqc:noah_hsqc:noah_tocsy States
 ; module identifiers: CI_HSQCT C_HSQC H_TOCSY
 ; pulse programme created by genesis-v2.0.20, https://nmr-genesis.co.uk
-; Fri Dec 31 2021 01:38:22 GMT+0000 (Greenwich Mean Time)
+; Wed Jan 05 2022 17:53:21 GMT+0000 (Greenwich Mean Time)

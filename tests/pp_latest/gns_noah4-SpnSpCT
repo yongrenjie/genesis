@@ -9,6 +9,7 @@
 ; 13C sensitivity-enhanced HSQC
 ;     [zgoptns: use -DEDIT for multiplicity editing]
 ; 1H COSY + TOCSY (echo/antiecho F1)
+;     [zgoptns: use -DNOZQS for no zero-quantum suppression]
 ; =========================================================================
 
 ;$CLASS=HighRes
@@ -343,9 +344,13 @@ baseopt_echo
   10u st
 
   ; TOCSY
+  4u
+#ifdef NOZQS
+#else
   10u gron12
   (p32:sp29 ph0):f1  ; ZQ suppression
   20u groff
+#else
   d16 pl10:f1
 
 						;begin DIPSI2
@@ -547,4 +552,4 @@ ph31=0 2
 ; auprog: noah_nhsqc:noah_hsqc:noah_cosy:noah_tocsy
 ; module identifiers: N_SEHSQC C_SEHSQC H_COTO
 ; pulse programme created by genesis-v2.0.20, https://nmr-genesis.co.uk
-; Fri Dec 31 2021 01:38:22 GMT+0000 (Greenwich Mean Time)
+; Wed Jan 05 2022 17:53:21 GMT+0000 (Greenwich Mean Time)

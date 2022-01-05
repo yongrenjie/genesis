@@ -8,6 +8,7 @@
 ;     [zgoptns: use -DEDIT for multiplicity editing]
 ; 1H 1D TSE-PSYCHE pure shift spectrum with SAPPHIRE averaging
 ;     [set TD1 and SW(Hz) as cnst37 and cnst38 respectively]
+;     [zgoptns: use -DES for excitation sculpting]
 ; =========================================================================
 
 ;$CLASS=HighRes
@@ -48,6 +49,7 @@ define delay DH_PSYCHE_TSAPc
 define delay DH_PSYCHE_TSAPd
 define delay DH_PSYCHE_TSAPe
 define delay DH_PSYCHE_TSAPf
+define delay DH_PSYCHE_TSAPg
 "cnst21          = (cnst20/360)*sqrt((2*10000)/(0.03/2))"                                               ; PSYCHE saltire RF amplitude
 "cnst41          = 2*sfo2/sfo1"                                                                         ; gradient ratio
 "d0              = 3u"                                                                                  ; 13C HSQC t1
@@ -71,10 +73,12 @@ define delay DH_PSYCHE_TSAPf
 "DH_PSYCHE_TSAPd = 0"                                                                                   ; tau_3 in original paper, set at runtime
 "DH_PSYCHE_TSAPe = (dw*2*cnst22)"                                                                       ; delay for drop points
 "DH_PSYCHE_TSAPf = d17"                                                                                 ; half of t1, set at runtime
+"DH_PSYCHE_TSAPg = p12+4u"                                                                              ; delay to balance J-evolution during ES pulses
 define list<gradient> GC_HSQCJ={cnst41}
 "l0      = td1/2"             ; TD1/NBL (i.e. TD1 for ordinary modules)
 "l1      = 0"                 ; Running counter for TD1 for ordinary modules (0 on first increment)
 "l2      = 0"                 ; Running counter for NS (1 on first scan)
+"l3      = 0"                 ; Running counter for TD1 for QF k-scaled 1H modules, e.g. PSYCHE (0 on first increment)
 "acqt0   = 0"
 baseopt_echo
 
@@ -203,6 +207,10 @@ else
   p16:gp16
   d16
   d16
+#ifdef ES
+  (p12:sp1 ph0):f1
+  4u pl1:f1
+#endif /* ES */
   ( center (p41:sp41 ph7):f1 (p41:gp15) )
   d16
   p16:gp16
@@ -216,6 +224,10 @@ else
   p16:gp17
   d16
   d16  ; to balance delays on either side
+#ifdef ES
+  (p12:sp1 ph0):f1
+  4u pl1:f1
+#endif /* ES */
   ( center (p40:sp40 ph15):f1 (p40:gp14) )
   d16 pl1:f1
   p16:gp17
@@ -226,6 +238,9 @@ else
 
   ; third spin echo (H2L chirp)
   DH_PSYCHE_TSAPd
+#ifdef ES
+  DH_PSYCHE_TSAPg
+#endif /* ES */
   p16:gp18
   d16
   d16
@@ -234,6 +249,9 @@ else
   p16:gp18
   d16
   DH_PSYCHE_TSAPd
+#ifdef ES
+  DH_PSYCHE_TSAPg
+#endif /* ES */
 
   DH_PSYCHE_TSAPf     ; t1/2
   go=2 ph26
@@ -285,6 +303,7 @@ ph30=0 2 2 0
 ;gpz18: 77% (1H PSYCHE CTP gradient 3)
 
 ;WaveMaker shaped pulses (use 'wvm -a' to generate)
+;sp1:wvm:wu180H1Sinc: sinc180(p12)
 ;sp3:wvm:wu180C13: cawurst-20(60 kHz, 0.5 ms; L2H)
 ;sp18:wvm:wu180Jcomp: cawurst-40(280 ppm; Jcomp, L2H)
 ;sp41:wvm:wuchirpLH: sm_chirp(10 kHz, 40 ms; L2H, Q=5) np=10000
@@ -309,6 +328,7 @@ ph30=0 2 2 0
 ;p1: f1 channel -  90 degree high power pulse
 ;p2: f1 channel - 180 degree high power pulse
 ;p3: f2 channel -  90 degree high power pulse
+;p12: f1 channel - 180 degree inversion for excitation sculpting [2-8 ms]
 ;p14: f2 channel - 180 degree inversion [500 us for Crp60,0.5,20.1]
 ;p16: gradient pulse [1 ms]
 ;p31: f2 channel - 180 degree inversion with J-compensation
@@ -317,11 +337,13 @@ ph30=0 2 2 0
 ;pl1: f1 channel - power level for pulse (default)
 ;pl2: f2 channel - power level for pulse (default)
 ;pl9: f1 channel - power level for presaturation
+;sp1: 1H selective inversion
 ;sp3: 13C adiabatic inversion
 ;sp18: 13C J-compensated refocusing
 ;sp40: 1H PSYCHE saltire
 ;sp41: 1H TSE-PSYCHE low-to-high chirp
 ;sp42: 1H TSE-PSYCHE high-to-low chirp
+;spnam1: Sinc1.1000 or WaveMaker
 ;spnam3: Crp60,0.5,20.1 or WaveMaker
 ;spnam18: Crp60_xfilt.2 or WaveMaker
 ;spnam40: Crp_psyche.20
@@ -336,4 +358,4 @@ ph30=0 2 2 0
 ; auprog: noah_hsqc:noah_sapphire
 ; module identifiers: C_HSQCJ H_PSYCHE_TSAP
 ; pulse programme created by genesis-v2.0.20, https://nmr-genesis.co.uk
-; Fri Dec 31 2021 01:38:22 GMT+0000 (Greenwich Mean Time)
+; Wed Jan 05 2022 17:53:21 GMT+0000 (Greenwich Mean Time)

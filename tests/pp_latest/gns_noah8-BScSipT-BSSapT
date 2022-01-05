@@ -751,4 +751,4 @@ ph26=0 2
 ; auprog: noah_hmbc noah_hmbc:noah_hsqc noah_TS:noah_hsqc noah_split:noah_tocsy States noah_tocsy States
 ; module identifiers: C_HMBC_CFDD C_HSQCC_DIA C_SEHSQC_IA H_TT_DM
 ; pulse programme created by genesis-v2.0.20, https://nmr-genesis.co.uk
-; Fri Dec 31 2021 01:38:22 GMT+0000 (Greenwich Mean Time)
+; Wed Jan 05 2022 17:53:22 GMT+0000 (Greenwich Mean Time)

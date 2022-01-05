@@ -19,7 +19,7 @@
 ;Angew. Chem. Int. Ed. 2017, 56 (39), 11779-11783
 ;NOAH: NMR Supersequences for Small Molecule Analysis and Structure Elucidation
 
-;B. Reif, M. Köck, R. Kerssebaum, H. Kang, W. Fenical, C.  Griesinger
+;B. Reif, M. KÃ¶ck, R. Kerssebaum, H. Kang, W. Fenical, C.  Griesinger
 ;J. Magn. Reson. 1996, 118 (2), 282-285
 ;ADEQUATE, a New Set of Experiments to Determine the Constitution of Small Molecules at Natural Abundance
 
@@ -395,4 +395,4 @@ ph29=0 2 2 0
 ; auprog: noah_hsqc:noah_nhmbc
 ; module identifiers: C_ADEQ N_HMBC_CF
 ; pulse programme created by genesis-v2.0.20, https://nmr-genesis.co.uk
-; Fri Dec 31 2021 01:38:40 GMT+0000 (Greenwich Mean Time)
+; Wed Jan 05 2022 17:53:21 GMT+0000 (Greenwich Mean Time)
