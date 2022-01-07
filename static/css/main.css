@@ -63,6 +63,7 @@ html {
     font-family: "Source Sans Pro", sans-serif;
     box-sizing: border-box;
     font-size: 18px;
+    background-color: #fcfcfc;
 }
 
 *, *:before, *:after {
@@ -93,6 +94,7 @@ textarea#pulprog_text {
     width: 100%;
     resize: none;
     font-family: "Inconsolata", monospace;
+    background-color: inherit;
 }
 
 /* Headings */

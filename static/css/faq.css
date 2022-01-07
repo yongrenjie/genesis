@@ -81,7 +81,7 @@ input.toggle-button:checked + label.toggle-label::before {
 
 div.toggle-content-inner {
     padding: 0.3em 1em;
-    line-height: 145%;
+    line-height: 1.5;
 }
 
 div.toggle-content-inner {
