@@ -302,7 +302,7 @@ allPhases[18] = new Phase({num: 18, str: "0 2", incrC: "i2"});  // time-shared 1
 allPhases[19] = new Phase({num: 19, str: "1 1 3 3", incrB: "i2"});  // time-shared 13C seHSQC (replaces ph9)
 allPhases[20] = new Phase({num: 20, str: "0 2", incrB: "i", incrC: "r"});  // time-shared 1H States (replaces ph6)
 // below are for receivers
-allPhases[22] = new Phase({num: 22, str: "0 2 2 0 2 0 0 2 2 2 0 0 2 0 2 2 0", incrB: "i2"});      // ADEQUATE
+allPhases[22] = new Phase({num: 22, str: "0 2 2 0 2 0 0 2 2 0 0 2 0 2 2 0", incrB: "i2"});      // ADEQUATE
 allPhases[23] = new Phase({num: 23, str: "0 0 2 2", incrC: "i2"});      // HSQC-COSY interleaved (replaces ph25)
 allPhases[24] = new Phase({num: 24, str: "0 2 2 0", incrC: "i2"});      // 13C EA for interleaved (replaces ph30)
 allPhases[25] = new Phase({num: 25, str: "0 0 2 2", incrB: "i2"});      // HSQC-COSY
