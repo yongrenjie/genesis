@@ -21,6 +21,10 @@
 ;$SUBTYPE=
 ;$COMMENT=
 
+;J. R. J. Yong, E. Kupce, T. D. W. Claridge
+;Anal. Chem. 2022, DOI: 10.1021/acs.analchem.1c04964
+;Modular Pulse Program Generation for NMR Supersequences
+
 ;E. Kupce, T. D. W. Claridge
 ;Angew. Chem. Int. Ed. 2017, 56 (39), 11779-11783
 ;NOAH: NMR Supersequences for Small Molecule Analysis and Structure Elucidation
@@ -643,4 +647,4 @@ ph29=0 2 2 0
 ; auprog: noah_nhmbc:noah_nhsqc:noah_hsqc:noah_sapphire
 ; module identifiers: N_HMBC_CNF N_HSQC C_HSQCC H_PSYCHE_TSAP
 ; pulse programme created by genesis-v2.0.20, https://nmr-genesis.co.uk
-; Wed Jan 05 2022 17:53:22 GMT+0000 (Greenwich Mean Time)
+; Thu Jan 20 2022 23:57:41 GMT+0000 (Greenwich Mean Time)
