@@ -24,17 +24,17 @@ To access a specific version of the website (say version X.Y.Z), navigate to the
 ## Offline usage
 
 1. [Download and install Node.js](https://nodejs.org/en/).
-2. Clone this repository and navigate into it..
+2. Clone this repository and navigate into it:
 
        git clone https://github.com/yongrenjie/genesis
        cd genesis
 
-3. Run the following commands
+3. Run the following commands:
 
        npm install
        npm start
 
-4. Open any web browser and navigate to http://localhost:5555/. (Port 5555 is used by default. If you want to change this, set the `$PORT` environment variable to a number of your choice.)
+4. Open any web browser and navigate to http://localhost:5555/. (Port 5555 is used by default. If you want to change this, set the `$PORT` environment variable to a number of your choice; for example, on Unix/Linux you can run `PORT=8000 npm start` to launch on port 8000.)
 
 5. (optional) If you want to access a specific version, run
 
@@ -55,6 +55,7 @@ Check out the original paper:
 Kupče, Ē.; Claridge, T. D. W. NOAH: NMR Supersequences for Small Molecule Analysis and Structure Elucidation. *Angew. Chem. Int. Ed.* **2017,** *56* (39), 11779–11783. DOI: [10.1002/anie.201705506](https://doi.org/10.1002/anie.201705506).
 
 
-## Figures and raw data for the accompanying paper
+## Figures and raw data for the accompanying paper...
 
-I've uploaded these at https://github.com/yongrenjie/genesis-paper. There are more detailed instructions there.
+... are uploaded at https://github.com/yongrenjie/genesis-paper.
+There are more detailed instructions there.
