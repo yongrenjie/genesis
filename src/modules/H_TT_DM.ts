@@ -1,4 +1,3 @@
-import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H interleaved 2x TOCSY (two different mixing times)`
@@ -48,7 +47,7 @@ const mod = new NOAHModule(
     "H_TT_DM",
     "h1",
     "T T",
-    [Kupce2017ACIE],
+    [],
     "noah_tocsy States noah_tocsy States",
     shortDescription,
     [],

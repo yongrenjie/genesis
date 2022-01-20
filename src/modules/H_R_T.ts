@@ -1,4 +1,4 @@
-import { Kupce2017ACIE, Thiele2009CEJ } from "../citation.js";
+import { Thiele2009CEJ } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H interleaved ROESY + TOCSY`
@@ -53,7 +53,7 @@ const mod = new NOAHModule(
     "H_R_T",
     "h1",
     "R T",
-    [Kupce2017ACIE, Thiele2009CEJ],
+    [Thiele2009CEJ],
     "noah_roesy States noah_tocsy States",
     shortDescription,
     [],

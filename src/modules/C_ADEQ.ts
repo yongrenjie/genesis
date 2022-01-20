@@ -1,4 +1,4 @@
-import { Kupce2017ACIE, Reif1996JMR } from "../citation.js";
+import { Reif1996JMR } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 13C 1,1-ADEQUATE with ZIP element`
@@ -99,7 +99,7 @@ const mod = new NOAHModule(
     "C_ADEQ",
     "c13",
     "A",
-    [Kupce2017ACIE, Reif1996JMR],
+    [Reif1996JMR],
     "noah_hsqc",
     shortDescription,
     [],

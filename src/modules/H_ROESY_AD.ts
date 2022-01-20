@@ -1,4 +1,4 @@
-import { Kupce2017ACIE, Thiele2009CEJ } from "../citation.js";
+import { Thiele2009CEJ } from "../citation.js";
 import { AF_ES } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
@@ -35,7 +35,7 @@ const mod = new NOAHModule(
     "H_ROESY_AD",
     "h1",
     "Rad",
-    [Kupce2017ACIE, Thiele2009CEJ],
+    [Thiele2009CEJ],
     "noah_roesy States",
     shortDescription,
     [AF_ES],

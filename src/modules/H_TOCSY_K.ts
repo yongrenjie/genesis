@@ -1,4 +1,3 @@
-import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H phase-sensitive TOCSY (double NS, half TD1)`;
@@ -39,7 +38,7 @@ const mod = new NOAHModule(
     "H_TOCSY_K",
     "h1",
     "Tk",
-    [Kupce2017ACIE],
+    [],
     "noah_tocsy States noah_add",
     shortDescription,
     [],

@@ -1,4 +1,4 @@
-import { Kupce2017ACIE, Koos2016ACIE } from "../citation.js";
+import { Koos2016ACIE } from "../citation.js";
 import { AF_ES } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
@@ -49,7 +49,7 @@ const mod = new NOAHModule(
     "H_CLIP_COSY",
     "h1",
     "Cc",
-    [Kupce2017ACIE, Koos2016ACIE],
+    [Koos2016ACIE],
     "noah_clipcosy States",
     shortDescription,
     [AF_ES],

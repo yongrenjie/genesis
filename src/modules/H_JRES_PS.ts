@@ -1,4 +1,4 @@
-import { Kupce2017ACIE, Foroozandeh2015CC } from "../citation.js";
+import { Foroozandeh2015CC } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H phase-sensitive PSYCHE 2D J spectrum
@@ -88,7 +88,7 @@ const mod = new NOAHModule(
     "H_JRES_PS",
     "h1",
     "J",
-    [Kupce2017ACIE, Foroozandeh2015CC],
+    [Foroozandeh2015CC],
     "noah_jresph",
     shortDescription,
     [],

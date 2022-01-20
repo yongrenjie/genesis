@@ -1,4 +1,3 @@
-import { Kupce2017ACIE } from "../citation.js";
 import { AF_ES } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
@@ -29,7 +28,7 @@ const mod = new NOAHModule(
     "H_COSY_QF",
     "h1",
     "Cqf",
-    [Kupce2017ACIE],
+    [],
     "noah_cosy QF",
     shortDescription,
     [AF_ES],

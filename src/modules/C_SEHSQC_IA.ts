@@ -1,4 +1,4 @@
-import { Kupce2017ACIE, Hansen2021AC, Yong2021JMR } from "../citation.js";
+import { Hansen2021AC, Yong2021JMR } from "../citation.js";
 import { AF_EDIT } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
@@ -138,7 +138,7 @@ const mod = new NOAHModule(
     "C_SEHSQC_IA",
     "c13",
     "Sip Sap",
-    [Kupce2017ACIE, Hansen2021AC, Yong2021JMR],
+    [Hansen2021AC, Yong2021JMR],
     "noah_hsqc noah_split",
     shortDescription,
     [AF_EDIT],

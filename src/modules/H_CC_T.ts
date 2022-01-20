@@ -1,4 +1,4 @@
-import { Kupce2017ACIE, Koos2016ACIE } from "../citation.js";
+import { Koos2016ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H interleaved CLIP-COSY + TOCSY`;
@@ -66,7 +66,7 @@ const mod = new NOAHModule(
     "H_CC_T",
     "h1",
     "Cc T",
-    [Kupce2017ACIE, Koos2016ACIE],
+    [Koos2016ACIE],
     "noah_clipcosy States noah_tocsy States",
     shortDescription,
     [],

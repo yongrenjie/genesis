@@ -1,4 +1,3 @@
-import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H pulse-acquire`;
@@ -17,7 +16,7 @@ const mod = new NOAHModule(
     "H_ZG",
     "h1",
     "Zg",
-    [Kupce2017ACIE],
+    [],
     "noah_cosy QF",
     shortDescription,
     [],

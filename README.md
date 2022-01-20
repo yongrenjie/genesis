@@ -6,6 +6,8 @@
 
 <p align="center"><b>Available now at <a href="https://nmr-genesis.co.uk">https://nmr-genesis.co.uk</a></b></p>
 
+<p align="center"><b>Read the paper at <a href="https://doi.org/10.1021/acs.analchem.1c04964">DOI: 10.1021/acs.analchem.1c04964</a></b> (or on <a href="https://github.com/yongrenjie/genesis-paper/blob/master/genesis.pdf">GitHub</a>)</p>
+
 ---------
 
 

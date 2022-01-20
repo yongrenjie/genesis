@@ -1,4 +1,4 @@
-import { Kupce2017ACIE, Cicero2001JMR } from "../citation.js";
+import { Cicero2001JMR } from "../citation.js";
 import { AF_LP3 } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
@@ -48,7 +48,7 @@ const mod = new NOAHModule(
     "C_HMBC_CFGB",
     "hmbc",
     "Bgb",
-    [Kupce2017ACIE, Cicero2001JMR],
+    [Cicero2001JMR],
     "noah_hmbc",
     shortDescription,
     [AF_LP3],

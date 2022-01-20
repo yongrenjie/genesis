@@ -1,4 +1,3 @@
-import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H interleaved TOCSY (mixing time: d9) + COSY
@@ -78,7 +77,7 @@ const mod = new NOAHModule(
     "H_TT_CR",
     "h1",
     "TT CR",
-    [Kupce2017ACIE],
+    [],
     "noah_tocsy States noah_cosy States:noah_tocsy States noah_roesy States",
     shortDescription,
     [],

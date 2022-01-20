@@ -1,4 +1,4 @@
-import { Kupce2017ACIE, Gyongyosi2021AC } from "../citation.js";
+import { Gyongyosi2021AC } from "../citation.js";
 import { AF_EDIT1 } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
@@ -107,7 +107,7 @@ const mod = new NOAHModule(
     "CI_HSQCC_CLIP",
     "c13",
     "Scc",
-    [Kupce2017ACIE, Gyongyosi2021AC],
+    [Gyongyosi2021AC],
     "noah_hsqc",
     shortDescription,
     [AF_EDIT1],

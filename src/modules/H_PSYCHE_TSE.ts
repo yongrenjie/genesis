@@ -1,4 +1,4 @@
-import { Kupce2017ACIE, Foroozandeh2015CC } from "../citation.js";
+import { Foroozandeh2015CC } from "../citation.js";
 import { AF_ES } from "../acquFlag.js";
 import NOAHModule from "../noahModule.js";
 
@@ -88,7 +88,7 @@ const mod = new NOAHModule(
     "H_PSYCHE_TSE",
     "h1",
     "Pt",
-    [Kupce2017ACIE, Foroozandeh2015CC],
+    [Foroozandeh2015CC],
     "noah_psyche",
     shortDescription,
     [AF_ES],

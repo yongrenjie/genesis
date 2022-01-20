@@ -1,4 +1,4 @@
-import { Kupce2017ACIE, Yong2021JMR } from "../citation.js";
+import { Yong2021JMR } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 15N sensitivity-enhanced HSQC
@@ -99,7 +99,7 @@ const mod = new NOAHModule(
     "N_SEHSQC",
     "n15",
     "Spn",
-    [Kupce2017ACIE, Yong2021JMR],
+    [Yong2021JMR],
     "noah_nhsqc",
     shortDescription,
     [],

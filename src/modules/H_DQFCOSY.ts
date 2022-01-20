@@ -1,4 +1,3 @@
-import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = "; 1H DQF-COSY (States)";
@@ -37,7 +36,7 @@ const mod = new NOAHModule(
     "H_DQFCOSY",
     "h1",
     "D",
-    [Kupce2017ACIE],
+    [],
     "noah_clipcosy States",
     shortDescription,
     [],

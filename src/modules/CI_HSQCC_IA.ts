@@ -1,4 +1,3 @@
-import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 13C interleaved HSQC-COSY / HSQC with variable INEPT excitation
@@ -113,7 +112,7 @@ const mod = new NOAHModule(
     "CI_HSQCC_IA",
     "c13",
     "Sc S",
-    [Kupce2017ACIE],
+    [],
     "noah_hsqc noah_TS",
     shortDescription,
     [],

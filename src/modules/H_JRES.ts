@@ -1,4 +1,3 @@
-import { Kupce2017ACIE } from "../citation.js";
 import NOAHModule from "../noahModule.js";
 
 let shortDescription = `; 1H magnitude-mode 2D J spectrum
@@ -24,7 +23,7 @@ const mod = new NOAHModule(
     "H_JRES",
     "h1",
     "Jqf",
-    [Kupce2017ACIE],
+    [],
     "noah_jres QF",
     shortDescription,
     [],
