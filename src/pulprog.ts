@@ -11,7 +11,8 @@ import { allDelays,
          allWavemakers,
          Parameter } from "./parameters.js";
 import { AF_PRESAT_D1 } from "./acquFlag.js";
-import { Yong2021AC, Kupce2017ACIE, Citation } from "./citation.js";
+import { Yong2021AC, Kupce2017ACIE,
+         Kupce2021JACSA, Citation } from "./citation.js";
 
 // removeDuplicateByKey(): a helper function {{{1
 /**
@@ -95,6 +96,7 @@ export function makePulprogText(trueModuleNames: string[],
     let shortDescriptions: string[] = [];
     let preambles: string[] = [];
     let citations: Citation[] = [Yong2021AC, Kupce2017ACIE];
+    if (hasInterleaved) citations.push(Kupce2021JACSA);
     let mainpp: string[] = [];  // the bulk of the pulse programme
     // Initialise and seed DIPSI-2 generator.
     const dipsiGen = makeDipsiGenerator();

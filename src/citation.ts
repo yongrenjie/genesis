@@ -136,3 +136,8 @@ export const Reif1996JMR = new Citation(
     ["B. Reif", "M. Kock", "R. Kerssebaum", "H. Kang", "W. Fenical", "C. Griesinger"],
     JMR, 1996, 118, 2, "282-285", "10.1006/jmra.1996.0038"
 )
+export const Kupce2021JACSA = new Citation(
+    "Parallel NMR Supersequences: Ten Spectra in a Single Measurement",
+    [Eriks, Jon, "G. Widmalm", Tim],
+    "JACS Au", 2021, 1, 11, "1892-1897", "10.1021/jacsau.1c00423"
+)
