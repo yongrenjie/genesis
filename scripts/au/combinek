@@ -3,10 +3,10 @@
  * Adds up series of k adjacent FIDs in a ser file. The value of k is read from
  * the status parameter cnst39. For use with 15N NOAH modules.
  *
- * v: 2.0.20
+ * v: 2.1.0
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 23 December 2021 */
+ * 21 January 2022 */
 
 #define MALLOC_ERROR "insufficient memory; aborting"
 #define READ_ERROR "file read failed; aborting"
