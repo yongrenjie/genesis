@@ -121,7 +121,7 @@ ol.citation-start {
 }
 
 ol.citation-start li, ol.citation li {
-    margin: 0 0 0.7ex 0;
+    margin: 0 0 0.7ex 1.8em;
     list-style: none;
     position: relative;
     font-size: 85%;
@@ -132,7 +132,7 @@ ol.citation-start li:before, ol.citation li:before {
     content: "[" counter(cite-counter) "] ";
     counter-increment: cite-counter;
     position: absolute;
-    left: -1.4em;
+    left: -2.2em;
 }
 
 /* vim: set foldmethod=marker: */
