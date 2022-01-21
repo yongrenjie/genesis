@@ -37,7 +37,8 @@ readarray -s5 -t tags < <(git for-each-ref --sort=creatordate --format '%(refnam
 
 echo "${#tags[@]}" tags found.
 
-for tag in "${tags[@]}"; do
+for i in "${!tags[@]}"; do
+    tag=${tags[$i]}
     readarray -d. -t vnos < <(printf $tag)
     major=${vnos[0]}
     minor=${vnos[1]}
@@ -48,7 +49,9 @@ for tag in "${tags[@]}"; do
     # We could use `cp * ${target_dir} || true`, but this is more explicit.
     find . -maxdepth 1 -type f | xargs -I {} cp {} "${target_dir}"
     cp -r static scripts "${target_dir}"
-    "${sed_command[@]}" "s/<div\ id=\"warning\">/<div\ id=\"warning\">Please\ note\ that\ this\ is\ an\ old\ version\ of\ GENESIS\ (v${tag})/" "${target_dir}/index.html"
+    if (( $i < ${#tags[@]} - 1 )); then
+        "${sed_command[@]}" "s/<div\ id=\"warning\">/<div\ id=\"warning\">Please\ note\ that\ this\ is\ an\ old\ version\ of\ GENESIS\ (v${tag})/" "${target_dir}/index.html"
+    fi
 done
 
 git reset --hard ${git_branch}
