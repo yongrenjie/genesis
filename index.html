@@ -764,6 +764,20 @@
 
                 <div class="faq-headings">About this website</div>
 
+                <input id="faq_bs" class="toggle-button" type="checkbox"> <!-- {{{2 --->
+                <label for="faq_bs" class="toggle-label" tabindex="0">I asked for HMBC + HSQC, but the website gave me HSQC + HMBC.</label>
+                <div class="toggle-content">
+                    <div class="toggle-content-inner">
+                        <p>This is intended. The NOAH-2 SB has better performance than NOAH-2 BS (unpublished work by JY). The reason is fairly simple:</p>
+                        <ol>
+                            <li>The HSQC already preserves the necessary magnetisation for the HMBC, so no modification is necessary, and it gets a sensitivity boost from going first.</li>
+                            <li>The HMBC gets a slight boost from the fact that it doesn&rsquo;t need to use the <i>zz</i>-filter when placed at the end; however, there is also a slight loss because the preceding HSQC doesn&rsquo;t preserve magnetisation perfectly. Overall, these two factors almost perfectly cancel each other out, so the HMBC has approximately the same sensitivity as before.</li>
+                        </ol>
+                        <p>If you really want a HMBC + HSQC sequence (or maybe you want to verify what I said!), please turn on developer mode and enter the combination <span class="ms">C_HMBC_CF C_HSQC</span>.</p>
+                        <p>(Note that this analysis doesn't extend to BS<sup>+</sup> (HMBC + seHSQC) supersequences, because if the seHSQC is to be placed first it must be modified.)</p>
+                    </div>
+                </div> <!-- }}}2 --->
+
                 <input id="faq_devmode" class="toggle-button" type="checkbox"> <!-- {{{2 --->
                 <label for="faq_devmode" class="toggle-label" tabindex="0">What is &ldquo;developer mode&rdquo;? What do those module codes mean?</label>
                 <div class="toggle-content">

@@ -162,6 +162,13 @@ function simpleModulesToTrue(simpleModules: SimpleModule[]): TrueModule[] {
             trueModules.push(h1mapping[module]);
         }
     }
+    // Manual override for BS combinations (give the user SB instead)
+    if ((trueModules.length == 2)
+        && (trueModules[0] === "C_HMBC_CF")
+        && (trueModules[1] === "C_HSQC")) {
+        trueModules = ["C_HSQC", "C_HMBC_NOF"];
+    }
+
     return trueModules;
 }
 // }}}1
