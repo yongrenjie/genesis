@@ -1,4 +1,4 @@
-div#buttons {
+div.buttons {
     margin: 15px 0;
     display: flex;
     flex-flow: row wrap;
@@ -6,7 +6,7 @@ div#buttons {
     justify-content: center;
 }
 
-div#buttons input {
+div.buttons input {
     position: relative;  /* needed for clicking behaviour */
     font-family: inherit;
     border: 1px solid black;
@@ -20,42 +20,42 @@ div#buttons input {
 }
 
 @media (pointer: fine) {
-    div#buttons input:hover {
+    div.buttons input:hover {
         background-color: #d0d0d0;
     }
 }
 
-div#buttons input:focus {
+div.buttons input:focus {
     box-shadow: 0 0 4px 2px #aaaaaa;
 }
 
-div#buttons input:active {
+div.buttons input:active {
     top: 2px;
 }
 
-div#buttons input#download_button {
+div.buttons input#download_button {
     font-size: 120%;
 }
 
-div#buttons input#reset_button {
+div.buttons input#reset_button,
+div.buttons input#faq_button {
     font-size: 80%;
-    width: 9em;
+    width: 8em;
     height: 100%;
 }
 
-div#buttons input#faq_button {
+div.buttons input#download_scripts_button {
     font-size: 80%;
-    width: 9em;
     height: 100%;
 }
 
 /* explicit styling when the viewport is small */
 @media (max-width: 641px) {
-    div#buttons {
+    div.buttons {
         flex-flow: column wrap;
         align-items: center;
     }
-    div#buttons input {
+    div.buttons input {
         margin: 3px 0;
     }
 }

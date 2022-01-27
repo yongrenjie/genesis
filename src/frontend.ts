@@ -478,7 +478,7 @@ function setModuleGridRows() {
 }
 setModuleGridRows();
 // }}}2
-// Modify version number-dependent parts {{{2
+// Modify version number-dependent parts (incl. download links for scripts) {{{2
 // Update the version number on the page
 document.getElementById("version")!.innerHTML = version;
 /**
@@ -486,12 +486,19 @@ document.getElementById("version")!.innerHTML = version;
  * version number.
  */
 function createScriptDownloadLinks() {
+    const link_to_scripts = `static/downloads/noah_scripts_v${version}.zip`
+    // Links in FAQ
     let anchors = [...document.querySelectorAll("a.scripts")];
     for (let a of anchors) {
-        a.setAttribute("href", `static/downloads/noah_scripts_v${version}.zip`);
+        a.setAttribute("href", link_to_scripts);
     }
+    // 'Download processing scripts' button
+    function downloadScripts() {
+        window.location.href = link_to_scripts;
+    }
+    document.getElementById("download_scripts_button")!.addEventListener("click", downloadScripts);
 }
-// Create the download link for the newest scripts
+// Create the download links for the newest scripts
 createScriptDownloadLinks();
 // }}}2
 // Display the page {{{2
