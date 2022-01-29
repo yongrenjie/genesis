@@ -36,7 +36,7 @@ let pulprog = `
   10u gron12
   (p32:sp29 ph0):f1  ; ZQ suppression
   20u groff
-#else
+#endif /* NOZQS */
   d16 pl10:f1
 
   |DIPSI|
