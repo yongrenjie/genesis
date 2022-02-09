@@ -59,7 +59,7 @@ const CC    = "Chem. Commun.";
 export const Yong2021AC = new Citation(
     "Modular Pulse Program Generation for NMR Supersequences",
     [Jon, Eriks, Tim],
-    AC, 2022, "", "", "", "10.1021/acs.analchem.1c04964"
+    AC, 2022, 94, 4, "2271-2278", "10.1021/acs.analchem.1c04964"
 )
 export const Kupce2017ACIE = new Citation(
     "NOAH: NMR Supersequences for Small Molecule Analysis and Structure Elucidation",
