@@ -5,6 +5,11 @@ Script to set up NUS for NOAH experiments. To turn on NUS, run `noah_nus2` from
 the TopSpin command line. To disable NUS on a dataset where it was previously
 enabled, run `noah_nus2 off`.
 
+You may wish to save this script as noah_nus.py, overwriting the old version.
+In practice, there is no good reason to retain the old version as long as you
+make sure to only use pulse programmes obtained from the GENESIS website:
+https://nmr-genesis.co.uk
+
 v: 2.1.3
 Jonathan Yong & Tim Claridge, University of Oxford
 Eriks Kupce, Bruker UK
@@ -22,10 +27,10 @@ from de.bruker.nmr.prsc.dbxml.ParfileLocator import getParfileDirs
 
 
 NUS_ALREADY_ON = ("NUS has already been enabled for this dataset.\n"
-                  "Please disable NUS first with 'noah_nus2 off' before"
+                  "Please disable NUS first with '{} off' before"
                   " reconfiguring NUS.")
 NUS_ALREADY_OFF = ("NUS has not been enabled for this dataset yet.\n"
-                   "You can enable it using the command 'noah_nus2 on'.")
+                   "You can enable it using the command '{} on'.")
 MODULE_UNSUPPORTED = ("One or more modules in this supersequence (likely\nQF"
                       " COSY, 2D J, or PSYCHE) are not compatible with NUS.")
 GENESIS_URL = "https://nmr-genesis.co.uk"
@@ -37,10 +42,10 @@ PP_NOT_GENESIS = ("This pulse programme is not suitable for use\n"
 
 
 def enable_nus():
-    # Check if NUS is already enabled.
+    # Check if NUS is already enabled. If so, disable it.
     zgoptns, vclist = GETPAR("ZGOPTNS"), GETPAR("VCLIST")
     if "-DNUS" in zgoptns and "noah" in vclist:
-        err_exit(NUS_ALREADY_ON)
+        disable_nus(show_message=False)
 
     # Check if the pulse programme supports -DNUS flag
     pulprog = GETPAR("PULPROG")
@@ -65,13 +70,25 @@ def enable_nus():
     # Reset cnst39 (15N k-scaling factor) back to 1.
     PUTPAR("CNST 39", "1")
 
-    # Figure out how long the NUS list should be, based on NusAMOUNT and other
-    # parameters.
+    # The NUS sampling amount is preferentially read from sys.argv, but if not
+    # given is taken from the NUSAmount parameter.
+    if len(sys.argv) > 2:
+        try:
+            nus_amount = float(sys.argv[2])
+        except ValueError:
+            usage_err_exit()
+    else:
+        nus_amount = float(GETPAR("NusAMOUNT"))
+
+    # Check that it isn't wacky
+    if nus_amount >= 100 or nus_amount <= 0:
+        err_exit('NUS percentage must be between 0 and 100')
+
+    # Calculate appropriate TD1 and replace it
     td1 = int(GETPAR("1 TD"))
     nbl = int(GETPAR("NBL"))
     t1_incrs_full = int(td1 / (nbl * 2))  # this is "l0" in the pulprog
-    t1_incrs_nus = int(t1_incrs_full * float(GETPAR("NusAMOUNT")) / 100)
-    # Replace TD1 with the lower number to reflect the usage of NUS.
+    t1_incrs_nus = int(t1_incrs_full * nus_amount / 100)
     PUTPAR("1 TD", str(t1_incrs_nus * 2 * nbl))
 
     # Generate the NUS list. This is delegated to the nussampler executable.
@@ -109,19 +126,24 @@ def enable_nus():
     PUTPAR("ZGOPTNS", zgoptns)
     # Change FnTYPE back to the default, just in case the user changed it.
     PUTPAR("FnTYPE", "traditional(planes)")
-    EXIT()
+    # Show a message
+    info_message("NUS percentage successfully set to {}%.\n"
+                 "Full TD1 per module without NUS = {}\n"
+                 "TD1 per module with NUS (now) = {}".format(nus_amount,
+                                                             t1_incrs_full * 2,
+                                                             t1_incrs_nus * 2))
 
 
-def disable_nus():
+def disable_nus(show_message=True):
     # Check if NUS is already enabled.
     zgoptns, vclist = GETPAR("ZGOPTNS"), GETPAR("VCLIST")
     if not ("-DNUS" in zgoptns and "noah" in vclist):
-        err_exit(NUS_ALREADY_OFF)
+        err_exit(NUS_ALREADY_OFF.format(this_script_name()))
     # To undo NUS is easier, since we don't need to generate the list.
     # Back-calculate TD1.
     nus_td1 = int(GETPAR("1 TD"))
-    nusamount = float(GETPAR("NusAMOUNT"))
-    full_td1 = int(nus_td1 * 100 / nusamount)
+    nus_amount = float(GETPAR("NusAMOUNT"))
+    full_td1 = int(nus_td1 * 100 / nus_amount)
     PUTPAR("1 TD", str(full_td1))
 
     # Unset the zgoptns flag.
@@ -135,12 +157,39 @@ def disable_nus():
 
     # Remove vclist. See note above about using " " instead of "".
     PUTPAR("VCLIST", " ")
-    EXIT()
+    # Show a message if desired
+    if show_message:
+        info_message("NUS successfully disabled")
 
 
 def err_exit(message):
-    ERRMSG(message, title="noah_nus2.py")
+    # Show an error message and exit
+    this_script = this_script_name()
+    prefixed_message = "{}.py: {}".format(this_script, message)
+    ERRMSG(prefixed_message, title="{}.py".format(this_script))
     EXIT()
+
+
+def usage_err_exit():
+    # Show usage guidance and exit
+    err_exit("Unrecognised arguments. Usage:\n"
+             "'{} on' - switches NUS on according to NUSAmount parameter"
+             "'{} on <percentage>' - use a specified NUS percentage"
+             "'{} off' - disable NUS".format(this_script,
+                                             this_script,
+                                             this_script))
+
+
+def info_message(message):
+    # Displays an info message without forcing the user to click OK. See
+    # MSG_nonmodal() in nmrpoise/poise.py
+    this_script = this_script_name()
+    prefixed_message = "{}.py: {}".format(this_script, message)
+    dialog = mfw.BInfo()
+    dialog.setMessage(prefixed_message)
+    dialog.setTitle("{}.py".format(this_script))
+    dialog.setBlocking(0)  # in ordinary MSG() this is 1
+    dialog.show()
 
 
 def found_in_file(fname, needle):
@@ -151,17 +200,20 @@ def found_in_file(fname, needle):
     return False
 
 
+def this_script_name():
+    # Jython doesn't let us use __file__
+    return os.path.splitext(os.path.basename(sys.argv[0]))[0]
+
+
 if __name__ == "__main__":
     # Make sure that this is really a NOAH experiment.
     if "noah" not in GETPAR("PULPROG").lower():
-        ERRMSG("noah_nus2.py: only intended for use with NOAH datasets")
-        EXIT()
+        err_exit("Only intended for use with NOAH datasets")
     # If it didn't fail this check but NBL < 2, then it's not the original
-    # dataset and noah_nus2 won't have any effect.
+    # dataset and this script won't have any effect.
     if int(GETPAR("NBL")) < 2:
-        ERRMSG("noah_nus2.py: this is a processed dataset; please run this"
-               " script on the original dataset used for acquisition.")
-        EXIT()
+        err_exit("This is a processed dataset; please run this script on the"
+                 " original dataset used for acquisition.")
 
     if len(sys.argv) < 2:
         enable_nus()
@@ -170,6 +222,4 @@ if __name__ == "__main__":
     elif sys.argv[1] in ["off", "disable", "undo"]:
         disable_nus()
     else:
-        ERRMSG("noah_nus2.py: unrecognised arguments.\n"
-               "Usage: 'noah_nus2 [on/off]'")
-        EXIT()
+        usage_err_exit()
