@@ -71,7 +71,7 @@ def enable_nus():
     PUTPAR("CNST 39", "1")
 
     # The NUS sampling amount is preferentially read from sys.argv, but if not
-    # given is taken from the NUSAmount parameter.
+    # given is taken from the NusAMOUNT parameter.
     if len(sys.argv) > 2:
         try:
             nus_amount = float(sys.argv[2])
@@ -84,11 +84,13 @@ def enable_nus():
     if nus_amount >= 100 or nus_amount <= 0:
         err_exit('NUS percentage must be between 0 and 100')
 
+    PUTPAR("NusAMOUNT", str(nus_amount))
+
     # Calculate appropriate TD1 and replace it
     td1 = int(GETPAR("1 TD"))
     nbl = int(GETPAR("NBL"))
     t1_incrs_full = int(td1 / (nbl * 2))  # this is "l0" in the pulprog
-    t1_incrs_nus = int(t1_incrs_full * nus_amount / 100)
+    t1_incrs_nus = int((t1_incrs_full * nus_amount / 100) + 0.5)
     PUTPAR("1 TD", str(t1_incrs_nus * 2 * nbl))
 
     # Generate the NUS list. This is delegated to the nussampler executable.
@@ -129,16 +131,17 @@ def enable_nus():
     # Show a message
     info_message("NUS percentage successfully set to {}%.\n"
                  "Full TD1 per module without NUS = {}\n"
-                 "TD1 per module with NUS (now) = {}".format(nus_amount,
-                                                             t1_incrs_full * 2,
-                                                             t1_incrs_nus * 2))
+                 "TD1 per module with NUS (now active) = {}".format(
+                     nus_amount, t1_incrs_full * 2, t1_incrs_nus * 2))
 
 
 def disable_nus(show_message=True):
     # Check if NUS is already enabled.
     zgoptns, vclist = GETPAR("ZGOPTNS"), GETPAR("VCLIST")
     if not ("-DNUS" in zgoptns and "noah" in vclist):
-        err_exit(NUS_ALREADY_OFF.format(this_script_name()))
+        info_message(NUS_ALREADY_OFF.format(this_script_name()))
+        return
+
     # To undo NUS is easier, since we don't need to generate the list.
     # Back-calculate TD1.
     nus_td1 = int(GETPAR("1 TD"))
@@ -172,9 +175,10 @@ def err_exit(message):
 
 def usage_err_exit():
     # Show usage guidance and exit
-    err_exit("Unrecognised arguments. Usage:\n"
-             "'{} on' - switches NUS on according to NUSAmount parameter"
-             "'{} on <percentage>' - use a specified NUS percentage"
+    this_script = this_script_name()
+    err_exit("Unrecognised arguments. Usage:\n\n"
+             "'{} on' - switches NUS on according to NusAMOUNT parameter\n"
+             "'{} on <percentage>' - use a specified NUS percentage\n"
              "'{} off' - disable NUS".format(this_script,
                                              this_script,
                                              this_script))
