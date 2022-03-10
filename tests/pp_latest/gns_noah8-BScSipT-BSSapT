@@ -19,7 +19,7 @@
 ;$COMMENT=
 
 ;J. R. J. Yong, E. Kupce, T. D. W. Claridge
-;Anal. Chem. 2022, DOI: 10.1021/acs.analchem.1c04964
+;Anal. Chem. 2022, 94 (4), 2271-2278
 ;Modular Pulse Program Generation for NMR Supersequences
 
 ;E. Kupce, T. D. W. Claridge
@@ -153,7 +153,7 @@ baseopt_echo
   4u BLKGRAD
 #ifdef PRESAT
   4u pl9:f1
-  10u st0
+  1m st0
   d1 cw:f1
   4u do:f1
   4u pl1:f1
@@ -254,7 +254,7 @@ else {
   4u
   p16:gp0*1.77
   d16
-  10u st
+  1m st
 
 
   ; MODULE 2
@@ -368,7 +368,7 @@ if "d30 > 1m"
   4u
   p16:gp0*2.32
   d16
-  10u st
+  1m st
 
 
   ; MODULE 3
@@ -516,7 +516,7 @@ if "d15 > 1m"
   4u
   p16:gp0*-1.29
   d16
-  10u st
+  1m st
 
 
   ; MODULE 4
@@ -758,5 +758,5 @@ ph26=0 2
 
 ; auprog: noah_hmbc noah_hmbc:noah_hsqc noah_TS:noah_hsqc noah_split:noah_tocsy States noah_tocsy States
 ; module identifiers: C_HMBC_CFDD C_HSQCC_DIA C_SEHSQC_IA H_TT_DM
-; pulse programme created by genesis-v2.1.1, https://nmr-genesis.co.uk
-; Sat Jan 29 2022 20:58:21 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.1.4, https://nmr-genesis.co.uk
+; Thu Mar 10 2022 01:00:29 GMT+0000 (Greenwich Mean Time)
