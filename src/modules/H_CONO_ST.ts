@@ -55,7 +55,7 @@ let pulprog = `
   D[ID]b cw:f1
   4u do:f1
   4u pl1:f1
-  10u st
+  1m st
 # else
   /* NOZQS only */
   4u

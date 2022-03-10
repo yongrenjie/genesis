@@ -18,7 +18,7 @@ let pulprog = `
   d10
   (p1 ph0):f1
   goscnp ph26  ; acquire H-H COSY
-  10u st
+  1m st
 
   ; TOCSY
 #ifdef NOZQS

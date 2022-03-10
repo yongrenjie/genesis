@@ -49,7 +49,7 @@ let pulprog = `
 # endif
   4u do:f1
   4u pl1:f1
-  10u st
+  1m st
 #else
 # ifdef NOZQS
   D[ID]b        ; no presat, no ZQS
