@@ -252,11 +252,13 @@ const CLPJF = new PSElement("LPJF", lpjfText, lpjfPreamble);
 
 // 15N low-pass J-filters {{{1
 const nlpjfPreamble = [
+    `define delay DN_LP1`,
     `define delay DN_LP2a`,
     `define delay DN_LP2b`,
     `define delay DN_LP3a`,
     `define delay DN_LP3b`,
     `define delay DN_LP3c`,
+    `"DN_LP1  = 1s/(2*cnst4)-p16-d16"`,
     `"DN_LP2a = 1s/(2*cnst26)-p16-d16"`,
     `"DN_LP2b = 1s/(2*cnst27)-p16-d16"`,
     `"DN_LP3a = 1s/(2*(cnst26+0.07*(cnst27-cnst26)))-p16-d16"`,
@@ -281,6 +283,7 @@ const nlpjfText = [
     `  p16:gp10*-0.4`,
     `  d16`,
     `#else`,
+    `#ifdef NLP2`,
     `  DN_LP2a`,
     `  p16:gp10*-3`,
     `  d16`,
@@ -292,6 +295,15 @@ const nlpjfText = [
     `  4u`,
     `  p16:gp10`,
     `  d16`,
+    `#else`,
+    `  DN_LP1`,
+    `  p16:gp10*-1`,
+    `  d16`,
+    `  (p21 ph7):f3`,
+    `  4u`,
+    `  p16:gp10`,
+    `  d16`,
+    `#endif`,
     `#endif`,
 ];
 // }}}1

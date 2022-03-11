@@ -7,8 +7,8 @@ let preamble = `
 "p2     = p1*2"                       ; 1H hard 180
 "p22    = p21*2"                      ; 15N hard 180
 "d4     = 0.25s/cnst2"                ; 13C INEPT
-"d20    = 3u"                         ; 15N HSQC t1/2
-"in20   = 1000000/(2*cnst40*sfo3)"    ; 15N HSQC increment: cnst40 = SW(15N)
+"d20    = 3u"                         ; 15N HMBC t1/2
+"in20   = 1000000/(2*cnst40*sfo3)"    ; 15N HMBC increment: cnst40 = SW(15N)
 "d21    = 0.5s/cnst28"                ; decremented delay 15N IMPEACH-MBC
 "d22    = 4u"                         ; incremented delay 15N IMPEACH-MBC
 "in21   = ((0.5s/cnst28)-(0.5s/cnst29))/((td1/nbl)/2)"

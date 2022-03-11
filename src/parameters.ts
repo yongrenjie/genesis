@@ -235,7 +235,7 @@ allDelays[21] = new Delay({num: 21, str: "15N IMPEACH-MBC decremented nJ(CH) evo
 allDelays[22] = new Delay({num: 22, str: "15N IMPEACH-MBC incremented time", incrD: "i"});
 // 23 is free (in theory, should be reserved for 15N version of d3)
 allDelays[24] = new Delay({num: 24, str: "1/4J(NH)"});
-// 25 is free
+allDelays[25] = new Delay({num: 25, str: "15N t1 (magnitude-mode)", incrA: "i"});
 allDelays[26] = new Delay({num: 26, str: "1/8J(NH) for all multiplicities, 1/4J(NH) for NH only"});
 allDelays[27] = new Delay({num: 27, str: "1/4J(CC)"});
 allDelays[28] = new Delay({num: 28, str: "decremented delay for 1,1-ADEQUATE", incrB: "d"});
@@ -367,6 +367,9 @@ allGradients[21] = new Gradient({num: 21, val: 32, comment: "1H excitation sculp
 allGradients[22] = new Gradient({num: 22, val: 78.5, comment: "13C ADEQUATE CTP"});
 allGradients[23] = new Gradient({num: 23, val: 77.6, comment: "13C ADEQUATE CTP"});
 allGradients[24] = new Gradient({num: 24, val: -59, comment: "13C ADEQUATE CTP"});
+allGradients[25] = new Gradient({num: 25, val: 70, comment: "15N HMBC CTP"});
+allGradients[26] = new Gradient({num: 26, val: 30, comment: "15N HMBC CTP"});
+allGradients[27] = new Gradient({num: 27, val: 50.1, comment: "15N HMBC CTP"});
 // }}}1
 
 // WaveMaker definitions {{{1

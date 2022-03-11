@@ -7,8 +7,8 @@ let preamble = `
 "p2     = p1*2"                       ; 1H hard 180
 "p22    = p21*2"                      ; 15N hard 180
 "d4     = 0.25s/cnst2"                ; 13C INEPT
-"d20    = 3u"                         ; 15N HSQC t1/2
-"in20   = 1000000/(2*cnst40*sfo3)"    ; 15N HSQC increment: cnst40 = SW(15N)
+"d20    = 3u"                         ; 15N HMBC t1/2
+"in20   = 1000000/(2*cnst40*sfo3)"    ; 15N HMBC increment: cnst40 = SW(15N)
 "p17    = p16*cnst16"                 ; Longer gradients for 15N module
 "D[ID]a = (0.5s/cnst23)-p16-d16-4u"
 "D[ID]b = p16+d16+p2/2+d20-p21*2/PI+4u"
