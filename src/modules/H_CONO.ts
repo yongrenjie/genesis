@@ -44,20 +44,23 @@ let pulprog = `
   4u pl9:f1
 # ifdef NOZQS
   D[ID]b cw:f1  ; presat, no ZQS
+  4u do:f1
 # else
   D[ID]c cw:f1  ; presat, ZQS
-# endif
   4u do:f1
-  4u pl1:f1
-  1m st
+# endif
 #else
 # ifdef NOZQS
   D[ID]b        ; no presat, no ZQS
+  4u
 # else
   D[ID]c        ; presat, ZQS
+  4u
 # endif
-  22u st
 #endif  /* PRESAT */
+
+  4u pl1:f1
+  2m st
   (p1 ph7):f1
   D[ID]d
   de

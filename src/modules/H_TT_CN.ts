@@ -11,7 +11,7 @@ let preamble = `
 "l12    = l11*2"                      ; number of short TOCSY loops
 "l19    = (d14/(p6*115.112))/2"       ; half the number of long TOCSY loops
 "l20    = l19*2"                      ; number of long TOCSY loops
-"D[ID]a = d8-4u-de-aq-4u-p16-d16-p32-30u"     ; NOE mixing time
+"D[ID]a = d8-4u-de-aq-4u-p16-d16-p32-30u-2m"     ; NOE mixing time
 `
 
 let pulprog = `
@@ -36,7 +36,7 @@ if "l1 % 2 == 0"
   50u
   p16:gp0*1.7
   d16
-  1m st
+  2m st
 
   |DIPSI|
 
@@ -61,7 +61,8 @@ else
   20u groff
   p16:gp11
   d16 pl1:f1
-  D[ID]a st  ; NOE mixing time
+  D[ID]a       ; NOE mixing time
+  2m st
   (p1 ph0):f1
 }
   goscnp ph26  ; acquire H-H TOCSY number 2

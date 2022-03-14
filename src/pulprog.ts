@@ -134,7 +134,7 @@ export function makePulprogText(trueModuleNames: string[],
     mainpp.push(
         `#ifdef PRESAT`,
         `  4u pl9:f1`,
-        `  1m st0`,
+        `  2m st0`,
         `  d1 cw:f1`,
         `  4u do:f1`,
         `  4u pl1:f1`,
@@ -251,7 +251,7 @@ export function makePulprogText(trueModuleNames: string[],
                 `  4u`,
                 `  p16:gp0*${gradGen.next().value}`,
                 `  d16`,
-                `  1m st`,
+                `  2m st`,
             );
         }
     }
@@ -474,7 +474,7 @@ export function makePulprogText(trueModuleNames: string[],
 
     // Postprocess mainpp {{{1
     // Remove st0 commands from sequences with NBL=1 (triggers warning in TS4)
-    // The only lines we have to deal with are 'd1 st0' and '1m st0', so this
+    // The only lines we have to deal with are 'd1 st0' and '2m st0', so this
     // quick replacement works for now.
     if (nbl == 1) {
         mainpp = mainpp.map(line => line.replace(/ st0$/, ""));

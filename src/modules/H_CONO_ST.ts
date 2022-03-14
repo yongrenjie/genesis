@@ -8,7 +8,7 @@ let AF_ES_NOESYONLY = new AcquFlag("ES", "pre-acquisition excitation sculpting i
 let preamble = `
 "d10    = 3u"                         ; COSY/NOESY t1
 "in10   = 2*dw"                       ; COSY/NOESY increment
-"D[ID]a = d8-de-aq-p32-p16-d16-52u"   ; NOE mixing time (with ZQS, without ES)
+"D[ID]a = d8-de-aq-p32-p16-d16-30u"   ; NOE mixing time (with ZQS, without ES)
 "D[ID]b = d8-de-aq-p16-d16-22u"       ; NOE mixing time (without ZQS, without ES)
 `
 
@@ -55,14 +55,15 @@ let pulprog = `
   D[ID]b cw:f1
   4u do:f1
   4u pl1:f1
-  1m st
+  2m st
 # else
   /* NOZQS only */
   4u
   p16:gp11
   d16 pl1:f1
   D[ID]b
-  18u st
+  8u
+  2m st
 # endif
 #else
 # ifdef PRESAT
@@ -76,7 +77,7 @@ let pulprog = `
   D[ID]a cw:f1
   4u do:f1
   4u pl1:f1
-  10u st
+  2m st
 # else
   /* no flags */
   4u
@@ -86,7 +87,8 @@ let pulprog = `
   p16:gp11
   d16 pl1:f1
   D[ID]a
-  18u st
+  8u
+  2m st
 # endif  /* PRESAT */
 #endif  /* NOZQS */
   (p1 ph0):f1
