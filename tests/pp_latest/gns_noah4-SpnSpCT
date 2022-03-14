@@ -131,7 +131,7 @@ baseopt_echo
   4u BLKGRAD
 #ifdef PRESAT
   4u pl9:f1
-  1m st0
+  2m st0
   d1 cw:f1
   4u do:f1
   4u pl1:f1
@@ -220,7 +220,7 @@ baseopt_echo
   4u
   p16:gp0*1.77
   d16
-  1m st
+  2m st
 
 
   ; MODULE 2
@@ -326,7 +326,7 @@ baseopt_echo
   4u
   p16:gp0*2.32
   d16
-  1m st
+  2m st
 
 
   ; MODULE 3
@@ -345,7 +345,7 @@ baseopt_echo
   p16:gp5*EA
   d16
   goscnp ph31    ; acquire H-H COSY
-  1m st
+  2m st
 
   ; TOCSY
   4u
@@ -555,5 +555,5 @@ ph31=0 2
 
 ; auprog: noah_nhsqc:noah_hsqc:noah_cosy:noah_tocsy
 ; module identifiers: N_SEHSQC C_SEHSQC H_COTO
-; pulse programme created by genesis-v2.1.4, https://nmr-genesis.co.uk
-; Thu Mar 10 2022 01:00:29 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.1.5, https://nmr-genesis.co.uk
+; Mon Mar 14 2022 14:18:01 GMT+0000 (Greenwich Mean Time)

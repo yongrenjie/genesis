@@ -90,7 +90,7 @@ baseopt_echo
   4u BLKGRAD
 #ifdef PRESAT
   4u pl9:f1
-  1m st0
+  2m st0
   d1 cw:f1
   4u do:f1
   4u pl1:f1
@@ -163,7 +163,7 @@ baseopt_echo
   4u
   p16:gp0*1.77
   d16
-  1m st
+  2m st
 
 
   ; MODULE 2
@@ -312,5 +312,5 @@ ph30=0 2 2 0
 
 ; auprog: noah_hsqc:noah_clipcosy States
 ; module identifiers: C_HSQC H_CLIP_COSY
-; pulse programme created by genesis-v2.1.4, https://nmr-genesis.co.uk
-; Thu Mar 10 2022 01:00:29 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.1.5, https://nmr-genesis.co.uk
+; Mon Mar 14 2022 14:18:01 GMT+0000 (Greenwich Mean Time)

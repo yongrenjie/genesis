@@ -46,6 +46,7 @@ define delay DC_ZZFa
 define delay DC_ZZFb
 define delay DN_HMBC_CFa
 define delay DN_HMBC_CFb
+define delay DN_LP1
 define delay DN_LP2a
 define delay DN_LP2b
 define delay DN_LP3a
@@ -54,11 +55,11 @@ define delay DN_LP3c
 "cnst44      = 2*sfo3/sfo1"                                  ; gradient ratio
 "d0          = 3u"                                           ; 13C HSQC t1
 "d4          = 0.25s/cnst2"                                  ; 13C INEPT
-"d20         = 3u"                                           ; 15N HSQC t1/2
+"d20         = 3u"                                           ; 15N HMBC t1/2
 "d27         = 0.25s/cnst3"                                  ; 1J(CC) evolution
 "d28         = d27-4u"
 "in0         = inf1/2"                                       ; 13C HSQC increment
-"in20        = 1000000/(2*cnst40*sfo3)"                      ; 15N HSQC increment: cnst40 = SW(15N)
+"in20        = 1000000/(2*cnst40*sfo3)"                      ; 15N HMBC increment: cnst40 = SW(15N)
 "in28        = in0"
 "p2          = p1*2"                                         ; 1H hard 180
 "p8          = p3*1.333"                                     ; 13C 120 deg pulse
@@ -75,6 +76,7 @@ define delay DN_LP3c
 "DC_ZZFb     = d4+p14/2"
 "DN_HMBC_CFa = (0.5s/cnst23)-p16-d16-4u"
 "DN_HMBC_CFb = p16+d16+p2/2+d20-p21*2/PI+4u"
+"DN_LP1      = 1s/(2*cnst4)-p16-d16"
 "DN_LP2a     = 1s/(2*cnst26)-p16-d16"
 "DN_LP2b     = 1s/(2*cnst27)-p16-d16"
 "DN_LP3a     = 1s/(2*(cnst26+0.07*(cnst27-cnst26)))-p16-d16"
@@ -113,7 +115,7 @@ baseopt_echo
   4u BLKGRAD
 #ifdef PRESAT
   4u pl9:f1
-  1m st0
+  2m st0
   d1 cw:f1
   4u do:f1
   4u pl1:f1
@@ -203,7 +205,7 @@ if "(2 * d27) < (l0 * 2 * in0)"
   4u
   p16:gp0*1.77
   d16
-  1m st
+  2m st
 
 
   ; MODULE 2
@@ -247,6 +249,7 @@ if "(2 * d27) < (l0 * 2 * in0)"
   p16:gp10*-0.4
   d16
 #else
+#ifdef NLP2
   DN_LP2a
   p16:gp10*-3
   d16
@@ -258,6 +261,15 @@ if "(2 * d27) < (l0 * 2 * in0)"
   4u
   p16:gp10
   d16
+#else
+  DN_LP1
+  p16:gp10*-1
+  d16
+  (p21 ph7):f3
+  4u
+  p16:gp10
+  d16
+#endif
 #endif
 
   ; nJ(CH) evolution
@@ -360,6 +372,7 @@ ph29=0 2 2 0
 ;d2: 1/2J(CH)
 ;cnst2: = 1J(CH)
 ;cnst3: = 1J(CC)
+;cnst4: = 1J(NH)
 ;cnst16: 15N CTP gradient lengthening factor
 ;cnst17: = -0.5 for Crp60comp.4
 ;cnst23: = nJ(NH) long-range
@@ -398,5 +411,5 @@ ph29=0 2 2 0
 
 ; auprog: noah_hsqc:noah_nhmbc
 ; module identifiers: C_ADEQ N_HMBC_CF
-; pulse programme created by genesis-v2.1.4, https://nmr-genesis.co.uk
-; Thu Mar 10 2022 01:00:29 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.1.5, https://nmr-genesis.co.uk
+; Mon Mar 14 2022 14:18:01 GMT+0000 (Greenwich Mean Time)

@@ -66,6 +66,7 @@ define delay DN_HSQCa
 define delay DN_HSQCb
 define delay DN_HSQCc
 define delay DN_HSQCd
+define delay DN_LP1
 define delay DN_LP2a
 define delay DN_LP2b
 define delay DN_LP3a
@@ -79,11 +80,11 @@ define delay DN_LP3c
 "d4              = 0.25s/cnst2"                                                                         ; 13C INEPT
 "d12             = 0.25s/cnst12"                                                                        ; COSY mixing (< 1/4J(HH))
 "d17             = 3u"                                                                                  ; PSYCHE t1
-"d20             = 3u"                                                                                  ; 15N HSQC t1/2
+"d20             = 3u"                                                                                  ; 15N HMBC t1/2
 "d24             = 0.25s/cnst4"                                                                         ; 15N INEPT
 "in0             = inf1/2"                                                                              ; 13C HSQC-COSY increment
 "in17            = trunc(0.5+(1000000/(cnst38*dw*2*((td1/nbl)/cnst37))))*dw*((td1/nbl)/cnst37)/1000000" ; PSYCHE increment
-"in20            = 1000000/(2*cnst40*sfo3)"                                                             ; 15N HSQC increment: cnst40 = SW(15N)
+"in20            = 1000000/(2*cnst40*sfo3)"                                                             ; 15N HMBC increment: cnst40 = SW(15N)
 "p2              = p1*2"                                                                                ; 1H hard 180
 "p17             = p16*cnst16"                                                                          ; Longer gradients for 15N module
 "p22             = p21*2"                                                                               ; 15N hard 180
@@ -114,6 +115,7 @@ define delay DN_LP3c
 "DN_HSQCb        = d24+p22/2"
 "DN_HSQCc        = p17+d16+p2/2+d20-p21*2/PI+4u"
 "DN_HSQCd        = DN_HSQCb-p17-d16-p21-de+p1*2/PI-8u"
+"DN_LP1          = 1s/(2*cnst4)-p16-d16"
 "DN_LP2a         = 1s/(2*cnst26)-p16-d16"
 "DN_LP2b         = 1s/(2*cnst27)-p16-d16"
 "DN_LP3a         = 1s/(2*(cnst26+0.07*(cnst27-cnst26)))-p16-d16"
@@ -151,7 +153,7 @@ baseopt_echo
   4u BLKGRAD
 #ifdef PRESAT
   4u pl9:f1
-  1m st0
+  2m st0
   d1 cw:f1
   4u do:f1
   4u pl1:f1
@@ -202,6 +204,7 @@ baseopt_echo
   p16:gp10*-0.4
   d16
 #else
+#ifdef NLP2
   DN_LP2a
   p16:gp10*-3
   d16
@@ -213,6 +216,15 @@ baseopt_echo
   4u
   p16:gp10
   d16
+#else
+  DN_LP1
+  p16:gp10*-1
+  d16
+  (p21 ph7):f3
+  4u
+  p16:gp10
+  d16
+#endif
 #endif
 
   ; nJ(CH) evolution
@@ -249,7 +261,7 @@ baseopt_echo
   4u
   p16:gp0*1.77
   d16
-  1m st
+  2m st
 
 
   ; MODULE 2
@@ -301,7 +313,7 @@ baseopt_echo
   4u
   p16:gp0*2.32
   d16
-  1m st
+  2m st
 
 
   ; MODULE 3
@@ -419,7 +431,7 @@ if "d15 > 1m"
   4u
   p16:gp0*-1.29
   d16
-  1m st
+  2m st
 
 
   ; MODULE 4
@@ -646,5 +658,5 @@ ph29=0 2 2 0
 
 ; auprog: noah_nhmbc:noah_nhsqc:noah_hsqc:noah_sapphire
 ; module identifiers: N_HMBC_CNF N_HSQC C_HSQCC H_PSYCHE_TSAP
-; pulse programme created by genesis-v2.1.4, https://nmr-genesis.co.uk
-; Thu Mar 10 2022 01:00:29 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.1.5, https://nmr-genesis.co.uk
+; Mon Mar 14 2022 14:18:01 GMT+0000 (Greenwich Mean Time)
