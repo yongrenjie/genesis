@@ -5,10 +5,10 @@
  * number of FIDs after running combinekh. For use with 1H 2DJ or PSYCHE NOAH
  * modules.
  *
- * v: 2.1.5
+ * v: 2.1.6
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 10 March 2022 */
+ * 14 March 2022 */
 
 #define MALLOC_ERROR "insufficient memory; aborting"
 #define READ_ERROR "file read failed; aborting"

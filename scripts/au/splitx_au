@@ -10,10 +10,10 @@
  * specifying the noah_xxxx programmes as the userP1 through userP5 processing
  * parameters.
  *
- * v: 2.1.5
+ * v: 2.1.6
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 10 March 2022 */
+ * 14 March 2022 */
 
 /* Initialisation {{{1 */
 /***********************/

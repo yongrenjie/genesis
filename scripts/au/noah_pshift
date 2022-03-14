@@ -6,11 +6,11 @@
  * points are read from cnst22 instead of cnst4 as usual (in NOAH supersequences,
  * cnst4 is reserved for 1J(NH) in 15N modules).
  *
- * v: 2.1.5
+ * v: 2.1.6
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
  * modified from `pshift` AU programme by Ralph Adams, University of Manchester
- * 10 March 2022 */
+ * 14 March 2022 */
 
 // Error messages.
 #define MALLOC_ERROR "noah_pshift: cannot get enough memory"
