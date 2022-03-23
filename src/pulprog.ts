@@ -618,7 +618,6 @@ export function makePulprogText(trueModuleNames: string[],
         `; module identifiers: ${trueModuleNames.join(" ")}`,
         `; pulse programme created by genesis-v${version}, https://nmr-genesis.co.uk`,
         `; ${(new Date()).toString()}`,
-        ``,
     );
     return pp.join("\n");
     // }}}1
