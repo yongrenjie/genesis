@@ -3,6 +3,12 @@
  * Adds up series of k adjacent FIDs in a ser file. The value of k is read from
  * the status parameter cnst39. For use with 15N NOAH modules.
  *
+ * The variable 'nfid' controls how many FIDs are acquired before being
+ * repeated.  For example, with EA-type experiments this is typically 2, and
+ * this AU programme will try to determine nfid based on the FnMODE parameter.
+ * However, it is possible to call this AU program as either 'combinek nfid2'
+ * or 'combinek nfid1' to manually override this.
+ *
  * v: 2.1.6
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
@@ -52,15 +58,20 @@ td1 = td1 - (td1 % (2 * k));
 int td;
 FETCHPARS("TD", &td)
 
-/* 2D function mode */ 
-/* 0 - undefined; 1 - QF; 2-6 - various phase-sensitive methods */
-int fnmode;
-FETCHPAR1S("FnMODE", &fnmode)
-/* If 2 <= fnmode <= 6, then we need to read two FIDs of data at once */
-/* e.g. for fnmode = 6 (EA), we need to read echo + antiecho data together */
+/* Determine nfid */
 int nfid;
-if ((2 <= fnmode) && (fnmode <= 6)) nfid = 2;
-else nfid = 1;
+if ((i_argc > 2) && (strcmp(i_argv[2], "nfid1") == 0)) nfid = 1;
+else if ((i_argc > 2) && (strcmp(i_argv[2], "nfid2") == 0)) nfid = 2;
+else {
+    /* Determine nfid from 2D FnMODE */
+    /* 0 - undefined; 1 - QF; 2-6 - various phase-sensitive methods */ 
+    int fnmode;
+    FETCHPAR1S("FnMODE", &fnmode)
+    /* If 2 <= fnmode <= 6, then we need to read two FIDs of data at once */
+    /* e.g. for fnmode = 6 (EA), we need to read echo + antiecho data together */
+    if ((2 <= fnmode) && (fnmode <= 6)) nfid = 2;
+    else nfid = 1;
+}
 
 /* Data type */
 /* 0 - (32-bit) int, 1 - float, 2 - (64-bit) double */
