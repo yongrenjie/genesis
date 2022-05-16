@@ -221,6 +221,9 @@ C_HMBC_CF_K
     zz-HMBC (C_HMBC_CF) with half the resolution in the indirect dimension and
     twice the number of scans, so-named because it corresponds to a value of k
     = 2 in the k-scaling discussed in doi:10.1016/j.jmr.2021.107027.
+C_HSQC_K
+    Same as C_HSQC but with k = 2, i.e. half resolution in indirect dimension
+    but twice the number of scans.
 C_HSQCJ_K
     Same as C_HSQCJ but with k = 2, i.e. half resolution in indirect dimension
     but twice the number of scans.
@@ -244,6 +247,8 @@ C_HSQCT_IA
     Interleaved in-phase and antiphase version of C_HSQCT.
 H_CC_T
     Interleaved CLIP-COSY and TOCSY.
+H_N_T
+    Interleaved NOESY and TOCSY.
 H_R_T
     Interleaved (adiabatic spin-lock) ROESY and TOCSY.
 H_TOCSY_K
