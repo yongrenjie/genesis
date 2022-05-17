@@ -2,10 +2,10 @@
  * ---------
  * Process NOAH HSQC module.
  *
- * v: 2.1.6
+ * v: 2.1.7
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 14 March 2022 */
+ * 17 May 2022 */
 
 if ((i_argc > 2) && (strlen(i_argv[2]) > 1)) {
     if (strcmp(i_argv[2], "undefined") == 0

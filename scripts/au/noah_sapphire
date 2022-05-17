@@ -8,10 +8,10 @@
  * without a lot of fiddling, it turns out to make more sense to simply collect
  * them into a single script.
  *
- * v: 2.1.6
+ * v: 2.1.7
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 14 March 2022 */
+ * 17 May 2022 */
 
 // Error messages
 #define MALLOC_ERROR "noah_sapphire: cannot get enough memory"
