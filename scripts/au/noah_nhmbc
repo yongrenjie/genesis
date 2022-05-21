@@ -31,8 +31,8 @@ if ((i_argc > 2) && (strlen(i_argv[2]) > 1)) {
 
 XCMD("2 WDW QSINE")
 XCMD("1 WDW QSINE")
-XCMD("1 SSB 2")
-XCMD("2 SSB 4")
+XCMD("1 SSB 0")
+XCMD("2 SSB 0")
 XCMD("2 PH_mod no")
 XCMD("1 PH_mod no")
 XCMD("fixF1n")
