@@ -175,9 +175,9 @@ export function makePulprogText(trueModuleNames: string[],
         }
         const moduleDefineDelays = [...mod.preamble
             .split("\n")
-            .map(l => l.match(/(?<=^")D\[ID\].(?=\s*=)/))
+            .map(l => l.match(/"(D\[ID\][a-z])/))
             .filter(a => a !== null && a.length > 0)
-            .map(a => `define delay ${a![0]}`)
+            .map(a => `define delay ${a![1]}`)
             .map(l => l.replace(/\[ID\]/g, trueModuleNames[i]))
         ];
         preambles.push(...moduleDefineDelays);
