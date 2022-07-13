@@ -2,10 +2,10 @@
  * ---------
  * General processing for NOAH modules.
  *
- * v: 2.1.7
+ * v: 2.1.8
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 17 May 2022 */
+ * 13 July 2022 */
 
 int fntp, td1;
 XFB

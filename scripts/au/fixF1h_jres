@@ -3,10 +3,10 @@
  * Fix the values of SW and O1 in the indirect dimension for NOAH 2DJ modules.
  * SW_h is read from the status parameter cnst38.
  *
- * v: 2.1.7
+ * v: 2.1.8
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 17 May 2022 */
+ * 13 July 2022 */
 
 double sfo1;
 FETCHPARS("SFO1", &sfo1) 
