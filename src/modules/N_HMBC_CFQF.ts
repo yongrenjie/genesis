@@ -10,7 +10,7 @@ let preamble = `
 "d25    = 3u"                         ; 15N QF HMBC t1/2
 "in25   = 1000000/(2*cnst40*sfo3)"    ; 15N QF HMBC increment: cnst40 = SW(15N)
 "p17    = p16*cnst16"                 ; Longer gradients for 15N module
-"D[ID]a = (0.5s/cnst23)-p16-d16-4u"
+"D[ID]a = (0.5s/cnst23)-p16-d16-4u"   ; nJ(NH) evolution
 `
 
 let pulprog = `
@@ -22,7 +22,7 @@ let pulprog = `
   ; low-pass J-filter
   |NLPJF|
 
-  ; nJ(CH) evolution
+  ; nJ(NH) evolution
   D[ID]a
   ; coherence transfer to 13C and t1
   (p21 ph12):f3
