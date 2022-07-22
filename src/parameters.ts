@@ -93,6 +93,7 @@ export const allParams = {
     "cnst21": "PSYCHE saltire RF amplitude (Hz)",
     "cnst22": "PSYCHE drop points [ca. 4]",
     "cnst23": "= nJ(NH) long-range",
+    "cnst24": "= second nJ(NH) long-range for interleaved HMBC",
     "cnst26": "= minimum 1J(NH)",
     "cnst27": "= maximum 1J(NH)",
     "cnst28": "= minimum nJ(NH) (accordion excitation)",

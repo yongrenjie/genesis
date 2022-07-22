@@ -38,6 +38,12 @@ N_HMBC_CF
     Same as C_HMBC_CF, just that it's 15N in the indirect dimension.
 N_HMBC_CNF
     Same as C_HMBC_CNF, just that it's 15N in the indirect dimension.
+N_HMBC_CFQF
+    QF (magnitude-mode) version of 15N HMBC, gives slightly better results.
+    Contains 13C-only zz-filter.
+N_HMBC_CFQDD
+    Interleaved version of two QF 15N HMBCs with different nJ(NH) evolution
+    time.
 N_HMBC_CFIM
     IMPEACH-MBC experiment (doi:10.1006/jmre.1999.1840), but it doesn't work
     very well (yet?).

@@ -70,6 +70,7 @@ import H_TT_DM from "./modules/H_TT_DM.js";
 import H_ZG from "./modules/H_ZG.js";
 import N_HMBC_CF from "./modules/N_HMBC_CF.js";
 import N_HMBC_CFIM from "./modules/N_HMBC_CFIM.js";
+import N_HMBC_CFQDD from "./modules/N_HMBC_CFQDD.js";
 import N_HMBC_CFQF from "./modules/N_HMBC_CFQF.js";
 import N_HMBC_CNF from "./modules/N_HMBC_CNF.js";
 import N_HMQC from "./modules/N_HMQC.js";
@@ -150,6 +151,7 @@ const allModules: Map<string, NOAHModule> = new Map([
     [H_ZG.name, H_ZG],
     [N_HMBC_CF.name, N_HMBC_CF],
     [N_HMBC_CFIM.name, N_HMBC_CFIM],
+    [N_HMBC_CFQDD.name, N_HMBC_CFQDD],
     [N_HMBC_CFQF.name, N_HMBC_CFQF],
     [N_HMBC_CNF.name, N_HMBC_CNF],
     [N_HMQC.name, N_HMQC],
