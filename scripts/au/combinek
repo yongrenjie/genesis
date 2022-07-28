@@ -30,6 +30,21 @@ if (k == 0)      STOPMSG("combinek has already been run on this dataset")
 else if (k == 1) STOP
 else if (k < 0)  STOPMSG("error: cnst39 cannot be negative")
 
+/* Determine nfid */
+int nfid;
+if ((i_argc > 2) && (strcmp(i_argv[2], "nfid1") == 0)) nfid = 1;
+else if ((i_argc > 2) && (strcmp(i_argv[2], "nfid2") == 0)) nfid = 2;
+else {
+    /* Determine nfid from 2D FnMODE */
+    /* 0 - undefined; 1 - QF; 2-6 - various phase-sensitive methods */ 
+    int fnmode;
+    FETCHPAR1S("FnMODE", &fnmode)
+    /* If 2 <= fnmode <= 6, then we need to read two FIDs of data at once */
+    /* e.g. for fnmode = 6 (EA), we need to read echo + antiecho data together */
+    if ((2 <= fnmode) && (fnmode <= 6)) nfid = 2;
+    else nfid = 1;
+}
+
 /* Open the ser file to read */
 char ser[PATH_MAX + 64];
 strcpy(ser, ACQUPATH("ser"));
@@ -49,29 +64,13 @@ FETCHPARS("NS", &ns)
 /* Number of t1 increments */
 int td1;
 FETCHPAR1S("TD", &td1)
-/* Round TD1 down to the nearest multiple of 2k (factor of 2 because we
- * need both echo and antiecho).
+/* Round TD1 down to the nearest multiple of nfid * k.
  * This allows combinek to work even when acquisition is incomplete. */
-td1 = td1 - (td1 % (2 * k));
+td1 = td1 - (td1 % (nfid * k));
 
 /* Number of points in FID */
 int td;
 FETCHPARS("TD", &td)
-
-/* Determine nfid */
-int nfid;
-if ((i_argc > 2) && (strcmp(i_argv[2], "nfid1") == 0)) nfid = 1;
-else if ((i_argc > 2) && (strcmp(i_argv[2], "nfid2") == 0)) nfid = 2;
-else {
-    /* Determine nfid from 2D FnMODE */
-    /* 0 - undefined; 1 - QF; 2-6 - various phase-sensitive methods */ 
-    int fnmode;
-    FETCHPAR1S("FnMODE", &fnmode)
-    /* If 2 <= fnmode <= 6, then we need to read two FIDs of data at once */
-    /* e.g. for fnmode = 6 (EA), we need to read echo + antiecho data together */
-    if ((2 <= fnmode) && (fnmode <= 6)) nfid = 2;
-    else nfid = 1;
-}
 
 /* Data type */
 /* 0 - (32-bit) int, 1 - float, 2 - (64-bit) double */
