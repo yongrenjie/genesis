@@ -9,7 +9,7 @@
  * However, it is possible to call this AU program as either 'combinek nfid2'
  * or 'combinek nfid1' to manually override this.
  *
- * v: 2.2.0
+ * v: 2.2.1
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
  * 22 August 2022 */
