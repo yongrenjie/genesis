@@ -55,6 +55,7 @@ if (strstr(zgoptns, "-DNUS") || strstr(pp_name, ".nus")) {
     full_td1 = (int) ((td1 * 100 / nusamount) + 0.5);
 }
 
+
 // Each FID in a ser file starts at a 1024-byte boundary.
 int dlen;  // number of bytes per data point
 // tdr is tds, rounded up to the nearest multiple of 256 or 128 as appropriate.
@@ -86,18 +87,34 @@ if ((double) td_times_nbl >= 2. * 1024 * 1024 * 1024 / dlen) STOPMSG("amount of 
 /* Get information about individual AU programmes {{{1 */
 /*******************************************************/
 
+// Allocate memory
+char **auprogs = calloc(nbl, sizeof (char *));
+for (i = 0; i < nbl; i++) {
+    *(auprogs + i) = calloc(AU_NAME_MAX, sizeof (char));
+}
+
+// Flag to determine whether we should read from the pulse programme.
+int read_au_from_pulprog = 1;
+
 // Attempt to locate pulse programme file. Use the compiled version if it can't find it.
 char pp_path[PATH_MAX];      // path to pulse programme file
 if (getParfileDirForRead(pp_name, PP_DIRS, pp_path) < 0) {
     strcpy(pp_path, ACQUPATH("pulseprogram"));
 }
-
-// If some version of the pulse programme was found, search inside it for processing AU programmes
-char **auprogs = calloc(nbl, sizeof (char *));
-for (i = 0; i < nbl; i++) {
-    *(auprogs + i) = calloc(AU_NAME_MAX, sizeof (char));
+// TS 4.1.4 broke the above because it changed up the directory structure, so
+// we now need to check inside the EXPNO/lists/pp directory
+if (access(pp_path, F_OK) != 0) {
+    strcpy(pp_path, ACQUPATH("lists/pp/"));
+    strcat(pp_path, pp_name);
 }
-if (*pp_path) {
+// as well as EXPNO/pulseprogram.precomp
+if (access(pp_path, F_OK) != 0) {
+    strcpy(pp_path, ACQUPATH("pulseprogram.precomp"));
+}
+
+Proc_err(DEF_ERR_OPT, pp_path);
+// If some version of the pulse programme was found, search inside it for processing AU programmes
+if (access(pp_path, F_OK) == 0) {
     FILE *pulprog_fp = fopen(pp_path, "r");
     char line[PATH_MAX];
     // getline() only works in TopSpin 4, fgets always works
@@ -136,7 +153,7 @@ for (i = 0; i < nbl; i++) {
         strcpy(*(auprogs + i), auprog);
     }
 }
-
+ 
 
 /* Determine information for time-shared modules {{{1 */
 /******************************************************/
