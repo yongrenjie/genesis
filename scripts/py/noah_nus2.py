@@ -61,8 +61,8 @@ def enable_nus():
                     err_exit(MODULE_UNSUPPORTED)
                 break
     # Exit if pulse programme was not found
-    if not found_pulprog:
-        err_exit("Pulse programme '{}' was not found.".format(pulprog))
+    #if not found_pulprog:
+    #    err_exit("Pulse programme '{}' was not found.".format(pulprog))
 
     # Reset FnTYPE.
     PUTPAR("FnTYPE", "traditional(planes)")
@@ -84,14 +84,16 @@ def enable_nus():
     if nus_amount >= 100 or nus_amount <= 0:
         err_exit('NUS percentage must be between 0 and 100')
 
-    PUTPAR("NusAMOUNT", str(nus_amount))
-
     # Calculate appropriate TD1 and replace it
     td1 = int(GETPAR("1 TD"))
     nbl = int(GETPAR("NBL"))
     t1_incrs_full = int(td1 / (nbl * 2))  # this is "l0" in the pulprog
     t1_incrs_nus = int((t1_incrs_full * nus_amount / 100) + 0.5)
     PUTPAR("1 TD", str(t1_incrs_nus * 2 * nbl))
+    
+    # Recalculate NUSAmount so that splitx_au processing works correctly
+    true_nus_amount = 100 * t1_incrs_nus / t1_incrs_full
+    PUTPAR("NusAMOUNT", str(true_nus_amount))
 
     # Generate the NUS list. This is delegated to the nussampler executable.
     # Path to TopSpin installation.
@@ -132,7 +134,7 @@ def enable_nus():
     info_message("NUS percentage successfully set to {}%.\n"
                  "Full TD1 per module without NUS = {}\n"
                  "TD1 per module with NUS (now active) = {}".format(
-                     nus_amount, t1_incrs_full * 2, t1_incrs_nus * 2))
+                     true_nus_amount, t1_incrs_full * 2, t1_incrs_nus * 2))
 
 
 def disable_nus(show_message=True):
@@ -146,8 +148,9 @@ def disable_nus(show_message=True):
     # Back-calculate TD1.
     nus_td1 = int(GETPAR("1 TD"))
     nus_amount = float(GETPAR("NusAMOUNT"))
-    full_td1 = int(nus_td1 * 100 / nus_amount)
+    full_td1 = int((nus_td1 * 100 / nus_amount) + 0.5)
     PUTPAR("1 TD", str(full_td1))
+    nbl = int(GETPAR("NBL"))
 
     # Unset the zgoptns flag.
     # In TopSpin there is some very odd behaviour where if you PUTPAR(par, "")
@@ -162,7 +165,9 @@ def disable_nus(show_message=True):
     PUTPAR("VCLIST", " ")
     # Show a message if desired
     if show_message:
-        info_message("NUS successfully disabled")
+        info_message("NUS successfully disabled.\n"
+                     "TD1 per module = {}".format(int(full_td1 / nbl))
+                     )
 
 
 def err_exit(message):
