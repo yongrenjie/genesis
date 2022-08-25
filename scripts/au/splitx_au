@@ -112,7 +112,6 @@ if (access(pp_path, F_OK) != 0) {
     strcpy(pp_path, ACQUPATH("pulseprogram.precomp"));
 }
 
-Proc_err(DEF_ERR_OPT, pp_path);
 // If some version of the pulse programme was found, search inside it for processing AU programmes
 if (access(pp_path, F_OK) == 0) {
     FILE *pulprog_fp = fopen(pp_path, "r");
