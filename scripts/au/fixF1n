@@ -3,10 +3,10 @@
  * Fix the values of SW and O1 in the indirect dimension for NOAH 15N modules.
  * SW is read from the status parameter cnst40.
  *
- * v: 2.2.1
+ * v: 2.2.2
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 22 August 2022 */
+ * 25 August 2022 */
 
 double sfo;
 FETCHPARS("SFO3", &sfo)
