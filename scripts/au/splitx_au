@@ -15,10 +15,10 @@
  * in order to additionally archive all datasets using the archive AU
  * programme.
  *
- * v: 2.2.2
+ * v: 2.2.3
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 25 August 2022 */
+ * 14 November 2022 */
 
 /* Initialisation {{{1 */
 /***********************/
