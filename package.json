@@ -20,7 +20,7 @@
     "type": "module",
     "dependencies": {
         "ansi-regex": ">=5.0.1",
-        "mocha": "^9.2.0",
+        "mocha": "^10.1.0",
         "nanoid": ">=3.1.31",
         "typescript": "^4.2.3",
         "yargs": "^16.2.0",
