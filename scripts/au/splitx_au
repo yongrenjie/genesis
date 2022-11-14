@@ -10,6 +10,11 @@
  * specifying the noah_xxxx programmes as the userP1 through userP5 processing
  * parameters.
  *
+ * This AU programme can be invoked as
+ *     splitx_au --archive
+ * in order to additionally archive all datasets using the archive AU
+ * programme.
+ *
  * v: 2.2.2
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
@@ -26,6 +31,12 @@ double *drow, *drow_sum, *drow_diff;   // one 64-bit float-typed FID
 int    i, j, k, n;                     // loop indices
 char   ser_path[PATH_MAX];             // path to various ser files
 char   expno_path[PATH_MAX];           // path to the NOAH expno directory
+
+// Check for archive flag
+int archive_flag = 0;
+if ((i_argc > 2) && (strcmp(i_argv[2], "--archive") == 0)) {
+    archive_flag = 1;
+}
 
 // Check if dataset is 2D
 int parmode;
@@ -423,6 +434,7 @@ for (i = 0; i < nbl; i++) {
 
     // Run the AU programme and update TopSpin
     XAUPW
+    if (archive_flag) XCMD("archive");
     REFRESHDATA
     XCMD("sendgui browse_update_tree")
     Show_meta(SM_RAW | SM_RAWP);
@@ -476,6 +488,7 @@ for (i = 0; i < nbl; i++) {
 
         // Run the AU programme and update TopSpin
         XAUPW
+        if (archive_flag) XCMD("archive");
         REFRESHDATA
         XCMD("sendgui browse_update_tree")
         Show_meta(SM_RAW | SM_RAWP);
