@@ -4,10 +4,10 @@
  * experiments which have one module in the first slot & alternate between
  * three modules in the second slot, such as the ABBS experiment.
  * 
- * v: 2.2.3
+ * v: 2.2.4
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 14 November 2022 */
+ * 17 November 2022 */
 
 
 /******************

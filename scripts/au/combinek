@@ -9,10 +9,10 @@
  * However, it is possible to call this AU program as either 'combinek nfid2'
  * or 'combinek nfid1' to manually override this.
  *
- * v: 2.2.3
+ * v: 2.2.4
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 14 November 2022 */
+ * 17 November 2022 */
 
 #define MALLOC_ERROR "insufficient memory; aborting"
 #define READ_ERROR "file read failed; aborting"

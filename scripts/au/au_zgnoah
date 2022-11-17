@@ -8,10 +8,10 @@
  * (thus suppressing an error about incorrect NBL when rga was being
  * performed).
  *
- * v: 2.2.3
+ * v: 2.2.4
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 14 November 2022 */
+ * 17 November 2022 */
 
 char pulprog[64];
 int nbl;
