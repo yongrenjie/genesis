@@ -677,11 +677,16 @@
                 </div> <!-- }}}2 --->
 
                 <input id="faq_automation" class="toggle-button" type="checkbox"> <!-- {{{2 --->
-                <label for="faq_automation" class="toggle-label" tabindex="0">How can NOAH experiments be set up for use in automation?</label>
+                <label for="faq_automation" class="toggle-label" tabindex="0">How can NOAH experiments be set up for use under IconNMR automation?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
-                        <p>The acquisition AU programme (AUNM) should be set to <span class="ms">au_zgcosy</span>, to avoid issues with <span class="ms">rga</span> (see above). The processing AU programme (AUNMP) should be set to <span class="ms">splitx_au</span>. If the pulse programmes and AU scripts are up-to-date, then there is no need to set the user processing parameters.</p>
-                        <p>WaveMaker shaped pulses can optionally be generated before acquisition by adding the statement <span class="ms">XCMD("wvm -q")</span> into the acquisition AU programme.</p>
+                        <p>Set up a NOAH parameter set as usual, but with two different parameters:</p>
+                        <ul>
+                            <li>The <b>acquisition AU programme (AUNM)</b> parameter should be set to <span class="ms">au_zgnoah</span>, to avoid issues with <span class="ms">rga</span> (see above). This AU programme does not come with TopSpin, but you can download it on this website (click the &lsquo;download processing scripts&rsquo; button).</li>
+                            <li>The <b>processing AU programme (AUNMP)</b> should be set to <span class="ms">splitx_au</span>. If the pulse programmes and AU scripts are up-to-date, then there is no need to set the user processing parameters.</li>
+                        </ul>
+                        <p>If you additionally want to use NUS, then set up a NOAH experiment as usual and enter the desired amount of NUSAmount, but <i>do not turn on NUS using noah_nus2.</i> Instead, change the acquisition AU programme (AUNM) to <span class="ms">au_zgnoah_nus</span>, which will enable NUS for you before running the experiment.
+                        <p>If you want to also generate WaveMaker shaped pulses before acquisition, you can modify the acquisition AU programme to contain the statement <span class="ms">XCMD("wvm -q")</span> immediately before the line containing <span class="ms">ZG</span>.</p>
                     </div>
                 </div> <!-- }}}2 --->
 
@@ -737,6 +742,10 @@
 
                         <p>A few possible error messages are collated here. If yours isn&rsquo;t listed here, drop us an email.</p>
                         <ul>
+                            <li><b>rga: Warning: Pulse program does not contain a 'st' statement...</b><br />
+
+                                This message arises when using the <span class="ms">au_zgcosy</span> AU acquisition programme, which was previously recommended. It is harmless and can be safely ignored. To suppress it, set the acquisition AU programme (AUNM) parameter to <span class="ms">au_zgnoah</span> instead (this AU programme can be downloaded on this website).</li>
+
                             <li><b>Warning: file size #0 resulting from pulse program is not consistent with parameters...</b><br />
                                 This usually results from a wrongly set <span class="ms">NBL</span> parameter. The correct value to use is always specified in a comment near the top of the pulse programme.</li>
                         </ul>
