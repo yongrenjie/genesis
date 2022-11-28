@@ -2,10 +2,10 @@
  * -----
  * Fix the values of SW and O1 in the indirect dimension for NOAH 1H modules.
  *
- * v: 2.2.4
+ * v: 2.2.5
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 17 November 2022 */
+ * 28 November 2022 */
 
 double sf1;
 FETCHPARS("SFO1", &sf1) 
