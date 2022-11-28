@@ -41,7 +41,7 @@ PP_NOT_GENESIS = ("This pulse programme is not suitable for use\n"
                   " GENESIS website ({}).").format(GENESIS_URL)
 
 
-def enable_nus():
+def enable_nus(show_message=True):
     # Check if NUS is already enabled. If so, disable it.
     zgoptns, vclist = GETPAR("ZGOPTNS"), GETPAR("VCLIST")
     if "-DNUS" in zgoptns and "noah" in vclist:
@@ -61,8 +61,8 @@ def enable_nus():
                     err_exit(MODULE_UNSUPPORTED)
                 break
     # Exit if pulse programme was not found
-    #if not found_pulprog:
-    #    err_exit("Pulse programme '{}' was not found.".format(pulprog))
+    if not found_pulprog:
+        err_exit("Pulse programme '{}' was not found.".format(pulprog))
 
     # Reset FnTYPE.
     PUTPAR("FnTYPE", "traditional(planes)")
@@ -76,7 +76,10 @@ def enable_nus():
         try:
             nus_amount = float(sys.argv[2])
         except ValueError:
-            usage_err_exit()
+            if sys.argv[2] != "-q":
+                usage_err_exit()
+            else:
+                nus_amount = float(GETPAR("NusAMOUNT"))
     else:
         nus_amount = float(GETPAR("NusAMOUNT"))
 
@@ -131,17 +134,19 @@ def enable_nus():
     # Change FnTYPE back to the default, just in case the user changed it.
     PUTPAR("FnTYPE", "traditional(planes)")
     # Show a message
-    info_message("NUS percentage successfully set to {}%.\n"
-                 "Full TD1 per module without NUS = {}\n"
-                 "TD1 per module with NUS (now active) = {}".format(
-                     true_nus_amount, t1_incrs_full * 2, t1_incrs_nus * 2))
+    if show_message:
+        info_message("NUS percentage successfully set to {}%.\n"
+                     "Full TD1 per module without NUS = {}\n"
+                     "TD1 per module with NUS (now active) = {}".format(
+                         true_nus_amount, t1_incrs_full * 2, t1_incrs_nus * 2))
 
 
 def disable_nus(show_message=True):
     # Check if NUS is already enabled.
     zgoptns, vclist = GETPAR("ZGOPTNS"), GETPAR("VCLIST")
     if not ("-DNUS" in zgoptns and "noah" in vclist):
-        info_message(NUS_ALREADY_OFF.format(this_script_name()))
+        if show_message:
+            info_message(NUS_ALREADY_OFF.format(this_script_name()))
         return
 
     # To undo NUS is easier, since we don't need to generate the list.
@@ -226,9 +231,14 @@ if __name__ == "__main__":
 
     if len(sys.argv) < 2:
         enable_nus()
-    elif sys.argv[1] in ["on", "enable"]:
-        enable_nus()
-    elif sys.argv[1] in ["off", "disable", "undo"]:
-        disable_nus()
     else:
-        usage_err_exit()
+        show_message = True
+        if len(sys.argv) > 2 and "-q" in sys.argv:
+            show_message = False
+
+        if sys.argv[1] in ["on", "enable"]:
+            enable_nus(show_message=show_message)
+        elif sys.argv[1] in ["off", "disable", "undo"]:
+            disable_nus(show_message=show_message)
+        else:
+            usage_err_exit()
