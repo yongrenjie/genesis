@@ -594,8 +594,8 @@
                         <p>All pulsed field gradients can be set using the <span class="ms">gppp</span> command, and most shaped pulses can be created using the WaveMaker <span class="ms">wvm -a</span> command.</p>
                         <p>All other parameters are fully documented in the pulse programmes, and nearly all of these are the same as in the standard experiments. There are a few parameters which are NOAH-specific:</p>
                         <ul>
-                            <li><b>cnst16</b>: factor to lengthen CTP gradients in <sup>15</sup>N spectra by. We recommend setting this such that cnst16*p16 is around 2–2.5 ms. In other words, if your &ldquo;standard&rdquo; gradient duration p16 is 1 ms, set cnst16 = 2–2.5. This helps to suppress artefacts in the spectra which arise from imperfect pulses.</li>
-                            <li><b>cnst32</b>: in supersequences with multiple <sup>13</sup>C spectra (e.g. HSQC-TOCSY + HSQC), cnst32 tells you how much of the one-bond C–H magnetisation to allocate to the first of the two, where 1 means &ldquo;all of it&rdquo; and 0 means &ldquo;none&rdquo;. The remainder goes to the second module. The optimum amount to use depends on what these two modules are, as well as other parameters e.g. acquisition times and relaxation rates, but something between 0.7 and 0.9 usually works well.</li>
+                            <li><b>cnst16</b>: factor to lengthen CTP gradients in <sup>15</sup>N spectra by. We recommend setting this such that cnst16*p16 is around 2–2.5 ms. In other words, if your &lsquo;standard&rsquo; gradient duration p16 is 1 ms, set cnst16 = 2–2.5. This helps to suppress artefacts in the spectra which arise from imperfect pulses.</li>
+                            <li><b>cnst32</b>: in supersequences with multiple <sup>13</sup>C spectra (e.g. HSQC-TOCSY + HSQC), cnst32 tells you how much of the one-bond C–H magnetisation to allocate to the first of the two, where 1 means &lsquo;all of it&rsquo; and 0 means &lsquo;none&rsquo;. The remainder goes to the second module. The optimum amount to use depends on what these two modules are, as well as other parameters e.g. acquisition times and relaxation rates, but something between 0.7 and 0.9 usually works well.</li>
                             <li><b>cnst37</b>: this is the desired number of <i>t</i><sub>1</sub> increments or chunks for the 2DJ and PSYCHE experiments respectively. There is no need to multiply this by NBL. Note that this should be a factor of the other modules&rsquo; TD1.</li>
                             <li><b>cnst38</b>: for 2DJ and PSYCHE experiments this is the indirect dimension proton SW in Hz. For PSYCHE modules, we include automatic corrections in the pulse programme to make sure that SW2/SW1 is an integer (i.e. each chunk has an integer number of points), so you can just provide an approximate value here without worrying about that.</li>
                             <li><b>cnst39</b>: <i>k</i>-scaling factor for <sup>15</sup>N modules. Set this to a value larger than 1 to reduce TD1 for the <sup>15</sup>N experiment by a factor of cnst39; in return NS will be increased by a factor of cnst39. The impact is not huge, but sometimes sensitivity gains can be attained.</li>
@@ -614,7 +614,7 @@
                         <ul>
                             <li><span class="ms">-DEDIT</span> and <span class="ms">-DEDIT1</span>: enables multiplicity editing in HSQC or HSQC-COSY spectra.</li>
                             <li><span class="ms">-DTEDIT</span>: enables multiplicity editing in HSQC-TOCSY spectra.</li>
-                            <li><span class="ms">-DINVERT</span> and <span class="ms">-DINVERT1</span>: in HSQC-TOCSY spectra, causes &ldquo;direct&rdquo; (HSQC) and &ldquo;indirect&rdquo; (HSQC-TOCSY) responses to have opposite signs.
+                            <li><span class="ms">-DINVERT</span> and <span class="ms">-DINVERT1</span>: in HSQC-TOCSY spectra, causes &lsquo;direct&rsquo; (HSQC) and &lsquo;indirect&rsquo; (HSQC-TOCSY) responses to have opposite signs.
                             <li><span class="ms">-DPRESAT</span>: enables presaturation during d1 and also during NOE mixing times (if a NOESY module is present).
                             <li><span class="ms">-DES</span>: enables excitation sculpting in most (but not all) homonuclear modules.
                         </ul>
@@ -631,15 +631,15 @@
                         <ol class="steps">
                             <li><a href="scripts/py/noah_nus2.py" download>Download the newest version of <span class="ms">noah_nus2.py</span>.</a> Place it in the appropriate folder for TopSpin&rsquo;s Python scripts.</li>
                             <li>Set up your experiment normally without NUS first, with the full value for TD1 (i.e. number of <i>t</i><sub>1</sub> increments times NBL). Don&rsquo;t change any other parameters, such as FnTYPE.</li>
-                            <li>Specify the parameter NUSAmount (this refers to the sampling density as a percentage, i.e. set this to 50 for half the points) and then run <span class="ms">noah_nus2</span> in TopSpin.</li>
+                            <li>Specify the parameter NusAMOUNT (this refers to the sampling density as a percentage, i.e. set this to 50 for half the points) and then run <span class="ms">noah_nus2 on</span> in TopSpin.</li>
                         </ol>
                         <p>To disable NUS on a dataset where it was previously enabled, run <span class="ms">noah_nus2 off</span>.</p>
                         <p>The optimal sampling density depends on what spectra you&rsquo;re trying to run as well as your sample. However, there is nothing special about NOAH in this regard: the typical considerations (e.g. how sparse the spectrum is) are the same, and whatever works for the individual spectra will also work on NOAH.</p>
                         <p><b>Incompatibilities</b>
                         <ul>
-                            <li>The script will not work on old versions of pulse sequences, e.g. those found in the Supporting Information of older papers. For these, please use the old <span class="ms">noah_nus.py</span> script.</li>
+                            <li>The script will not work on old versions of pulse sequences, e.g. those found in the Supporting Information of older papers. For these, please use the old <span class="ms">noah_nus.py</span> script. (I'd <b>really</b> encourage you to re-download the pulse programmes and scripts here, though. They are better.)</li>
                             <li>NUS is not compatible with the cnst39 scaling in <sup>15</sup>N modules respectively. If you try to enable this on a dataset with cnst39 &gt; 1, the script will silently reset cnst39 back to 1.</li>
-                            <li>Finally, NUS totally does not work with with QF-style modules (namely QF COSY), cnst37-scaled <sup>1</sup>H modules (2DJ and PSYCHE), or time-shared / interleaved experiments. The <span class="ms">-DNUS</span> flag is not encoded in these pulse sequences, so the script will not work at all.</li>
+                            <li>Finally, NUS totally does not work with with QF-style modules (namely QF COSY), cnst37-scaled <sup>1</sup>H modules (2DJ and PSYCHE), or time-shared / interleaved experiments. The <span class="ms">-DNUS</span> acquisition flag is not available in these pulse sequences, and the script will tell you this if you try to enable NUS.</li>
                         </ul>
 
                         </p>
@@ -672,7 +672,7 @@
                 <label for="faq_weird" class="toggle-label" tabindex="0">During acquisition, is it normal that TopSpin shows weird numbers in the progress bar?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
-                        <p>Yes. If you are running a NOAH-4 experiment with 256 <i>t</i><sub>1</sub> increments (i.e. TD1 = 1024), then the progress line in the status bar will inch towards &ldquo;1024/256&rdquo;. It&rsquo;s a bit odd, but entirely harmless.</p>
+                        <p>Yes. If you are running a NOAH-4 experiment with 256 <i>t</i><sub>1</sub> increments (i.e. TD1 = 1024), then the progress line in the status bar will inch towards &lsquo;1024/256&rsquo;. It&rsquo;s a bit odd, but entirely harmless.</p>
                     </div>
                 </div> <!-- }}}2 --->
 
@@ -680,13 +680,13 @@
                 <label for="faq_automation" class="toggle-label" tabindex="0">How can NOAH experiments be set up for use under IconNMR automation?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
-                        <p>Set up a NOAH parameter set as usual, but with two different parameters:</p>
+                        <p>Set up a NOAH experiment as usual (you can also enable NUS using the <span class="ms">noah_nus2</span> script if you want), and make sure to specify these two parameters:</p>
                         <ul>
                             <li>The <b>acquisition AU programme (AUNM)</b> parameter should be set to <span class="ms">au_zgnoah</span>, to avoid issues with <span class="ms">rga</span> (see above). This AU programme does not come with TopSpin, but you can download it on this website (click the &lsquo;download processing scripts&rsquo; button).</li>
                             <li>The <b>processing AU programme (AUNMP)</b> should be set to <span class="ms">splitx_au</span>. If the pulse programmes and AU scripts are up-to-date, then there is no need to set the user processing parameters.</li>
                         </ul>
-                        <p>If you additionally want to use NUS, then set up a NOAH experiment as usual and enter the desired amount of NUSAmount, but <i>do not turn on NUS using noah_nus2.</i> Instead, change the acquisition AU programme (AUNM) to <span class="ms">au_zgnoah_nus</span>, which will enable NUS for you before running the experiment.
-                        <p>If you want to also generate WaveMaker shaped pulses before acquisition, you can modify the acquisition AU programme to contain the statement <span class="ms">XCMD("wvm -q")</span> immediately before the line containing <span class="ms">ZG</span>.</p>
+                        <p>With this setup, NOAH experiments should be able to run in IconNMR as usual. You can use either the <span class="ms">sti</span> (send to Icon) command, or save a parameter set and load it within Icon. However, getting NOAH to work under automation <i>can</i> be finicky (especially when NUS is involved as well), so please feel free to get in touch if you have any issues or questions.</p>
+                        <p>If you want to also generate WaveMaker shaped pulses before acquisition, you can modify the acquisition AU programme (i.e. <span class="ms">au_zgnoah</span>) to contain the statement <span class="ms">XCMD("wvm -q")</span> immediately before the line containing <span class="ms">ZG</span>.</p>
                     </div>
                 </div> <!-- }}}2 --->
 
@@ -711,7 +711,7 @@
                             <li>If you haven&rsquo;t already done so, <a class="scripts" download>download the newest versions of the NOAH scripts</a>. Unzip that and copy everything inside the <b>au</b> subdirectory to <b>&lt;TS&gt;/exp/stan/nmr/au/src/user</b>, where &lt;TS&gt; is your TopSpin installation location (<span class="ms">C:\Bruker\TopSpinX.Y.Z</span> for Windows, and <span class="ms">/opt/topspinx.y.z</span> for macOS/Linux).</li>
                             <li>Process the data by entering <span class="ms">splitx_au</span> into the TopSpin command line. This will create new datasets with expnos beginning from (1000 × <i>m</i>) + 1, where <i>m</i> is the expno of the original NOAH data.</li>
                         </ol>
-                        <p>If you are using old versions of the pulse programme, there is an additional step where you need to specify the userP1 through userP5 parameters. For example, in a BSC experiment, you would specify (userP1, userP2, userP3) = (noah_hmbc, noah_hsqc, noah_cosy) respectively. This is no longer necessary as long as you have downloaded the newest AU scripts and pulse programmes from this website. Please do get in touch if you need extra information on this.</p>
+                        <p>If you are using old versions of the pulse programme, there is an additional step where you need to specify the userP1 through userP5 processing parameters in TopSpin. For example, in a BSC experiment, you would specify (userP1, userP2, userP3) = (noah_hmbc, noah_hsqc, noah_cosy) respectively. This was an easy way to mess up the processing (by incorrectly inputting these parameters), and has thus been removed: so, <b>if you downloaded pulse programmes and AU scripts from this website, this step is no longer necessary</b>. Please do get in touch if you need extra information on this.</p>
                     </div>
                 </div> <!-- }}}2 --->
 
@@ -732,7 +732,7 @@
                     </div>
                 </div> <!-- }}}2 --->
 
-                <div class="faq-headings">General NOAH questions</div>
+                <div class="faq-headings">General NOAH/GENESIS questions</div>
 
                 <input id="faq_errors" class="toggle-button" type="checkbox"> <!-- {{{2 --->
                 <label for="faq_errors" class="toggle-label" tabindex="0">I got an error message when trying to use these.</label>
@@ -752,19 +752,11 @@
                     </div>
                 </div> <!-- }}}2 --->
 
-                <input id="faq_download" class="toggle-button" type="checkbox"> <!-- {{{2 --->
-                <label for="faq_download" class="toggle-label" tabindex="0">Download all NOAH scripts</label>
-                <div class="toggle-content">
-                    <div class="toggle-content-inner">
-                        <p><a class="scripts" download>Click here to download the AU and Python scripts (.zip).</a> We assume you know what you&rsquo;re doing here. (If not, the other entries in this FAQ have more information.)</p>
-                    </div>
-                </div> <!-- }}}2 -->
-
                 <input id="faq_cite" class="toggle-button" type="checkbox"> <!-- {{{2 --->
                 <label for="faq_cite" class="toggle-label" tabindex="0">What papers should I cite / where can I find out more about NOAH experiments?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
-                        <p>Thanks for asking! If you&rsquo;re just looking for a citation for the supersequence you used, the pulse programmes downloaded from this website will already suggest the relevant references, so you can directly copy those.</p>
+                        <p>Thanks for asking! If you&rsquo;re just looking for a citation for the supersequence you used, check the text of the pulse programme you downloaded from here: it should already suggest some relevant references, so you can directly copy those.</p>
                         <p>On the other hand, if you&rsquo;re interested in reading more, the paper accompanying the GENESIS website is:</p>
                         <ol class="citation-start">
                             <li>Yong, J. R. J.; Kupče, Ē.; Claridge, T. D. W. Modular Pulse Program Generation for NMR Supersequences. <i>Anal. Chem.</i> <b>2022,</b> <i>94</i> (4), 2271–2278. <a href="https://doi.org/10.1021/acs.analchem.1c04964">DOI: 10.1021/acs.analchem.1c04964</a>.</li>
@@ -790,8 +782,6 @@
                     </div>
                 </div> <!-- }}}2 --->
 
-                <div class="faq-headings">About this website</div>
-
                 <input id="faq_bs" class="toggle-button" type="checkbox"> <!-- {{{2 --->
                 <label for="faq_bs" class="toggle-label" tabindex="0">I asked for HMBC + HSQC, but the website gave me HSQC + HMBC.</label>
                 <div class="toggle-content">
@@ -807,12 +797,12 @@
                 </div> <!-- }}}2 --->
 
                 <input id="faq_devmode" class="toggle-button" type="checkbox"> <!-- {{{2 --->
-                <label for="faq_devmode" class="toggle-label" tabindex="0">What is &ldquo;developer mode&rdquo;? What do those module codes mean?</label>
+                <label for="faq_devmode" class="toggle-label" tabindex="0">What is &lsquo;developer mode&rsquo;? What do those module codes mean?</label>
                 <div class="toggle-content">
                     <div class="toggle-content-inner">
-                        <p>Internally, the website contains multiple &ldquo;versions&rdquo; of many NOAH modules. For example, there are several different sensitivity-enhanced HSQC sequences, each having different strengths and weaknesses: which of these to use depends on the context. If the seHSQC module is placed at the end of a sequence (e.g. NOAH-2 BS<sup>+</sup>), then we can use the original Cavanagh–Rance seHSQC, which has greater sensitivity than the versions specifically modified for use in NOAH. On the other hand, if there is a homonuclear module which follows (e.g. NOAH-2 S<sup>+</sup>C), then we should use the versions specifically designed to preserve the uncoupled proton magnetisation. (We have an upcoming paper which will explain this fully.)</p>
-                        <p>As another example, the NOAH HMBC module is usually configured to preserve one-bond C–H magnetisation using the <i>zz</i>-filter, which can be then used in a H–C HSQC experiment. However, if there is also a H–N module (HMQC or seHSQC) in the supersequence, then the filter must be modified to also preserve N–H magnetisation. This can be done, but the resulting &ldquo;double filter&rdquo; is less effective at preserving C–H magnetisation. Thus, we want to only use the &ldquo;double filter&rdquo; when it&rsquo;s actually needed.
-                        <p>When using the &ldquo;normal&rdquo; interface, the website picks the &ldquo;smartest&rdquo; possible variants for use, based on decisions such as the above. Each version of a module is assigned an internal label, which you can see at the bottom of the generated pulse programme. In &ldquo;developer mode&rdquo;, you have complete control over this and can pick exactly which version of a sequence you want. You can also access a few modules, or combinations thereof, which are not generally recommended: for example, the <sup>15</sup>N HSQC (without sensitivity enhancement) is available. The internal labels of the modules are described in more detail <a href="devmode_modules.txt">here</a>.</p>
+                        <p>Internally, the website contains multiple &lsquo;versions&rsquo; of many NOAH modules. For example, there are several different sensitivity-enhanced HSQC sequences, each having different strengths and weaknesses: which of these to use depends on the context. If the seHSQC module is placed at the end of a sequence (e.g. NOAH-2 BS<sup>+</sup>), then we can use the original Cavanagh–Rance seHSQC, which has greater sensitivity than the versions specifically modified for use in NOAH. On the other hand, if there is a homonuclear module which follows (e.g. NOAH-2 S<sup>+</sup>C), then we should use the versions specifically designed to preserve the uncoupled proton magnetisation. (We have an upcoming paper which will explain this fully.)</p>
+                        <p>As another example, the NOAH HMBC module is usually configured to preserve one-bond C–H magnetisation using the <i>zz</i>-filter, which can be then used in a H–C HSQC experiment. However, if there is also a H–N module (HMQC or seHSQC) in the supersequence, then the filter must be modified to also preserve N–H magnetisation. This can be done, but the resulting &lsquo;double filter&rsquo; is less effective at preserving C–H magnetisation. Thus, we want to only use the &lsquo;double filter&rsquo; when it&rsquo;s actually needed.
+                        <p>When using the &lsquo;normal&rsquo; interface, the website picks the &lsquo;smartest&rsquo; possible variants for use, based on decisions such as the above. Each version of a module is assigned an internal label, which you can see at the bottom of the generated pulse programme. In &lsquo;developer mode&rsquo;, you have complete control over this and can pick exactly which version of a sequence you want. You can also access a few modules, or combinations thereof, which are not generally recommended: for example, the <sup>15</sup>N HSQC (without sensitivity enhancement) is available. The internal labels of the modules are described in more detail <a href="devmode_modules.txt">here</a>.</p>
                     </div>
                 </div> <!-- }}}2 --->
 
@@ -837,7 +827,6 @@
                             <li><span class="ms">tim.claridge[at]chem.ox.ac.uk</span></li>
                             <li><span class="ms">eriks.kupce[at]bruker.com</span></li>
                         </ul>
-                        <p>You can also get hold of me on <a href="https://twitter.com/jonyrj95">Twitter</a>, if you prefer that.</p>
                         <p>Finally, if you're interested, we published a paper describing this website (<a href="https://doi.org/10.1021/acs.analchem.1c04964">DOI: 10.1021/acs.analchem.1c04964</a>).
                     </div>
                 </div> <!-- }}}2 --->
