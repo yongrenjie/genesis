@@ -10,11 +10,11 @@ In practice, there is no good reason to retain the old version as long as you
 make sure to only use pulse programmes obtained from the GENESIS website:
 https://nmr-genesis.co.uk
 
-v: 2.2.6
+v: 2.2.7
 Jonathan Yong & Tim Claridge, University of Oxford
 Eriks Kupce, Bruker UK
 modified from original Python script by Maksim Mayzel, Bruker BioSpin AG
-29 November 2022
+25 January 2023
 """
 
 from __future__ import division, with_statement

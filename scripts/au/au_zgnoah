@@ -11,10 +11,10 @@
  * Also automatically disables and re-enables NUS if it has been previously set
  * up, to avoid issues with new experiments using old vclists.
  *
- * v: 2.2.6
+ * v: 2.2.7
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 29 November 2022 */
+ * 25 January 2023 */
 
 char pulprog[64];
 int nbl;
