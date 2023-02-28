@@ -718,6 +718,7 @@ ph31=0 2
 ;ns: 1 * n
 
 ; auprog: noah_hmbc:noah_nhsqc:noah_hsqc:noah_cosy:noah_tocsy
+; splitx_title: 13C HMBC:15N seHSQC:13C seHSQC:COSY:TOCSY
 ; module identifiers: C_HMBC_CNF N_SEHSQC C_SEHSQC H_COTO
-; pulse programme created by genesis-v2.1.5, https://nmr-genesis.co.uk
-; Mon Mar 14 2022 14:18:01 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.2.7, https://nmr-genesis.co.uk
+; Tue Feb 28 2023 23:50:13 GMT+0000 (Greenwich Mean Time)

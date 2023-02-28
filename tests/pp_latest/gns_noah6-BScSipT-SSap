@@ -742,6 +742,7 @@ ph30=0 2 2 0
 ;ns: 1 * n
 
 ; auprog: noah_hmbc:noah_hsqc noah_TS:noah_hsqc noah_split:noah_tocsy States
+; splitx_title: 13C HMBC:13C IPAP HSQC-COSY:13C IPAP seHSQC:TOCSY (States)
 ; module identifiers: C_HMBC_CF C_HSQCC_DIA C_SEHSQC_IA H_TOCSY
-; pulse programme created by genesis-v2.1.5, https://nmr-genesis.co.uk
-; Mon Mar 14 2022 14:18:01 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.2.7, https://nmr-genesis.co.uk
+; Tue Feb 28 2023 23:50:13 GMT+0000 (Greenwich Mean Time)

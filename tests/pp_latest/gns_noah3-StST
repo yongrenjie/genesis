@@ -498,6 +498,7 @@ ph30=0 2 2 0
 ;ns: 1 * n
 
 ; auprog: noah_hsqc:noah_hsqc:noah_tocsy States
+; splitx_title: 13C HSQC-TOCSY:13C HSQC:TOCSY (States)
 ; module identifiers: CI_HSQCT C_HSQC H_TOCSY
-; pulse programme created by genesis-v2.1.5, https://nmr-genesis.co.uk
-; Mon Mar 14 2022 14:18:01 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.2.7, https://nmr-genesis.co.uk
+; Tue Feb 28 2023 23:50:13 GMT+0000 (Greenwich Mean Time)

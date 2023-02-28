@@ -88,7 +88,7 @@ describe("makePulprogText regression tests", function() {
     });
     describe("TS/interleaved experiments", function() {
         it("p-NOAH 5",
-            makeTest("./tests/pp_latest/gns_noah5-BScSpjT-S",
+            makeTest("./tests/pp_latest/gns_noah5-BkScSpjT-S",
                 ["C_HMBC_CF_K", "C_HSQCC_DIA", "C_SEHSQCJ", "H_TOCSY"]));
         it("p-NOAH 6",
             makeTest("./tests/pp_latest/gns_noah6-BScSipT-SSap",

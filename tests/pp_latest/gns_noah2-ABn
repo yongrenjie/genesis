@@ -410,6 +410,7 @@ ph29=0 2 2 0
 ;ns: 1 * n
 
 ; auprog: noah_hsqc:noah_nhmbc
+; splitx_title: 13C 1,1-ADEQUATE:15N HMBC
 ; module identifiers: C_ADEQ N_HMBC_CF
-; pulse programme created by genesis-v2.1.5, https://nmr-genesis.co.uk
-; Mon Mar 14 2022 14:18:01 GMT+0000 (Greenwich Mean Time)
+; pulse programme created by genesis-v2.2.7, https://nmr-genesis.co.uk
+; Tue Feb 28 2023 23:50:13 GMT+0000 (Greenwich Mean Time)
