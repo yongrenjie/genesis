@@ -1,0 +1,301 @@
+/* splitx_au_13
+ * ------------
+ * Essentially a drop-in replacement for splitx_au, but only for NBL=2
+ * experiments which have one module in the first slot & alternate between
+ * three modules in the second slot, such as the ABBS experiment.
+ * 
+ * v: 2.3.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 28 February 2023 */
+
+
+/******************
+ * Initialisation *
+ ******************/
+
+#define MALLOC_ERROR "cannot get enough memory"
+
+int    *irow;               // one 32-bit integer-typed FID
+double *drow;               // one 64-bit float-typed FID
+int i, j, k;                // loop indices
+char ser_path[PATH_MAX];    // path to various ser files
+char expno_path[PATH_MAX];  // path to the NOAH expno directory
+
+// Relative number of scans of each experiment
+float fscans[4];
+FETCHPARS("CNST 51", fscans) // ADEQUATE
+FETCHPARS("CNST 52", fscans + 1) // 15N HMBC
+FETCHPARS("CNST 53", fscans + 2) // 13C HMBC
+fscans[3] = fscans[0] - fscans[1] - fscans[2];  // 13C HSQC
+int scans[4];
+for (i = 0; i < 4; i++) {
+    scans[i] = (int) (fscans[i] + 0.5);
+}
+
+// Check if dataset is 2D
+int parmode;
+FETCHPAR("PARMODE", &parmode)
+if (parmode != 1) STOPMSG("Program is only suitable for 2D")
+
+// Read in more parameters
+int dtypa, byteorder, tds, td1, td1s, nbl;
+FETCHPARS("DTYPA", &dtypa)
+FETCHPARS("BYTORDA", &byteorder)
+FETCHPARS("TD", &tds)
+FETCHPAR1("TD", &td1)
+FETCHPAR1S("TD", &td1s)
+FETCHPAR("NBL", &nbl)
+
+// Each FID in a ser file starts at a 1024-byte boundary.
+int dlen;  // number of bytes per data point
+// tdr is tds, rounded up to the nearest multiple of 256 or 128 as appropriate.
+size_t tdr = (size_t) tds;
+// 32-bit integer data (TopSpin 3)
+if (dtypa == 0) {
+    tdr = ((tdr + 255) / 256) * 256;
+    dlen = 4;
+}
+// 64-bit float data (TopSpin 4)
+else if (dtypa == 2) {
+    tdr = ((tdr + 127) / 128) * 128;
+    dlen = 8;
+}
+else STOPMSG("Program is only suitable for integer or double data")
+
+// Perform several more checks on TD.
+if ((tds <= 0) || (tdr > MAXINT)) {
+    Proc_err(DEF_ERR_OPT, "acquisition status parameter TD{F2} = %d\nout of range", tds);
+    ABORT
+}
+int td = (int) tdr;
+if ((td <= 0) || (td > 64 * 1024 * 1024)) STOPMSG("TD{F2} out of range")
+if ((td1s <= 0) || (td1s > 64 * 1024 * 1024)) STOPMSG("TD{F1} out of range")
+int td_times_nbl = td * nbl;
+if ((double) td_times_nbl >= 2. * 1024 * 1024 * 1024 / dlen) STOPMSG("amount of memory requested too large")
+
+
+/**************************************************
+ * Split up the ser file into individual datasets *
+ **************************************************/
+
+// Calculate the EXPNOs to write to. By default this is set to n * 1000 + 1 and onwards.
+int oexpno = expno;
+int nexpno = expno * 1000 + 1;
+if (nexpno <= 0) STOPMSG("invalid expno value")
+
+// Write parameters to the new expnos.
+for (i = 0; i < 4; i++) {
+    WRAPARAM(nexpno + i)
+    ERRORABORT
+}
+
+// Open the ser files (to read from and write to) and error out if fopen() fails on any of them.
+FILE *fp_ser_combined;
+strcpy(ser_path, ACQUPATH("ser"));
+if ((fp_ser_combined = fopen(ser_path, "rb")) == 0) STOPMSG(strcat(ser_path, ": cannot open file for reading"))
+// fp_new_sers[0] through fp_new_sers[3] refer to the split ser files.
+FILE **fp_new_sers;
+if ((fp_new_sers = calloc(4, sizeof (FILE *))) == NULL) STOPMSG(MALLOC_ERROR)
+for (i = 0; i < 4; i++) {
+    // Set expno to the new ones so that ACQUPATH() returns the ser file of the new expno.
+    expno = nexpno + i;
+    strcpy(ser_path, ACQUPATH("ser"));
+    if ((fp_new_sers[i] = fopen(ser_path, "wb")) == 0) STOPMSG(strcat(ser_path, ": cannot open file for writing"))
+}
+// Reset expno.
+expno = oexpno;
+
+// Allocate memory buffers for reading in data.
+if (dtypa == 0) {
+    if ((irow = malloc(td_times_nbl * dlen)) == NULL) STOPMSG(MALLOC_ERROR)
+}
+else if (dtypa == 2) {
+    if ((drow = malloc(td_times_nbl * dlen)) == NULL) STOPMSG(MALLOC_ERROR)
+}
+
+// Perform the splitting
+k = td1s / nbl;
+// round down to the nearest multiple of cnst51
+k -= (k % scans[0]);
+
+if (dtypa == 0) {
+    for (i = 0; i < k; i++) {	
+        if (fread(irow, dlen, td_times_nbl, fp_ser_combined) != (size_t)(td_times_nbl)) STOPMSG("read failed")
+        local_swap4(irow, td_times_nbl * dlen, byteorder);
+        for (j = 0; j < nbl; j++) {
+            if (j == 0) {
+                // ADEQUATE
+                if (fwrite(irow, dlen, td, fp_new_sers[0]) != (size_t)(td)) STOPMSG("write failed")
+            }
+            else {
+                // BBS combo here -- depends on value of i mod scans[0]
+                if (i % scans[0] < scans[1]) {
+                    // 15N HMBC
+                    if (fwrite(irow+td, dlen, td, fp_new_sers[1]) != (size_t)(td)) STOPMSG("write failed")
+                }
+                else if (i % scans[0] < scans[1] + scans[2]) {
+                    // 13C HMBC
+                    if (fwrite(irow+td, dlen, td, fp_new_sers[2]) != (size_t)(td)) STOPMSG("write failed")
+                }
+                else {
+                    // 13C HSQC
+                    if (fwrite(irow+td, dlen, td, fp_new_sers[3]) != (size_t)(td)) STOPMSG("write failed")
+                }
+            }
+        }
+    }
+}
+else if (dtypa == 2) {
+    for (i = 0; i < k; i++) {
+        if (fread(drow, dlen, td_times_nbl, fp_ser_combined) != (size_t)(td_times_nbl)) STOPMSG("read failed")
+        local_swap4(drow, td_times_nbl * dlen, byteorder);
+        for (j = 0; j < nbl; j++) {
+            if (j == 0) {
+                // ADEQUATE
+                if (fwrite(drow+j*td, dlen, td, fp_new_sers[0]) != (size_t)(td)) STOPMSG("write failed")
+            }
+            else {
+                // BBS combo here -- depends on value of i mod scans[0]
+                if (i % scans[0] < scans[1]) {
+                    // 15N HMBC
+                    if (fwrite(drow+j*td, dlen, td, fp_new_sers[1]) != (size_t)(td)) STOPMSG("write failed")
+                }
+                else if (i % scans[0] < scans[1] + scans[2]) {
+                    // 13C HMBC
+                    if (fwrite(drow+j*td, dlen, td, fp_new_sers[2]) != (size_t)(td)) STOPMSG("write failed")
+                }
+                else {
+                    // 13C HSQC
+                    if (fwrite(drow+j*td, dlen, td, fp_new_sers[3]) != (size_t)(td)) STOPMSG("write failed")
+                }
+            }
+        }
+    }
+}
+
+// Free memory
+fclose(fp_ser_combined);
+for (i = 0; i < 4; i++) fclose(fp_new_sers[i]);
+free(fp_new_sers);
+if (dtypa == 0) free(irow);
+
+// STOPMSG("done")
+
+/*************************************************************
+ * Determine AU programmes for processing individual modules *
+ *************************************************************/
+
+// Attempt to locate pulse programme file. Use the compiled version if it can't find it.
+char pp_name[PATH_MAX];      // pulse programme name
+FETCHPARS("PULPROG", pp_name)
+char pp_path[PATH_MAX];      // path to pulse programme file
+if (getParfileDirForRead(pp_name, PP_DIRS, pp_path) < 0) {
+    strcpy(pp_path, ACQUPATH("pulseprogram"));
+}
+
+// If some version of the pulse programme was found, search inside it for processing AU programmes
+int x;
+char **auprogs = calloc(4, sizeof (char *));
+for (x = 0; x < 4; x++) {
+    *(auprogs + x) = calloc(PATH_MAX, sizeof (char));
+}
+if (*pp_path) {
+    FILE *pulprog_fp = fopen(pp_path, "r");
+    char line[PATH_MAX];
+    // getline() only works in TopSpin 4, fgets always works
+    while (fgets(line, PATH_MAX, pulprog_fp) != NULL) {
+        if (*line != ';') continue;                  // not a comment
+        else if (!strstr(line, "auprog")) continue;  // auprog not in line
+        else {                                       // found the comment with auprog
+            char *s = line;
+            for (x = 0; x < 4; x++) {
+                while (*s++ != ':') ;                // skip until after the first colon
+                while (isspace(*s)) s++;             // skip any leading whitespace
+                // Read in the name of the AU programme. Any trailing whitespace is OK as TopSpin
+                // will trim it off after STOREPAR.
+                char *t = *(auprogs + x);
+                // strcpy s into t until we hit a colon, newline or EOF
+                while (*s != ':' && *s != '\r' && *s != '\n' && *s != '\0' && *s != 'EOF') {
+                    *t++ = *s++;
+                }
+                *t = '\0';
+                // if we reached the end of the line, break immediately
+                if (*s == '\r' || *s == '\n' || *s == '\0' || *s == 'EOF') break;
+            }
+            break;
+        }
+    }
+    fclose(pulprog_fp);
+}
+
+// Read in the USERPx parameters, which override the ones in the pulse programme.
+for (i = 0; i < 4; i++) {
+    char userPx[7];
+    char auprog[128];
+    sprintf(userPx, "userP%d", i + 1);
+    FETCHPAR(userPx, auprog)
+    if (*auprog) {
+        strcpy(*(auprogs + i), auprog);
+    }
+}
+
+
+/*************************************************************
+ * Call processing AU programmes AND combinek on each module * 
+ *************************************************************/
+
+// Set up new parameters
+td1  /= nbl;
+td1s /= nbl;
+strcpy(expno_path, ACQUPATH(0));   // this points to the expno directory itself
+byteorder = local_endian();
+  
+for (i = 0; i < 4; i++) {
+    // Open the appropriate dataset
+    DATASET(name, nexpno + i, procno, disk, user)
+    if (!*(auprogs[i])) {
+        Proc_err(DEF_ERR_OPT, "Processing AU script #%d not found, please specify as USERP%d.", i + 1, i + 1);
+        ABORT
+    }
+
+    // Store new parameters
+    STOREPAR("AUNMP", *(auprogs + i))
+    STOREPAR("NBL", 1)
+    STOREPARS("NBL", 1)
+    STOREPARS("BYTORDA", byteorder)
+    STOREPAR1("TD", td1 * scans[i] / scans[0])
+    STOREPAR1S("TD", k * scans[i] / scans[0])   // use k instead of td1s to avoid errors when processing partially done experiments
+    int ds_size[3];
+    ds_size[0] = td;
+    ds_size[1] = k * scans[i] / scans[0];
+    
+    // Set cnst39 correctly so that combinek works nicely
+    STOREPAR("CNST 39", (float) scans[i])
+    STOREPARS("CNST 39", (float) scans[i])
+
+    // Create audit trail
+    double ymin, ymax;
+    char autext[PATH_MAX + 128];
+    sprintf(autext, "created by splitx_au; dataset %d of 4 from %s", i + 1, expno_path);
+    if (CheckSumFileMax(ACQUPATH("ser"), 0, autext, 0, 0, byteorder, 0, parmode + 1, tds, ds_size, ds_size, &ymin, &ymax) > 0) {
+        AuditCreate(ACQUPATH("audita.txt"), autext);
+        STOREPARS("YMIN_a", ymin)
+        STOREPARS("YMAX_a", ymax)
+    }
+
+    // Process data
+    XAU("combinek", "nfid1");
+    XAUPW
+    
+    REFRESHDATA
+    XCMD("sendgui browse_update_tree")
+    Show_meta(SM_RAW | SM_RAWP);
+}
+
+// Free memory
+free(auprogs);
+
+Show_status("splitx done.");
+QUIT
+// vim: ft=c

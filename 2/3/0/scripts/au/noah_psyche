@@ -1,0 +1,17 @@
+/* noah_psyche
+ * -----------
+ * Process NOAH PSYCHE module.
+ *
+ * v: 2.3.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 28 February 2023 */
+
+XCMD("fixF1h_psyche")
+XCMD("2 SI 65536")
+XCMD("1 FnMODE QF")
+XCMD("1s FnMODE QF")
+XCMD("combinekh")
+XCMD("noah_pshift")
+QUIT
+// vim: ft=c

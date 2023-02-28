@@ -1,0 +1,572 @@
+/* splitx_au
+ * ---------
+ * Splits a NOAH dataset into NBL different individual datasets which can then
+ * be separately processed. If the NOAH dataset has expno M, the individual
+ * datasets will have expnos starting from (1000 * M) + 1.
+ * 
+ * This AU programme also parses the pulse programme text in order to determine
+ * what subsidiary AU programmes (noah_xxxx) to use for processing the
+ * individual datasets. If necessary, this behaviour can be overruled by
+ * specifying the noah_xxxx programmes as the userP1 through userP5 processing
+ * parameters.
+ *
+ * Additional options available:
+ *
+ *   --archive : Additionally archives all processsed datasets using the
+ *               `archive` AU programme.
+ *   --title   : Additionally add a short description of each experiment to the
+ *               title of each processed dataset. Note that this requires pulse
+ *               programmes from GENESIS v2.3.0 or higher (check at the bottom
+ *               of your pulse programme for the version number).
+ *
+ * v: 2.3.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 28 February 2023 */
+
+/* Initialisation {{{1 */
+/***********************/
+
+#define MALLOC_ERROR "cannot get enough memory"
+#define AU_MAX_LENGTH 100
+#define TITLE_MAX_LENGTH 150
+
+int    *irow, *irow_sum, *irow_diff;   // one 32-bit integer-typed FID
+double *drow, *drow_sum, *drow_diff;   // one 64-bit float-typed FID
+int    i, j, k, n;                     // loop indices
+char   ser_path[PATH_MAX];             // path to various ser files
+char   expno_path[PATH_MAX];           // path to the NOAH expno directory
+
+// Check for command-line flags. This is very rudimentary but suffices.
+int archive_flag = 0;
+int title_flag = 0;
+if (i_argc > 2) {
+    for (i = 0; i < i_argc; i++) {
+        if (strcmp(i_argv[i], "--archive") == 0) {
+            archive_flag = 1;
+        }
+        else if (strcmp(i_argv[i], "--title") == 0) {
+            title_flag = 1;
+        }
+    }
+}
+
+// Check if dataset is 2D
+int parmode;
+FETCHPAR("PARMODE", &parmode)
+if (parmode != 1) STOPMSG("Program is only suitable for 2D")
+
+// Read in more parameters
+int dtypa, byteorder, tds, td1, td1s, nbl;
+FETCHPARS("DTYPA", &dtypa)
+FETCHPARS("BYTORDA", &byteorder)
+FETCHPARS("TD", &tds)
+FETCHPAR1("TD", &td1)
+FETCHPAR1S("TD", &td1s)
+FETCHPAR("NBL", &nbl)
+
+// Check whether NUS was used.
+int full_td1;   // 'full' value of TD1 post-reconstruction
+int nus = 0;                 // flag to indicate whether NUS was used
+char pp_name[PATH_MAX];      // pulse programme name
+FETCHPARS("PULPROG", pp_name)
+char zgoptns[128];
+double nusamount;
+FETCHPARS("ZGOPTNS", zgoptns);
+if (strstr(zgoptns, "-DNUS") || strstr(pp_name, ".nus")) {
+    nus = 1;
+    FETCHPAR("NusAMOUNT", &nusamount)
+    full_td1 = (int) ((td1 * 100 / nusamount) + 0.5);
+}
+
+
+// Each FID in a ser file starts at a 1024-byte boundary.
+int dlen;  // number of bytes per data point
+// tdr is tds, rounded up to the nearest multiple of 256 or 128 as appropriate.
+size_t tdr = (size_t) tds;
+// 32-bit integer data (TopSpin 3)
+if (dtypa == 0) {
+    tdr = ((tdr + 255) / 256) * 256;
+    dlen = 4;
+}
+// 64-bit float data (TopSpin 4)
+else if (dtypa == 2) {
+    tdr = ((tdr + 127) / 128) * 128;
+    dlen = 8;
+}
+else STOPMSG("Program is only suitable for integer or double data")
+
+// Perform several more checks on TD.
+if ((tds <= 0) || (tdr > MAXINT)) {
+    Proc_err(DEF_ERR_OPT, "acquisition status parameter TD{F2} = %d\nout of range", tds);
+    ABORT
+}
+int td = (int) tdr;
+if ((td <= 0) || (td > 64 * 1024 * 1024)) STOPMSG("TD{F2} out of range")
+if ((td1s <= 0) || (td1s > 64 * 1024 * 1024)) STOPMSG("TD{F1} out of range")
+int td_times_nbl = td * nbl;
+if ((double) td_times_nbl >= 2. * 1024 * 1024 * 1024 / dlen) STOPMSG("amount of memory requested too large")
+
+
+/* Get information about individual AU programmes {{{1 */
+/*******************************************************/
+
+// Allocate memory
+char **auprogs = calloc(nbl, sizeof (char *));
+for (i = 0; i < nbl; i++) {
+    *(auprogs + i) = calloc(AU_MAX_LENGTH, sizeof (char));
+}
+
+// Flag to determine whether we should read from the pulse programme.
+int read_au_from_pulprog = 1;
+
+// Attempt to locate pulse programme file. Use the compiled version if it can't find it.
+char pp_path[PATH_MAX];      // path to pulse programme file
+if (getParfileDirForRead(pp_name, PP_DIRS, pp_path) < 0) {
+    strcpy(pp_path, ACQUPATH("pulseprogram"));
+}
+// TS 4.1.4 broke the above because it changed up the directory structure, so
+// we now need to check inside the EXPNO/lists/pp directory
+if (access(pp_path, F_OK) != 0) {
+    strcpy(pp_path, ACQUPATH("lists/pp/"));
+    strcat(pp_path, pp_name);
+}
+// as well as EXPNO/pulseprogram.precomp
+if (access(pp_path, F_OK) != 0) {
+    strcpy(pp_path, ACQUPATH("pulseprogram.precomp"));
+}
+
+// If some version of the pulse programme was found, search inside it for processing AU programmes
+if (access(pp_path, F_OK) == 0) {
+    FILE *pulprog_fp = fopen(pp_path, "r");
+    char line[PATH_MAX];
+    // getline() only works in TopSpin 4, fgets always works
+    while (fgets(line, PATH_MAX, pulprog_fp) != NULL) {
+        if (*line != ';') continue;                  // not a comment
+        else if (!strstr(line, "auprog")) continue;  // auprog not in line
+        else {                                       // found the comment with auprog
+            char *s = line;
+            for (i = 0; i < nbl; i++) {
+                while (*s++ != ':') ;                // skip until after the first colon
+                while (isspace(*s)) s++;             // skip any leading whitespace
+                // Read in the name of the AU programme. Any trailing whitespace is OK as TopSpin
+                // will trim it off after STOREPAR.
+                char *t = *(auprogs + i);
+                // strcpy s into t until we hit a colon, newline or EOF
+                while (*s != ':' && *s != '\r' && *s != '\n' && *s != '\0' && *s != 'EOF') {
+                    *t++ = *s++;
+                }
+                *t = '\0';
+                // if we reached the end of the line, break immediately
+                if (*s == '\r' || *s == '\n' || *s == '\0' || *s == 'EOF') break;
+            }
+            break;
+        }
+    }
+    fclose(pulprog_fp);
+}
+
+// Read in the USERPx parameters, which override the ones in the pulse programme.
+for (i = 0; i < nbl; i++) {
+    char userPx[7];
+    char auprog[128];
+    sprintf(userPx, "userP%d", i + 1);
+    FETCHPAR(userPx, auprog)
+    if (*auprog) {
+        strcpy(*(auprogs + i), auprog);
+    }
+}
+
+/* Get info about short titles {{{1 */
+/************************************/
+
+// The code here is very similar to that for reading in AU programmes.
+// Allocate memory
+char **titles = calloc(nbl, sizeof (char *));
+for (i = 0; i < nbl; i++) {
+    *(titles + i) = calloc(TITLE_MAX_LENGTH, sizeof (char));
+}
+
+// Thankfully, the AU programme bit did the hard work of finding the pulse programme, so
+// we can just use the pp_path variable here directly.
+// The magic string here is `splitx_title`.
+if (access(pp_path, F_OK) == 0) {
+    FILE *pulprog_fp = fopen(pp_path, "r");
+    char line[PATH_MAX];
+    // getline() only works in TopSpin 4, fgets always works
+    while (fgets(line, PATH_MAX, pulprog_fp) != NULL) {
+        if (*line != ';') continue;
+        else if (!strstr(line, "splitx_title")) continue;
+        else {
+            char *s = line;
+            for (i = 0; i < nbl; i++) {
+                while (*s++ != ':') ;                // skip until after the first colon
+                while (isspace(*s)) s++;             // skip any leading whitespace
+                // Read in the name of the AU programme. Any trailing whitespace is OK as TopSpin
+                // will trim it off after STOREPAR.
+                char *t = *(titles + i);
+                // strcpy s into t until we hit a colon, newline or EOF
+                while (*s != ':' && *s != '\r' && *s != '\n' && *s != '\0' && *s != 'EOF') {
+                    *t++ = *s++;
+                }
+                *t = '\0';
+                // if we reached the end of the line, break immediately
+                if (*s == '\r' || *s == '\n' || *s == '\0' || *s == 'EOF') break;
+            }
+            break;
+        }
+    }
+    fclose(pulprog_fp);
+}
+
+
+/* Determine information for time-shared modules {{{1 */
+/******************************************************/
+
+// A count of the total number of datasets we need to create
+int ndatasets = nbl;
+
+// auprogs_secondary is another array of strings, which contains the second 'noah_xxxx' part of
+// the processing (if any). That is, if USERP1 is 'noah_hmbc noah_split', then after this block
+// of code, auprogs[0] will be 'noah_hmbc' and auprogs_secondary[0] will be 'noah_split'.
+char **auprogs_secondary = calloc(nbl, sizeof (char *));
+for (i = 0; i < nbl; i++) {
+    *(auprogs_secondary + i) = calloc(AU_MAX_LENGTH, sizeof (char));
+    // We check if the string ' noah' (with a space) exists anywhere after the start of auprogs[i].
+    char *c;
+    if ((c = strstr(auprogs[i] + 1, " noah")) != NULL) {
+        strcpy(auprogs_secondary[i], c + 1);   // set auprogs_secondary
+        *c = '\0';                             // trim the end of auprogs
+        // For all secondary auprogs except for noah_add and noah_sub, we need a new dataset to
+        // store the data in.
+        if (strcmp(auprogs_secondary[i], "noah_add") != 0
+                && strcmp(auprogs_secondary[i], "noah_sub") != 0) {
+            ndatasets++;
+        }
+    }
+}
+
+/* Split up the ser file into individual datasets {{{1 */
+/*******************************************************/
+
+// Calculate the EXPNOs to write to. By default this is set to n * 1000 + 1 and onwards.
+int oexpno = expno;
+int nexpno = expno * 1000 + 1;
+if (nexpno <= 0) STOPMSG("invalid expno value")
+
+// Write parameters to the new expnos.
+for (i = 0; i < ndatasets; i++) {
+    WRAPARAM(nexpno + i)
+    ERRORABORT
+}
+
+// Open the ser files (to read from and write to) and error out if fopen() fails on any of them.
+FILE *fp_ser_combined;
+strcpy(ser_path, ACQUPATH("ser"));
+if ((fp_ser_combined = fopen(ser_path, "rb")) == 0) STOPMSG(strcat(ser_path, ": cannot open file for reading"))
+// fp_new_sers[0] through fp_new_sers[ndatasets - 1] refer to the split ser files.
+FILE **fp_new_sers;
+if ((fp_new_sers = calloc(ndatasets, sizeof (FILE *))) == NULL) STOPMSG(MALLOC_ERROR)
+for (i = 0; i < ndatasets; i++) {
+    // Set expno to the new ones so that ACQUPATH() returns the ser file of the new expno.
+    expno = nexpno + i;
+    strcpy(ser_path, ACQUPATH("ser"));
+    if ((fp_new_sers[i] = fopen(ser_path, "wb")) == NULL) STOPMSG(strcat(ser_path, ": cannot open file for writing"))
+}
+// Reset expno.
+expno = oexpno;
+
+// Allocate memory buffers for reading in data. The xrow_sum/xrow_diff arrays are meant to store the
+// 'previous' row of data for time-shared modules, so that the current row can be added to /
+// subtracted from it respectively.
+if (dtypa == 0) {
+    if ((irow = calloc(td_times_nbl, dlen)) == NULL) STOPMSG(MALLOC_ERROR)
+    if ((irow_sum = calloc(td_times_nbl, dlen)) == NULL) STOPMSG(MALLOC_ERROR)
+    if ((irow_diff = calloc(td_times_nbl, dlen)) == NULL) STOPMSG(MALLOC_ERROR)
+}
+else if (dtypa == 2) {
+    if ((drow = calloc(td_times_nbl, dlen)) == NULL) STOPMSG(MALLOC_ERROR)
+    if ((drow_sum = calloc(td_times_nbl, dlen)) == NULL) STOPMSG(MALLOC_ERROR)
+    if ((drow_diff = calloc(td_times_nbl, dlen)) == NULL) STOPMSG(MALLOC_ERROR)
+}
+
+// Perform the splitting
+k = td1s / nbl;
+int current_ds;
+
+if (dtypa == 0) {
+    // Iterate over TD1
+    for (i = 0; i < k; i++) {
+        // Read in NBL lines of data
+        if (fread(irow, dlen, td_times_nbl, fp_ser_combined) != (size_t)(td_times_nbl)) STOPMSG("read failed")
+        local_swap4(irow, td_times_nbl * dlen, byteorder);
+        // Write ndatasets modules worth of data
+        current_ds = 0;     // current_ds is not necessarily equal to j, when time-shared modules are present
+        for (j = 0; j < nbl; j++) {
+            if (strcmp(auprogs_secondary[j], "noah_add") == 0) {
+                if (i % 2 == 0) { // copy irow into irow_sum
+                    for (n = 0; n < td; n++) *(irow_sum + (j * td) + n) = *(irow + (j * td) + n);
+                }
+                else {            // write the sum of irow_sum and irow into the ser file
+                    for (n = 0; n < td; n++) *(irow_sum + (j * td) + n) += *(irow + (j * td) + n);
+                    if (fwrite(irow_sum + j*td, dlen, td, fp_new_sers[current_ds]) != (size_t)(td)) STOPMSG("write failed")
+                }
+                current_ds += 1;
+            }
+            else if (strcmp(auprogs_secondary[j], "noah_sub") == 0) {
+                if (i % 2 == 0) { // copy irow into irow_diff
+                    for (n = 0; n < td; n++) *(irow_diff + (j * td) + n) = *(irow + (j * td) + n);
+                }
+                else {            // write the difference of irow_diff and irow into the ser file
+                    for (n = 0; n < td; n++) *(irow_diff + (j * td) + n) -= *(irow + (j * td) + n);
+                    if (fwrite(irow_diff + j*td, dlen, td, fp_new_sers[current_ds]) != (size_t)(td)) STOPMSG("write failed")
+                }
+                current_ds += 1;
+            }
+            else if (strcmp(auprogs_secondary[j], "noah_TS") == 0) {
+                if (i % 2 == 0) { // copy irow into irow_sum and irow_diff
+                    for (n = 0; n < td; n++) *(irow_diff + (j * td) + n) = *(irow_sum + (j * td) + n) = *(irow + (j * td) + n);
+                }
+                else {            // construct the sum and difference and write into successive ser files
+                    for (n = 0; n < td; n++) *(irow_sum + (j * td) + n) += *(irow + (j * td) + n);
+                    for (n = 0; n < td; n++) *(irow_diff + (j * td) + n) -= *(irow + (j * td) + n);
+                    if (fwrite(irow_sum + j*td, dlen, td, fp_new_sers[current_ds]) != (size_t)(td)) STOPMSG("write failed")
+                    if (fwrite(irow_diff + j*td, dlen, td, fp_new_sers[current_ds + 1]) != (size_t)(td)) STOPMSG("write failed")
+                }
+                current_ds += 2;
+            }
+            else if (*(auprogs_secondary[j])) {
+                // Anything else that is nonempty. Write the data into alternating ser files
+                if (fwrite(irow+j*td, dlen, td, fp_new_sers[current_ds + (i % 2)]) != (size_t)(td)) STOPMSG("write failed")
+                current_ds += 2;
+            }
+            else {
+                // auprogs_secondary is empty, proceed as usual
+                if (fwrite(irow+j*td, dlen, td, fp_new_sers[current_ds]) != (size_t)(td)) STOPMSG("write failed")
+                current_ds += 1;
+            }
+        }
+    }
+}
+
+else if (dtypa == 2) {
+    // Iterate over TD1
+    for (i = 0; i < k; i++) {
+        // Read in NBL lines of data
+        if (fread(drow, dlen, td_times_nbl, fp_ser_combined) != (size_t)(td_times_nbl)) STOPMSG("read failed")
+        local_swap4(drow, td_times_nbl * dlen, byteorder);
+        // Write ndatasets modules worth of data
+        current_ds = 0;     // current_ds is not necessarily equal to j, when time-shared modules are present
+        for (j = 0; j < nbl; j++) {
+            if (strcmp(auprogs_secondary[j], "noah_add") == 0) {
+                if (i % 2 == 0) { // copy the appropriate part of drow into drow_sum
+                    for (n = 0; n < td; n++) *(drow_sum + (j * td) + n) = *(drow + (j * td) + n);
+                }
+                else {            // write the sum of drow_sum and drow into the ser file
+                    for (n = 0; n < td; n++) *(drow_sum + (j * td) + n) += *(drow + (j * td) + n);
+                    if (fwrite(drow_sum + j*td, dlen, td, fp_new_sers[current_ds]) != (size_t)(td)) STOPMSG("write failed")
+                }
+                current_ds += 1;
+            }
+            else if (strcmp(auprogs_secondary[j], "noah_sub") == 0) {
+                if (i % 2 == 0) { // copy the appropriate part of drow into drow_diff
+                    for (n = 0; n < td; n++) *(drow_diff + (j * td) + n) = *(drow + (j * td) + n);
+                }
+                else {            // write the difference of drow_diff and drow into the ser file
+                    for (n = 0; n < td; n++) *(drow_diff + (j * td) + n) -= *(drow + (j * td) + n);
+                    if (fwrite(drow_diff + j*td, dlen, td, fp_new_sers[current_ds]) != (size_t)(td)) STOPMSG("write failed")
+                }
+                current_ds += 1;
+            }
+            else if (strcmp(auprogs_secondary[j], "noah_TS") == 0) {
+                if (i % 2 == 0) { // copy drow into drow_sum and drow_diff
+                    for (n = 0; n < td; n++) *(drow_diff + (j * td) + n) = *(drow_sum + (j * td) + n) = *(drow + (j * td) + n);
+                }
+                else {            // construct the sum and difference and write into successive ser files
+                    for (n = 0; n < td; n++) *(drow_sum + (j * td) + n) += *(drow + (j * td) + n);
+                    for (n = 0; n < td; n++) *(drow_diff + (j * td) + n) -= *(drow + (j * td) + n);
+                    if (fwrite(drow_sum + j*td, dlen, td, fp_new_sers[current_ds]) != (size_t)(td)) STOPMSG("write failed")
+                    if (fwrite(drow_diff + j*td, dlen, td, fp_new_sers[current_ds + 1]) != (size_t)(td)) STOPMSG("write failed")
+                }
+                current_ds += 2;
+            }
+            else if (*(auprogs_secondary[j])) {
+                // Anything else that is nonempty. Write the data into alternating ser files
+                if (fwrite(drow + j*td, dlen, td, fp_new_sers[current_ds + (i % 2)]) != (size_t)(td)) STOPMSG("write failed")
+                current_ds += 2;
+            }
+            else {
+                // auprogs_secondary is empty, proceed as usual
+                if (fwrite(drow + j*td, dlen, td, fp_new_sers[current_ds]) != (size_t)(td)) STOPMSG("write failed")
+                current_ds += 1;
+            }
+        }
+    }
+}
+
+// Free memory
+fclose(fp_ser_combined);
+for (i = 0; i < ndatasets; i++) fclose(fp_new_sers[i]);
+free(fp_new_sers);
+if (dtypa == 0) {
+    free(irow);
+    free(irow_sum);
+    free(irow_diff);
+}
+else if (dtypa == 2) {
+    free(drow);
+    free(drow_sum);
+    free(drow_diff);
+}
+
+/* Call processing AU programmes on each module {{{1 */
+/*****************************************************/
+
+// Set up new parameters
+td1  /= nbl;
+td1s /= nbl;
+strcpy(expno_path, ACQUPATH(0));   // this points to the expno directory itself
+byteorder = local_endian();
+int ds_size[3];
+ds_size[0] = td;
+ds_size[1] = td1s;
+
+current_ds = 0;
+
+for (i = 0; i < nbl; i++) {
+    if (!*(auprogs[i])) {
+        Proc_err(DEF_ERR_OPT, "Processing AU script #%d not found, please specify as USERP%d.", i + 1, i + 1);
+        ABORT
+    }
+
+    // Flag to indicate whether the data has been split into two datasets.
+    int has_secondary_dataset = *(auprogs_secondary[i])
+        && strcmp(auprogs_secondary[i], "noah_add") != 0
+        && strcmp(auprogs_secondary[i], "noah_sub") != 0;
+    // Flag to indicate that the resolution should be halved.
+    int half_resolution = *(auprogs_secondary[i]);
+
+    // Open the first dataset
+    DATASET(name, nexpno + current_ds, procno, disk, user)
+
+    // Store new parameters
+    STOREPAR("AUNMP", auprogs[i])
+    STOREPAR("NBL", 1)
+    STOREPARS("NBL", 1)
+    STOREPARS("BYTORDA", byteorder)
+    STOREPAR1("TD", half_resolution ? td1 / 2 : td1)
+    STOREPAR1S("TD", half_resolution ? td1s / 2 : td1s)
+    if (half_resolution && !has_secondary_dataset) {
+        int ns;
+        FETCHPAR("NS", &ns)
+        STOREPAR("NS", ns * 2)
+    }
+
+    // Update title if requested
+    if (title_flag && *(titles[i])) {
+        FILE *title_fp = fopen(PROCPATH("title"), "a");
+        fprintf(title_fp, "\n%s", titles[i]);
+        fclose(title_fp);
+    }
+
+    // If NUS is enabled, copy vclist -> nuslist and enable NUS processing.
+    if (nus == 1) {
+    	char path_vclist[256], path_nuslist[256];
+        strcpy(path_vclist, ACQUPATH("vclist"));
+        strcpy(path_nuslist, ACQUPATH("nuslist"));
+        if (access(path_vclist, F_OK) == 0) {
+            rename(path_vclist, path_nuslist);
+            STOREPARS("FnTYPE", 2)
+            STOREPAR("Mdd_CsALG", 1)
+            STOREPAR("Mdd_CsNITER", 50)
+            STOREPAR("Mdd_CsVE", 0)
+            STOREPAR1S("NusTD", full_td1 / nbl)
+        }
+    }
+
+    // Create audit trail
+    double ymin, ymax;
+    char autext[PATH_MAX + 128];
+    sprintf(autext, "created by splitx_au; dataset %d of %d from %s", current_ds + 1, ndatasets, expno_path);
+    if (CheckSumFileMax(ACQUPATH("ser"), 0, autext, 0, 0, byteorder, 0, parmode + 1, tds, ds_size, ds_size, &ymin, &ymax) > 0) {
+        AuditCreate(ACQUPATH("audita.txt"), autext);
+        STOREPARS("YMIN_a", ymin)
+        STOREPARS("YMAX_a", ymax)
+    }
+
+    // Run the AU programme and update TopSpin
+    XAUPW
+    if (archive_flag) XCMD("archive");
+    REFRESHDATA
+    XCMD("sendgui browse_update_tree")
+    Show_meta(SM_RAW | SM_RAWP);
+
+    // Process secondary dataset (if present)
+    if (has_secondary_dataset) {
+        current_ds++;
+        DATASET(name, nexpno + current_ds, procno, disk, user)
+
+        // If the secondary auprog is one of the special keywords, we take the AU programme from the
+        // first half. Otherwise we use it as-is.
+        if (strcmp(auprogs_secondary[i], "noah_split") == 0
+                || strcmp(auprogs_secondary[i], "noah_add") == 0
+                || strcmp(auprogs_secondary[i], "noah_sub") == 0
+                || strcmp(auprogs_secondary[i], "noah_TS") == 0) {
+            STOREPAR("AUNMP", auprogs[i])
+        }
+        else {
+            STOREPAR("AUNMP", auprogs_secondary[i])
+        }
+        STOREPAR("NBL", 1)
+        STOREPARS("NBL", 1)
+        STOREPARS("BYTORDA", byteorder)
+        STOREPAR1("TD", td1 / 2)
+        STOREPAR1S("TD", td1s / 2)
+
+        // If NUS is enabled, copy vclist -> nuslist and enable NUS processing.
+        if (nus == 1) {
+            char path_vclist[256], path_nuslist[256];
+            strcpy(path_vclist, ACQUPATH("vclist"));
+            strcpy(path_nuslist, ACQUPATH("nuslist"));
+            if (access(path_vclist, F_OK) == 0) {
+                rename(path_vclist, path_nuslist);
+                STOREPARS("FnTYPE", 2)
+                STOREPAR("Mdd_CsALG", 1)
+                STOREPAR("Mdd_CsNITER", 50)
+                STOREPAR("Mdd_CsVE", 0)
+                STOREPAR1S("NusTD", full_td1 / nbl)
+            }
+        }
+
+        // Create audit trail
+        double ymin, ymax;
+        char autext[PATH_MAX + 128];
+        sprintf(autext, "created by splitx_au; dataset %d of %d from %s", current_ds + 1, ndatasets, expno_path);
+        if (CheckSumFileMax(ACQUPATH("ser"), 0, autext, 0, 0, byteorder, 0, parmode + 1, tds, ds_size, ds_size, &ymin, &ymax) > 0) {
+            AuditCreate(ACQUPATH("audita.txt"), autext);
+            STOREPARS("YMIN_a", ymin)
+            STOREPARS("YMAX_a", ymax)
+        }
+
+        // Run the AU programme and update TopSpin
+        XAUPW
+        if (archive_flag) XCMD("archive");
+        REFRESHDATA
+        XCMD("sendgui browse_update_tree")
+        Show_meta(SM_RAW | SM_RAWP);
+    }
+
+    current_ds++;
+}
+
+/* Cleanup {{{1 */
+/****************/
+
+free(auprogs);
+free(auprogs_secondary);
+
+Show_status("splitx done.");
+QUIT
+
+/* }}}1 */
+// vim: filetype=c:foldmethod=marker

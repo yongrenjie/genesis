@@ -1,0 +1,218 @@
+Module codes
+============
+
+
+H-C HMBC
+--------
+
+C_HMBC_CF
+    zz-HMBC, as described in doi:10.1039/C8CC03296C, with second-order low-pass
+    J filter.
+C_HMBC_CFTO
+    Same as above but with a third-order low-pass J filter. Generally should
+    not be needed.
+C_HMBC_CFG
+    An experimental version -- this does not work and is not likely to ever
+    work! Use at your own risk!
+C_HMBC_CNF
+    Semi-adiabatic double filter which preserves CH and NH magnetisation, as
+    described in doi:10.1016/j.jmr.2019.106568.
+C_HMBC_NOF
+    HMBC without the zz-filter. Note that this is not the same as the Bruker
+    `hmbcetgp..` experiments: the gradient scheme here is symmetric, whereas
+    the Bruker experiments have an asymmetric gradient scheme.
+
+
+H-N experiments
+---------------
+
+N_HMQC
+    Standard HMQC, similar to that originally reported in
+    doi:10.1002/anie.201705506, but gradient scheme has been slightly modified
+    to reduce artefacts in later modules.
+N_HSQC
+    Standard NOAH HSQC. Not recommended for use as this causes f1 broadening in
+    all subsequent modules, see doi:10.1016/j.jmr.2021.107027 for explanation.
+N_SEHSQC
+    NOAH seHSQC, 'version 2' / 'ZIP-seHSQC', as described in
+    doi:10.1016/j.jmr.2021.107027.
+N_SEHSQC_DP
+    NOAH seHSQC, 'version 1', as described in doi:10.1016/j.jmr.2021.107027.
+    Not recommended for use as this causes f1 broadening in all subsequent
+    modules.
+N_SEHSQC_OR
+    Cavanagh-Rance seHSQC, essentially the same as `hsqcetf3gpsi`.
+
+
+H-C HSQCs
+---------
+
+C_HSQC
+    Standard NOAH HSQC.
+C_HSQCJ
+    Standard NOAH HSQC, but without 13C decoupling during acquisition. There is
+    a 90° pulse on 13C before acquisition, which purges antiphase contributions
+    to peaks (i.e. 'CLIP' version).
+C_SEHSQC
+    NOAH seHSQC, 'version 2' / 'ZIP-seHSQC' as reported in
+    doi:10.1021/acs.analchem.0c05205 and doi:10.1016/j.jmr.2021.107027.
+C_SEHSQCJ
+    Same as C_SEHSQC but without 13C decoupling during acquitision.
+C_SEHSQC_DP
+    NOAH seHSQC, 'version 1' as reported in doi:10.1016/j.jmr.2021.107027.
+    Sensitivity is not as good as in 'version 2', hence this is never
+    recommended by default. However, this could be better in specific scenarios
+    as bulk magnetisation is more uniformly preserved over the entire spectral
+    window, where 'version 2' has some regions where performance is quite
+    poorer than average.
+C_SEHSQC_OR
+    Cavanagh-Rance seHSQC, essentially a mixture of `hsqcetgpsisp2.2` (for the
+    non-edited) and `hsqcedetgpsisp2.3` (for the edited).
+C_SEHSQCJ_OR
+    Same as C_SEHSQC_OR but without 13C decoupling during acquitision.
+CI_HSQC
+    Standard NOAH HSQC, but with an additional variable `cnst32` which allows
+    the user to control the amount of C-H magnetisation excited by the INEPT
+    block. Any unexcited magnetisation is returned to +z for use in other
+    modules. See doi:10.1016/j.jmr.2021.107027.
+CI_HSQCJ
+    Same as C_HSQCJ, but is `cnst32`-compatible.
+
+
+Other H-C experiments
+---------------------
+
+C_HSQCC
+    'Triple spin echo' version of HSQC-COSY experiment.  Lineshapes are not so
+    good and raw sensitivity is not as high as in the other alternatives, but
+    this module does preserve uncoupled 1H ('bulk') magnetisation for later use
+    (none of the other HSQC-COSY versions do).
+C_HSQCC_CLIP
+    HSQC-CLIP-COSY as reported in doi:10.1021/acs.analchem.0c04124. This
+    provides excellent lineshapes but dephases bulk magnetisation.
+C_HSQCC_DSE
+    'Double spin echo' version of HSQC-COSY experiment. Lineshapes are not so
+    good and bulk magnetisation is also dephased, but this has the greatest raw
+    sensitivity of all the HSQC-COSY versions.
+C_HSQCT
+    Standard NOAH HSQC with a TOCSY mixing block, as reported in
+    doi:10.1016/j.jmr.2021.107027. This preserves bulk magnetisation.
+C_SEHSQCT
+    NOAH seHSQC, 'version 2' / 'ZIP-seHSQC' with a TOCSY mixing block, as
+    reported in doi:10.1021/acs.analchem.0c05205. This also preserves bulk
+    magnetisation.
+C_SEHSQCT_OR
+    Cavanagh-Rance seHSQC with TOCSY mixing block, basically the same as Bruker
+    `hsqcdietgpsisp.2` and `hsqcdiedetgpsisp.3`.  This doesn't preserve bulk
+    magnetisation.
+CI_HSQCC
+    Same as C_HSQCC, but is `cnst32`-compatible.
+CI_HSQCC_CLIP
+    Same as C_HSQCC_CLIP, but has an additional variable `cnst32` which changes
+    the INEPT delay durations. This is NOT the same as "cnst32-compatible",
+    because even though only a portion of the C-H magnetisation is excited, the
+    unexcited portion is not retained, it is lost by gradient dephasing! This
+    module serves little purpose except to prove that it doesn't work.
+CI_HSQCC_DSE
+    Same as C_HSQCC_DSE, but has an additional variable `cnst32` which changes
+    the INEPT delay durations. This is NOT "cnst32-compatible", see above for
+    explanation.
+CI_HSQCT
+    Same as C_HSQCT, but is `cnst32`-compatible.
+
+
+H-H experiments
+---------------
+
+H_CLIP_COSY
+    CLIP-COSY as reported in doi:10.1002/anie.201510938.
+H_COSY
+    Standard echo-antiecho COSY, similar to Bruker `cosyetgp`.
+H_CONO
+    Echo-antiecho COCONOSY module (COSY and NOESY, with COSY FID recorded
+    during the NOE mixing time), as reported in doi:10.1002/anie.201705506.
+H_CONO_ST
+    States COCONOSY module: this is better for low-viscosity samples (e.g.
+    CDCl3) as diffusion during the mixing time can cause substantial
+    sensitivity losses in the echo-antiecho version.
+H_COSY_QF
+    Standard magnitude-mode COSY, similar to Bruker `cosygpqf`.
+H_CORO_ST
+    States COSY + ROESY. The COSY FID is recorded before the ROESY mixing
+    begins.
+H_COTO
+    Echo-antiecho COSY + TOCSY. The COSY FID is recorded before the TOCSY
+    mixing begins. This is similar to the 'COTO' sequence presented in
+    doi:10.1002/mrc.4835.
+H_COTO_ST
+    States COSY + TOCSY.
+H_DQFCOSY
+    States DQF-COSY.
+H_DQFCOSY_EA
+    Echo-antiecho DQF-COSY.
+H_JRES
+    Magnitude-mode 2D J-resolved spectrum.
+H_JRES_PS
+    Absorption-mode 2D J-resolved spectrum, using the PSYCHE element, as
+    reported in doi:10.1039/c5cc06293d.
+H_NOESY
+    Standard States NOESY, similar to `noesygpphzs`.
+H_PSYCHE
+    1D PSYCHE as reported in doi:10.1002/anie.201404111.
+H_PSYCHE_TSE
+    1D TSE-PSYCHE as reported in doi:10.1039/c5cc06293d. This provides much
+    better artefact suppression compared to the original PSYCHE method.
+H_ROESY
+    ROESY with 180/-180 spin-lock as the mixing element; similar to Bruker
+    `roesyetgp.2`.
+H_ROESY_AD
+    ROESY with adiabatic spin-lock, as reported in doi:10.1002/chem.200802027.
+H_TOCSY
+    Standard States TOCSY, similar to `dipsi2gpphzs`.
+
+
+Modules specific to time-shared / interleaved work
+--------------------------------------------------
+
+C_HMBC_CFDD
+    Two interleaved zz-HMBC with 13C filter only (so C_HMBC_CF), but with two
+    different delays for nJ(CH) evolution. The resulting pair of HMBCs have
+    half resolution in the indirect dimension.
+C_HMBC_CF_K
+    zz-HMBC (C_HMBC_CF) with half the resolution in the indirect dimension and
+    twice the number of scans, so-named because it corresponds to a value of k
+    = 2 in the k-scaling discussed in doi:10.1016/j.jmr.2021.107027.
+C_HSQCJ_K
+    Same as C_HSQCJ but with k = 2, i.e. half resolution in indirect dimension
+    but twice the number of scans.
+C_SEHSQCJ_K
+    Same as C_SEHSQCJ but with k = 2, i.e. half resolution in indirect
+    dimension but twice the number of scans.
+C_SEHSQC_IA
+    Interleaved in-phase and antiphase F2-coupled seHSQC (version 2 / ZIP).
+CI_HSQCC_IA
+    Interleaved in-phase and antiphase version of CI_HSQCC. These phases refer
+    to the relative phase of the HSQC-COSY, i.e. indirect, peaks and the HSQC,
+    i.e. direct, peaks. When added or subtracted these will yield either only
+    the direct peaks or only the indirect peaks.
+C_HSQCC_CIA
+    Interleaved in-phase and antiphase version of C_HSQCC_CLIP.
+C_HSQCC_DIA
+    Interleaved in-phase and antiphase version of C_HSQCC_DSE.
+C_HSQCC_IA
+    Interleaved in-phase and antiphase version of C_HSQCC.
+C_HSQCT_IA
+    Interleaved in-phase and antiphase version of C_HSQCT.
+H_CC_T
+    Interleaved CLIP-COSY and TOCSY.
+H_R_T
+    Interleaved (adiabatic spin-lock) ROESY and TOCSY.
+H_TOCSY_K
+    Same as H_TOCSY but with k = 2, i.e. half resolution in indirect dimension
+    but twice the number of scans.
+H_TT_CN
+    Interleaved double TOCSY and COSY/NOESY.
+H_TT_CR
+    Interleaved double TOCSY and COSY/(adiabatic) ROESY.
+H_TT_DM
+    Two interleaved TOCSY modules with different mixing times.

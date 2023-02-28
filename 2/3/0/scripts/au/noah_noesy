@@ -1,0 +1,47 @@
+/* noah_noesy
+ * ----------
+ * Process NOAH NOESY module.
+ *
+ * v: 2.3.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 28 February 2023 */
+
+if ((i_argc > 2) && (strlen(i_argv[2]) > 1)) {
+    if (strcmp(i_argv[2], "undefined") == 0
+            || strcmp(i_argv[2], "QF") == 0
+            || strcmp(i_argv[2], "QSEQ") == 0
+            || strcmp(i_argv[2], "TPPI") == 0
+            || strcmp(i_argv[2], "States") == 0
+            || strcmp(i_argv[2], "States-TPPI") == 0
+            || strcmp(i_argv[2], "Echo-Antiecho") == 0
+            || strcmp(i_argv[2], "QF(no-frequency)") == 0) {
+        sprintf(cmd, "1 FnMODE %s", i_argv[2]);
+        XCMD(cmd)
+        sprintf(cmd, "1s FnMODE %s", i_argv[2]);
+        XCMD(cmd)
+    }
+    // ignore 'xaup' passed as second parameter
+    else if (strcmp(i_argv[2], "xaup") == 0) ;
+    else {
+        sprintf(text, "ignoring invalid FnMODE '%s'", i_argv[2]);
+        Proc_err(INFO_OPT, text);
+    }
+}
+
+XCMD("2 WDW QSINE")
+XCMD("1 WDW QSINE")
+XCMD("1 SSB 2")
+XCMD("2 SSB 2")
+XCMD("2 PH_mod pk")
+XCMD("1 PH_mod pk")
+XCMD("fixF1")
+XCMD("proc_noah")  
+XCMD("abs1")
+XCMD("sendgui apk2d")
+XCMD("1 SR 0")
+XCMD("2 NLEV 20")
+XCMD("sendgui levcalc")
+XCMD("2 SPECTYP NOESY")
+QUIT
+// vim: ft=c

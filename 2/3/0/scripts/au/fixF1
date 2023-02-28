@@ -1,0 +1,31 @@
+/* fixF1
+ * -----
+ * Fix the values of SW and O1 in the indirect dimension for NOAH 1H modules.
+ *
+ * v: 2.3.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 28 February 2023 */
+
+double sf1;
+FETCHPARS("SFO1", &sf1) 
+STOREPAR1S("SFO1", sf1)
+
+char c1[8];
+FETCHPARS("NUC1", c1)
+STOREPAR1S("NUC1", c1)
+
+double a1;
+FETCHPARS("BF1", &a1)  
+STOREPAR1S("BF1", a1)
+FETCHPARS("O1", &a1)  
+STOREPARS("O2", a1)
+STOREPAR1S("O1", a1)
+
+double sw1;
+FETCHPARS("SW_h", &sw1)  
+STOREPAR1S("SW_h", sw1)
+STOREPAR1S("SW", sw1/sf1)
+
+QUIT
+// vim: ft=c

@@ -1,0 +1,83 @@
+/* noah_jresph
+ * -----------
+ * Process NOAH phase-sensitive 2DJ (i.e. PSYCHE 2DJ) module.
+ *
+ * v: 2.3.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 28 February 2023 */
+
+if ((i_argc > 2) && (strlen(i_argv[2]) > 1)) {
+    if (strcmp(i_argv[2], "undefined") == 0
+            || strcmp(i_argv[2], "QF") == 0
+            || strcmp(i_argv[2], "QSEQ") == 0
+            || strcmp(i_argv[2], "TPPI") == 0
+            || strcmp(i_argv[2], "States") == 0
+            || strcmp(i_argv[2], "States-TPPI") == 0
+            || strcmp(i_argv[2], "Echo-Antiecho") == 0
+            || strcmp(i_argv[2], "QF(no-frequency)") == 0) {
+        sprintf(cmd, "1 FnMODE %s", i_argv[2]);
+        XCMD(cmd)
+        sprintf(cmd, "1s FnMODE %s", i_argv[2]);
+        XCMD(cmd)
+    }
+    // ignore 'xaup' passed as second parameter
+    else if (strcmp(i_argv[2], "xaup") == 0) ;
+    else {
+        sprintf(text, "ignoring invalid FnMODE '%s'", i_argv[2]);
+        Proc_err(INFO_OPT, text);
+    }
+}
+
+#define PI 3.141593
+
+XCMD("2 WDW QSINE")
+XCMD("1 WDW no")
+XCMD("2 SSB 2")
+XCMD("2 PH_mod pk")
+XCMD("1 PH_mod pk")
+XCMD("1 ME_mod no")
+XCMD("fixF1h_jres")
+XCMD("combinekh") 
+
+// set SI = TD * 4 in indirect dimension
+int td1;
+FETCHPAR1S("TD", &td1);
+int si = td1 * 4;
+STOREPAR1("SI", si);
+XAU ("proc_noah", "")
+
+// contents of setgtc2d inserted here (post-refactoring)
+float taq, taq1, tdeff1;
+FETCHPARS("AQ", &taq);
+FETCHPAR1S("AQ", &taq1);
+FETCHPAR1S("TDEFF", &tdeff1);
+// account for NUS
+if (tdeff1 != 0) taq1 = taq1 * tdeff1 / td1;
+taq1 = 2 * taq1;
+float tdeff, td;
+FETCHPARS("TDEFF", &tdeff);
+FETCHPARS("TD", &td);
+if (tdeff != 0) taq = taq * tdeff / td;
+float tlb = -0.01, tlb1 = -0.01;
+float tgtc1 = taq1 * 0.5;
+float tgtc = taq * 0.5;
+float tgb1 = -PI * tlb1 * tgtc1 * tgtc1 / (taq1 * 2);
+STOREPAR1("LB", tlb1);
+STOREPAR1("GB", tgb1);
+STOREPAR1("WDW", 2);
+float tgb = -PI * tlb * tgtc * tgtc / (taq * 2);
+STOREPAR("LB", tlb);
+STOREPAR("GB", tgb);
+STOREPAR("WDW", 2);
+
+// Finish the processing
+XCMD("sendgui apk2d")
+XCMD("abs1")
+XCMD("1 SR 0")
+XCMD("2 NLEV 20")
+XCMD("sendgui levcalc")
+XCMD("tilt")
+XCMD("2 SPECTYP JRES")
+QUIT
+// vim: ft=c

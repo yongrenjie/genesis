@@ -1,0 +1,138 @@
+div#faq {
+    margin-bottom: 30px;
+}
+
+div.faq-headings {
+    font-size: 120%;
+    font-weight: bold;
+    margin: 2ex 0;
+}
+
+span.ms {
+    font-family: "Inconsolata", monospace;
+    background-color: #eeeeee;
+}
+
+span.small {
+    font-size: 80%;
+}
+
+/* Collapsible boxes {{{1 */
+
+input.toggle-button {
+    display: none;
+}
+
+.toggle-label {
+    display: block;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #797979;
+    padding: 0.5em 1em;
+    font-size: 100%;
+    cursor: pointer;
+    margin: 0.8em 0 0 0;
+    background: #f4f4f4;
+}
+
+.toggle-label:hover {
+    text-decoration: underline;
+}
+
+div.toggle-content {
+    background-color: #fffff2;
+    max-height: 0px;
+    overflow: hidden;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-radius: 4px;
+    border-width: 2px;
+    border-style: none solid solid solid;
+    border-color: #ffffff;
+    /* transition: max-height 0.2s ease-in-out; */
+}
+
+input.toggle-button:checked + label.toggle-label {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+input.toggle-button:checked + label.toggle-label + div.toggle-content {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    max-height: 200vh;
+    border-color: #797979;
+}
+
+label.toggle-label::before {
+    font-size: 110%;
+    font-weight: bold;
+    content: '+';
+    float: right;
+}
+
+input.toggle-button:checked + label.toggle-label::before {
+    font-size: 110%;
+    font-weight: bold;
+    content: '−';
+    float: right;
+}
+
+
+div.toggle-content-inner {
+    padding: 0.3em 1em;
+    line-height: 1.5;
+}
+
+div.toggle-content-inner {
+    /* margin: 0 0 1ex 0; */
+}
+
+div.toggle-content-inner > ul > li:not(:last-child) {
+    margin-bottom: 1.5ex;
+}
+
+/* Special ordered lists in FAQ {{{1 */
+/* https://stackoverflow.com/a/4615631/7115316 */
+
+ol.steps {
+    counter-reset: list;
+}
+
+ol.steps > li {
+    list-style: none;
+    margin-left: 3.5em;
+    margin-bottom: 1ex;
+}
+
+ol.steps > li:before {
+    content: "Step " counter(list) ": ";
+    counter-increment: list;
+    float: left;
+    margin-left: -3.5em;
+}
+
+ol.steps > li > p:first-child {
+    font-style: italic;
+}
+
+ol.citation-start {
+    counter-reset: cite-counter;
+}
+
+ol.citation-start li, ol.citation li {
+    margin: 0 0 0.7ex 1.8em;
+    list-style: none;
+    position: relative;
+    font-size: 85%;
+    line-height: 1.5;
+}
+
+ol.citation-start li:before, ol.citation li:before {
+    content: "[" counter(cite-counter) "] ";
+    counter-increment: cite-counter;
+    position: absolute;
+    left: -2.2em;
+}
+
+/* vim: set foldmethod=marker: */
