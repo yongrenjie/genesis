@@ -19,10 +19,10 @@
  *               programmes from GENESIS v2.3.0 or higher (check at the bottom
  *               of your pulse programme for the version number).
  *
- * v: 2.2.7
+ * v: 2.3.0
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
- * 25 January 2023 */
+ * 28 February 2023 */
 
 /* Initialisation {{{1 */
 /***********************/
