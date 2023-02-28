@@ -101,6 +101,7 @@ const mod = new NOAHModule(
     "Spn",
     [Yong2021JMR],
     "noah_nhsqc",
+    "15N seHSQC",
     shortDescription,
     [],
     preamble,

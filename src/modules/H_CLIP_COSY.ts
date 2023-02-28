@@ -51,6 +51,7 @@ const mod = new NOAHModule(
     "Cc",
     [Koos2016ACIE],
     "noah_clipcosy States",
+    "CLIP-COSY",
     shortDescription,
     [AF_ES],
     preamble,

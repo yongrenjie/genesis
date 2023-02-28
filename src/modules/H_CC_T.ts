@@ -68,6 +68,7 @@ const mod = new NOAHModule(
     "Cc T",
     [Koos2016ACIE],
     "noah_clipcosy States noah_tocsy States",
+    "CLIP-COSY/TOCSY",
     shortDescription,
     [],
     preamble,

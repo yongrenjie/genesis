@@ -50,6 +50,7 @@ const mod = new NOAHModule(
     "Bgb",
     [Cicero2001JMR],
     "noah_hmbc",
+    "13C HMBC",
     shortDescription,
     [AF_LP3],
     preamble,

@@ -67,6 +67,7 @@ const mod = new NOAHModule(
     "P",
     [Foroozandeh2014ACIE],
     "noah_psyche",
+    "1D PSYCHE",
     shortDescription,
     [AF_ES],
     preamble,

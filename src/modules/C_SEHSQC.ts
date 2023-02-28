@@ -128,6 +128,7 @@ const mod = new NOAHModule(
     "Sp",
     [Hansen2021AC, Yong2021JMR],
     "noah_hsqc",
+    "13C seHSQC",
     shortDescription,
     [AF_EDIT],
     preamble,

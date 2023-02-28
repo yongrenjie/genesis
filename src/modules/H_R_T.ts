@@ -55,6 +55,7 @@ const mod = new NOAHModule(
     "R T",
     [Thiele2009CEJ],
     "noah_roesy States noah_tocsy States",
+    "ROESY (States)/TOCSY (States)",
     shortDescription,
     [],
     preamble,

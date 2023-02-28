@@ -10,6 +10,7 @@ class NOAHModule {
     shortCode: string;
     citations: Citation[];
     auprog: string;
+    shortTitle: string;
     shortDescription: string;
     acquFlags: AcquFlag[];
     preamble: string;
@@ -22,6 +23,7 @@ class NOAHModule {
                 shortCode: string,
                 citations: Citation[],
                 auprog: string,
+                shortTitle: string,
                 shortDescription: string,
                 acquFlags: AcquFlag[],
                 preamble: string,
@@ -33,6 +35,7 @@ class NOAHModule {
         this.shortCode = shortCode;
         this.citations = citations;
         this.auprog = auprog;
+        this.shortTitle = shortTitle;
         this.shortDescription = shortDescription;
         this.acquFlags = acquFlags;
         this.preamble = preamble;

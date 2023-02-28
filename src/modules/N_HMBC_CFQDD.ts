@@ -53,6 +53,7 @@ const mod = new NOAHModule(
     "BnqfBnqf",
     [],
     "noah_nhmbc QF noah_nhmbc QF",
+    "15N HMBC",
     shortDescription,
     [AF_NLP3],
     preamble,

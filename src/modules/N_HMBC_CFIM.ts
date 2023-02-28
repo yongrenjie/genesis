@@ -66,6 +66,7 @@ const mod = new NOAHModule(
     "In",
     [],
     "noah_nhmbc",
+    "15N IMPEACH-MBC",
     shortDescription,
     [AF_NLP3],
     preamble,

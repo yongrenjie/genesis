@@ -30,6 +30,7 @@ const mod = new NOAHModule(
     "C",
     [],
     "noah_cosy",
+    "COSY",
     shortDescription,
     [AF_ES],
     preamble,

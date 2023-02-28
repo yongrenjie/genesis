@@ -90,6 +90,7 @@ const mod = new NOAHModule(
     "J",
     [Foroozandeh2015CC],
     "noah_jresph",
+    "PSYCHE 2DJ",
     shortDescription,
     [],
     preamble,

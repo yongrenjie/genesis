@@ -102,6 +102,7 @@ const mod = new NOAHModule(
     "CNst",
     [],
     "noah_cosy States:noah_noesy States",
+    "COSY (States):NOESY (States)",
     shortDescription,
     [AF_PRESAT_NOE, AF_NOZQS, AF_ES_NOESYONLY],
     preamble,

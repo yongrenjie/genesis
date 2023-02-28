@@ -18,6 +18,7 @@ const mod = new NOAHModule(
     "Zg",
     [],
     "noah_cosy QF",
+    "1D pulse-acquire",
     shortDescription,
     [],
     preamble,

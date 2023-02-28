@@ -29,6 +29,7 @@ const mod = new NOAHModule(
     "R",
     [],
     "noah_roesy States",
+    "ROESY (States)",
     shortDescription,
     [AF_ES],
     preamble,

@@ -114,6 +114,7 @@ const mod = new NOAHModule(
     "Sc S",
     [],
     "noah_hsqc noah_TS",
+    "13C IPAP-HSQC",
     shortDescription,
     [],
     preamble,

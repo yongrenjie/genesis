@@ -91,6 +91,7 @@ const mod = new NOAHModule(
     "St",
     [Yong2021JMR],
     "noah_hsqc",
+    "13C HSQC-TOCSY",
     shortDescription,
     [AF_INVERT1],
     preamble,

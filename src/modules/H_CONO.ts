@@ -78,6 +78,7 @@ const mod = new NOAHModule(
     "CN",
     [],
     "noah_cosy:noah_noesy",
+    "COSY:NOESY",
     shortDescription,
     [AF_PRESAT_NOE, AF_NOZQS],
     preamble,

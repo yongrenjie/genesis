@@ -74,6 +74,7 @@ const mod = new NOAHModule(
     "TT CN",
     [],
     "noah_tocsy States noah_cosy States:noah_tocsy States noah_noesy States",
+    "TOCSY (States)/COSY (States):TOCSY (States)/NOESY (States)",
     shortDescription,
     [],
     preamble,

@@ -109,6 +109,7 @@ const mod = new NOAHModule(
     "Scc",
     [Gyongyosi2021AC],
     "noah_hsqc",
+    "13C HSQC-CLIP-COSY",
     shortDescription,
     [AF_EDIT1],
     preamble,

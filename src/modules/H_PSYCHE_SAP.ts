@@ -103,6 +103,7 @@ const mod = new NOAHModule(
     "P",
     [Foroozandeh2014ACIE, Moutzouri2017CC],
     "noah_sapphire",
+    "1D PSYCHE (with SAPPHIRE)",
     shortDescription,
     [AF_ES],
     preamble,

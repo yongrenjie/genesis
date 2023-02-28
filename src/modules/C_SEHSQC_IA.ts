@@ -140,6 +140,7 @@ const mod = new NOAHModule(
     "Sip Sap",
     [Hansen2021AC, Yong2021JMR],
     "noah_hsqc noah_split",
+    "13C IPAP seHSQC",
     shortDescription,
     [AF_EDIT],
     preamble,

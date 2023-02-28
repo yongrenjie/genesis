@@ -41,6 +41,7 @@ const mod = new NOAHModule(
     "Dea",
     [],
     "noah_noesy",
+    "DQF-COSY",
     shortDescription,
     [],
     preamble,

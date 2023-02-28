@@ -107,6 +107,7 @@ const mod = new NOAHModule(
     "Pt",
     [Foroozandeh2015CC, Moutzouri2017CC],
     "noah_sapphire",
+    "1D TSE-PSYCHE (with SAPPHIRE)",
     shortDescription,
     [AF_ES],
     preamble,

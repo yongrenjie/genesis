@@ -37,6 +37,7 @@ const mod = new NOAHModule(
     "Rad",
     [Thiele2009CEJ],
     "noah_roesy States",
+    "Adiabatic ROESY (States)",
     shortDescription,
     [AF_ES],
     preamble,

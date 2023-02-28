@@ -90,6 +90,7 @@ const mod = new NOAHModule(
     "Pt",
     [Foroozandeh2015CC],
     "noah_psyche",
+    "1D TSE-PSYCHE",
     shortDescription,
     [AF_ES],
     preamble,

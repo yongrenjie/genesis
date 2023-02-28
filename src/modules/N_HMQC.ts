@@ -60,6 +60,7 @@ const mod = new NOAHModule(
     "Mn",
     [],
     "noah_nhsqc",
+    "15N HMQC",
     shortDescription,
     [],
     preamble,

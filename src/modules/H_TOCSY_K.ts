@@ -40,6 +40,7 @@ const mod = new NOAHModule(
     "Tk",
     [],
     "noah_tocsy States noah_add",
+    "TOCSY (States)",
     shortDescription,
     [],
     preamble,

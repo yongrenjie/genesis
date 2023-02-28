@@ -56,6 +56,7 @@ const mod = new NOAHModule(
     "B",
     [Kupce2018CC],
     "noah_hmbc",
+    "13C HMBC",
     shortDescription,
     [AF_LP3],
     preamble,

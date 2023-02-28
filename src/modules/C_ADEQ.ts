@@ -101,6 +101,7 @@ const mod = new NOAHModule(
     "A",
     [Reif1996JMR],
     "noah_hsqc",
+    "13C 1,1-ADEQUATE",
     shortDescription,
     [],
     preamble,

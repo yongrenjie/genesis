@@ -48,6 +48,7 @@ const mod = new NOAHModule(
     "T",
     [],
     "noah_tocsy States",
+    "TOCSY (States)",
     shortDescription,
     [AF_NOZQS, AF_ES],
     preamble,

@@ -83,6 +83,7 @@ const mod = new NOAHModule(
     "Sjk",
     [Enthart2008JMR],
     "noah_hsqc noah_add",
+    "13C J-HSQC",
     shortDescription,
     [AF_EDIT],
     preamble,

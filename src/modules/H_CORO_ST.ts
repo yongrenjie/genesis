@@ -49,6 +49,7 @@ const mod = new NOAHModule(
     "CRst",
     [Thiele2009CEJ],
     "noah_cosy States:noah_roesy States",
+    "COSY (States):ROESY (States)",
     shortDescription,
     [AF_NOZQS, AF_ES_ROESYONLY],
     preamble,

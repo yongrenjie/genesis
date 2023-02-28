@@ -544,6 +544,9 @@ export function makePulprogText(trueModuleNames: string[],
     // AU programme list {{{2
     const auProgs = modules.map(m => m.auprog);
     const auProgsStr = `; auprog: ${auProgs.join(":")}`;
+    // Short title list {{{2
+    const shortTitles = modules.map(m => m.shortTitle);
+    const shortTitlesStr = `; splitx_title: ${shortTitles.join(":")}`;
 
     // Finally, string everything together {{{1
     pp.push(
@@ -615,6 +618,7 @@ export function makePulprogText(trueModuleNames: string[],
         ...paramDefns,
         ``,
         auProgsStr,
+        shortTitlesStr,
         `; module identifiers: ${trueModuleNames.join(" ")}`,
         `; pulse programme created by genesis-v${version}, https://nmr-genesis.co.uk`,
         `; ${(new Date()).toString()}`,

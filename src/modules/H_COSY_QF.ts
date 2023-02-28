@@ -30,6 +30,7 @@ const mod = new NOAHModule(
     "Cqf",
     [],
     "noah_cosy QF",
+    "COSY (QF)",
     shortDescription,
     [AF_ES],
     preamble,

@@ -25,6 +25,7 @@ const mod = new NOAHModule(
     "Jqf",
     [],
     "noah_jres QF",
+    "2DJ (QF)",
     shortDescription,
     [],
     preamble,

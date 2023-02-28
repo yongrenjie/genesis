@@ -38,6 +38,7 @@ const mod = new NOAHModule(
     "D",
     [],
     "noah_clipcosy States",
+    "DQF-COSY (States)",
     shortDescription,
     [],
     preamble,

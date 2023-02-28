@@ -86,6 +86,7 @@ const mod = new NOAHModule(
     "St S",
     [Yong2021JMR],
     "noah_hsqc noah_TS",
+    "13C IPAP HSQC-TOCSY",
     shortDescription,
     [],
     preamble,
