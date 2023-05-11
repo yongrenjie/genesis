@@ -1,4 +1,3 @@
-import { makePulprogText } from "./pulprog.js";
 import { version } from "./version.js";
 
 // HTML elements
@@ -328,15 +327,6 @@ function toggleDevMode() {
     const manualDiv = document.getElementById("manual-input");
     manualDiv!.style.display = on ? "block" : "none";
 
-    // Toggle pulprog placeholder text
-    const textArea = document.getElementById("pulprog_text") as HTMLTextAreaElement;
-    if (devModeButton.checked) {
-        textArea.placeholder = "Select one or more modules to generate pulse programme...";
-    }
-    else {
-        textArea.placeholder = "Select two or more modules to generate pulse programme...";
-    }
-
     // Final actions
     if (devModeButton.checked) {
         updateButtons();
@@ -356,7 +346,6 @@ function toggleDevMode() {
         }
     }
     setModuleGridRows();
-    updatePulprogText();
 }
 // Add toggle behaviour to the devmode button
 document.getElementById("devmode_button")!.addEventListener("click", toggleDevMode);
@@ -368,7 +357,6 @@ toggleDevMode();
 function updateManualModulesValue() {
     const moduleNames = getTrueModules(getSelectedButtons());
     manualInput.value = moduleNames.join(' ');
-    updatePulprogText();   // see https://stackoverflow.com/q/42427606
 }
 for (let inputName of inputNames) {
     let buttons = document.querySelectorAll(`input[name="${inputName}"]`);
@@ -389,32 +377,11 @@ function updateButtons() {
 }
 manualInput.addEventListener('input', updateButtons);
 // }}}2
-// Update pulprog textarea when manual-modules textbox is changed {{{2
-function updatePulprogText() {
-    const moduleNames = manualInput.value
-        .toUpperCase().split(/\s+/).filter(m => m !== "");
-    if (moduleNames.length == 0) {
-        pulprogTextarea.value = "";
-        return;
-    }
-    let ppText: string;
-    try {
-        ppText = makePulprogText(moduleNames,
-            devModeButton.checked,
-            devModeButton.checked
-        ); 
-    }
-    catch (error) { console.error(error); ppText = ""; }
-    pulprogTextarea.value = ppText;
-}
-manualInput.addEventListener('input', updatePulprogText);
-// }}}2
 
 // Reset button {{{2
 function resetButtons() {
     noneButtons.forEach(b => b.checked = true);
     updateManualModulesValue();
-    updatePulprogText();
 }
 document.getElementById("reset_button")!.addEventListener("click", resetButtons);
 // }}}2

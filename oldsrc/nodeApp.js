@@ -33,7 +33,7 @@ function onRequest(req, res) {
         // Try to get the list of (backend) modules. If it fails, return a
         // generic error. Otherwise call makePulprogText().
         try {
-            let backendModules = querystring.parse(url.parse(req.url).query)["modules"].split(' ');
+            let modules = querystring.parse(url.parse(req.url).query)["modules"].split(' ');
             res.writeHead(200, {"content-type": "text/plain"});
             pptext = makePulprogText(backendModules, true, true);
             if (pptext.length > 0) {

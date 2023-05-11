@@ -78,7 +78,7 @@ body {
 }
 
 div#main-wrapper {
-    display: none; /* change this with JS */
+    /* display: none; /1* change this with JS *1/ */
     max-width: 1030px;  /* Chrome only needs 1018, Safari needs 1023 */
     animation: fadein 0.8s;
     flex-grow: 0;
