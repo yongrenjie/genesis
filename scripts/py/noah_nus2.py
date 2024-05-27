@@ -10,7 +10,7 @@ In practice, there is no good reason to retain the old version as long as you
 make sure to only use pulse programmes obtained from the GENESIS website:
 https://nmr-genesis.co.uk
 
-v: 2.3.1
+v: 2.3.2
 Jonathan Yong & Tim Claridge, University of Oxford
 Eriks Kupce, Bruker UK
 modified from original Python script by Maksim Mayzel, Bruker BioSpin AG

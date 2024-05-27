@@ -16,10 +16,10 @@
  *               `archive` AU programme.
  *   --title   : Additionally add a short description of each experiment to the
  *               title of each processed dataset. Note that this requires pulse
- *               programmes from GENESIS v2.3.1 or higher (check at the bottom
+ *               programmes from GENESIS v2.3.2 or higher (check at the bottom
  *               of your pulse programme for the version number).
  *
- * v: 2.3.1
+ * v: 2.3.2
  * Jonathan Yong & Tim Claridge, University of Oxford
  * Eriks Kupce, Bruker UK
  * 27 May 2024 */
