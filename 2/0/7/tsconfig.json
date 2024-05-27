@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "./build",
+    "allowJs": true,
+    "target": "es6",
+    "module": "esnext",
+    "lib": [
+        "es2019",
+        "dom",
+        "dom.iterable"
+    ],
+    "strictNullChecks": true
+  },
+  "include": ["./src/**/*"]
+}

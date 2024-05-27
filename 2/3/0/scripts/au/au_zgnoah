@@ -1,0 +1,42 @@
+/* au_zgnoah
+ * ---------
+ * Runs rga on a pulse-acquire sequence first before running the NOAH
+ * experiment. To be used as the acquisition AU programme (parameter AUNM)
+ * under automation.
+ * 
+ * Modified from au_zgcosy to also temporarily change the NBL parameter to 1
+ * (thus suppressing an error about incorrect NBL when rga was being
+ * performed).
+ *
+ * Also automatically disables and re-enables NUS if it has been previously set
+ * up, to avoid issues with new experiments using old vclists.
+ *
+ * v: 2.3.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 28 February 2023 */
+
+char pulprog[64];
+int nbl;
+
+FETCHPAR("PULPROG", pulprog)
+FETCHPAR("NBL", &nbl)
+
+// Perform rga on pulse-acquire
+STOREPAR("PULPROG", "zg_rga")
+STOREPAR("NBL", 1)
+RGA
+STOREPAR("PULPROG", pulprog)
+STOREPAR("NBL", nbl)
+
+// Check if NUS needs to be re-enabled
+char zgoptns[128];
+FETCHPARS("ZGOPTNS", zgoptns);
+if (strstr(zgoptns, "-DNUS")) {
+    XCMD("sendgui xpy noah_nus2 off -q")
+    XCMD("sendgui xpy noah_nus2 on")
+}
+
+// Acquire
+ZG
+QUIT

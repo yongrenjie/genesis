@@ -1,0 +1,194 @@
+/* fonts from https://google-webfonts-helper.herokuapp.com/fonts */
+/* source-sans-pro-italic - latin-ext_latin */
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: italic;
+  font-weight: 400;
+  src: local(''),
+       url('../fonts/source-sans-pro-v14-latin-ext_latin-italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/source-sans-pro-v14-latin-ext_latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* source-sans-pro-regular - latin-ext_latin */
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: local(''),
+       url('../fonts/source-sans-pro-v14-latin-ext_latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/source-sans-pro-v14-latin-ext_latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* source-sans-pro-700 - latin-ext_latin */
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 700;
+  src: local(''),
+       url('../fonts/source-sans-pro-v14-latin-ext_latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/source-sans-pro-v14-latin-ext_latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* source-sans-pro-700italic - latin-ext_latin */
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: italic;
+  font-weight: 700;
+  src: local(''),
+       url('../fonts/source-sans-pro-v14-latin-ext_latin-700italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/source-sans-pro-v14-latin-ext_latin-700italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* inconsolata-regular - latin-ext_latin */
+@font-face {
+  font-family: 'Inconsolata';
+  font-style: normal;
+  font-weight: 400;
+  src: local(''),
+       url('../fonts/inconsolata-v21-latin-ext_latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/inconsolata-v21-latin-ext_latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* inconsolata-700 - latin-ext_latin */
+@font-face {
+  font-family: 'Inconsolata';
+  font-style: normal;
+  font-weight: 700;
+  src: local(''),
+       url('../fonts/inconsolata-v21-latin-ext_latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/inconsolata-v21-latin-ext_latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+
+/* border-box settings for everything, unless explicitly overruled
+ * https://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice */
+
+html {
+    font-family: "Source Sans Pro", sans-serif;
+    box-sizing: border-box;
+    font-size: 18px;
+    background-color: #fcfcfc;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+    font-size: inherit;
+}
+
+body {
+    margin: 0 0 0px 0; /* override user-agent style sheet */
+    display: flex;
+    justify-content: center;
+}
+
+div#main-wrapper {
+    display: none; /* change this with JS */
+    max-width: 1030px;  /* Chrome only needs 1018, Safari needs 1023 */
+    animation: fadein 0.8s;
+    flex-grow: 0;
+    margin: 20px;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+textarea#pulprog_text {
+    width: 100%;
+    resize: none;
+    font-family: "Inconsolata", monospace;
+    background-color: inherit;
+}
+
+/* Headings */
+
+h1 {
+    text-align: center;
+    font-size: 200%;
+    padding: 0;
+    margin: 0;
+}
+
+/* trick for line around text
+ * see https://stackoverflow.com/questions/5214127 */
+h2 {
+    overflow: hidden;
+    text-align: center;
+    font-size: 144%;
+    margin: 20px 0;
+}
+
+h2:before,
+h2:after {
+    background-color: #000000;
+    content: "";
+    display: inline-block;
+    height: 2px;
+    position: relative;
+    vertical-align: middle;
+    width: 50%;
+}
+
+h2:before {
+    right: 0.5em;
+    margin-left: -50%;
+}
+
+h2:after {
+    left: 0.5em;
+    margin-right: -50%;
+}
+
+/* spinning loader */
+div#spinner-container {
+    display: grid;
+    grid-template-columns: 1fr max-content 1fr;
+    grid-row-gap: 20px;
+    margin: 30px 0;
+}
+
+div#spinner-text {
+    grid-row-start: 1;
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+div#spinner-symbol {
+    grid-row-start: 2;
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+div#spinner-symbol {
+    display: flex;
+}
+
+div#spinner {
+    flex: 0 0 auto;
+    margin-left: auto;
+    margin-right: auto;
+    border: 8px solid #eeeeee;
+    border-top: 8px solid #32a852;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+sup, sub {
+    font-size: 70%;
+    vertical-align: baseline;
+    position: relative;
+    top: -0.4em;
+}
+
+sub {
+  top: 0.4em;
+}
+
+div#warning {
+    text-align: center;
+    color: #ff0000;
+}

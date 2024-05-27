@@ -1,0 +1,166 @@
+/* noah_pshift
+ * -----------
+ * Perform pure shift processing on NOAH PSYCHE module, i.e. extract the 1D FID
+ * from the 2D interferogram. This is a heavily simplified/rewritten version of
+ * the `pshift` AU programme in TopSpin. The major difference is that the drop
+ * points are read from cnst22 instead of cnst4 as usual (in NOAH supersequences,
+ * cnst4 is reserved for 1J(NH) in 15N modules).
+ *
+ * v: 2.3.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * modified from `pshift` AU programme by Ralph Adams, University of Manchester
+ * 28 February 2023 */
+
+// Error messages.
+#define MALLOC_ERROR "noah_pshift: cannot get enough memory"
+#define FREAD_ERROR "noah_pshift: failed to read data from disk"
+#define FWRITE_ERROR "noah_pshift: failed to write data to disk"
+#define FOPEN_ERROR "noah_pshift: failed to open file handle"
+#define TWOD_DATA_ONLY_ERROR "noah_sapphire: only works on 2D data"
+// Maximum size of TD that we can handle.
+#define MAX_TD 131072
+// Macro to round doubles or floats to integer.
+#define ROUND(x) ((x) < 0 ? (int) ((x) - 0.5) : (int) ((x) + 0.5))
+
+// New expno to store the processed data in.
+int new_expno = expno + 1;
+
+GETCURDATA
+/* The GRPDLY parameter tells us how much to circularly shift the FID by (i.e.
+ * take points from the start and move them to the end; and then apply a
+ * first-order phase correction). The formula is as such. The number of points
+ * to be cut is floor(GRPDLY), and the 1st order phase correction to be applied
+ * is (GRPDLY - floor(GRPDLY)) * 360. However, in practice, the phase correction
+ * is quite small and so can be left to apk to deal with.
+ * Here we cut a ton of code that was to do with not being able to read GRPDLY
+ * on older spectrometers (I don't know *how* old). It basically involves
+ * reading the parameters DECIM and DSPFVS, then performing a lookup in a list,
+ * which is provided at the bottom of the original pshift script. I don't know
+ * if it's worth (re-)implementing this.
+ */
+double grpdly;
+FETCHPARS("GRPDLY", &grpdly)
+int grpdly_points = 2 * ((int) (grpdly + 1));  // *2 because real + imaginary. I don't know why +1.
+
+/* Run 2D processing. Error out if not 2D. */
+int pmod;
+FETCHPAR("PARMODE", &pmod)
+if (pmod != 1) STOPMSG(TWOD_DATA_ONLY_ERROR)
+
+// Read in key parameters
+int td1, td2;
+double sw1, sw2, sfo1, sfo2;
+FETCHPAR1S("TD", &td1)
+FETCHPAR("TD", &td2)
+FETCHPAR1S("SW", &sw1)
+FETCHPAR1S("SFO1", &sfo1)
+FETCHPARS("SW", &sw2)
+FETCHPARS("SFO1", &sfo2)  // this is not actually SFO2 but rather F2 SFO1
+sw1 = sw1 * sfo1; // convert both SW's to Hz
+sw2 = sw2 * sfo2;
+
+// Files to read from and write to.
+char infile[PATH_MAX], outfile[PATH_MAX];
+strcpy(infile, ACQUPATH("ser"));
+strcpy(outfile, NEWACQUPATH(new_expno, "fid"));
+// Create the new dataset in the next expno
+RSER(1, new_expno, 1)
+
+// Get the appropriate number of drop points.
+float cnst22;
+FETCHPAR("CNST 22", &cnst22)
+int drop_points = 2 * ROUND(cnst22);  // *2 because complex points
+
+// Get the number of complex points per chunk.
+// Note that if sw2/sw1 is not an exact integer, it gets rounded: this means that in effect
+int points_per_chunk = 2 * ROUND(sw2/sw1);
+
+FILE *fp_ser, *fp_fid;
+if ((fp_ser = fopen(infile, "r")) == NULL) STOPMSG(FOPEN_ERROR)
+if ((fp_fid = fopen(outfile, "w")) == NULL) STOPMSG(FOPEN_ERROR)
+
+// Determine data type and process accordingly.
+int dtypa;
+FETCHPARS("DTYPA", &dtypa)
+if (dtypa == 0) {
+    int dsize = 4;
+    int n = 1024 / dsize;
+    td2 = (td2 + n - 1) / n * n;
+
+    // Allocate memory to read in data
+    int *ser_array;
+    if ((ser_array = calloc(td2, dsize)) == NULL) STOPMSG(MALLOC_ERROR)
+
+    // Loop over chunks in the ser file, copying each to the FID as we go along.
+    int j, k, *p;
+    for (j = 0; j < td1; j++) {  // loop over chunks
+        // Read in TD2 points. This includes the group delay plus drop points.
+        if (fread(ser_array, dsize, td2, fp_ser) != td2) STOPMSG(FREAD_ERROR)
+        // Reset the pointer to the start of ser_array.
+        p = ser_array;
+// For the first chunk we want to copy over the group delay.
+        if (j == 0) {
+            if (fwrite(p, dsize, grpdly_points, fp_fid) != grpdly_points) STOPMSG(FWRITE_ERROR)
+        }
+        // Advance the pointer beyond the group delay. If j > 0 then this simply
+        // skips over the group delay without copying it.
+        p += grpdly_points;
+        // Skip over the drop points.
+        p += drop_points;
+        // Write points_per_chunk points to the FID file.
+        if (fwrite(p, dsize, points_per_chunk, fp_fid) != points_per_chunk) STOPMSG(FWRITE_ERROR)
+    }
+
+    free(ser_array);
+}
+else if (dtypa == 2) {
+    int dsize = 8;
+    int n = 1024 / dsize;
+    td2 = (td2 + n - 1) / n * n;
+
+    // Allocate memory to read in
+    double *ser_array;
+    if ((ser_array = calloc(td2, dsize)) == NULL) STOPMSG(MALLOC_ERROR)
+
+    // Loop over chunks in the ser file, copying each to the FID as we go along.
+    int j;
+    double *p;
+    for (j = 0; j < td1; j++) {  // loop over chunks
+        // Read in TD2 points. This includes the group delay plus drop points.
+        if (fread(ser_array, dsize, td2, fp_ser) != td2) STOPMSG(FREAD_ERROR)
+        // Reset the pointer to the start of ser_array.
+        p = ser_array;
+        // For the first chunk we want to copy over the group delay.
+        if (j == 0) {
+            if (fwrite(p, dsize, grpdly_points, fp_fid) != grpdly_points) STOPMSG(FWRITE_ERROR)
+        }
+        // Advance the pointer beyond the group delay. If j > 0 then this simply
+        // skips over the group delay without copying it.
+        p += grpdly_points;
+        // Skip over the drop points.
+        p += drop_points;
+        // Write points_per_chunk points to the FID file.
+        if (fwrite(p, dsize, points_per_chunk, fp_fid) != points_per_chunk) STOPMSG(FWRITE_ERROR)
+    }
+    free(ser_array);
+}
+
+// Close both file pointers.
+fclose(fp_ser);
+fclose(fp_fid);
+
+// Open new dataset.
+REXPNO(new_expno)
+SETCURDATA
+// Set true length of TD.
+int new_td = (points_per_chunk * td1) + grpdly_points;
+STOREPARS("TD", new_td)
+STOREPAR("TD", new_td)
+// Perform final processing.
+XCMD("sendgui browse_update_tree")
+EFP
+APK
+XCMD("abs n")
+QUIT
+// vim: ft=c

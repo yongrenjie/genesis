@@ -1,0 +1,20 @@
+/* proc_noah
+ * ---------
+ * General processing for NOAH modules.
+ *
+ * v: 2.3.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 28 February 2023 */
+
+int fntp, td1;
+XFB
+// Check for NUS.
+FETCHPARS("FnTYPE", &fntp)
+if (fntp == 2) {
+    XHT2
+    FETCHPAR1S("NusTD", &td1)  
+    STOREPAR1("TD", td1)
+}
+QUIT
+// vim: ft=c

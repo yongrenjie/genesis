@@ -1,0 +1,29 @@
+{
+    "name": "genesis",
+    "version": "2.3.0",
+    "author": "Jonathan Yong",
+    "email": "jonathan.yong@chem.ox.ac.uk",
+    "url": "https://github.com/yongrenjie",
+    "description": "make NOAH pulse programmes",
+    "homepage": "https://github.com/yongrenjie/genesis",
+    "bugs": {
+        "url": "https://github.com/yongrenjie/genesis/issues",
+        "email": "jonathan.yong@chem.ox.ac.uk"
+    },
+    "license": "MIT",
+    "repository": "github:yongrenjie/genesis",
+    "scripts": {
+        "start": "tsc && node build/app.js",
+        "postinstall": "tsc",
+        "test": "tsc; mocha tests/"
+    },
+    "type": "module",
+    "dependencies": {
+        "ansi-regex": ">=5.0.1",
+        "mocha": "^10.1.0",
+        "nanoid": ">=3.1.31",
+        "typescript": "^4.2.3",
+        "yargs": "^16.2.0",
+        "yargs-parser": "^20.2.4"
+    }
+}

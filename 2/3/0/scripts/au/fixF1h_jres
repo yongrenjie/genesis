@@ -1,0 +1,39 @@
+/* fixF1h_jres
+ * -----------
+ * Fix the values of SW and O1 in the indirect dimension for NOAH 2DJ modules.
+ * SW_h is read from the status parameter cnst38.
+ *
+ * v: 2.3.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 28 February 2023 */
+
+double sfo1;
+FETCHPARS("SFO1", &sfo1) 
+STOREPAR1S("SFO1", sfo1)
+STOREPAR1("SFO1", sfo1)
+
+char nuc1[8];
+FETCHPARS("NUC1", nuc1)
+STOREPAR1S("NUC1", nuc1)
+STOREPAR1("NUC1", nuc1)
+
+double o1;
+FETCHPARS("BF1", &o1)  
+STOREPAR1S("BF1", o1)
+STOREPAR1("BF1", o1)
+FETCHPARS("O1", &o1)  
+STOREPARS("O2", o1)
+STOREPAR1S("O1", o1)
+STOREPAR1("O1", o1)
+
+float cnst38;
+FETCHPARS("CNST 38", &cnst38)
+double sw_h = (double) cnst38;
+STOREPAR1S("SW_h", sw_h)
+STOREPAR1("SW_h", sw_h)
+STOREPAR1S("SW", sw_h/sfo1)
+STOREPAR1("SW", sw_h/sfo1)
+
+QUIT
+// vim: ft=c

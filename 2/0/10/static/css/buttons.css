@@ -1,0 +1,135 @@
+div#buttons {
+    margin: 15px 0;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: baseline;
+    justify-content: center;
+}
+
+div#buttons input {
+    position: relative;  /* needed for clicking behaviour */
+    font-family: inherit;
+    border: 1px solid black;
+    background-color: #eeeeee;
+    border-radius: 0.5em;
+    padding: 0.4em 1em;
+    margin: 0 5px;
+    transition-property: background-color;
+    transition-duration: 0.2s;
+    outline: 0;
+}
+
+@media (pointer: fine) {
+    div#buttons input:hover {
+        background-color: #d0d0d0;
+    }
+}
+
+div#buttons input:focus {
+    box-shadow: 0 0 4px 2px #aaaaaa;
+}
+
+div#buttons input:active {
+    top: 2px;
+}
+
+div#buttons input#download_button {
+    font-size: 120%;
+}
+
+div#buttons input#reset_button {
+    font-size: 80%;
+    width: 9em;
+    height: 100%;
+}
+
+div#buttons input#faq_button {
+    font-size: 80%;
+    width: 9em;
+    height: 100%;
+}
+
+/* explicit styling when the viewport is small */
+@media (max-width: 641px) {
+    div#buttons {
+        flex-flow: column wrap;
+        align-items: center;
+    }
+    div#buttons input {
+        margin: 3px 0;
+    }
+}
+
+
+/* checkbox hack */
+/* https://css-tricks.com/the-checkbox-hack/ */
+
+div#devmode {
+    text-align: right;
+    font-size: 70%;
+}
+
+.switch {
+    position: relative;
+    top: 0.18em;
+    display: inline-block;
+    margin-left: 0.3em;
+}
+.switch-input {
+    display: none;
+}
+.switch-label {
+    display: block;
+    width: 2em;
+    height: 1em;
+    text-indent: -150%;
+    clip: rect(0 0 0 0);
+    color: transparent;
+    user-select: none;
+}
+
+.switch-label::before,
+.switch-label::after {
+    content: "";
+    display: block;
+    position: absolute;
+    cursor: pointer;
+}
+
+.switch-label::before {
+    width: 100%;
+    height: 100%;
+    background-color: #dedede;
+    border-radius: 9999em;
+    -webkit-transition: background-color 0.25s ease;
+    transition: background-color 0.25s ease;
+}
+
+.switch-label::after {
+    top: 0;
+    left: 0;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.45);
+    -webkit-transition: left 0.25s ease;
+    transition: left 0.25s ease;
+}
+
+.switch-input:checked + .switch-label::before {
+    background-color: #46d13f;
+}
+.switch-input:checked + .switch-label::after {
+    left: 1em;
+}
+
+div#manual-input {
+    display: none;  /* later changed with JavaScript */
+    text-align: center;
+}
+
+input#manual-modules {
+    margin: 0 10px;
+    font-family: "Inconsolata", monospace;
+}

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Jonathan Yong">
+    <meta name="description" content="Website to automatically generate NOAH pulse programmes in Bruker format">
+    <link rel="icon" href="data:,"><!-- stops Chrome from asking for a favicon -->
+    <link rel="stylesheet" type="text/css" href="static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="static/css/modules.css">
+    <link rel="stylesheet" type="text/css" href="static/css/buttons.css">
+
+    <script src="build/frontend.js" type="module"></script>
+
+    <!-- Thanks, favicon.io -->
+    <link rel="manifest" type="application/manifest+json" href="static/site.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="static/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="static/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="static/favicon-16x16.png">
+
+    <title>NOAH pulse programme generator</title>
+</head>
+
+<body id="top">
+
+    <div id="spinner-container">
+        <div id="spinner-text">Loading modules... </div>
+        <div id="spinner-symbol"><div id="spinner"></div></div>
+    </div>
+
+    <div id="main-wrapper">
+
+        <h1>NOAH pulse programme generator</h1>
+
+        <h2 id="modules_h2">Module selector</h2>
+
+        <div id="warning">Please note that this is an old version of GENESIS (v2.0.7)
+        </div>
+
+        <div id="devmode">
+            Developer mode:
+            <div class="switch">
+                <input id="devmode_button" type="checkbox" class="switch-input" />
+                <label for="devmode_button" class="switch-label"></label>
+            </div>
+        </div>
+
+        <div id="chooser">
+            <div class="chooser-overall hmbc">
+                <div class="chooser_text hmbc">
+                    <sup>13</sup>C HMBC
+                </div>
+                <div class="chooser_modules hmbc">
+                    <ul>
+                        <li>
+                            <input type="radio" name="hmbc" id="hmbc_none" checked></input>
+                            <label for="hmbc_none">None</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="hmbc" id="hmbc_hmbc"></input>
+                            <label for="hmbc_hmbc">HMBC</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="hmbc" id="C_HMBC_CNF"></input>
+                            <label for="C_HMBC_CNF">C_HMBC_CNF</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="hmbc" id="C_HMBC_CF"></input>
+                            <label for="C_HMBC_CF">C_HMBC_CF</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="hmbc" id="C_HMBC_CFTO"></input>
+                            <label for="C_HMBC_CFTO">C_HMBC_CFTO</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="hmbc" id="C_HMBC_NOF"></input>
+                            <label for="C_HMBC_NOF">C_HMBC_NOF</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="hmbc" id="C_HMBC_CFG"></input>
+                            <label for="C_HMBC_CFG">C_HMBC_CFG</label>
+                        </li>
+                    </ul>
+                </div>
+            </div> <!-- /chooser-overall hmbc -->
+
+            <div class="chooser-overall n15">
+                <div class="chooser_text n15">
+                    <sup>15</sup>N–<sup>1</sup>H
+                </div>
+                <div class="chooser_modules n15">
+                    <ul>
+                        <!-- nondevmode -->
+                        <li>
+                            <input type="radio" name="n15" id="n15_none" checked></input>
+                            <label for="n15_none">None</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="n15" id="n15_hmqc"></input>
+                            <label for="n15_hmqc">HMQC</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="n15" id="n15_sehsqc"></input>
+                            <label for="n15_sehsqc">seHSQC</label>
+                        </li>
+                        <!-- devmode -->
+                        <li>
+                            <input type="radio" name="n15" id="N_HMQC"></input>
+                            <label for="N_HMQC">N_HMQC</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="n15" id="N_HSQC"></input>
+                            <label for="N_HSQC">N_HSQC</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="n15" id="N_SEHSQC"></input>
+                            <label for="N_SEHSQC">N_SEHSQC</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="n15" id="N_SEHSQC_OR"></input>
+                            <label for="N_SEHSQC_OR">N_SEHSQC_OR</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="n15" id="N_SEHSQC_DP"></input>
+                            <label for="N_SEHSQC_DP">N_SEHSQC_DP</label>
+                        </li>
+                    </ul>
+                </div>
+            </div> <!-- /chooser-overall n15 -->
+
+            <div class="chooser-overall ci13">
+                <div class="chooser_text ci13">
+                    <sup>13</sup>C–<sup>1</sup>H #1
+                </div>
+                <div class="chooser_modules ci13">
+                    <ul>
+                        <!-- nondevmode -->
+                        <li>
+                            <input type="radio" name="ci13" id="ci13_none" checked></input>
+                            <label for="ci13_none">None</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="ci13" id="ci13_hsqc"></input>
+                            <label for="ci13_hsqc">HSQC</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="ci13" id="ci13_hsqc_f2j"></input>
+                            <label for="ci13_hsqc_f2j">F2 J-HSQC</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="ci13" id="ci13_hsqc_cosy"></input>
+                            <label for="ci13_hsqc_cosy">HSQC-COSY</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="ci13" id="ci13_hsqc_tocsy"></input>
+                            <label for="ci13_hsqc_tocsy">HSQC-TOCSY</label>
+                        </li>
+                        <!-- devmode -->
+                        <li>
+                            <input type="radio" name="ci13" id="CI_HSQC_TOCSY"></input>
+                            <label for="CI_HSQC_TOCSY">CI_HSQC_TOCSY</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="ci13" id="CI_HSQC_COSY"></input>
+                            <label for="CI_HSQC_COSY">CI_HSQC_COSY</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="ci13" id="CI_HSQC_COSY_CLIP"></input>
+                            <label for="CI_HSQC_COSY_CLIP">CI_HSQC_COSY_CLIP</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="ci13" id="CI_HSQC_COSY_DSE"></input>
+                            <label for="CI_HSQC_COSY_DSE">CI_HSQC_COSY_DSE</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="ci13" id="CI_HSQC"></input>
+                            <label for="CI_HSQC">CI_HSQC</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="ci13" id="CI_HSQC_F2J"></input>
+                            <label for="CI_HSQC_F2J">CI_HSQC_F2J</label>
+                        </li>
+                    </ul>
+                </div>
+            </div> <!-- /chooser-overall ci13 -->
+
+            <div class="chooser-overall c13">
+                <div class="chooser_text c13">
+                    <sup>13</sup>C–<sup>1</sup>H #2
+                </div>
+                <div class="chooser_modules c13">
+                    <ul>
+                        <!-- nondevmode -->
+                        <li>
+                            <input type="radio" name="c13" id="c13_none" checked></input>
+                            <label for="c13_none">None</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="c13_hsqc"></input>
+                            <label for="c13_hsqc">HSQC</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="c13_hsqc_f2j"></input>
+                            <label for="c13_hsqc_f2j">F2 J-HSQC</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="c13_hsqc_cosy"></input>
+                            <label for="c13_hsqc_cosy">HSQC-COSY</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="c13_hsqc_tocsy"></input>
+                            <label for="c13_hsqc_tocsy">HSQC-TOCSY</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="c13_sehsqc"></input>
+                            <label for="c13_sehsqc">seHSQC</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="c13_sehsqc_tocsy"></input>
+                            <label for="c13_sehsqc_tocsy">seHSQC-TOCSY</label>
+                        </li>
+                        <!-- devmode -->
+                        <li>
+                            <input type="radio" name="c13" id="C_HSQC"></input>
+                            <label for="C_HSQC">C_HSQC</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="C_HSQC_F2J"></input>
+                            <label for="C_HSQC_F2J">C_HSQC_F2J</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="C_HSQC_COSY"></input>
+                            <label for="C_HSQC_COSY">C_HSQC_COSY</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="C_HSQC_COSY_CLIP"></input>
+                            <label for="C_HSQC_COSY_CLIP">C_HSQC_COSY_CLIP</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="ci13" id="C_HSQC_COSY_DSE"></input>
+                            <label for="C_HSQC_COSY_DSE">C_HSQC_COSY_DSE</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="C_HSQC_TOCSY"></input>
+                            <label for="C_HSQC_TOCSY">C_HSQC_TOCSY</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="C_SEHSQC"></input>
+                            <label for="C_SEHSQC">C_SEHSQC</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="C_SEHSQC_OR"></input>
+                            <label for="C_SEHSQC_OR">C_SEHSQC_OR</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="C_SEHSQC_DP"></input>
+                            <label for="C_SEHSQC_DP">C_SEHSQC_DP</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="C_SEHSQC_TOCSY"></input>
+                            <label for="C_SEHSQC_TOCSY">C_SEHSQC_TOCSY</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="c13" id="C_SEHSQC_TOCSY_OR"></input>
+                            <label for="C_SEHSQC_TOCSY_OR">C_SEHSQC_TOCSY_OR</label>
+                        </li>
+                    </ul>
+                </div>
+            </div> <!-- /chooser-overall c13 -->
+
+            <div class="chooser-overall h1">
+                <div class="chooser_text h1">
+                    <sup>1</sup>H–<sup>1</sup>H
+                </div>
+                <div class="chooser_modules h1">
+                    <!-- it is very important, when adding future modules here, that
+                        the input id (and the label for-attribute) is h1_xxx_xxx and
+                        corresponds EXACTLY to the backend module file which should be
+                        H_XXX_XXX.js. -->
+                    <ul>
+                        <li id="li_h1_none">
+                            <input type="radio" name="h1" id="h1_none" checked></input>
+                            <label for="h1_none">None</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="h1" id="h1_cosy"></input>
+                            <label for="h1_cosy">COSY</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="h1" id="h1_cosy_qf"></input>
+                            <label for="h1_cosy_qf">COSY (QF)</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="h1" id="h1_clip_cosy"></input>
+                            <label for="h1_clip_cosy">CLIP-COSY</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="h1" id="h1_dqf_cosy"></input>
+                            <label for="h1_dqf_cosy">DQF-COSY</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="h1" id="h1_tocsy"></input>
+                            <label for="h1_tocsy">TOCSY</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="h1" id="h1_noesy"></input>
+                            <label for="h1_noesy">NOESY</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="h1" id="h1_roesy"></input>
+                            <label for="h1_roesy">ROESY</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="h1" id="h1_roesy_ad"></input>
+                            <label for="h1_roesy_ad">ROESY (ad.)</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="h1" id="h1_cosy_roesy_st"></input>
+                            <label for="h1_cosy_roesy_st">COSY·ROESY St</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="h1" id="h1_cosy_noesy"></input>
+                            <label for="h1_cosy_noesy">COSY·NOESY EA</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="h1" id="h1_cosy_noesy_st"></input>
+                            <label for="h1_cosy_noesy_st">COSY·NOESY St</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="h1" id="h1_cosy_tocsy"></input>
+                            <label for="h1_cosy_tocsy">COSY·TOCSY EA</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="h1" id="h1_cosy_tocsy_st"></input>
+                            <label for="h1_cosy_tocsy_st">COSY·TOCSY St</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="h1" id="h1_jres"></input>
+                            <label for="h1_jres">2DJ (QF)</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="h1" id="h1_psyche_jres"></input>
+                            <label for="h1_psyche_jres">PSYCHE 2DJ</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="h1" id="h1_psyche"></input>
+                            <label for="h1_psyche">1D PSYCHE</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="h1" id="h1_tse_psyche"></input>
+                            <label for="h1_tse_psyche">1D TSE-PSYCHE</label>
+                        </li>
+                    </ul>
+                </div>
+            </div><!-- /chooser-overall h1 -->
+        </div><!-- /chooser -->
+
+
+        <div id="buttons">
+            <input id="reset_button" type="button" value="Reset all">
+            <input id="download_button" type="button" value="Download pulse programme">
+            <input id="faq_button" type="button" value="Read the FAQ">
+        </div><!-- /buttons -->
+
+        <h2>Pulse programme text</h2>
+        <div id="pulprog">
+            <textarea id="pulprog_text" rows=30 placeholder="Select two or more modules to generate pulse programme..." readonly></textarea>
+        </div>
+
+        <h2 id="faq_h2">FAQ</h2>
+        <div id="faq">
+
+            <span class="small"><a href="#top">Back to top</a></span>
+
+            <ul id="faq_toc">
+            </ul>
+
+            <dl>
+                <dt id="faq_download">Download all NOAH scripts</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
+                <dd>
+                    <p><a class="scripts" download>Click here to download the AU and Python scripts (.zip).</a> We assume you know what you're doing here. (If not, the other entries in this FAQ have more information.)</p>
+                </dd>
+
+                <dt id="faq_run">Acquiring a NOAH experiment: an overview</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
+                <dd>
+                    <p>Nearly all of the setup is the same as for a standard <sup>13</sup>C–<sup>1</sup>H 2D experiment. There are two parameters which require additional consideration:</p>
+                    <ul>
+                        <li><b>NBL</b> should be set to the total number of modules, e.g. 4 for a MSCN supersequence. (Set this either in <span class="ms">ased</span>, or by typing <span class="ms">nbl</span> into the TopSpin command line.)</li>
+                        <li><b>TD1</b> (i.e. TD in the F1 dimension) must be its original value multiplied by the total number of modules. For example, if you are running a supersequence with 4 modules and want to have 256 <i>t</i><sub>1</sub> increments in each module, TD1 must be set to 256 × 4 = 1024.</li>
+                    </ul>
+
+                    <p>All other parameters are fully documented in the pulse programmes, and nearly all of these are the same as in the standard experiments. There are a few parameters which are NOAH-specific:</p>
+
+                    <ul>
+                        <li><b>cnst16</b>: factor to lengthen CTP gradients in <sup>15</sup>N spectra by. We recommend setting this such that cnst16*p16 is around 2–2.5 ms. In other words, if your "standard" gradient duration p16 is 1 ms, set cnst16 = 2–2.5. This helps to suppress artefacts in the spectra which arise from imperfect pulses.</li>
+                        <li><b>cnst32</b>: in supersequences with multiple <sup>13</sup>C spectra (e.g. HSQC-TOCSY + HSQC), cnst32 tells you how much of the one-bond C–H magnetisation to allocate to the first of the two, where 1 means "all of it" and 0 means "none". The remainder goes to the second module. The optimum amount to use depends on what these two modules are, as well as other parameters e.g. acquisition times and relaxation rates, but something between 0.7 and 0.9 usually works well.</li>
+                        <li><b>cnst37</b>: this is the desired value of TD1 for the 2DJ and PSYCHE experiments. Note that, ideally, this should be a factor of the other modules' TD1.</li>
+                        <li><b>cnst38</b>: for 2DJ and PSYCHE experiments this is the indirect dimension proton SW in Hz. For PSYCHE modules, we include automatic corrections in the pulse programme to make sure that SW2/SW1 is an integer (i.e. each chunk has an integer number of points), so you can just provide an approximate value here without worrying about that.</li>
+                        <li><b>cnst39</b>: <i>k</i>-scaling factor for <sup>15</sup>N modules. Set this to a value larger than 1 to reduce TD1 for the <sup>15</sup>N experiment by a factor of cnst39; in return NS will be increased by a factor of cnst39. The impact is not huge, but sometimes sensitivity gains can be attained.</li>
+                        <li><b>cnst40</b>: for <sup>15</sup>N experiments this is the nitrogen SW in ppm. (The nitrogen transmitter offset is O3P.)</li>
+                    </ul>
+                </dd>
+
+                <dt id="faq_zgoptns">What are acquisition flags, and how do I use them?</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
+                <dd>
+                    <p>Acquisition flags are ways of conditionally running parts of a pulse programme (technically, compiling, not running). They are useful when we don't want to create two versions of what's essentially the same module with just small changes. In this case, you can enable acquisition flags to turn on/off optional features. The available acquisition flags are listed near the top of the pulse programme. To turn on an acquisition flag, such as <span class="ms">-DEDIT</span>, simply include it in the TopSpin acquisition parameter <b>zgoptns</b> (accessible via <span class="ms">ased</span>).</p>
+                    <p>There are two acquisition flags available currently:</p>
+                    <ul>
+                        <li><b>-DEDIT</b>: enables multiplicity editing in HSQC spectra.</li>
+                        <li><b>-DTEDIT</b>: enables multiplicity editing in HSQC-TOCSY spectra.</li>
+                    </ul>
+                    <p>There is also the -DNUS flag, which (partially) turns on non-uniform sampling, but you probably don't want to set that manually unless you're absolutely certain what you're doing. Instead, please use the <span class="ms">noah_nus.py</span> script. See: <a href="#faq_nus">Can non-uniform sampling be used with NOAH sequences?</a> for more information.</p>
+                </dd>
+
+                <dt id="faq_rga">Does rga work as expected?</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
+                <dd>
+                    <p>No, it doesn't. It tries to optimise the receiver gain for the first module, instead of the entire supersequence as a whole. If the first module has low intrinsic sensitivity (which is typically the case), then <span class="ms">rga</span> will suggest unreasonably large values for the receiver gain, leading to ADC overflows for the more sensitive modules.</p>
+
+                    <p>If you want to use <span class="ms">rga</span>, you will need to run it with a different pulse programme which corresponds to the most sensitive module. For example, for a MSCN supersequence, you should run <span class="ms">rga</span> with the pulse programme set to a COSY.</p>
+
+                    <p>Alternatively, instead of simply acquiring with <span class="ms">zg</span>, you can run <span class="ms">au_zgcosy</span>. This performs <span class="ms">rga</span> on a pulse-acquire sequence before acquiring the actual data.
+                </dd>
+
+                <dt id="faq_weird">During acquisition, is it normal that TopSpin shows weird numbers in the progress bar?</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
+                <dd>
+                    <p>Yes. Using the same example as before, if you are running a NOAH-4 experiment with 256 <i>t</i><sub>1</sub> increments (i.e. TD1 = 1024), then the progress line in the status bar will inch towards "1024/256".</p>
+                </dd>
+                
+                <dt id="faq_diffparams">Is it possible to have different values of SW/TD2/RG/&lt;other parameter&gt; for different modules?</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
+                <dd>
+                    <p>In a way, yes, but as far as we are aware it has to be hardcoded in the pulse programme (and often in a nontrivial way). That would make the pulse programme overly specialised for a particular sample/spectrometer, and isn't something we want to do here.</p>
+                </dd>
+
+                <dt id="faq_process">Processing a NOAH experiment: an overview</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
+                <dd>
+
+                    <p>If you acquired this data under automation, it should have already been set up such that your data is automatically processed. If your NOAH dataset was acquired with experiment number (expno) <i>m</i>, then check whether you already have datasets in expnos (1000 × <i>m</i>) + 1 onwards. If those exist, then chances are these <i>are</i> the individual processed 2D spectra. If not, then read on...</p>
+
+                    <ol class="steps">
+                        <li>If you haven't already done so, <a class="scripts" download>download the newest versions of the NOAH scripts</a>. Unzip that and copy everything inside the <b>au</b> subdirectory to <b>&lt;TS&gt;/exp/stan/nmr/au/src/user</b>, where &lt;TS&gt; is your TopSpin installation location (<span class="ms">C:\Bruker\TopSpinX.Y.Z</span> for Windows, and <span class="ms">/opt/topspinx.y.z</span> for macOS/Linux).</li>
+
+                        <li>Process the data by entering <span class="ms">splitx_au</span> into the TopSpin command line. This will create new datasets with expnos beginning from (1000 × <i>m</i>) + 1, where <i>m</i> is the expno of the original NOAH data.</li>
+                    </ol>
+
+                    <p>If you are using old versions of the pulse programme, there is an additional step where you need to specify the userP1 through userP5 parameters. For example, in a BSC experiment, you would specify (userP1, userP2, userP3) = (noah_hmbc, noah_hsqc, noah_cosy) respectively. This is no longer necessary as long as you have downloaded the newest AU scripts and pulse programmes from this website. Please do get in touch if you need extra information on this.</p>
+                </dd>
+
+                <dt id="faq_catalina">I'm using macOS Catalina / Big Sur and the processing doesn't work.</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
+                <dd>
+                    <p><b>On Catalina:</b> Please update TopSpin to version 4.1.0 or later. On older versions of TopSpin for macOS, there is a bug in TopSpin which causes certain parts of AU programmes to not work on Catalina.</p>
+                    <p><b>On Big Sur:</b> The AU programmes are completely broken even on TopSpin 4.1.1. Sorry about that; we'll have to wait until Bruker provides a fix.</p>
+                </dd>
+
+                <dt id="faq_nus">Can non-uniform sampling be used with NOAH sequences?</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
+                <dd>
+                    <p>NUS can be enabled in the pulse sequence, but <b>not</b> in the conventional way of setting FnTYPE to 'non-uniform sampling'. For all pulse programmes downloaded from this website, please follow the steps below:</p>
+
+                    <ol class="steps">
+                        <li><a href="scripts/py/noah_nus.py" download>Download the newest version of <span class="ms">noah_nus.py</span>.</a></li>
+
+                        <li>Set up your experiment normally without NUS first, with the full value for TD1. Don't change any other parameters, such as FnTYPE.</li>
+
+                        <li>Specify the parameter NUSAmount and then run <span class="ms">noah_nus</span> in TopSpin.</li>
+                    </ol>
+
+                    <p>To disable NUS on a dataset where it was previously enabled, run <span class="ms">noah_nus off</span>.</p>
+
+                    <p>The optimal sampling density depends on what spectra you're trying to run as well as your sample. However, there is nothing special about NOAH in this regard: the typical considerations (e.g. how sparse the spectrum is) are the same, and whatever works for the individual spectra will also work on NOAH.</p>
+
+                    <p><b>Incompatibilities:</b> The script will not work on old versions of pulse sequences, e.g. those found in the Supporting Information of older papers. It is also not compatible with the cnst37 and cnst39 scaling in <sup>1</sup>H and <sup>15</sup>N modules respectively. It also cannot be used with QF-style modules, namely QF COSY and 2DJ. The behaviour of <span class="ms">noah_nus.py</span> is currently as follows:
+
+                    <ul>
+                        <li>If you try to enable NUS on a <sup>1</sup>H module requiring scaling (i.e. using cnst37), or a QF COSY, it will simply refuse to work.</li>
+                        <li>If you try to enable NUS on a <sup>15</sup>N experiment with cnst39 &gt; 1, cnst39 will be changed back to 1.</li>
+                    </ul>
+                    </p>
+                </dd>
+
+                <dt id="faq_automation">How can NOAH experiments be set up for use in automation?</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
+                <dd>
+                    <p>The acquisition AU programme (AUNM) should be set to <span class="ms">au_zgcosy</span>, to avoid issues with <span class="ms">rga</span> (see above). The processing AU programme (AUNMP) should be set to <span class="ms">splitx_au</span>. If the pulse programmes and AU scripts are up-to-date, then there is no need to set the user processing parameters.</p>
+
+                    <p>WaveMaker shaped pulses can optionally be generated before acquisition by adding the statement <span class="ms">XCMD("wvm -q")</span> into the acquisition AU programme.</p>
+                </dd>
+
+                <dt id="faq_cite">What papers should I cite / where can I find out more about NOAH experiments?</dt>
+                <span class="small"><a href="#top">Back to top of page</a> | <a href="#faq_h2">Back to FAQ</a></span>
+                <dd>
+                    <p>Thanks for asking. Firstly, note that the pulse programmes provided above will already suggest references that are relevant. If you're interested in reading more, the original NOAH paper is:</p>
+                    <ol class="citation-start">
+                        <li>Kupče, Ē.; Claridge, T. D. W. NOAH: NMR Supersequences for Small Molecule Analysis and Structure Elucidation. <i>Angew. Chem. Int. Ed.</i> <b>2017,</b> <i>56</i> (39), 11779–11783. <a href="https://doi.org/10.1002/anie.201705506">DOI: 10.1002/anie.201705506</a>.</li>
+                    </ol>
+
+                    <p>and there are a couple of reviews which cover the NOAH technique:</p>
+                    <ol class="citation">
+                        <li>Kupče, Ē.; Frydman, L.; Webb, A.; Yong, J. R. J.; Claridge, T. D. W.<i> Nat. Rev. Methods Primers</i> <b>2021,</b> in press.</li>
+                        <li>Kupče, Ē.; Mote, K. R.; Webb, A. G.; Madhu, P. K.; Claridge, T. D. W.<i> Prog. Nucl. Magn. Reson. Spectrosc.</i> <b>2021.</b> <a href="https://doi.org/10.1016/j.pnmrs.2021.03.001">DOI: 10.1016/j.pnmrs.2021.03.001</a>.</li>
+                    </ol>
+
+                    <p>Apart from these, there are a few other papers covering more technical details of individual modules and supersequences:
+                    <ol class="citation">
+                        <li>Kupče, Ē.; Claridge, T. D. W. Molecular structure from a single NMR supersequence. <i>Chem. Commun.</i> <b>2018,</b> <i>54</i> (52), 7139–7142. <a href="https://doi.org/10.1039/C8CC03296C">DOI: 10.1039/C8CC03296C</a>.</li>
+                        <li>Claridge, T. D. W.; Mayzel, M.; Kupče, Ē. Triplet NOAH supersequences optimised for small molecule structure characterisation. <i>Magn. Reson. Chem.</i> <b>2019,</b> <i>57</i> (11), 946–952. <a href="https://doi.org/10.1002/mrc.4887">DOI: 10.1002/mrc.4887</a>.</li>
+                        <li>Kupče, Ē.; Claridge, T. D. W. New NOAH modules for structure elucidation at natural isotopic abundance. <i>J. Magn. Reson.</i> <b>2019,</b> <i>307,</i> 106568. <a href="https://doi.org/10.1016/j.jmr.2019.106568">DOI: 10.1016/j.jmr.2019.106568</a>.</li>
+                    </ol>
+                </dd>
+                
+            </dl>
+        </div><!-- /faq -->
+
+        <span class="small">&copy; Jonathan Yong, 2020–2021. Source code is available on <a href="https://github.com/yongrenjie/gennoah">GitHub</a>. Current version: v<span id="version"></span></span>
+    </div><!-- /main-wrapper -->
+
+
+    <script nomodule type="text/javascript">
+        document.getElementById("spinner-container").innerHTML = "Your browser does not support JavaScript modules; please use an updated browser to view this website.";
+    </script>
+</body>
+</html>

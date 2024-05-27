@@ -1,0 +1,45 @@
+/* fixF1h_psyche
+ * -------------
+ * Fix the values of SW and O1 in the indirect dimension for NOAH PSYCHE
+ * modules. SW_h is back-calculated from in17 (the t1 increment in the PSYCHE
+ * module is in17*2). SW_h will be very close to the user-specified cnst38.
+ * However, the pulse programme makes tiny adjustments to in17 to make sure
+ * that the length of each chunk is exactly an even number of dwell points, to
+ * minimise chunking artefacts. So, SW_h will (in general) be a tiny bit
+ * different from cnst38.
+ *
+ * v: 2.3.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 28 February 2023 */
+
+double sfo1;
+FETCHPARS("SFO1", &sfo1) 
+STOREPAR1S("SFO1", sfo1)
+STOREPAR1("SFO1", sfo1)
+
+char nuc1[8];
+FETCHPARS("NUC1", nuc1)
+STOREPAR1S("NUC1", nuc1)
+STOREPAR1("NUC1", nuc1)
+
+double o1;
+FETCHPARS("BF1", &o1)  
+STOREPAR1S("BF1", o1)
+STOREPAR1("BF1", o1)
+FETCHPARS("O1", &o1)  
+STOREPARS("O2", o1)
+STOREPAR1S("O1", o1)
+STOREPAR1("O1", o1)
+
+// Back-calculate SW1 from in17.
+double in17;
+FETCHPARS("IN 17", &in17)
+double sw_h = 1 / (2 * in17);
+STOREPAR1S("SW_h", sw_h)
+STOREPAR1("SW_h", sw_h)
+STOREPAR1S("SW", sw_h/sfo1)
+STOREPAR1("SW", sw_h/sfo1)
+
+QUIT
+// vim: ft=c

@@ -1,0 +1,176 @@
+/* combinek
+ * --------
+ * Adds up series of k adjacent FIDs in a ser file. The value of k is read from
+ * the status parameter cnst39. For use with 15N NOAH modules.
+ *
+ * The variable 'nfid' controls how many FIDs are acquired before being
+ * repeated.  For example, with EA-type experiments this is typically 2, and
+ * this AU programme will try to determine nfid based on the FnMODE parameter.
+ * However, it is possible to call this AU program as either 'combinek nfid2'
+ * or 'combinek nfid1' to manually override this.
+ *
+ * v: 2.3.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 28 February 2023 */
+
+#define MALLOC_ERROR "insufficient memory; aborting"
+#define READ_ERROR "file read failed; aborting"
+#define WRITE_ERROR "file write failed; aborting"
+
+/* Read sensitivity factor k */
+float cnst39;
+FETCHPARS("CNST 39", &cnst39)
+int k;
+k = (int) (cnst39 + 0.5);
+
+/* Check for invalid values of k.
+ * We don't spawn a message box if k == 1, because the user may have purposely chosen that */
+if (k == 0)      STOPMSG("combinek has already been run on this dataset")
+else if (k == 1) STOP
+else if (k < 0)  STOPMSG("error: cnst39 cannot be negative")
+
+/* Determine nfid */
+int nfid;
+if ((i_argc > 2) && (strcmp(i_argv[2], "nfid1") == 0)) nfid = 1;
+else if ((i_argc > 2) && (strcmp(i_argv[2], "nfid2") == 0)) nfid = 2;
+else {
+    /* Determine nfid from 2D FnMODE */
+    /* 0 - undefined; 1 - QF; 2-6 - various phase-sensitive methods */ 
+    int fnmode;
+    FETCHPAR1S("FnMODE", &fnmode)
+    /* If 2 <= fnmode <= 6, then we need to read two FIDs of data at once */
+    /* e.g. for fnmode = 6 (EA), we need to read echo + antiecho data together */
+    if ((2 <= fnmode) && (fnmode <= 6)) nfid = 2;
+    else nfid = 1;
+}
+
+/* Open the ser file to read */
+char ser[PATH_MAX + 64];
+strcpy(ser, ACQUPATH("ser"));
+FILE *fp;
+if ((fp = fopen(ser, "rb")) == NULL) STOPMSG(READ_ERROR)
+
+/* Open the newser file to write */
+char newser[PATH_MAX + 64];
+strcpy(newser, ACQUPATH("newser"));
+FILE *fq;
+if ((fq = fopen(newser, "wb")) == NULL) STOPMSG(WRITE_ERROR)
+
+/* Number of scans */
+int ns;
+FETCHPARS("NS", &ns)
+
+/* Number of t1 increments */
+int td1;
+FETCHPAR1S("TD", &td1)
+/* Round TD1 down to the nearest multiple of nfid * k.
+ * This allows combinek to work even when acquisition is incomplete. */
+td1 = td1 - (td1 % (nfid * k));
+
+/* Number of points in FID */
+int td;
+FETCHPARS("TD", &td)
+
+/* Data type */
+/* 0 - (32-bit) int, 1 - float, 2 - (64-bit) double */
+int dtypa;
+FETCHPARS("DTYPA", &dtypa)
+
+int dsize = 0; /* sizeof (data type) */
+
+if (dtypa == 0) {
+    dsize = sizeof (int);
+    /* round each block in FID to a multiple of 1024 bytes */
+    int n = 1024 / dsize;
+    td = (td % n) ? td - (td % n) + n : td;
+    /* allocate memory */
+    int *sum;
+    int *row;
+    if ((sum = malloc(dsize * td * nfid)) == NULL) STOPMSG(MALLOC_ERROR)
+    if ((row = malloc(dsize * td * nfid)) == NULL) STOPMSG(MALLOC_ERROR)
+
+    /* read in data and perform the summation */
+    int m, i, j;
+    for (m = 0; m < (td1 / (k * nfid)); m++) {
+        /* initialise sum to zero */
+        for (j = 0; j < td * nfid; j++) *(sum+j) = 0;
+        /* read in k rows and add each of them to sum */
+        for (i = 0; i < k; i++) {
+            if (fread(row, dsize, td * nfid, fp) != td * nfid) STOPMSG(READ_ERROR)
+            for (j = 0; j < td * nfid; j++) *(sum + j) += *(row + j); 
+        }
+        /* write the sum to newser */
+        if (fwrite(sum, dsize, td * nfid, fq) != td * nfid) STOPMSG(WRITE_ERROR)
+    }
+
+    /* clean up */
+    free(sum);
+    free(row);
+    fclose(fp);
+    fclose(fq);
+}
+else if (dtypa == 2) {
+    dsize = sizeof (double);
+    /* round each block in FID to a multiple of 1024 bytes */
+    int n = 1024 / dsize;
+    td = (td % n) ? td - (td % n) + n : td;
+
+    /* allocate memory */
+    double *sum;
+    double *row;
+    if ((sum = malloc(dsize * td * nfid)) == NULL) STOPMSG(MALLOC_ERROR)
+    if ((row = malloc(dsize * td * nfid)) == NULL) STOPMSG(MALLOC_ERROR)
+
+    /* read in data and perform the summation */
+    int m, i, j;
+    for (m = 0; m < (td1 / (k * nfid)); m++) {
+        /* initialise sum to zero */
+        for (j = 0; j < td * nfid; j++) *(sum+j) = 0;
+        /* read in k rows and add each of them to sum */
+        for (i = 0; i < k; i++) {
+            if (fread(row, dsize, td * nfid, fp) != td * nfid) STOPMSG(READ_ERROR)
+            for (j = 0; j < td * nfid; j++) *(sum + j) += *(row + j); 
+        }
+        /* write the sum to newser */
+        if (fwrite(sum, dsize, td * nfid, fq) != td * nfid) STOPMSG(WRITE_ERROR)
+    }
+
+    /* clean up */
+    free(sum);
+    free(row);
+    fclose(fp);
+    fclose(fq);
+}
+else STOPMSG("combinek only works with TopSpin 3 (integer) data...")
+
+
+/* Backup old ser file */
+char serbak[PATH_MAX + 64];
+strcpy(serbak, ACQUPATH("ser.bak"));
+if ((fp = fopen(ser, "rb")) == NULL) STOPMSG(READ_ERROR)
+if ((fq = fopen(serbak, "wb")) == NULL) STOPMSG(WRITE_ERROR)
+
+int c;
+while ((c = getc(fp)) != EOF) putc(c,fq);
+fclose(fp);
+fclose(fq);
+
+/* Overwrite ser file with newser */
+if ((fp = fopen(newser, "rb")) == NULL) STOPMSG(READ_ERROR)
+if ((fq = fopen(ser, "wb")) == NULL) STOPMSG(WRITE_ERROR)
+while ((c = getc(fp)) != EOF) putc(c,fq);
+fclose(fp);
+fclose(fq);
+remove(newser); /* if we got all the way here we don't need it anymore */
+
+/* Overwrite previous parameters */
+STOREPAR1S("TD", td1/k)
+STOREPAR1("TD", td1/k)
+STOREPARS("NS", ns*k)
+STOREPAR("NS", ns*k) 
+/* Prevent user from running combinek twice on the same dataset */
+STOREPARS("CNST 39", 0.0)
+
+QUIT
+// vim: ft=c

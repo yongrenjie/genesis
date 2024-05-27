@@ -1,0 +1,37 @@
+/* fixF1n
+ * ------
+ * Fix the values of SW and O1 in the indirect dimension for NOAH 15N modules.
+ * SW is read from the status parameter cnst40.
+ *
+ * v: 2.3.0
+ * Jonathan Yong & Tim Claridge, University of Oxford
+ * Eriks Kupce, Bruker UK
+ * 28 February 2023 */
+
+double sfo;
+FETCHPARS("SFO3", &sfo)
+STOREPAR1S("SFO1", sfo)
+
+// cnst40 is 15N SW in ppm
+float cnst40;
+FETCHPAR("CNST 40", &cnst40)
+STOREPAR1S("SW", (double) cnst40)
+// calculate 15N SW_h
+double sw_h;
+sw_h = cnst40 * sfo;
+STOREPAR1S("SW_h", sw_h)
+
+char nuc[8];
+FETCHPARS("NUC3", nuc)
+STOREPAR1S("NUC1", nuc)
+
+double bf;
+FETCHPARS("BF3", &bf)
+STOREPAR1S("BF1", bf)
+
+double o;
+FETCHPARS("O3", &o)
+STOREPAR1S("O1", o)
+
+QUIT
+// vim: ft=c
