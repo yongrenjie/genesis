@@ -14,10 +14,10 @@ jobs:
       with:
         ref: gh-pages
 
-    - name: Perform hard reset to master branch
+    - name: Perform hard reset to main branch
       run: |
-        git fetch origin master --tags
-        git reset --hard origin/master
+        git fetch origin main --tags
+        git reset --hard origin/main
 
     - name: Setup node.js v14
       uses: actions/setup-node@v2
