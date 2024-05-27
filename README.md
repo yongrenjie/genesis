@@ -10,6 +10,17 @@
 
 ---------
 
+## Update 2024
+
+Although the GENESIS website is still live at https://nmr-genesis.co.uk, the code is officially no longer maintained.
+(You can blame the nature of academic research for this. I am no longer working in chemistry and can't meaningfully maintain this code as I don't use it any more.)
+
+It's very unlikely that there are still bugs: in all its years of existence, I have had at most a couple of bugs reported and all of these have been fixed.
+If you find a critical one, contact details are still available on the website.
+
+Thank you so much to all of you who have used it over the years and sent in emails.
+It has been a great joy knowing that it has been (and perhaps even continues to be) a useful tool.
+
 
 ## Online usage
 
